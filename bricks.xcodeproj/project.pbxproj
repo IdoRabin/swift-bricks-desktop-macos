@@ -1,0 +1,618 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EC218AB9275931E700744400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AB8275931E700744400 /* AppDelegate.swift */; };
+		EC218ABB275931E700744400 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ABA275931E700744400 /* ViewController.swift */; };
+		EC218ABD275931E700744400 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ABC275931E700744400 /* Document.swift */; };
+		EC218ABF275931E800744400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC218ABE275931E800744400 /* Assets.xcassets */; };
+		EC218AC2275931E800744400 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC218AC0275931E800744400 /* Main.storyboard */; };
+		EC218ACE275931E800744400 /* bricksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ACD275931E800744400 /* bricksTests.swift */; };
+		EC218AD8275931E800744400 /* bricksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AD7275931E800744400 /* bricksUITests.swift */; };
+		EC218ADA275931E800744400 /* bricksUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AD9275931E800744400 /* bricksUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EC218ACA275931E800744400 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC218AAD275931E700744400 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC218AB4275931E700744400;
+			remoteInfo = bricks;
+		};
+		EC218AD4275931E800744400 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC218AAD275931E700744400 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC218AB4275931E700744400;
+			remoteInfo = bricks;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		EC218AB5275931E700744400 /* bricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC218AB8275931E700744400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EC218ABA275931E700744400 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EC218ABC275931E700744400 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		EC218ABE275931E800744400 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EC218AC1275931E800744400 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EC218AC3275931E800744400 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC218AC4275931E800744400 /* bricks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bricks.entitlements; sourceTree = "<group>"; };
+		EC218AC9275931E800744400 /* bricksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bricksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC218ACD275931E800744400 /* bricksTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bricksTests.swift; sourceTree = "<group>"; };
+		EC218AD3275931E800744400 /* bricksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bricksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC218AD7275931E800744400 /* bricksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bricksUITests.swift; sourceTree = "<group>"; };
+		EC218AD9275931E800744400 /* bricksUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bricksUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EC218AB2275931E700744400 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC218AC6275931E800744400 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC218AD0275931E800744400 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EC218AAC275931E700744400 = {
+			isa = PBXGroup;
+			children = (
+				EC218AB7275931E700744400 /* bricks */,
+				EC218ACC275931E800744400 /* bricksTests */,
+				EC218AD6275931E800744400 /* bricksUITests */,
+				EC218AB6275931E700744400 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EC218AB6275931E700744400 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EC218AB5275931E700744400 /* bricks.app */,
+				EC218AC9275931E800744400 /* bricksTests.xctest */,
+				EC218AD3275931E800744400 /* bricksUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EC218AB7275931E700744400 /* bricks */ = {
+			isa = PBXGroup;
+			children = (
+				EC218AB8275931E700744400 /* AppDelegate.swift */,
+				EC218ABA275931E700744400 /* ViewController.swift */,
+				EC218ABC275931E700744400 /* Document.swift */,
+				EC218ABE275931E800744400 /* Assets.xcassets */,
+				EC218AC0275931E800744400 /* Main.storyboard */,
+				EC218AC3275931E800744400 /* Info.plist */,
+				EC218AC4275931E800744400 /* bricks.entitlements */,
+			);
+			path = bricks;
+			sourceTree = "<group>";
+		};
+		EC218ACC275931E800744400 /* bricksTests */ = {
+			isa = PBXGroup;
+			children = (
+				EC218ACD275931E800744400 /* bricksTests.swift */,
+			);
+			path = bricksTests;
+			sourceTree = "<group>";
+		};
+		EC218AD6275931E800744400 /* bricksUITests */ = {
+			isa = PBXGroup;
+			children = (
+				EC218AD7275931E800744400 /* bricksUITests.swift */,
+				EC218AD9275931E800744400 /* bricksUITestsLaunchTests.swift */,
+			);
+			path = bricksUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EC218AB4275931E700744400 /* bricks */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC218ADD275931E800744400 /* Build configuration list for PBXNativeTarget "bricks" */;
+			buildPhases = (
+				EC218AB1275931E700744400 /* Sources */,
+				EC218AB2275931E700744400 /* Frameworks */,
+				EC218AB3275931E700744400 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bricks;
+			productName = bricks;
+			productReference = EC218AB5275931E700744400 /* bricks.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EC218AC8275931E800744400 /* bricksTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC218AE0275931E800744400 /* Build configuration list for PBXNativeTarget "bricksTests" */;
+			buildPhases = (
+				EC218AC5275931E800744400 /* Sources */,
+				EC218AC6275931E800744400 /* Frameworks */,
+				EC218AC7275931E800744400 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC218ACB275931E800744400 /* PBXTargetDependency */,
+			);
+			name = bricksTests;
+			productName = bricksTests;
+			productReference = EC218AC9275931E800744400 /* bricksTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		EC218AD2275931E800744400 /* bricksUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC218AE3275931E800744400 /* Build configuration list for PBXNativeTarget "bricksUITests" */;
+			buildPhases = (
+				EC218ACF275931E800744400 /* Sources */,
+				EC218AD0275931E800744400 /* Frameworks */,
+				EC218AD1275931E800744400 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC218AD5275931E800744400 /* PBXTargetDependency */,
+			);
+			name = bricksUITests;
+			productName = bricksUITests;
+			productReference = EC218AD3275931E800744400 /* bricksUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EC218AAD275931E700744400 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1310;
+				LastUpgradeCheck = 1310;
+				TargetAttributes = {
+					EC218AB4275931E700744400 = {
+						CreatedOnToolsVersion = 13.1;
+					};
+					EC218AC8275931E800744400 = {
+						CreatedOnToolsVersion = 13.1;
+						TestTargetID = EC218AB4275931E700744400;
+					};
+					EC218AD2275931E800744400 = {
+						CreatedOnToolsVersion = 13.1;
+						TestTargetID = EC218AB4275931E700744400;
+					};
+				};
+			};
+			buildConfigurationList = EC218AB0275931E700744400 /* Build configuration list for PBXProject "bricks" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EC218AAC275931E700744400;
+			productRefGroup = EC218AB6275931E700744400 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EC218AB4275931E700744400 /* bricks */,
+				EC218AC8275931E800744400 /* bricksTests */,
+				EC218AD2275931E800744400 /* bricksUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EC218AB3275931E700744400 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC218ABF275931E800744400 /* Assets.xcassets in Resources */,
+				EC218AC2275931E800744400 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC218AC7275931E800744400 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC218AD1275931E800744400 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EC218AB1275931E700744400 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC218ABB275931E700744400 /* ViewController.swift in Sources */,
+				EC218AB9275931E700744400 /* AppDelegate.swift in Sources */,
+				EC218ABD275931E700744400 /* Document.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC218AC5275931E800744400 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC218ACE275931E800744400 /* bricksTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC218ACF275931E800744400 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC218ADA275931E800744400 /* bricksUITestsLaunchTests.swift in Sources */,
+				EC218AD8275931E800744400 /* bricksUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EC218ACB275931E800744400 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC218AB4275931E700744400 /* bricks */;
+			targetProxy = EC218ACA275931E800744400 /* PBXContainerItemProxy */;
+		};
+		EC218AD5275931E800744400 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC218AB4275931E700744400 /* bricks */;
+			targetProxy = EC218AD4275931E800744400 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EC218AC0275931E800744400 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EC218AC1275931E800744400 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EC218ADB275931E800744400 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EC218ADC275931E800744400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		EC218ADE275931E800744400 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bricks/bricks.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = bricks/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricks;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		EC218ADF275931E800744400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = bricks/bricks.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = bricks/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricks;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		EC218AE1275931E800744400 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bricks.app/Contents/MacOS/bricks";
+			};
+			name = Debug;
+		};
+		EC218AE2275931E800744400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/bricks.app/Contents/MacOS/bricks";
+			};
+			name = Release;
+		};
+		EC218AE4275931E800744400 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = bricks;
+			};
+			name = Debug;
+		};
+		EC218AE5275931E800744400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = bricks;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EC218AB0275931E700744400 /* Build configuration list for PBXProject "bricks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC218ADB275931E800744400 /* Debug */,
+				EC218ADC275931E800744400 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC218ADD275931E800744400 /* Build configuration list for PBXNativeTarget "bricks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC218ADE275931E800744400 /* Debug */,
+				EC218ADF275931E800744400 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC218AE0275931E800744400 /* Build configuration list for PBXNativeTarget "bricksTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC218AE1275931E800744400 /* Debug */,
+				EC218AE2275931E800744400 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC218AE3275931E800744400 /* Build configuration list for PBXNativeTarget "bricksUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC218AE4275931E800744400 /* Debug */,
+				EC218AE5275931E800744400 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EC218AAD275931E700744400 /* Project object */;
+}

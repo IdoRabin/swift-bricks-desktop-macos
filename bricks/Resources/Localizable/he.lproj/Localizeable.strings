@@ -1,0 +1,89 @@
+/* 
+  Localizeable.strings
+  bricks
+
+  Created by Ido on 07/12/2021.
+  
+*/
+
+"OK" = "Ok";    // "OK" // OK button
+"DELETE" = "Delete";    // "Delete" // / Delete button
+"CANCEL" = "Cancel";    // "Cancel" // Cancel button
+"REMOVE" = "Remove";    // "Remove" // Remove button
+"ABORT" = "Abort";    // "Abort" // Abort button (aborts syncing phone contacts with Facebook)
+
+"TRY_AGAIN" = "Try Again";    // "Try Again" // Try Again button (tries again to receive some data from the internet)
+"BACK" = "Back";    // "Back" // Back button
+"DONE" = "Done";    // "Done" // Done Button
+"EDIT" = "Edit";    // "Edit" // Edit button
+"CLOSE" = "Close";    // "Close" // Close button (closes an alert / window)
+"NEXT" = "Next";    // "Next" // Next button
+"COPY" = "Copy";    // "Copy"
+"CONTINUE" = "Continue"; // "Continue"
+"CONTACTS" = "Contacts";    // "Contacts" // As for your phone contacts (contact list).
+"SUGGESTIONS" = "Suggestions";    // "Suggestions" // Referes to suggestions of matching Facebook profile for a contact.
+"MORE" = "More";    // "More" // As for More options, More contacts, More settings etc.
+"SETTINGS" = "Settings";    // "Settings" // General application settings.
+"ABOUT" = "About";    // "About" // About this application / version
+"RESET" = "Reset";    // "Reset" // As for reset settings, reset to defaults, etc.
+"SELECT_ALL" = "Select All";    // "Select All" // Button - Select all items in a list
+"CLEAR" = "Clear";    // "Clear" // Button - Clear selection (the opposite of the Select All button)
+"SETTINGS_ON" = "On";    // "On" // Indicates that some settings are ON
+"SETTINGS_OFF" = "Off";    // "Off" // Indicates that some settings are OFF
+"REMIND_ME_LATER" = "Remind Me Later";    // "Remind Me Later" // Button - The user choose he wants us to remind him later something (rate the app, birthday reminder, sync reminder, etc).
+"INVITE" = "Invite";    // "Invite" // Button - Invite a friends to use the app.
+"LOGIN" = "Login";    // "Login" // Button - Login
+"LOGOUT" = "Logout";    // "Logout" // Button - Logout from your Facebook account
+"GIVEN_NAME" = "Gicen name";    // "Given Name" // User's given (first) name
+"FAMILY_NAME" = "Family name";    // "Family Name" // User's family (last) name
+"VERSION" = "Version";    // "Version" // Version
+"TERMS_OF_USE" = "Terms of Use";    // "Terms of Use" // Terms of Use (for this app)
+"PRIVACY_POLICY" = "Privacy Policy";    // "Privacy Policy" // Privacy Policy (for this app)
+"CONNECT" = "Connect";    // "Connect" // Button - For example connect to your social network account.
+"LATER" = "Later";    // "Later" // Button title - perform the action later
+"YES" = "Yes";    // "Yes" // Yes - for settings, example: Is Backup Enabled: Yes
+"NO" = "No";    // "No" // No - for settings, example: Is Backup Enabled: No
+"OTHER" = "Other";    // "Other" // Button - As for other options the user can choose from.
+"UPDATING" = "Updating";    // "Updating" // A view is currently being updated.
+"ACCEPT" = "Accept";    // "Accept" // Accept button title (user grants permission for a setting)
+"DECLINE" = "Decline";    // "Decline" // Decline button title (user prohibits permission for a setting)
+"UPGRADE" = "Upgrade";    // "Upgrade" // Button or title that calls the user to "upgrade" functionality (purchase of premium) // Android: "upgrade"
+"MY_PROFILE" = "My Profile";    // "My Profile" // Title: My Profile
+"UNNAMED" = "Unnamed"; // "Unnamed" // an unnamed element will have this title / name
+"SAVE" = "Save";
+"SAVE_AS" = "Save as";
+"SAVE_AS_DOT_DOT" = "Save as..";
+"OPEN" = "Open";
+"UNTITLED" = "Untitled"; // "Untitled" // an untitled (no filename yet) document / element - will display this title
+
+"PLEASE_WAIT" = "Please wait";    // "Please Wait" // Message displayed to the user while some operation is in progress
+"PLEASE_WAIT_DOT_DOT" = "Please wait..";    // "Please Wait.." // Message displayed to the user while some operation is in progress
+"PLEASE_WAIT_A_MOMENT_DOT_DOT" = "Please wait a moment..";    // "Please wait a moment..." // Tells the user to wait a moment until an opertation is complete
+
+"YEAR" = "Year";    // "Year" // Word for one single year
+"MONTH" = "Month";    // "Month" // Word for one single month
+"MONTHS_FORMAT" = "%zd Months";    // "%zd Months" // Word for a few months. Example: "7 Months"
+"DAYS_FORMAT" = "%zd Days";    // "%zd Days" // Word for a few days. Example: "7 Days"
+"LAST_UPDATED_AT_FORMAT" = "Last updated at %@";    // "Last updated at %@" // Present a last updated date / time for a data field
+"GOT_IT" = "Got It!";    // "Got it!" // Usually a button title to dismiss a dialog // android
+
+"LOCK" = "Lock";
+"UNLOCK" = "Unlock";
+"ADD_NEW" = "Add new";
+
+// Splash
+"BRICKS" = "Bricks"; // product name
+"START_A_NEW_PROJECT_ELLIPSIS" = "Start a new project";
+"OPEN_AN_EXISTING_PROJECT_DOT_DOT" = "Open an existing project..";
+"COPYRIGHT_COMPANY_W_YEAR_FORMAT" = "Copyright © %@ Bricks Biz Ltd."; // "Copyright © 2001 Bricks Biz Ltd."
+
+// TOOLBAR
+"PROJECT" = "Project";
+"PROGRESS" = "Progress";
+"TASKS" = "Tasks";
+"PROPERTIES" = "Properties";
+
+// Tooltips
+"ADD_NEW_PLAN_LAYER" = "Add new plan layer";
+"DELETE_SELECTED_LAYER_FROM_PLAN" = "Delete selected layer from plan";
+"EDIT_SELECTED_LAYER" = "Edit selected layer";

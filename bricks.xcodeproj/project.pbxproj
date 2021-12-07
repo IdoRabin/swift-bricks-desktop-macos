@@ -8,13 +8,95 @@
 
 /* Begin PBXBuildFile section */
 		EC218AB9275931E700744400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AB8275931E700744400 /* AppDelegate.swift */; };
-		EC218ABB275931E700744400 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ABA275931E700744400 /* ViewController.swift */; };
-		EC218ABD275931E700744400 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ABC275931E700744400 /* Document.swift */; };
 		EC218ABF275931E800744400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC218ABE275931E800744400 /* Assets.xcassets */; };
-		EC218AC2275931E800744400 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC218AC0275931E800744400 /* Main.storyboard */; };
 		EC218ACE275931E800744400 /* bricksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ACD275931E800744400 /* bricksTests.swift */; };
 		EC218AD8275931E800744400 /* bricksUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AD7275931E800744400 /* bricksUITests.swift */; };
 		EC218ADA275931E800744400 /* bricksUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AD9275931E800744400 /* bricksUITestsLaunchTests.swift */; };
+		EC218B06275938B200744400 /* bricksHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = EC218B05275938B200744400 /* bricksHelper.m */; };
+		EC218B08275938B200744400 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EC218B07275938B200744400 /* main.m */; };
+		EC218B0C275938B200744400 /* bricksHelper.xpc in Embed XPC Services */ = {isa = PBXBuildFile; fileRef = EC218B01275938B200744400 /* bricksHelper.xpc */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		EC218B11275939B600744400 /* AppStoryboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B10275939B600744400 /* AppStoryboard.swift */; };
+		EC218B13275939CC00744400 /* AppConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B12275939CC00744400 /* AppConstants.swift */; };
+		EC218B15275939CF00744400 /* AppDocumentHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B14275939CF00744400 /* AppDocumentHistory.swift */; };
+		EC218B17275939DA00744400 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B16275939DA00744400 /* AppSettings.swift */; };
+		EC218B2227593ADA00744400 /* UserDefaults+Counters.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2127593A9700744400 /* UserDefaults+Counters.swift */; };
+		EC218B2427593B1D00744400 /* NSLock+Blocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2327593B1D00744400 /* NSLock+Blocks.swift */; };
+		EC218B3827593BE000744400 /* Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3227593BDB00744400 /* Cache.swift */; };
+		EC218B3927593BE000744400 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3027593BDA00744400 /* Box.swift */; };
+		EC218B3A27593BE000744400 /* SkipEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2E27593BDA00744400 /* SkipEncoding.swift */; };
+		EC218B3B27593BE000744400 /* TimedEventFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3527593BDB00744400 /* TimedEventFilter.swift */; };
+		EC218B3C27593BE000744400 /* ProgressCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3127593BDB00744400 /* ProgressCounter.swift */; };
+		EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2A27593BDA00744400 /* ObserversArray.swift */; };
+		EC218B3E27593BE000744400 /* CachesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3427593BDB00744400 /* CachesHelper.swift */; };
+		EC218B3F27593BE000744400 /* Codable+Serialize.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3327593BDB00744400 /* Codable+Serialize.swift */; };
+		EC218B4027593BE000744400 /* HashableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2F27593BDA00744400 /* HashableObject.swift */; };
+		EC218B4127593BE000744400 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3627593BDB00744400 /* Logger.swift */; };
+		EC218B4227593BE000744400 /* Selectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2C27593BDA00744400 /* Selectable.swift */; };
+		EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B3727593BDB00744400 /* WeakWrapper.swift */; };
+		EC218B4427593BE000744400 /* ThreadWaitLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2B27593BDA00744400 /* ThreadWaitLock.swift */; };
+		EC218B4527593BE000744400 /* LoadingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2D27593BDA00744400 /* LoadingHelper.swift */; };
+		EC218B4727593C3C00744400 /* NSBundle+Versions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4627593C3C00744400 /* NSBundle+Versions.swift */; };
+		EC218B5327593CBF00744400 /* OptionSetEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4F27593CBF00744400 /* OptionSetEx.swift */; };
+		EC218B5427593CBF00744400 /* SetEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B5027593CBF00744400 /* SetEx.swift */; };
+		EC218B5527593CBF00744400 /* DictionaryEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B5127593CBF00744400 /* DictionaryEx.swift */; };
+		EC218B5627593CBF00744400 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4827593CBF00744400 /* ArrayEx.swift */; };
+		EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4C27593CBF00744400 /* DateFormatterEx.swift */; };
+		EC218B5827593CBF00744400 /* Array+Identifiable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4B27593CBF00744400 /* Array+Identifiable.swift */; };
+		EC218B5927593CBF00744400 /* CustomStringConvertibleEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4D27593CBF00744400 /* CustomStringConvertibleEx.swift */; };
+		EC218B5A27593CBF00744400 /* DispatchQueueEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4927593CBF00744400 /* DispatchQueueEx.swift */; };
+		EC218B5B27593CBF00744400 /* URLEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B5227593CBF00744400 /* URLEx.swift */; };
+		EC218B5D27593CBF00744400 /* StringEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B4A27593CBF00744400 /* StringEx.swift */; };
+		EC218B6C27593DDC00744400 /* AppResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B6B27593DDC00744400 /* AppResult.swift */; };
+		EC218B6E27593DE100744400 /* AppStr.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B6D27593DE100744400 /* AppStr.swift */; };
+		EC218B7127593E7900744400 /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7027593E7900744400 /* AppError.swift */; };
+		EC218B7227593E7900744400 /* AppErrorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B6F27593E7900744400 /* AppErrorCode.swift */; };
+		EC218B7527593EE300744400 /* AppSandboxer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7327593EE300744400 /* AppSandboxer.swift */; };
+		EC218B7627593EE300744400 /* FileFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7427593EE300744400 /* FileFinder.swift */; };
+		EC218B7827593EED00744400 /* KeyboardKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7727593EED00744400 /* KeyboardKeys.swift */; };
+		EC218B7A27593F5E00744400 /* IndexPathTuple.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7927593F5E00744400 /* IndexPathTuple.swift */; };
+		EC218B7C275940E800744400 /* BUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7B275940E800744400 /* BUID.swift */; };
+		EC218B7D2759448000744400 /* BrickBasicInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2927593B7100744400 /* BrickBasicInfo.swift */; };
+		EC218B7F2759459700744400 /* ComparableEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7E2759459700744400 /* ComparableEx.swift */; };
+		EC218B812759463500744400 /* BrickDocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B802759463500744400 /* BrickDocumentController.swift */; };
+		EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B822759466C00744400 /* BrickTemplateType.swift */; };
+		EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B842759468E00744400 /* BrickVersionControlType.swift */; };
+		EC218B872759471100744400 /* BrickDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B862759471100744400 /* BrickDocument.swift */; };
+		EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC332CB6275EB65B00546767 /* MNButton.swift */; };
+		EC332CC9275ECAC600546767 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EC332CC6275ECAC500546767 /* Localizable.strings */; };
+		EC332CCD275ECCA300546767 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC332CCC275ECCA200546767 /* Main.storyboard */; };
+		EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */; };
+		EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18BF275D100B00BC23DA /* Clearable.swift */; };
+		EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFD9275CCA810046F30A /* Brick.swift */; };
+		EC9DEFDC275CCACA0046F30A /* BrickDocumentObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFDB275CCACA0046F30A /* BrickDocumentObserver.swift */; };
+		EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFDD275CCC0A0046F30A /* OptionalEx.swift */; };
+		EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2727593B7100744400 /* BrickSettings.swift */; };
+		EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2827593B7100744400 /* BrickStats.swift */; };
+		EC9DEFE2275CCE730046F30A /* Splashscreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC9DEFE1275CCE730046F30A /* Splashscreen.storyboard */; };
+		EC9DEFE6275CD0B40046F30A /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFE5275CD0B40046F30A /* SplashVC.swift */; };
+		EC9DEFE8275CD0BC0046F30A /* SplashWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFE7275CD0BC0046F30A /* SplashWC.swift */; };
+		EC9DEFEB275CD0E70046F30A /* NSTitleDetailTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFEA275CD0E70046F30A /* NSTitleDetailTableCellView.swift */; };
+		EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFEC275CD1BD0046F30A /* CGRect+Corners.swift */; };
+		EC9DEFFE275CD1BE0046F30A /* NSColorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFED275CD1BD0046F30A /* NSColorEx.swift */; };
+		EC9DEFFF275CD1BE0046F30A /* NSTextFIeldEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFEE275CD1BD0046F30A /* NSTextFIeldEx.swift */; };
+		EC9DF001275CD1BE0046F30A /* NSAttributedStringEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF0275CD1BD0046F30A /* NSAttributedStringEx.swift */; };
+		EC9DF002275CD1BE0046F30A /* CGRectEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF1275CD1BD0046F30A /* CGRectEx.swift */; };
+		EC9DF003275CD1BE0046F30A /* CALayerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF2275CD1BD0046F30A /* CALayerEx.swift */; };
+		EC9DF004275CD1BE0046F30A /* NSView+Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF3275CD1BD0046F30A /* NSView+Animation.swift */; };
+		EC9DF006275CD1BE0046F30A /* CGPointEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF5275CD1BD0046F30A /* CGPointEx.swift */; };
+		EC9DF007275CD1BE0046F30A /* UIImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF6275CD1BE0046F30A /* UIImage+Utils.swift */; };
+		EC9DF008275CD1BE0046F30A /* NSView+Separators.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF7275CD1BE0046F30A /* NSView+Separators.swift */; };
+		EC9DF009275CD1BE0046F30A /* NSViewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF8275CD1BE0046F30A /* NSViewEx.swift */; };
+		EC9DF00A275CD1BE0046F30A /* CGSizeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFF9275CD1BE0046F30A /* CGSizeEx.swift */; };
+		EC9DF00B275CD1BE0046F30A /* Lerpable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFFA275CD1BE0046F30A /* Lerpable.swift */; };
+		EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFFB275CD1BE0046F30A /* CGRect+Quadrants.swift */; };
+		EC9DF00D275CD1BE0046F30A /* NSWindowController+XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFFC275CD1BE0046F30A /* NSWindowController+XIB.swift */; };
+		EC9DF010275CD1CE0046F30A /* MNFocus.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF00E275CD1CE0046F30A /* MNFocus.swift */; };
+		EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF00F275CD1CE0046F30A /* MouseTracking.swift */; };
+		EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF014275CD2AF0046F30A /* GridViewSnapMode.swift */; };
+		EC9DF018275CDAD50046F30A /* SplashVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF017275CDAD50046F30A /* SplashVM.swift */; };
+		EC9DF01E275CE6DE0046F30A /* MVP.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01A275CE6DE0046F30A /* MVP.swift */; };
+		EC9DF01F275CE6DE0046F30A /* MVPVCBinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01B275CE6DE0046F30A /* MVPVCBinder.swift */; };
+		EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,15 +114,34 @@
 			remoteGlobalIDString = EC218AB4275931E700744400;
 			remoteInfo = bricks;
 		};
+		EC218B0A275938B200744400 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC218AAD275931E700744400 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC218B00275938B200744400;
+			remoteInfo = bricksHelper;
+		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		EC218AFC2759387700744400 /* Embed XPC Services */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+				EC218B0C275938B200744400 /* bricksHelper.xpc in Embed XPC Services */,
+			);
+			name = "Embed XPC Services";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		EC1A28BA275F9203008446A8 /* bump_build_nr.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bump_build_nr.sh; sourceTree = "<group>"; };
 		EC218AB5275931E700744400 /* bricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = bricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC218AB8275931E700744400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		EC218ABA275931E700744400 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		EC218ABC275931E700744400 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		EC218ABE275931E800744400 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EC218AC1275931E800744400 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EC218AC3275931E800744400 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC218AC4275931E800744400 /* bricks.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = bricks.entitlements; sourceTree = "<group>"; };
 		EC218AC9275931E800744400 /* bricksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bricksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,6 +149,96 @@
 		EC218AD3275931E800744400 /* bricksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = bricksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC218AD7275931E800744400 /* bricksUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bricksUITests.swift; sourceTree = "<group>"; };
 		EC218AD9275931E800744400 /* bricksUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = bricksUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		EC218B01275938B200744400 /* bricksHelper.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = bricksHelper.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC218B03275938B200744400 /* bricksHelperProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bricksHelperProtocol.h; sourceTree = "<group>"; };
+		EC218B04275938B200744400 /* bricksHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bricksHelper.h; sourceTree = "<group>"; };
+		EC218B05275938B200744400 /* bricksHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = bricksHelper.m; sourceTree = "<group>"; };
+		EC218B07275938B200744400 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		EC218B09275938B200744400 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC218B10275939B600744400 /* AppStoryboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoryboard.swift; sourceTree = "<group>"; };
+		EC218B12275939CC00744400 /* AppConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		EC218B14275939CF00744400 /* AppDocumentHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDocumentHistory.swift; sourceTree = "<group>"; };
+		EC218B16275939DA00744400 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		EC218B2127593A9700744400 /* UserDefaults+Counters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Counters.swift"; sourceTree = "<group>"; };
+		EC218B2327593B1D00744400 /* NSLock+Blocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLock+Blocks.swift"; sourceTree = "<group>"; };
+		EC218B2727593B7100744400 /* BrickSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickSettings.swift; sourceTree = "<group>"; };
+		EC218B2827593B7100744400 /* BrickStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickStats.swift; sourceTree = "<group>"; };
+		EC218B2927593B7100744400 /* BrickBasicInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickBasicInfo.swift; sourceTree = "<group>"; };
+		EC218B2A27593BDA00744400 /* ObserversArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObserversArray.swift; sourceTree = "<group>"; };
+		EC218B2B27593BDA00744400 /* ThreadWaitLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadWaitLock.swift; sourceTree = "<group>"; };
+		EC218B2C27593BDA00744400 /* Selectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Selectable.swift; sourceTree = "<group>"; };
+		EC218B2D27593BDA00744400 /* LoadingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingHelper.swift; sourceTree = "<group>"; };
+		EC218B2E27593BDA00744400 /* SkipEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipEncoding.swift; sourceTree = "<group>"; };
+		EC218B2F27593BDA00744400 /* HashableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableObject.swift; sourceTree = "<group>"; };
+		EC218B3027593BDA00744400 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
+		EC218B3127593BDB00744400 /* ProgressCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCounter.swift; sourceTree = "<group>"; };
+		EC218B3227593BDB00744400 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		EC218B3327593BDB00744400 /* Codable+Serialize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Serialize.swift"; sourceTree = "<group>"; };
+		EC218B3427593BDB00744400 /* CachesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachesHelper.swift; sourceTree = "<group>"; };
+		EC218B3527593BDB00744400 /* TimedEventFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimedEventFilter.swift; sourceTree = "<group>"; };
+		EC218B3627593BDB00744400 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		EC218B3727593BDB00744400 /* WeakWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakWrapper.swift; sourceTree = "<group>"; };
+		EC218B4627593C3C00744400 /* NSBundle+Versions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSBundle+Versions.swift"; sourceTree = "<group>"; };
+		EC218B4827593CBF00744400 /* ArrayEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEx.swift; sourceTree = "<group>"; };
+		EC218B4927593CBF00744400 /* DispatchQueueEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueEx.swift; sourceTree = "<group>"; };
+		EC218B4A27593CBF00744400 /* StringEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringEx.swift; sourceTree = "<group>"; };
+		EC218B4B27593CBF00744400 /* Array+Identifiable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Identifiable.swift"; sourceTree = "<group>"; };
+		EC218B4C27593CBF00744400 /* DateFormatterEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterEx.swift; sourceTree = "<group>"; };
+		EC218B4D27593CBF00744400 /* CustomStringConvertibleEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomStringConvertibleEx.swift; sourceTree = "<group>"; };
+		EC218B4F27593CBF00744400 /* OptionSetEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionSetEx.swift; sourceTree = "<group>"; };
+		EC218B5027593CBF00744400 /* SetEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetEx.swift; sourceTree = "<group>"; };
+		EC218B5127593CBF00744400 /* DictionaryEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryEx.swift; sourceTree = "<group>"; };
+		EC218B5227593CBF00744400 /* URLEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLEx.swift; sourceTree = "<group>"; };
+		EC218B6927593DB300744400 /* AppConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConstants.swift; sourceTree = "<group>"; };
+		EC218B6B27593DDC00744400 /* AppResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppResult.swift; sourceTree = "<group>"; };
+		EC218B6D27593DE100744400 /* AppStr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStr.swift; sourceTree = "<group>"; };
+		EC218B6F27593E7900744400 /* AppErrorCode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppErrorCode.swift; sourceTree = "<group>"; };
+		EC218B7027593E7900744400 /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
+		EC218B7327593EE300744400 /* AppSandboxer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSandboxer.swift; sourceTree = "<group>"; };
+		EC218B7427593EE300744400 /* FileFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileFinder.swift; sourceTree = "<group>"; };
+		EC218B7727593EED00744400 /* KeyboardKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardKeys.swift; sourceTree = "<group>"; };
+		EC218B7927593F5E00744400 /* IndexPathTuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPathTuple.swift; sourceTree = "<group>"; };
+		EC218B7B275940E800744400 /* BUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BUID.swift; sourceTree = "<group>"; };
+		EC218B7E2759459700744400 /* ComparableEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparableEx.swift; sourceTree = "<group>"; };
+		EC218B802759463500744400 /* BrickDocumentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickDocumentController.swift; sourceTree = "<group>"; };
+		EC218B822759466C00744400 /* BrickTemplateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickTemplateType.swift; sourceTree = "<group>"; };
+		EC218B842759468E00744400 /* BrickVersionControlType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickVersionControlType.swift; sourceTree = "<group>"; };
+		EC218B862759471100744400 /* BrickDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocument.swift; sourceTree = "<group>"; };
+		EC332CB6275EB65B00546767 /* MNButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNButton.swift; sourceTree = "<group>"; };
+		EC332CCC275ECCA200546767 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		EC332CCF275ED29E00546767 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewcontroller+XIB.swift"; sourceTree = "<group>"; };
+		EC7F18BF275D100B00BC23DA /* Clearable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clearable.swift; sourceTree = "<group>"; };
+		EC9DEFD9275CCA810046F30A /* Brick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brick.swift; sourceTree = "<group>"; };
+		EC9DEFDB275CCACA0046F30A /* BrickDocumentObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocumentObserver.swift; sourceTree = "<group>"; };
+		EC9DEFDD275CCC0A0046F30A /* OptionalEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalEx.swift; sourceTree = "<group>"; };
+		EC9DEFE1275CCE730046F30A /* Splashscreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splashscreen.storyboard; sourceTree = "<group>"; };
+		EC9DEFE3275CCF500046F30A /* BrickDocumentIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BrickDocumentIcon.icns; path = ../../../test/bricks/bricks/Resources/BrickDocumentIcon.icns; sourceTree = "<group>"; };
+		EC9DEFE5275CD0B40046F30A /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
+		EC9DEFE7275CD0BC0046F30A /* SplashWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashWC.swift; sourceTree = "<group>"; };
+		EC9DEFEA275CD0E70046F30A /* NSTitleDetailTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTitleDetailTableCellView.swift; sourceTree = "<group>"; };
+		EC9DEFEC275CD1BD0046F30A /* CGRect+Corners.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGRect+Corners.swift"; sourceTree = "<group>"; };
+		EC9DEFED275CD1BD0046F30A /* NSColorEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSColorEx.swift; sourceTree = "<group>"; };
+		EC9DEFEE275CD1BD0046F30A /* NSTextFIeldEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSTextFIeldEx.swift; sourceTree = "<group>"; };
+		EC9DEFF0275CD1BD0046F30A /* NSAttributedStringEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSAttributedStringEx.swift; sourceTree = "<group>"; };
+		EC9DEFF1275CD1BD0046F30A /* CGRectEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGRectEx.swift; sourceTree = "<group>"; };
+		EC9DEFF2275CD1BD0046F30A /* CALayerEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CALayerEx.swift; sourceTree = "<group>"; };
+		EC9DEFF3275CD1BD0046F30A /* NSView+Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSView+Animation.swift"; sourceTree = "<group>"; };
+		EC9DEFF5275CD1BD0046F30A /* CGPointEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGPointEx.swift; sourceTree = "<group>"; };
+		EC9DEFF6275CD1BE0046F30A /* UIImage+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Utils.swift"; sourceTree = "<group>"; };
+		EC9DEFF7275CD1BE0046F30A /* NSView+Separators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSView+Separators.swift"; sourceTree = "<group>"; };
+		EC9DEFF8275CD1BE0046F30A /* NSViewEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSViewEx.swift; sourceTree = "<group>"; };
+		EC9DEFF9275CD1BE0046F30A /* CGSizeEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGSizeEx.swift; sourceTree = "<group>"; };
+		EC9DEFFA275CD1BE0046F30A /* Lerpable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lerpable.swift; sourceTree = "<group>"; };
+		EC9DEFFB275CD1BE0046F30A /* CGRect+Quadrants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGRect+Quadrants.swift"; sourceTree = "<group>"; };
+		EC9DEFFC275CD1BE0046F30A /* NSWindowController+XIB.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSWindowController+XIB.swift"; sourceTree = "<group>"; };
+		EC9DF00E275CD1CE0046F30A /* MNFocus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNFocus.swift; sourceTree = "<group>"; };
+		EC9DF00F275CD1CE0046F30A /* MouseTracking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MouseTracking.swift; sourceTree = "<group>"; };
+		EC9DF014275CD2AF0046F30A /* GridViewSnapMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewSnapMode.swift; sourceTree = "<group>"; };
+		EC9DF017275CDAD50046F30A /* SplashVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVM.swift; sourceTree = "<group>"; };
+		EC9DF01A275CE6DE0046F30A /* MVP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVP.swift; sourceTree = "<group>"; };
+		EC9DF01B275CE6DE0046F30A /* MVPVCBinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPVCBinder.swift; sourceTree = "<group>"; };
+		EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPRouter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,15 +263,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EC218AFE275938B200744400 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		EC218AAC275931E700744400 = {
 			isa = PBXGroup;
 			children = (
+				EC1A28BA275F9203008446A8 /* bump_build_nr.sh */,
 				EC218AB7275931E700744400 /* bricks */,
 				EC218ACC275931E800744400 /* bricksTests */,
 				EC218AD6275931E800744400 /* bricksUITests */,
+				EC218B02275938B200744400 /* bricksHelper */,
 				EC218AB6275931E700744400 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -91,6 +291,7 @@
 				EC218AB5275931E700744400 /* bricks.app */,
 				EC218AC9275931E800744400 /* bricksTests.xctest */,
 				EC218AD3275931E800744400 /* bricksUITests.xctest */,
+				EC218B01275938B200744400 /* bricksHelper.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,13 +299,15 @@
 		EC218AB7275931E700744400 /* bricks */ = {
 			isa = PBXGroup;
 			children = (
-				EC218AB8275931E700744400 /* AppDelegate.swift */,
-				EC218ABA275931E700744400 /* ViewController.swift */,
-				EC218ABC275931E700744400 /* Document.swift */,
-				EC218ABE275931E800744400 /* Assets.xcassets */,
-				EC218AC0275931E800744400 /* Main.storyboard */,
-				EC218AC3275931E800744400 /* Info.plist */,
+				EC9DF016275CD4550046F30A /* Screens */,
+				EC218AE72759326400744400 /* App */,
+				EC218B2527593B6600744400 /* Document */,
+				EC218B1827593A2A00744400 /* Common */,
+				EC218AE62759321A00744400 /* Resources */,
 				EC218AC4275931E800744400 /* bricks.entitlements */,
+				EC218AC3275931E800744400 /* Info.plist */,
+				EC332CCC275ECCA200546767 /* Main.storyboard */,
+				EC9DEFE1275CCE730046F30A /* Splashscreen.storyboard */,
 			);
 			path = bricks;
 			sourceTree = "<group>";
@@ -126,6 +329,257 @@
 			path = bricksUITests;
 			sourceTree = "<group>";
 		};
+		EC218AE62759321A00744400 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EC332CC5275ECAC500546767 /* Localizable */,
+				EC9DEFE3275CCF500046F30A /* BrickDocumentIcon.icns */,
+				EC218ABE275931E800744400 /* Assets.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EC218AE72759326400744400 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				EC218AB8275931E700744400 /* AppDelegate.swift */,
+				EC218B6927593DB300744400 /* AppConstants.swift */,
+				EC218B16275939DA00744400 /* AppSettings.swift */,
+				EC218B14275939CF00744400 /* AppDocumentHistory.swift */,
+				EC218B12275939CC00744400 /* AppConstants.swift */,
+				EC218B6B27593DDC00744400 /* AppResult.swift */,
+				EC218B7027593E7900744400 /* AppError.swift */,
+				EC218B6F27593E7900744400 /* AppErrorCode.swift */,
+				EC218B6D27593DE100744400 /* AppStr.swift */,
+				EC218B10275939B600744400 /* AppStoryboard.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		EC218B02275938B200744400 /* bricksHelper */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B03275938B200744400 /* bricksHelperProtocol.h */,
+				EC218B04275938B200744400 /* bricksHelper.h */,
+				EC218B05275938B200744400 /* bricksHelper.m */,
+				EC218B07275938B200744400 /* main.m */,
+				EC218B09275938B200744400 /* Info.plist */,
+			);
+			path = bricksHelper;
+			sourceTree = "<group>";
+		};
+		EC218B1827593A2A00744400 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B1A27593A3C00744400 /* Foundation */,
+				EC218B1927593A3000744400 /* UI */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		EC218B1927593A3000744400 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DF012275CD1DC0046F30A /* Subclasses */,
+				EC9DEFE9275CD0D80046F30A /* UI Components */,
+				EC218B2027593A7A00744400 /* Protocols */,
+				EC218B1E27593A6E00744400 /* Utils */,
+				EC218B1D27593A6E00744400 /* Extensions */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		EC218B1A27593A3C00744400 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B1F27593A7400744400 /* Protocols */,
+				EC218B1C27593A5500744400 /* Utils */,
+				EC218B1B27593A4E00744400 /* Extensions */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
+		EC218B1B27593A4E00744400 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B4B27593CBF00744400 /* Array+Identifiable.swift */,
+				EC218B4827593CBF00744400 /* ArrayEx.swift */,
+				EC218B4D27593CBF00744400 /* CustomStringConvertibleEx.swift */,
+				EC218B4C27593CBF00744400 /* DateFormatterEx.swift */,
+				EC218B5127593CBF00744400 /* DictionaryEx.swift */,
+				EC218B4927593CBF00744400 /* DispatchQueueEx.swift */,
+				EC218B4F27593CBF00744400 /* OptionSetEx.swift */,
+				EC218B7E2759459700744400 /* ComparableEx.swift */,
+				EC9DEFDD275CCC0A0046F30A /* OptionalEx.swift */,
+				EC218B5027593CBF00744400 /* SetEx.swift */,
+				EC218B4A27593CBF00744400 /* StringEx.swift */,
+				EC218B5227593CBF00744400 /* URLEx.swift */,
+				EC218B4627593C3C00744400 /* NSBundle+Versions.swift */,
+				EC218B2327593B1D00744400 /* NSLock+Blocks.swift */,
+				EC218B2127593A9700744400 /* UserDefaults+Counters.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EC218B1C27593A5500744400 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B7727593EED00744400 /* KeyboardKeys.swift */,
+				EC218B7327593EE300744400 /* AppSandboxer.swift */,
+				EC218B7427593EE300744400 /* FileFinder.swift */,
+				EC218B3027593BDA00744400 /* Box.swift */,
+				EC218B3227593BDB00744400 /* Cache.swift */,
+				EC218B3427593BDB00744400 /* CachesHelper.swift */,
+				EC218B3327593BDB00744400 /* Codable+Serialize.swift */,
+				EC218B2F27593BDA00744400 /* HashableObject.swift */,
+				EC218B2D27593BDA00744400 /* LoadingHelper.swift */,
+				EC218B3627593BDB00744400 /* Logger.swift */,
+				EC218B2A27593BDA00744400 /* ObserversArray.swift */,
+				EC218B3127593BDB00744400 /* ProgressCounter.swift */,
+				EC218B2C27593BDA00744400 /* Selectable.swift */,
+				EC218B2E27593BDA00744400 /* SkipEncoding.swift */,
+				EC218B2B27593BDA00744400 /* ThreadWaitLock.swift */,
+				EC218B3527593BDB00744400 /* TimedEventFilter.swift */,
+				EC218B3727593BDB00744400 /* WeakWrapper.swift */,
+				EC218B7927593F5E00744400 /* IndexPathTuple.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		EC218B1D27593A6E00744400 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DEFF2275CD1BD0046F30A /* CALayerEx.swift */,
+				EC9DEFF5275CD1BD0046F30A /* CGPointEx.swift */,
+				EC9DEFEC275CD1BD0046F30A /* CGRect+Corners.swift */,
+				EC9DEFFB275CD1BE0046F30A /* CGRect+Quadrants.swift */,
+				EC9DEFF1275CD1BD0046F30A /* CGRectEx.swift */,
+				EC9DEFF9275CD1BE0046F30A /* CGSizeEx.swift */,
+				EC9DEFFA275CD1BE0046F30A /* Lerpable.swift */,
+				EC9DEFF0275CD1BD0046F30A /* NSAttributedStringEx.swift */,
+				EC9DEFED275CD1BD0046F30A /* NSColorEx.swift */,
+				EC9DEFEE275CD1BD0046F30A /* NSTextFIeldEx.swift */,
+				EC9DEFF3275CD1BD0046F30A /* NSView+Animation.swift */,
+				EC9DEFF7275CD1BE0046F30A /* NSView+Separators.swift */,
+				EC9DEFFC275CD1BE0046F30A /* NSWindowController+XIB.swift */,
+				EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */,
+				EC9DEFF8275CD1BE0046F30A /* NSViewEx.swift */,
+				EC9DEFF6275CD1BE0046F30A /* UIImage+Utils.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		EC218B1E27593A6E00744400 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DF019275CE6DE0046F30A /* MVP binding */,
+				EC9DF00E275CD1CE0046F30A /* MNFocus.swift */,
+				EC9DF00F275CD1CE0046F30A /* MouseTracking.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		EC218B1F27593A7400744400 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				EC7F18BF275D100B00BC23DA /* Clearable.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		EC218B2027593A7A00744400 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		EC218B2527593B6600744400 /* Document */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B802759463500744400 /* BrickDocumentController.swift */,
+				EC218B862759471100744400 /* BrickDocument.swift */,
+				EC9DEFDB275CCACA0046F30A /* BrickDocumentObserver.swift */,
+				EC9DEFD9275CCA810046F30A /* Brick.swift */,
+				EC218B2627593B7100744400 /* Components */,
+			);
+			path = Document;
+			sourceTree = "<group>";
+		};
+		EC218B2627593B7100744400 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B822759466C00744400 /* BrickTemplateType.swift */,
+				EC218B842759468E00744400 /* BrickVersionControlType.swift */,
+				EC218B7B275940E800744400 /* BUID.swift */,
+				EC218B2727593B7100744400 /* BrickSettings.swift */,
+				EC218B2827593B7100744400 /* BrickStats.swift */,
+				EC218B2927593B7100744400 /* BrickBasicInfo.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		EC332CC5275ECAC500546767 /* Localizable */ = {
+			isa = PBXGroup;
+			children = (
+				EC332CC6275ECAC500546767 /* Localizable.strings */,
+			);
+			path = Localizable;
+			sourceTree = "<group>";
+		};
+		EC9DEFE4275CD0900046F30A /* SplashVC */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DEFE5275CD0B40046F30A /* SplashVC.swift */,
+				EC9DEFE7275CD0BC0046F30A /* SplashWC.swift */,
+				EC9DF017275CDAD50046F30A /* SplashVM.swift */,
+			);
+			path = SplashVC;
+			sourceTree = "<group>";
+		};
+		EC9DEFE9275CD0D80046F30A /* UI Components */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DF013275CD29A0046F30A /* Gridview */,
+				EC9DEFEA275CD0E70046F30A /* NSTitleDetailTableCellView.swift */,
+			);
+			path = "UI Components";
+			sourceTree = "<group>";
+		};
+		EC9DF012275CD1DC0046F30A /* Subclasses */ = {
+			isa = PBXGroup;
+			children = (
+				EC332CB6275EB65B00546767 /* MNButton.swift */,
+			);
+			path = Subclasses;
+			sourceTree = "<group>";
+		};
+		EC9DF013275CD29A0046F30A /* Gridview */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DF014275CD2AF0046F30A /* GridViewSnapMode.swift */,
+			);
+			path = Gridview;
+			sourceTree = "<group>";
+		};
+		EC9DF016275CD4550046F30A /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DEFE4275CD0900046F30A /* SplashVC */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		EC9DF019275CE6DE0046F30A /* MVP binding */ = {
+			isa = PBXGroup;
+			children = (
+				EC9DF01A275CE6DE0046F30A /* MVP.swift */,
+				EC9DF01B275CE6DE0046F30A /* MVPVCBinder.swift */,
+				EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */,
+			);
+			path = "MVP binding";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -136,10 +590,12 @@
 				EC218AB1275931E700744400 /* Sources */,
 				EC218AB2275931E700744400 /* Frameworks */,
 				EC218AB3275931E700744400 /* Resources */,
+				EC218AFC2759387700744400 /* Embed XPC Services */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				EC218B0B275938B200744400 /* PBXTargetDependency */,
 			);
 			name = bricks;
 			productName = bricks;
@@ -182,6 +638,23 @@
 			productReference = EC218AD3275931E800744400 /* bricksUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		EC218B00275938B200744400 /* bricksHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC218B0D275938B200744400 /* Build configuration list for PBXNativeTarget "bricksHelper" */;
+			buildPhases = (
+				EC218AFD275938B200744400 /* Sources */,
+				EC218AFE275938B200744400 /* Frameworks */,
+				EC218AFF275938B200744400 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = bricksHelper;
+			productName = bricksHelper;
+			productReference = EC218B01275938B200744400 /* bricksHelper.xpc */;
+			productType = "com.apple.product-type.xpc-service";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -203,6 +676,9 @@
 						CreatedOnToolsVersion = 13.1;
 						TestTargetID = EC218AB4275931E700744400;
 					};
+					EC218B00275938B200744400 = {
+						CreatedOnToolsVersion = 13.1;
+					};
 				};
 			};
 			buildConfigurationList = EC218AB0275931E700744400 /* Build configuration list for PBXProject "bricks" */;
@@ -221,6 +697,7 @@
 				EC218AB4275931E700744400 /* bricks */,
 				EC218AC8275931E800744400 /* bricksTests */,
 				EC218AD2275931E800744400 /* bricksUITests */,
+				EC218B00275938B200744400 /* bricksHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -231,7 +708,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				EC218ABF275931E800744400 /* Assets.xcassets in Resources */,
-				EC218AC2275931E800744400 /* Main.storyboard in Resources */,
+				EC332CC9275ECAC600546767 /* Localizable.strings in Resources */,
+				EC332CCD275ECCA300546767 /* Main.storyboard in Resources */,
+				EC9DEFE2275CCE730046F30A /* Splashscreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +728,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EC218AFF275938B200744400 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -256,9 +742,86 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EC218ABB275931E700744400 /* ViewController.swift in Sources */,
+				EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */,
+				EC218B4127593BE000744400 /* Logger.swift in Sources */,
+				EC218B4727593C3C00744400 /* NSBundle+Versions.swift in Sources */,
+				EC9DF00D275CD1BE0046F30A /* NSWindowController+XIB.swift in Sources */,
+				EC9DF004275CD1BE0046F30A /* NSView+Animation.swift in Sources */,
+				EC9DF00A275CD1BE0046F30A /* CGSizeEx.swift in Sources */,
+				EC218B7127593E7900744400 /* AppError.swift in Sources */,
+				EC218B5A27593CBF00744400 /* DispatchQueueEx.swift in Sources */,
+				EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */,
+				EC9DF003275CD1BE0046F30A /* CALayerEx.swift in Sources */,
+				EC218B7527593EE300744400 /* AppSandboxer.swift in Sources */,
+				EC218B5D27593CBF00744400 /* StringEx.swift in Sources */,
+				EC218B11275939B600744400 /* AppStoryboard.swift in Sources */,
+				EC218B7827593EED00744400 /* KeyboardKeys.swift in Sources */,
+				EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */,
+				EC218B3B27593BE000744400 /* TimedEventFilter.swift in Sources */,
+				EC9DF00B275CD1BE0046F30A /* Lerpable.swift in Sources */,
+				EC218B5827593CBF00744400 /* Array+Identifiable.swift in Sources */,
+				EC9DEFE6275CD0B40046F30A /* SplashVC.swift in Sources */,
+				EC218B5927593CBF00744400 /* CustomStringConvertibleEx.swift in Sources */,
+				EC9DF006275CD1BE0046F30A /* CGPointEx.swift in Sources */,
+				EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */,
+				EC9DF007275CD1BE0046F30A /* UIImage+Utils.swift in Sources */,
+				EC218B812759463500744400 /* BrickDocumentController.swift in Sources */,
+				EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */,
+				EC9DF009275CD1BE0046F30A /* NSViewEx.swift in Sources */,
+				EC9DF01F275CE6DE0046F30A /* MVPVCBinder.swift in Sources */,
+				EC218B4527593BE000744400 /* LoadingHelper.swift in Sources */,
+				EC218B7F2759459700744400 /* ComparableEx.swift in Sources */,
+				EC218B17275939DA00744400 /* AppSettings.swift in Sources */,
+				EC218B3E27593BE000744400 /* CachesHelper.swift in Sources */,
+				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
+				EC218B5627593CBF00744400 /* ArrayEx.swift in Sources */,
+				EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */,
+				EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */,
+				EC218B4027593BE000744400 /* HashableObject.swift in Sources */,
+				EC218B7627593EE300744400 /* FileFinder.swift in Sources */,
+				EC218B5427593CBF00744400 /* SetEx.swift in Sources */,
+				EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */,
+				EC218B2227593ADA00744400 /* UserDefaults+Counters.swift in Sources */,
+				EC9DF010275CD1CE0046F30A /* MNFocus.swift in Sources */,
+				EC9DEFEB275CD0E70046F30A /* NSTitleDetailTableCellView.swift in Sources */,
+				EC9DEFE8275CD0BC0046F30A /* SplashWC.swift in Sources */,
+				EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */,
+				EC218B2427593B1D00744400 /* NSLock+Blocks.swift in Sources */,
+				EC218B3927593BE000744400 /* Box.swift in Sources */,
+				EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */,
+				EC218B5B27593CBF00744400 /* URLEx.swift in Sources */,
+				EC218B7A27593F5E00744400 /* IndexPathTuple.swift in Sources */,
+				EC9DF008275CD1BE0046F30A /* NSView+Separators.swift in Sources */,
+				EC218B6C27593DDC00744400 /* AppResult.swift in Sources */,
 				EC218AB9275931E700744400 /* AppDelegate.swift in Sources */,
-				EC218ABD275931E700744400 /* Document.swift in Sources */,
+				EC218B7C275940E800744400 /* BUID.swift in Sources */,
+				EC218B5527593CBF00744400 /* DictionaryEx.swift in Sources */,
+				EC9DEFDC275CCACA0046F30A /* BrickDocumentObserver.swift in Sources */,
+				EC218B7227593E7900744400 /* AppErrorCode.swift in Sources */,
+				EC218B3F27593BE000744400 /* Codable+Serialize.swift in Sources */,
+				EC9DF01E275CE6DE0046F30A /* MVP.swift in Sources */,
+				EC218B3A27593BE000744400 /* SkipEncoding.swift in Sources */,
+				EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */,
+				EC9DEFFF275CD1BE0046F30A /* NSTextFIeldEx.swift in Sources */,
+				EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */,
+				EC218B872759471100744400 /* BrickDocument.swift in Sources */,
+				EC218B3827593BE000744400 /* Cache.swift in Sources */,
+				EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */,
+				EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */,
+				EC218B4227593BE000744400 /* Selectable.swift in Sources */,
+				EC9DEFFE275CD1BE0046F30A /* NSColorEx.swift in Sources */,
+				EC218B6E27593DE100744400 /* AppStr.swift in Sources */,
+				EC218B7D2759448000744400 /* BrickBasicInfo.swift in Sources */,
+				EC9DF018275CDAD50046F30A /* SplashVM.swift in Sources */,
+				EC218B13275939CC00744400 /* AppConstants.swift in Sources */,
+				EC9DF001275CD1BE0046F30A /* NSAttributedStringEx.swift in Sources */,
+				EC218B15275939CF00744400 /* AppDocumentHistory.swift in Sources */,
+				EC218B3C27593BE000744400 /* ProgressCounter.swift in Sources */,
+				EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */,
+				EC218B4427593BE000744400 /* ThreadWaitLock.swift in Sources */,
+				EC9DF002275CD1BE0046F30A /* CGRectEx.swift in Sources */,
+				EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */,
+				EC218B5327593CBF00744400 /* OptionSetEx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -279,6 +842,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		EC218AFD275938B200744400 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC218B08275938B200744400 /* main.m in Sources */,
+				EC218B06275938B200744400 /* bricksHelper.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -292,15 +864,20 @@
 			target = EC218AB4275931E700744400 /* bricks */;
 			targetProxy = EC218AD4275931E800744400 /* PBXContainerItemProxy */;
 		};
+		EC218B0B275938B200744400 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC218B00275938B200744400 /* bricksHelper */;
+			targetProxy = EC218B0A275938B200744400 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		EC218AC0275931E800744400 /* Main.storyboard */ = {
+		EC332CC6275ECAC500546767 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				EC218AC1275931E800744400 /* Base */,
+				EC332CCF275ED29E00546767 /* en */,
 			);
-			name = Main.storyboard;
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -310,6 +887,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -340,6 +918,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 231;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -358,12 +937,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
 		};
@@ -371,6 +952,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -401,6 +983,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 231;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -413,11 +996,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
 		};
@@ -429,7 +1014,6 @@
 				CODE_SIGN_ENTITLEMENTS = bricks/bricks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -441,7 +1025,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricks;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -457,7 +1040,6 @@
 				CODE_SIGN_ENTITLEMENTS = bricks/bricks.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -469,7 +1051,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricks;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -484,7 +1065,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -493,7 +1073,6 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -509,7 +1088,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -518,7 +1096,6 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -533,7 +1110,6 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -541,7 +1117,6 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -556,7 +1131,6 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -564,12 +1138,47 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TEST_TARGET_NAME = bricks;
+			};
+			name = Release;
+		};
+		EC218B0E275938B200744400 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = bricksHelper/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = bricksHelper;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+			};
+			name = Debug;
+		};
+		EC218B0F275938B200744400 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = ZM8DB5E59A;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = bricksHelper/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = bricksHelper;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.idorabin.bricksHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
@@ -608,6 +1217,15 @@
 			buildConfigurations = (
 				EC218AE4275931E800744400 /* Debug */,
 				EC218AE5275931E800744400 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC218B0D275938B200744400 /* Build configuration list for PBXNativeTarget "bricksHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC218B0E275938B200744400 /* Debug */,
+				EC218B0F275938B200744400 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

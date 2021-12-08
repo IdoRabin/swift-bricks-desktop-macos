@@ -7,6 +7,8 @@
 
 import Foundation
 
+fileprivate let dlog : DSLogger? = DLog.forClass("Brick")
+
 class Brick : Codable, CustomDebugStringConvertible, Identifiable {
     var info : BrickBasicInfo
     var settings : BrickSettings

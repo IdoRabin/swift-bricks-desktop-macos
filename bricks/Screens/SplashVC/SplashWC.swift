@@ -11,17 +11,36 @@ fileprivate let dlog : DSLogger? = DLog.forClass("SplashWC")
 
 class SplashWC : NSWindowController {
     
+    override var windowFrameAutosaveName: NSWindow.FrameAutosaveName {
+        get {
+            return "\(type(of: self))"
+        }
+        set {
+            // does nothing
+        }
+    }
+    
     override func windowWillLoad() {
         super.windowWillLoad()
         // window?.collectionBehavior = [.ignoresCycle]// , .ignoresCycle, .canJoinAllSpaces]
+        AppDocumentHistory.shared.revalidateAll()
     }
     
     override func windowDidLoad() {
         super.windowDidLoad()
-        window?.isExcludedFromWindowsMenu = true
-        window?.delegate = self
-        window?.isMovableByWindowBackground = true
-        DispatchQueue.main.asyncAfter(delayFromNow: 1) {
+        if let window = self.window {
+            window.isExcludedFromWindowsMenu = true
+            window.isMovableByWindowBackground = true
+            window.contentView?.cornerAsCircle()
+            window.contentView?.layer?.corner(radius: 12)
+            (window.contentViewController as? SplashVC)?.windowController = self
+        } else {
+            dlog?.note("window is nil, expected value.")
+        }
+        
+        self.window?.delegate = AppDelegate.shared.documentController
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: 0.12) {[self] in
             self.showWindow(self)
         }
     }
@@ -29,17 +48,5 @@ class SplashWC : NSWindowController {
     deinit{
         dlog?.info("deinit")
     }
-}
- 
-extension SplashWC : NSWindowDelegate {
     
-    func windowWillClose(_ notification: Notification) {
-        DLog.splash.info("windowWillClose")
-    }
-    
-    func windowDidBecomeKey(_ notification: Notification) {
-        // Re-validate
-        DLog.splash.info("windowDidBecomeKey")
-        AppDocumentHistory.shared.revalidateAll()
-    }
 }

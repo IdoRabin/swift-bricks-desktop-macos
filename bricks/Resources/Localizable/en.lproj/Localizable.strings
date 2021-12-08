@@ -58,7 +58,7 @@
 
 "PLEASE_WAIT" = "Please wait";    // "Please Wait" // Message displayed to the user while some operation is in progress
 "PLEASE_WAIT_DOT_DOT" = "Please wait..";    // "Please Wait.." // Message displayed to the user while some operation is in progress
-"PLEASE_WAIT_A_MOMENT_DOT_DOT" = "Please wait a moment..";    // "Please wait a moment..." // Tells the user to wait a moment until an opertation is complete
+"PLEASE_WAIT_A_MOMENT_DOT_DOT" = "Please wait a moment..";    // "Please wait a moment.." // Tells the user to wait a moment until an opertation is complete
 
 "YEAR" = "Year";    // "Year" // Word for one single year
 "MONTH" = "Month";    // "Month" // Word for one single month
@@ -71,9 +71,15 @@
 "UNLOCK" = "Unlock";
 "ADD_NEW" = "Add new";
 
+// Menu
+"FILE" = "File"; // "File"
+"VIEW" = "View"; // "View"
+"WINDOW" = "Window"; // "Window"
+"HELP" = "Help"; // "Help"
+
 // Splash
 "BRICKS" = "Bricks"; // product name
-"START_A_NEW_PROJECT_ELLIPSIS" = "Start a new project";
+"START_A_NEW_PROJECT_DOT_DOT" = "Start a new project..";
 "OPEN_AN_EXISTING_PROJECT_DOT_DOT" = "Open an existing project..";
 "COPYRIGHT_COMPANY_W_YEAR_FORMAT" = "Copyright © %@ Bricks Biz Ltd."; // "Copyright © 2001 Bricks Biz Ltd."
 

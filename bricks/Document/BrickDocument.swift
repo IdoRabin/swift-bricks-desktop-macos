@@ -8,6 +8,8 @@
 import AppKit
 
 
+fileprivate let dlog : DSLogger? = DLog.forClass("BrickDocument")
+
 struct BrickDocUUID : BUID {
     var uid : UUID!
     var type : String { return TUID.Types.doc.rawValue }

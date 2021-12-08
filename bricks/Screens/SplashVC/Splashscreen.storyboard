@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="m70-Ir-Hi7">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -8,7 +8,7 @@
         <!--Window Controller-->
         <scene sceneID="jCV-tq-Ae4">
             <objects>
-                <windowController storyboardIdentifier="SplashWCID" id="m70-Ir-Hi7" customClass="SplashWC" customModule="bricks" customModuleProvider="target" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="SplashWCID" showSeguePresentationStyle="single" id="m70-Ir-Hi7" customClass="SplashWC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" visibleAtLaunch="NO" animationBehavior="alertPanel" frameAutosaveName="" tabbingMode="disallowed" id="r9p-bx-cBO">
                         <windowStyleMask key="styleMask" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -28,14 +28,14 @@
                 </windowController>
                 <customObject id="BDF-xv-8PV" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-172" y="-680"/>
+            <point key="canvasLocation" x="-173" y="-612"/>
         </scene>
         <!--SplashVC-->
         <scene sceneID="Ub2-bt-F6m">
             <objects>
-                <viewController identifier="splashVCID" storyboardIdentifier="splashVCID" showSeguePresentationStyle="single" id="8mh-U1-kbu" customClass="SplashVC" customModule="bricks" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController identifier="splashVCID" storyboardIdentifier="splashVCID" showSeguePresentationStyle="single" id="8mh-U1-kbu" customClass="SplashVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <customView key="view" wantsLayer="YES" id="2zk-61-hD7" userLabel="root view">
-                        <rect key="frame" x="0.0" y="0.0" width="716" height="420"/>
+                        <rect key="frame" x="0.0" y="0.0" width="720" height="420"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LSZ-on-UGm" userLabel="mainItemsConstainer">
@@ -77,87 +77,102 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                             <action selector="showWindowCheckboxAction:" target="8mh-U1-kbu" id="gV6-Qg-Khd"/>
                                         </connections>
                                     </button>
-                                    <button imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c5o-Qs-Yro" customClass="MNButton" customModule="bricks" customModuleProvider="target">
-                                        <rect key="frame" x="67" y="148" width="366" height="38"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="38" id="WsV-oC-e7b"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="square" title="Start a new project..." bezelStyle="shadowlessSquare" image="BrickNewFileIcon" imagePosition="leading" alignment="left" imageScaling="proportionallyUpOrDown" inset="2" id="REc-1y-cag">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system" size="16"/>
-                                            <string key="keyEquivalent">n</string>
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="startNewProjectButtonAction:" target="8mh-U1-kbu" id="gw7-vY-e4e"/>
-                                        </connections>
-                                    </button>
-                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="HcE-EW-uqK">
-                                        <rect key="frame" x="0.0" y="390" width="26" height="30"/>
+                                    <button translatesAutoresizingMaskIntoConstraints="NO" id="HcE-EW-uqK" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="388.5" width="26.5" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="ZqG-i2-9IQ"/>
                                             <constraint firstAttribute="width" constant="26" id="agk-Jv-nSg"/>
                                         </constraints>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="CloseIcon" imagePosition="only" alignment="center" inset="2" id="EbU-tn-aN9">
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="xmark" catalog="system" imagePosition="only" alignment="center" inset="2" id="EbU-tn-aN9">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
+                                            <string key="keyEquivalent">q</string>
+                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </buttonCell>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isDetectHover" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="closeButtonAction:" target="8mh-U1-kbu" id="jK9-Gj-Zb4"/>
                                         </connections>
                                     </button>
-                                    <button imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Pe-Ix-GfQ" customClass="MNButton" customModule="bricks" customModuleProvider="target">
-                                        <rect key="frame" x="67" y="103" width="366" height="38"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="38" id="xl6-S9-0S5"/>
-                                        </constraints>
-                                        <buttonCell key="cell" type="square" title="Open an existing project..." bezelStyle="shadowlessSquare" image="BrickFileIcon" imagePosition="leading" alignment="left" imageScaling="proportionallyUpOrDown" inset="2" id="J7u-hc-s5Q">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system" size="16"/>
-                                            <string key="keyEquivalent">o</string>
-                                            <modifierMask key="keyEquivalentModifierMask" command="YES"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="openExistingProjectButton:" target="8mh-U1-kbu" id="qw7-RZ-iLA"/>
-                                        </connections>
-                                    </button>
+                                    <stackView focusRingType="none" distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="250" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1P-Ll-6bq">
+                                        <rect key="frame" x="85" y="98" width="331" height="88"/>
+                                        <subviews>
+                                            <button horizontalHuggingPriority="749" verticalHuggingPriority="249" horizontalCompressionResistancePriority="249" verticalCompressionResistancePriority="749" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c5o-Qs-Yro" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
+                                                <rect key="frame" x="3" y="48" width="326" height="38"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="38" id="WsV-oC-e7b"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="square" title="Start a new project..." bezelStyle="shadowlessSquare" image="BrickNewFileIcon" imagePosition="leading" alignment="left" imageScaling="proportionallyUpOrDown" inset="2" id="REc-1y-cag">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system" size="16"/>
+                                                    <string key="keyEquivalent">n</string>
+                                                    <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="startNewProjectButtonAction:" target="8mh-U1-kbu" id="gw7-vY-e4e"/>
+                                                </connections>
+                                            </button>
+                                            <button horizontalHuggingPriority="750" verticalHuggingPriority="249" horizontalCompressionResistancePriority="249" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Pe-Ix-GfQ" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
+                                                <rect key="frame" x="3" y="2" width="326" height="38"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="38" id="xl6-S9-0S5"/>
+                                                </constraints>
+                                                <buttonCell key="cell" type="square" title="Open an existing project..." bezelStyle="shadowlessSquare" image="BrickFileIcon" imagePosition="leading" alignment="left" imageScaling="proportionallyUpOrDown" inset="2" id="J7u-hc-s5Q">
+                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                    <font key="font" metaFont="system" size="16"/>
+                                                    <string key="keyEquivalent">o</string>
+                                                    <modifierMask key="keyEquivalentModifierMask" command="YES"/>
+                                                </buttonCell>
+                                                <connections>
+                                                    <action selector="openExistingProjectButton:" target="8mh-U1-kbu" id="qw7-RZ-iLA"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <edgeInsets key="edgeInsets" left="3" right="2" top="2" bottom="2"/>
+                                        <visibilityPriorities>
+                                            <integer value="1000"/>
+                                            <integer value="1000"/>
+                                        </visibilityPriorities>
+                                        <customSpacing>
+                                            <real value="3.4028234663852886e+38"/>
+                                            <real value="3.4028234663852886e+38"/>
+                                        </customSpacing>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="MvY-5Q-joQ" firstAttribute="centerX" secondItem="MPk-Wx-OFl" secondAttribute="centerX" id="80R-Qq-Sau"/>
+                                    <constraint firstItem="M1P-Ll-6bq" firstAttribute="centerX" secondItem="MvY-5Q-joQ" secondAttribute="centerX" id="BLz-fd-T0l"/>
                                     <constraint firstItem="HcE-EW-uqK" firstAttribute="top" secondItem="LSZ-on-UGm" secondAttribute="top" id="BNf-Sb-Dk4"/>
-                                    <constraint firstItem="c5o-Qs-Yro" firstAttribute="centerX" secondItem="LSZ-on-UGm" secondAttribute="centerX" id="Bvt-7P-e9E"/>
                                     <constraint firstItem="MPk-Wx-OFl" firstAttribute="width" relation="lessThanOrEqual" secondItem="LSZ-on-UGm" secondAttribute="width" multiplier="0.75" id="CDe-wG-7uz"/>
                                     <constraint firstItem="HcE-EW-uqK" firstAttribute="leading" secondItem="LSZ-on-UGm" secondAttribute="leading" id="CO7-Ad-2c3"/>
                                     <constraint firstItem="Uyz-nA-0Lv" firstAttribute="centerX" secondItem="LSZ-on-UGm" secondAttribute="centerX" id="D5v-73-ctk"/>
+                                    <constraint firstItem="M1P-Ll-6bq" firstAttribute="top" secondItem="MvY-5Q-joQ" secondAttribute="bottom" constant="16" id="D8H-Ml-O0R"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="NKO-O1-bZo" secondAttribute="trailing" constant="12" id="DB9-Gt-C7Y"/>
                                     <constraint firstItem="MvY-5Q-joQ" firstAttribute="width" relation="lessThanOrEqual" secondItem="LSZ-on-UGm" secondAttribute="width" multiplier="0.75" id="Fe0-4g-C3t"/>
-                                    <constraint firstItem="c5o-Qs-Yro" firstAttribute="top" secondItem="MvY-5Q-joQ" secondAttribute="bottom" constant="16" id="FmL-0j-qZ9"/>
                                     <constraint firstItem="MPk-Wx-OFl" firstAttribute="centerX" secondItem="LSZ-on-UGm" secondAttribute="centerX" id="P2E-PN-8XK"/>
-                                    <constraint firstItem="7Pe-Ix-GfQ" firstAttribute="top" secondItem="c5o-Qs-Yro" secondAttribute="bottom" constant="7" id="SE3-pH-HXD"/>
                                     <constraint firstItem="NKO-O1-bZo" firstAttribute="leading" secondItem="LSZ-on-UGm" secondAttribute="leading" constant="20" id="XTh-OD-Dts"/>
-                                    <constraint firstItem="c5o-Qs-Yro" firstAttribute="width" secondItem="LSZ-on-UGm" secondAttribute="width" multiplier="0.73" id="Znf-oC-Xe4"/>
-                                    <constraint firstItem="7Pe-Ix-GfQ" firstAttribute="trailing" secondItem="c5o-Qs-Yro" secondAttribute="trailing" id="aLu-M2-PDp"/>
                                     <constraint firstItem="MPk-Wx-OFl" firstAttribute="top" secondItem="Uyz-nA-0Lv" secondAttribute="bottom" constant="24" id="aTC-N0-4ik"/>
                                     <constraint firstAttribute="bottom" secondItem="NKO-O1-bZo" secondAttribute="bottom" constant="20" id="fuB-Ke-ui5"/>
-                                    <constraint firstItem="7Pe-Ix-GfQ" firstAttribute="leading" secondItem="c5o-Qs-Yro" secondAttribute="leading" id="gEE-K1-mdM"/>
                                     <constraint firstItem="Uyz-nA-0Lv" firstAttribute="top" secondItem="LSZ-on-UGm" secondAttribute="top" constant="38" id="u2I-K3-w1h"/>
                                     <constraint firstItem="MvY-5Q-joQ" firstAttribute="top" secondItem="MPk-Wx-OFl" secondAttribute="bottom" constant="8" id="wWd-qH-w6A"/>
                                 </constraints>
                             </customView>
-                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i2T-Ts-ViJ" customClass="HistoryTableviewContainer" customModule="bricks" customModuleProvider="target">
-                                <rect key="frame" x="500" y="0.0" width="216" height="420"/>
+                            <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i2T-Ts-ViJ" customClass="HistoryTableviewContainer" customModule="Bricks" customModuleProvider="target">
+                                <rect key="frame" x="500" y="0.0" width="220" height="420"/>
                                 <clipView key="contentView" id="1x7-fV-dsV">
-                                    <rect key="frame" x="0.0" y="0.0" width="216" height="420"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="220" height="420"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" rowHeight="54" viewBased="YES" id="tWW-hW-d3P">
-                                            <rect key="frame" x="0.0" y="0.0" width="216" height="420"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="220" height="420"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
-                                                <tableColumn identifier="splashHistoryCellID" width="184" minWidth="40" maxWidth="1000" id="pOJ-yg-2lY">
+                                                <tableColumn identifier="splashHistoryCellID" width="188" minWidth="40" maxWidth="1000" id="pOJ-yg-2lY">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -169,7 +184,7 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="splashHistoryCellID" id="LwJ-sj-DaJ" customClass="NSTitleDetailTableCellView" customModule="bricks" customModuleProvider="target">
+                                                        <tableCellView identifier="splashHistoryCellID" id="LwJ-sj-DaJ" customClass="NSTitleDetailTableCellView" customModule="Bricks" customModuleProvider="target">
                                                             <rect key="frame" x="11" y="1" width="197" height="54"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
@@ -248,7 +263,7 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                 </viewController>
                 <customObject id="ZeN-sv-o5b" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-172.5" y="-103"/>
+            <point key="canvasLocation" x="-173" y="-103"/>
         </scene>
     </scenes>
     <resources>
@@ -256,6 +271,6 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
         <image name="BrickDocumentIcon" width="512" height="512"/>
         <image name="BrickFileIcon" width="171" height="171"/>
         <image name="BrickNewFileIcon" width="171" height="171"/>
-        <image name="CloseIcon" width="43" height="43"/>
+        <image name="xmark" catalog="system" width="14" height="13"/>
     </resources>
 </document>

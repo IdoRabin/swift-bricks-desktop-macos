@@ -13,6 +13,23 @@ fileprivate let dlog : DSLogger? = DLog.forClass("AppDelegate")
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+    weak var documentController : BrickDocumentController? = nil
+    weak var mainMenu : MainMenu? = nil
+    
+    static var shared : AppDelegate {
+        return NSApplication.shared.delegate as! AppDelegate
+    }
+    
+    override init() {
+        super.init()
+        dlog?.info("init")
+        NSApplication.shared.delegate = self
+    }
+    
+    deinit {
+        dlog?.info("deinit")
+    }
+    
     // MARK: Private
     private func onLaunchActions(completion:@escaping AppResultBlock) {
         // Init singletons
@@ -75,16 +92,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool {
+        dlog?.info("applicationShouldOpenUntitledFile")
         return false
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
         // init for NSDocuemntController subclass MUST take place before app finishes launching
-        let _ /*brickController*/ = BrickDocumentController()
+        dlog?.info("applicationWillFinishLaunching")
+        documentController = BrickDocumentController()
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        
+        dlog?.info("applicationDidFinishLaunching")
         self.onLaunchActions { result in
             switch result {
             case .success:
@@ -98,6 +117,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
+        dlog?.info("applicationWillTerminate")
+        
         // Insert code here to tear down your application
         UserDefaults.standard.synchronize()
     }

@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="RtL-z2-rrR" userLabel="AppDelegate" customClass="AppDelegate" customModule="Bricks" customModuleProvider="target"/>
+        <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+        <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6" customClass="MainMenu" customModule="Bricks" customModuleProvider="target">
+            <items>
+                <menuItem title="Bricks" id="1Xt-HY-uBw">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Bricks" systemMenu="apple" id="uQy-DD-JDr">
+                        <items>
+                            <menuItem title="About Bricks.." id="5kV-Vb-QxS">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="orderFrontStandardAboutPanel:" target="-1" id="Exp-CZ-Vem"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
+                            <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW"/>
+                            <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
+                            <menuItem title="Services" id="NMo-om-nkz">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
+                            <menuItem title="Hide Bricks" keyEquivalent="h" id="Olw-nP-bQN">
+                                <connections>
+                                    <action selector="hide:" target="-1" id="PnN-Uc-m68"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Hide Others" keyEquivalent="h" id="Vdr-fp-XzO">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="hideOtherApplications:" target="-1" id="VT4-aY-XCT"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show All" id="Kd2-mp-pUS">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="unhideAllApplications:" target="-1" id="Dhg-Le-xox"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="kCx-OE-vgT"/>
+                            <menuItem title="Quit Bricks" state="on" keyEquivalent="q" id="4sb-4s-VLi">
+                                <connections>
+                                    <action selector="terminate:" target="-1" id="Te7-pn-YzF"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="File" id="dMs-cI-mzQ">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="File" id="bib-Uj-vzu">
+                        <items>
+                            <menuItem title="New" keyEquivalent="n" id="Was-JA-tGl">
+                                <connections>
+                                    <action selector="newDocument:" target="-1" id="4Si-XN-c54"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open…" keyEquivalent="o" id="IAo-SY-fd9">
+                                <connections>
+                                    <action selector="openDocument:" target="-1" id="bVn-NM-KNZ"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Open Recent" id="tXI-mr-wws">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Open Recent" systemMenu="recentDocuments" id="oas-Oc-fiZ">
+                                    <items>
+                                        <menuItem title="Clear Menu" id="vNY-rz-j42">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="clearRecentDocuments:" target="-1" id="Daa-9d-B3U"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
+                            <menuItem title="Close" keyEquivalent="w" id="DVo-aG-piG">
+                                <connections>
+                                    <action selector="performClose:" target="-1" id="HmO-Ls-i7Q"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save…" keyEquivalent="s" id="pxx-59-PXV">
+                                <connections>
+                                    <action selector="saveDocument:" target="-1" id="teZ-XB-qJY"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
+                                <connections>
+                                    <action selector="saveDocumentAs:" target="-1" id="mDf-zr-I0C"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Revert to Saved" keyEquivalent="r" id="KaW-ft-85H">
+                                <connections>
+                                    <action selector="revertDocumentToSaved:" target="-1" id="iJ3-Pv-kwq"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
+                            <menuItem title="Page Setup…" keyEquivalent="P" id="qIS-W8-SiK">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <connections>
+                                    <action selector="runPageLayout:" target="-1" id="Din-rz-gC5"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Print…" keyEquivalent="p" id="aTl-1u-JFS">
+                                <connections>
+                                    <action selector="print:" target="-1" id="qaZ-4w-aoO"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Edit" id="5QF-Oa-p0T">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Edit" id="W48-6f-4Dl">
+                        <items>
+                            <menuItem title="Undo" keyEquivalent="z" id="dRJ-4n-Yzg">
+                                <connections>
+                                    <action selector="undo:" target="-1" id="M6e-cu-g7V"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Redo" keyEquivalent="Z" id="6dh-zS-Vam">
+                                <connections>
+                                    <action selector="redo:" target="-1" id="oIA-Rs-6OD"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="WRV-NI-Exz"/>
+                            <menuItem title="Cut" keyEquivalent="x" id="uRl-iY-unG">
+                                <connections>
+                                    <action selector="cut:" target="-1" id="YJe-68-I9s"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Copy" keyEquivalent="c" id="x3v-GG-iWU">
+                                <connections>
+                                    <action selector="copy:" target="-1" id="G1f-GL-Joy"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Paste" keyEquivalent="v" id="gVA-U4-sdL">
+                                <connections>
+                                    <action selector="paste:" target="-1" id="UvS-8e-Qdg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Delete" id="pa3-QI-u2k">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="delete:" target="-1" id="0Mk-Ml-PaM"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Select All" keyEquivalent="a" id="Ruw-6m-B2m">
+                                <connections>
+                                    <action selector="selectAll:" target="-1" id="VNm-Mi-diN"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="uyl-h8-XO2"/>
+                            <menuItem title="Find" id="4EN-yA-p0u">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" title="Find" id="1b7-l0-nxx">
+                                    <items>
+                                        <menuItem title="Find…" state="on" tag="1" keyEquivalent="f" id="Xz5-n4-O0W">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="cD7-Qs-BN4"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Find Next" tag="2" keyEquivalent="g" id="q09-fT-Sye">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="NDo-RZ-v9R"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Find Previous" tag="3" keyEquivalent="G" id="OwM-mh-QMV">
+                                            <connections>
+                                                <action selector="performFindPanelAction:" target="-1" id="HOh-sY-3ay"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Layer" id="0Fo-Ld-rQU">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Layer" id="EuD-js-nfB">
+                        <items>
+                            <menuItem title="Add.." id="lKF-z5-cZD" userLabel="Add">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Delete.." id="4r7-JD-sb7" userLabel="Delete">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="gfm-Y8-z0O"/>
+                            <menuItem title="Edit.." id="3Nc-rz-1o2">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Lock" id="mJe-YQ-Ql2">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Hide" id="ELB-oB-63v">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="FO7-hH-THF"/>
+                            <menuItem title="Hide Others" id="zEG-vY-KgW">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                            </menuItem>
+                            <menuItem title="Show All" keyEquivalent="s" id="JS6-n5-NhB"/>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="View" id="H8h-7b-M4v">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="View" id="HyV-fh-RgO">
+                        <items>
+                            <menuItem title="Show Toolbar" keyEquivalent="t" id="snW-S8-Cw5">
+                                <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleToolbarShown:" target="-1" id="BXY-wc-z0C"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Customize Toolbar…" id="1UK-8n-QPP">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="runToolbarCustomizationPalette:" target="-1" id="pQI-g3-MTW"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="hB3-LF-h0Y"/>
+                            <menuItem title="Show Project Sidebar" keyEquivalent="0" id="kIP-vf-haE">
+                                <connections>
+                                    <action selector="toggleSidebar:" target="-1" id="iwa-gc-5KM"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Show Utility Sidebar" keyEquivalent="0" allowsKeyEquivalentWhenHidden="YES" id="bO6-qk-ASa">
+                                <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleSidebar:" target="-1" id="OjI-rY-EkB"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="vFH-wu-Bv5"/>
+                            <menuItem title="Zoom" id="MFy-jP-4If">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <menu key="submenu" id="Xpf-Z2-BJt">
+                                    <items>
+                                        <menuItem title="Zoom in" keyEquivalent="]" id="0xc-uw-TJy">
+                                            <connections>
+                                                <action selector="zoomIn:" target="-1" id="3aW-JZ-YIv"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoom to 100%" id="v9S-xT-sWZ">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="zoomImageToActualSize:" target="-1" id="cko-bq-n8r"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoom out" keyEquivalent="[" id="ts1-jK-DJA">
+                                            <connections>
+                                                <action selector="zoomOut:" target="-1" id="Tyk-Xx-dmG"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Zoom to fit" id="TSa-fT-2zb">
+                                            <modifierMask key="keyEquivalentModifierMask"/>
+                                            <connections>
+                                                <action selector="zoomImageToFit:" target="-1" id="jAJ-yH-6ai"/>
+                                            </connections>
+                                        </menuItem>
+                                    </items>
+                                </menu>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="3Zj-OD-ldg"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="TLN-0R-nSU"/>
+                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
+                                <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
+                                <connections>
+                                    <action selector="toggleFullScreen:" target="-1" id="dU3-MA-1Rq"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Window" id="aUF-d1-5bR">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Window" systemMenu="window" id="Td7-aD-5lo">
+                        <items>
+                            <menuItem title="Minimize" keyEquivalent="m" id="OY7-WF-poV">
+                                <connections>
+                                    <action selector="performMiniaturize:" target="-1" id="VwT-WD-YPe"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Zoom" id="R4o-n2-Eq4">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="performZoom:" target="-1" id="DIl-cC-cCs"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem isSeparatorItem="YES" id="eu3-7i-yIM"/>
+                            <menuItem title="Bring All to Front" id="LE2-aR-0XJ">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="arrangeInFront:" target="-1" id="DRN-fu-gQh"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+                <menuItem title="Help" id="wpr-3q-Mcd">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <menu key="submenu" title="Help" systemMenu="help" id="F2S-fz-NVQ">
+                        <items>
+                            <menuItem title="Bricks Help" keyEquivalent="?" id="FKE-Sm-Kum">
+                                <connections>
+                                    <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
+                                </connections>
+                            </menuItem>
+                        </items>
+                    </menu>
+                </menuItem>
+            </items>
+            <connections>
+                <outlet property="bricksAboutMnuItem" destination="5kV-Vb-QxS" id="t43-La-nKY"/>
+                <outlet property="bricksHideMnuItem" destination="Olw-nP-bQN" id="3iU-gb-nzd"/>
+                <outlet property="bricksHideOthersMnuItem" destination="Vdr-fp-XzO" id="D8j-Ax-c4x"/>
+                <outlet property="bricksPreferencesMnuItem" destination="BOF-NM-1cW" id="GOD-Yo-QF0"/>
+                <outlet property="bricksQuitMnuItem" destination="4sb-4s-VLi" id="xgn-ao-qfm"/>
+                <outlet property="bricksServicesSubmenu" destination="hz9-B4-Xy5" id="6f6-mR-kui"/>
+                <outlet property="bricksShowAllMnuItem" destination="Kd2-mp-pUS" id="nQb-y1-Bn5"/>
+                <outlet property="bricksTopMnuItem" destination="1Xt-HY-uBw" id="Ess-kW-Ixo"/>
+                <outlet property="editCopyMnuItem" destination="x3v-GG-iWU" id="eYg-BX-G0x"/>
+                <outlet property="editCutMnuItem" destination="uRl-iY-unG" id="7iv-X3-E5f"/>
+                <outlet property="editDeleteMnuItem" destination="pa3-QI-u2k" id="dyt-LX-iKR"/>
+                <outlet property="editFindFindMnuItem" destination="Xz5-n4-O0W" id="OKN-Wm-ETl"/>
+                <outlet property="editFindNextMnuItem" destination="q09-fT-Sye" id="pWb-wQ-sGB"/>
+                <outlet property="editFindPreviousMnuItem" destination="OwM-mh-QMV" id="Agw-92-ePe"/>
+                <outlet property="editFindSubmenu" destination="1b7-l0-nxx" id="1Qi-I6-h77"/>
+                <outlet property="editPasteMnuItem" destination="gVA-U4-sdL" id="q1P-ZO-fNW"/>
+                <outlet property="editRedoMnuItem" destination="6dh-zS-Vam" id="tkh-rD-Acc"/>
+                <outlet property="editSelectAllMnuItem" destination="Ruw-6m-B2m" id="XAy-kH-3eG"/>
+                <outlet property="editTopMnuItem" destination="5QF-Oa-p0T" id="0Lw-To-WqL"/>
+                <outlet property="editUndoMnuItem" destination="dRJ-4n-Yzg" id="VmK-jr-Xyu"/>
+                <outlet property="fileClearRecentsMenuItem" destination="vNY-rz-j42" id="fUs-9T-F1S"/>
+                <outlet property="fileCloseMnuItem" destination="DVo-aG-piG" id="2t6-wy-d6t"/>
+                <outlet property="fileNewMnuItem" destination="Was-JA-tGl" id="XME-a0-dCQ"/>
+                <outlet property="fileOpenMnuItem" destination="IAo-SY-fd9" id="ATc-BY-wgw"/>
+                <outlet property="fileOpenRecentSubmenu" destination="oas-Oc-fiZ" id="9N5-XK-Zv3"/>
+                <outlet property="filePageSetupMnuItem" destination="qIS-W8-SiK" id="vC1-uV-gCl"/>
+                <outlet property="filePrintMnuItem" destination="aTl-1u-JFS" id="wN5-B5-nZX"/>
+                <outlet property="fileRevertToSavedMnuItem" destination="KaW-ft-85H" id="DDH-MN-vwn"/>
+                <outlet property="fileSaveAsMnuItem" destination="Bw7-FT-i3A" id="hIA-8B-vAc"/>
+                <outlet property="fileSaveMnuItem" destination="pxx-59-PXV" id="AKo-L8-mes"/>
+                <outlet property="fileTopMnuItem" destination="dMs-cI-mzQ" id="be4-JZ-GMk"/>
+                <outlet property="helpMenuItem" destination="FKE-Sm-Kum" id="vFN-Ig-ZJA"/>
+                <outlet property="helpTopMenuItem" destination="wpr-3q-Mcd" id="82q-fK-d0H"/>
+                <outlet property="layerAddMenuItem" destination="lKF-z5-cZD" id="gJL-5K-bEq"/>
+                <outlet property="layerDeleteMenuItem" destination="4r7-JD-sb7" id="6t6-xn-tL1"/>
+                <outlet property="layerEditMenuItem" destination="3Nc-rz-1o2" id="5ch-Un-xtH"/>
+                <outlet property="layerHideOthersMenuItem" destination="zEG-vY-KgW" id="eJL-j9-xur"/>
+                <outlet property="layerLockMenuItem" destination="mJe-YQ-Ql2" id="M2e-TI-Uce"/>
+                <outlet property="layerShowAllMenuItem" destination="JS6-n5-NhB" id="noh-Wm-Hxu"/>
+                <outlet property="layerShowHideMenuItem" destination="ELB-oB-63v" id="Gz6-Yg-z5m"/>
+                <outlet property="layerTopMenuItem" destination="0Fo-Ld-rQU" id="TqF-Nr-CPf"/>
+                <outlet property="viewCustomizeToolbarMnuItem" destination="1UK-8n-QPP" id="F3W-oe-cqo"/>
+                <outlet property="viewEnterFullScreenMnuItem" destination="4J7-dP-txa" id="MZN-z6-ih7"/>
+                <outlet property="viewShowProjectSidebarMnuItem" destination="kIP-vf-haE" id="Xhx-wc-3wU"/>
+                <outlet property="viewShowToolbarMnuItem" destination="snW-S8-Cw5" id="elK-iQ-nOO"/>
+                <outlet property="viewShowUtilitySidebarMnuItem" destination="bO6-qk-ASa" id="pdg-aF-Oxe"/>
+                <outlet property="viewTopMenuItem" destination="H8h-7b-M4v" id="8X0-12-mak"/>
+                <outlet property="viewZoomInMnuItem" destination="0xc-uw-TJy" id="Wmr-Oz-TH5"/>
+                <outlet property="viewZoomOutMnuItem" destination="ts1-jK-DJA" id="30h-7A-8jy"/>
+                <outlet property="viewZoomSubmenu" destination="Xpf-Z2-BJt" id="mRl-3h-G8d"/>
+                <outlet property="viewZoomTo100MnuItem" destination="v9S-xT-sWZ" id="S2O-zS-nBI"/>
+                <outlet property="viewZoomToFitMnuItem" destination="TSa-fT-2zb" id="uN5-MC-g2j"/>
+                <outlet property="windowBringAllToFrontMnuItem" destination="LE2-aR-0XJ" id="zhH-Yp-xbe"/>
+                <outlet property="windowMinimizeMnuitem" destination="OY7-WF-poV" id="KOr-XD-aV7"/>
+                <outlet property="windowTopMnuItem" destination="aUF-d1-5bR" id="O31-8n-Ti6"/>
+                <outlet property="windowZoomMnuItem" destination="R4o-n2-Eq4" id="vZz-zy-INB"/>
+            </connections>
+            <point key="canvasLocation" x="140" y="154"/>
+        </menu>
+    </objects>
+</document>

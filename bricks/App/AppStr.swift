@@ -85,9 +85,15 @@ enum AppStr : Localizable {
     case UNLOCK
     case ADD_NEW
     
+    // Menu
+    case FILE // "File"
+    case VIEW // "View"
+    case WINDOW // "Window"
+    case HELP // "Help"
+    
     // Splash screen
     case BRICKS // product name
-    case START_A_NEW_PROJECT_ELLIPSIS
+    case START_A_NEW_PROJECT_DOT_DOT
     case OPEN_AN_EXISTING_PROJECT_DOT_DOT
     case COPYRIGHT_COMPANY_W_YEAR_FORMAT // "Copyright © %@ Bricks Biz Ltd." should be year string
     

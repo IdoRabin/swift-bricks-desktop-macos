@@ -11,6 +11,7 @@ import Cocoa
 enum AppStoryboard : String {
     
     case main = "Main"
+    case newproject = "NewProject"
     case splashscreen = "Splashscreen"
     case preferences = "Preferences"
     

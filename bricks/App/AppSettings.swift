@@ -20,6 +20,7 @@ final class AppSettings : JSONFileSerializable {
         @AppSettable(true,   name:"general.allowsAnalyze") var allowsAnalyze : Bool
         @AppSettable(true,   name:"general.showsSplashScreenOnInit") var showsSplashScreenOnInit : Bool
         @AppSettable(true,   name:"general.splashScreenCloseBtnWillCloseApp") var splashScreenCloseBtnWillCloseApp : Bool
+        @AppSettable(true,   name:"general.tooltipsShowKeyboardShortcut") var tooltipsShowKeyboardShortcut : Bool
     }
     
     struct AppSettingsStats : Codable {

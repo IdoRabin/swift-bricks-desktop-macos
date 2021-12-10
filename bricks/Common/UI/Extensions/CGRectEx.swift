@@ -415,7 +415,6 @@ extension CGRect { /* Aspect sizes */
         }
     }
     
-    
     func rightHandDirectionalized()->CGRect {
         var result = self
         if result.size.width < 0 {
@@ -428,12 +427,17 @@ extension CGRect { /* Aspect sizes */
         }
         return result
     }
+    
 }
 
 extension CGSize : Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.width)
         hasher.combine(self.height)
+    }
+    
+    var isZero : Bool {
+        return self.width == 0 && self.height == 0
     }
 }
 
@@ -448,5 +452,14 @@ extension CGRect : Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.origin)
         hasher.combine(self.size)
+    }
+}
+
+extension NSEdgeInsets {
+    static var zero : NSEdgeInsets {
+        return NSEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    }
+    var isZero : Bool {
+        return top == 0 && left == 0 && bottom == 0 && right == 0
     }
 }

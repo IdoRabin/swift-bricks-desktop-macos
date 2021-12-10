@@ -146,6 +146,19 @@ extension String {
         }
         return accumulatedStrPrevious
     }
+    
+    
+    /// Check if the whoe string fits inside a given bounding size
+    /// - Parameters:
+    ///   - sze: size to fit the strinbg into
+    ///   - attributes: attributes to use
+    /// - Returns: true if the whole text (untrimmed, cliiped or changed) will fit into the provided size
+    func willFitBoundingSize(_ sze:CGSize, attributes: [NSAttributedString.Key : Any])->Bool {
+        let rect = (self as NSString).boundingRect(with: sze.changed(height: 9000), options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+        
+        // return true when the text bounding rect fits into the size
+        return rect.width <= sze.width && rect.height <= sze.height
+    }
 }
 
 extension NSMutableAttributedString {

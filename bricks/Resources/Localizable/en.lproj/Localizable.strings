@@ -72,16 +72,81 @@
 "ADD_NEW" = "Add new";
 
 // Menu
-"FILE" = "File"; // "File"
-"VIEW" = "View"; // "View"
-"WINDOW" = "Window"; // "Window"
-"HELP" = "Help"; // "Help"
+// App menu
+"ABOUT_APP_FORMAT" = "About %@";
+"PREFERENCES_DOT_DOT" = "Preferences..";
+"PREFERENCES" = "Preferences";
+"SERVICES" = "Services";
+"HIDE_APP_FORMAT" = "Hide %@";
+"HIDE_OTHERS" = "Hide Others";
+"SHOW_ALL" = "Show All";
+"QUIT_APP_FORMAT" = "Quit %@";
 
-// Splash
-"BRICKS" = "Bricks"; // product name
+// "File" menu
+"FILE" = "File";
+"NEW_PROJECT_DOT_DOT" = "New Project..";
+"OPEN_PROJECT_DOT_DOT" = "Open Project..";
+"OPEN_RECENT" = "Open Recent";
+"CLEAR_MENU" = "Clear Menu";
+"CLOSE_FORMAT" = "Close %@";
+"REVERT_TO_SAVED_DOT_DOT" = "Revert to saved..";
+"PAGE_SETUP_DOT_DOT" = "Page Setup..";
+"PRINT_DOT_DOT" = "Print..";
+
+// Edit menu
+"UNDO_FORMAT" = "Undo %@";
+"REDO_FORMAT" = "Redo %@";
+"CUT" = "Cut";
+"PASTE" = "Paste";
+"FIND" = "Find";
+"FIND_DOT_DOT" = "Find..";
+"FIND_NEXT" = "Find Next";
+"FIND_PREVIOUS" = "Find Previous";
+
+// "View" menu
+"VIEW" = "View";
+"SHOW_TOOLBAR" = "Show Toolbar";
+"HIDE_TOOLBAR" = "Hide Toolbar";
+"CUSTEMIZE_TOOLBAR_DOT_DOT" = "Custemize Toolbar..";
+"SHOW_PROJECTS_SIDEBAR" = "Show Projects sidebar";
+"HIDE_PROJECTS_SIDEBAR" = "Hide Projects sidebar";
+"SHOW_UTILITY_SIDEBAR" = "Show Utility sidebar";
+"HIDE_UTILITY_SIDEBAR" = "Hide Utility sidebar";
+"ZOOM" = "Zoom";
+"ZOOM_IN" = "Zoom In";
+"ZOOM_TO_100_PRC" = "Zoom to 100%";
+"ZOOM_OUT" = "Zoom Out";
+"ZOOM_TO_FIT" = "Zoom to Fit";
+"ENTER_FULL_SCREEN" = "Enter Full Screen";
+"EXIT_FULL_SCREEN" = "Exit Full Screen";
+
+// "Window" menu
+"WINDOW" = "Window";
+"MINIMIZE" = "Minimize";
+"BRING_ALL_TO_FRONT" = "Bring all to Front";
+
+// "Help" menu
+"HELP" = "Help";
+"DOCUMENTATION" = "Documentation";
+"SUPPORT" = "Support";
+"KEYBOARD_SHORTCUT_TOOLTIP" = "Key binding in Tooltips";
+
+// "Layer" menu
+"LAYER" = "Layer";
+"ADD" = "Add";
+"DELETE_FORMAT_DOT_DOT" = "Delete %@..";
+"EDIT_FORMAT_DOT_DOT" = "Edit %@..";
+"SHOW" = "Show";
+"HIDE" = "Hide";
+"SHOW_FORMAT" = "Show %@";
+"HIDE_FORMAT" = "Hide %@";
+
+// Splash screen
+"PRODUCT_NAME" = "Bricks"; // product name
 "START_A_NEW_PROJECT_DOT_DOT" = "Start a new project..";
 "OPEN_AN_EXISTING_PROJECT_DOT_DOT" = "Open an existing project..";
 "COPYRIGHT_COMPANY_W_YEAR_FORMAT" = "Copyright © %@ Bricks Biz Ltd."; // "Copyright © 2001 Bricks Biz Ltd."
+"COPYRIGHT_COMPANY_W_YEAR_FORMAT_LONG" = "Copyright © %@ Bricks Biz Ltd. All rights reserved. Logo and other icons are trademarks of Bricks Biz Ltd.";
 
 // TOOLBAR
 "PROJECT" = "Project";

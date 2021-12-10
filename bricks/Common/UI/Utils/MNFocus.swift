@@ -11,6 +11,7 @@ protocol MNFocusObserver {
     func mnFocusChanged(from:NSResponder?, to:NSResponder?)
 }
 
+fileprivate let v = MNFocus.shared
 class MNFocus {
     
     var observers = ObserversArray<MNFocusObserver>()
@@ -45,5 +46,11 @@ class MNFocus {
         if current != view {
             current = view
         }
+    }
+}
+
+extension NSView {
+    var isFirstResponder : Bool {
+        return MNFocus.shared.current == self
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="m70-Ir-Hi7">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="8mh-U1-kbu">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -35,14 +35,14 @@
             <objects>
                 <viewController identifier="splashVCID" storyboardIdentifier="splashVCID" showSeguePresentationStyle="single" id="8mh-U1-kbu" customClass="SplashVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <customView key="view" wantsLayer="YES" id="2zk-61-hD7" userLabel="root view">
-                        <rect key="frame" x="0.0" y="0.0" width="720" height="420"/>
+                        <rect key="frame" x="0.0" y="0.0" width="721" height="420"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <customView wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LSZ-on-UGm" userLabel="mainItemsConstainer">
-                                <rect key="frame" x="0.0" y="0.0" width="500" height="420"/>
+                                <rect key="frame" x="0.0" y="0.0" width="501" height="420"/>
                                 <subviews>
                                     <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Uyz-nA-0Lv" userLabel="App icon image view">
-                                        <rect key="frame" x="210" y="302" width="80" height="80"/>
+                                        <rect key="frame" x="211" y="302" width="80" height="80"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="80" id="VEi-Y7-gkp"/>
                                             <constraint firstAttribute="height" constant="80" id="sim-Yf-gaF"/>
@@ -50,7 +50,7 @@
                                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="AppIcon" id="PtV-Lt-trO"/>
                                     </imageView>
                                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MPk-Wx-OFl">
-                                        <rect key="frame" x="202" y="242" width="96" height="36"/>
+                                        <rect key="frame" x="203" y="242" width="96" height="36"/>
                                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Bricks" id="nK8-MQ-WOx">
                                             <font key="font" size="30" name="HelveticaNeue-Medium"/>
                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -63,12 +63,12 @@
                                             <font key="font" metaFont="systemLight" size="13"/>
                                             <string key="title">Copyright asd asd asdas sa as dsa 
 versionasd as das d asd asd asdasd asd as das sa dad asd </string>
-                                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                         </textFieldCell>
                                     </textField>
                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NKO-O1-bZo">
-                                        <rect key="frame" x="18" y="19" width="200" height="18"/>
+                                        <rect key="frame" x="10" y="11" width="200" height="18"/>
                                         <buttonCell key="cell" type="check" title="Show this window on startup" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="2he-VO-luW">
                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -85,7 +85,7 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                         </constraints>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="xmark" catalog="system" imagePosition="only" alignment="center" inset="2" id="EbU-tn-aN9">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
+                                            <font key="font" metaFont="systemMedium" size="13"/>
                                             <string key="keyEquivalent">q</string>
                                             <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                         </buttonCell>
@@ -96,10 +96,10 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                             <action selector="closeButtonAction:" target="8mh-U1-kbu" id="jK9-Gj-Zb4"/>
                                         </connections>
                                     </button>
-                                    <stackView focusRingType="none" distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="250" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1P-Ll-6bq">
+                                    <stackView focusRingType="none" distribution="fillEqually" orientation="vertical" alignment="leading" horizontalStackHuggingPriority="1000" verticalStackHuggingPriority="249.99998474121094" horizontalClippingResistancePriority="250" horizontalHuggingPriority="750" horizontalCompressionResistancePriority="250" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="M1P-Ll-6bq">
                                         <rect key="frame" x="85" y="98" width="331" height="88"/>
                                         <subviews>
-                                            <button horizontalHuggingPriority="749" verticalHuggingPriority="249" horizontalCompressionResistancePriority="249" verticalCompressionResistancePriority="749" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="c5o-Qs-Yro" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
+                                            <button horizontalHuggingPriority="999" verticalHuggingPriority="249" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="c5o-Qs-Yro" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
                                                 <rect key="frame" x="3" y="48" width="326" height="38"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="WsV-oC-e7b"/>
@@ -110,11 +110,12 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                                     <string key="keyEquivalent">n</string>
                                                     <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                                 </buttonCell>
+                                                <color key="contentTintColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <connections>
-                                                    <action selector="startNewProjectButtonAction:" target="8mh-U1-kbu" id="gw7-vY-e4e"/>
+                                                    <action selector="newDocument:" target="ZeN-sv-o5b" id="z3m-E5-74k"/>
                                                 </connections>
                                             </button>
-                                            <button horizontalHuggingPriority="750" verticalHuggingPriority="249" horizontalCompressionResistancePriority="249" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Pe-Ix-GfQ" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
+                                            <button horizontalHuggingPriority="999" verticalHuggingPriority="249" horizontalCompressionResistancePriority="249" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="7Pe-Ix-GfQ" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
                                                 <rect key="frame" x="3" y="2" width="326" height="38"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="xl6-S9-0S5"/>
@@ -125,8 +126,9 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                                     <string key="keyEquivalent">o</string>
                                                     <modifierMask key="keyEquivalentModifierMask" command="YES"/>
                                                 </buttonCell>
+                                                <color key="contentTintColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <connections>
-                                                    <action selector="openExistingProjectButton:" target="8mh-U1-kbu" id="qw7-RZ-iLA"/>
+                                                    <action selector="openDocument:" target="ZeN-sv-o5b" id="N1u-gh-xgy"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -142,25 +144,29 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                                     </stackView>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="M1P-Ll-6bq" secondAttribute="trailing" constant="12" id="0rb-2Z-rJ3"/>
                                     <constraint firstItem="MvY-5Q-joQ" firstAttribute="centerX" secondItem="MPk-Wx-OFl" secondAttribute="centerX" id="80R-Qq-Sau"/>
                                     <constraint firstItem="M1P-Ll-6bq" firstAttribute="centerX" secondItem="MvY-5Q-joQ" secondAttribute="centerX" id="BLz-fd-T0l"/>
                                     <constraint firstItem="HcE-EW-uqK" firstAttribute="top" secondItem="LSZ-on-UGm" secondAttribute="top" id="BNf-Sb-Dk4"/>
                                     <constraint firstItem="MPk-Wx-OFl" firstAttribute="width" relation="lessThanOrEqual" secondItem="LSZ-on-UGm" secondAttribute="width" multiplier="0.75" id="CDe-wG-7uz"/>
                                     <constraint firstItem="HcE-EW-uqK" firstAttribute="leading" secondItem="LSZ-on-UGm" secondAttribute="leading" id="CO7-Ad-2c3"/>
+                                    <constraint firstAttribute="height" priority="250" constant="420" identifier="mainItemsconstainerHeightConstraintID" id="CYZ-k7-Qob"/>
                                     <constraint firstItem="Uyz-nA-0Lv" firstAttribute="centerX" secondItem="LSZ-on-UGm" secondAttribute="centerX" id="D5v-73-ctk"/>
                                     <constraint firstItem="M1P-Ll-6bq" firstAttribute="top" secondItem="MvY-5Q-joQ" secondAttribute="bottom" constant="16" id="D8H-Ml-O0R"/>
                                     <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="NKO-O1-bZo" secondAttribute="trailing" constant="12" id="DB9-Gt-C7Y"/>
                                     <constraint firstItem="MvY-5Q-joQ" firstAttribute="width" relation="lessThanOrEqual" secondItem="LSZ-on-UGm" secondAttribute="width" multiplier="0.75" id="Fe0-4g-C3t"/>
                                     <constraint firstItem="MPk-Wx-OFl" firstAttribute="centerX" secondItem="LSZ-on-UGm" secondAttribute="centerX" id="P2E-PN-8XK"/>
-                                    <constraint firstItem="NKO-O1-bZo" firstAttribute="leading" secondItem="LSZ-on-UGm" secondAttribute="leading" constant="20" id="XTh-OD-Dts"/>
+                                    <constraint firstItem="M1P-Ll-6bq" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="LSZ-on-UGm" secondAttribute="leading" constant="12" id="U4b-gq-o3g"/>
+                                    <constraint firstAttribute="width" priority="250" constant="501" identifier="mainItemsconstainerWidthConstraintID" id="Ve8-Kt-sC4"/>
+                                    <constraint firstItem="NKO-O1-bZo" firstAttribute="leading" secondItem="LSZ-on-UGm" secondAttribute="leading" constant="12" id="XTh-OD-Dts"/>
                                     <constraint firstItem="MPk-Wx-OFl" firstAttribute="top" secondItem="Uyz-nA-0Lv" secondAttribute="bottom" constant="24" id="aTC-N0-4ik"/>
-                                    <constraint firstAttribute="bottom" secondItem="NKO-O1-bZo" secondAttribute="bottom" constant="20" id="fuB-Ke-ui5"/>
+                                    <constraint firstAttribute="bottom" secondItem="NKO-O1-bZo" secondAttribute="bottom" constant="12" id="fuB-Ke-ui5"/>
                                     <constraint firstItem="Uyz-nA-0Lv" firstAttribute="top" secondItem="LSZ-on-UGm" secondAttribute="top" constant="38" id="u2I-K3-w1h"/>
                                     <constraint firstItem="MvY-5Q-joQ" firstAttribute="top" secondItem="MPk-Wx-OFl" secondAttribute="bottom" constant="8" id="wWd-qH-w6A"/>
                                 </constraints>
                             </customView>
                             <scrollView borderType="none" autohidesScrollers="YES" horizontalLineScroll="56" horizontalPageScroll="10" verticalLineScroll="56" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i2T-Ts-ViJ" customClass="HistoryTableviewContainer" customModule="Bricks" customModuleProvider="target">
-                                <rect key="frame" x="500" y="0.0" width="220" height="420"/>
+                                <rect key="frame" x="501" y="0.0" width="220" height="420"/>
                                 <clipView key="contentView" id="1x7-fV-dsV">
                                     <rect key="frame" x="0.0" y="0.0" width="220" height="420"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -253,7 +259,10 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                         <outlet property="historyTableview" destination="tWW-hW-d3P" id="O6t-r9-7J4"/>
                         <outlet property="historyTableviewContainer" destination="i2T-Ts-ViJ" id="Apa-xJ-SQO"/>
                         <outlet property="imageView" destination="Uyz-nA-0Lv" id="ZNW-1Q-nT5"/>
+                        <outlet property="mainButtonsStackView" destination="M1P-Ll-6bq" id="sIS-4i-FoC"/>
                         <outlet property="mainItemsConstainer" destination="LSZ-on-UGm" id="z3K-Vc-egp"/>
+                        <outlet property="mainItemsconstainerHeightConstraint" destination="CYZ-k7-Qob" id="Hwh-5l-xpI"/>
+                        <outlet property="mainItemsconstainerWidthConstraint" destination="Ve8-Kt-sC4" id="pFa-OY-v9V"/>
                         <outlet property="openExistinProjectButton" destination="7Pe-Ix-GfQ" id="ii7-Jb-7D3"/>
                         <outlet property="showWindowCheckBox" destination="NKO-O1-bZo" id="q9Q-Fe-ozh"/>
                         <outlet property="startNewProjectButton" destination="c5o-Qs-Yro" id="Q4u-Wc-9tw"/>
@@ -263,14 +272,14 @@ versionasd as das d asd asd asdasd asd as das sa dad asd </string>
                 </viewController>
                 <customObject id="ZeN-sv-o5b" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-173" y="-103"/>
+            <point key="canvasLocation" x="-173.5" y="-103"/>
         </scene>
     </scenes>
     <resources>
         <image name="AppIcon" width="128" height="128"/>
         <image name="BrickDocumentIcon" width="512" height="512"/>
-        <image name="BrickFileIcon" width="171" height="171"/>
-        <image name="BrickNewFileIcon" width="171" height="171"/>
+        <image name="BrickFileIcon" width="170.5" height="170.5"/>
+        <image name="BrickNewFileIcon" width="170.5" height="170.5"/>
         <image name="xmark" catalog="system" width="14" height="13"/>
     </resources>
 </document>

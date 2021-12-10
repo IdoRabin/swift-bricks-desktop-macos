@@ -57,17 +57,18 @@
 		EC218B7C275940E800744400 /* BUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7B275940E800744400 /* BUID.swift */; };
 		EC218B7D2759448000744400 /* BrickBasicInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2927593B7100744400 /* BrickBasicInfo.swift */; };
 		EC218B7F2759459700744400 /* ComparableEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B7E2759459700744400 /* ComparableEx.swift */; };
-		EC218B812759463500744400 /* BrickDocumentController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B802759463500744400 /* BrickDocumentController.swift */; };
+		EC218B812759463500744400 /* BrickDocController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B802759463500744400 /* BrickDocController.swift */; };
 		EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B822759466C00744400 /* BrickTemplateType.swift */; };
 		EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B842759468E00744400 /* BrickVersionControlType.swift */; };
-		EC218B872759471100744400 /* BrickDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B862759471100744400 /* BrickDocument.swift */; };
+		EC218B872759471100744400 /* BrickDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B862759471100744400 /* BrickDoc.swift */; };
 		EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC332CB6275EB65B00546767 /* MNButton.swift */; };
 		EC332CC9275ECAC600546767 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EC332CC6275ECAC500546767 /* Localizable.strings */; };
 		EC332CCD275ECCA300546767 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC332CCC275ECCA200546767 /* Main.storyboard */; };
 		EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */; };
 		EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18BF275D100B00BC23DA /* Clearable.swift */; };
+		EC9928A12762A97D00DD4C90 /* BricksApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9928A02762A97D00DD4C90 /* BricksApplication.swift */; };
 		EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFD9275CCA810046F30A /* Brick.swift */; };
-		EC9DEFDC275CCACA0046F30A /* BrickDocumentObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFDB275CCACA0046F30A /* BrickDocumentObserver.swift */; };
+		EC9DEFDC275CCACA0046F30A /* BrickDocObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */; };
 		EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFDD275CCC0A0046F30A /* OptionalEx.swift */; };
 		EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2727593B7100744400 /* BrickSettings.swift */; };
 		EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B2827593B7100744400 /* BrickStats.swift */; };
@@ -99,7 +100,24 @@
 		EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */; };
 		ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA1B0CD2760101100B3D36A /* MainMenu.xib */; };
 		ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1B0D02760114700B3D36A /* MainMenu.swift */; };
+		ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */; };
+		ECAA83AA27635CE70016578C /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83A827635CE70016578C /* AboutVC.swift */; };
+		ECAA83AB27635CE70016578C /* AboutVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECAA83A927635CE70016578C /* AboutVC.xib */; };
 		ECB52A87275FF22A0090CB81 /* NewProject.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ECB52A86275FF22A0090CB81 /* NewProject.storyboard */; };
+		ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B622760F9DE00DD602D /* Invoker.swift */; };
+		ECEA1B652760F9FB00DD602D /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B642760F9FB00DD602D /* Command.swift */; };
+		ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B662760FAA800DD602D /* AppCommand.swift */; };
+		ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B6C2761144F00DD602D /* FileCommands.swift */; };
+		ECEA1B6F2761147800DD602D /* EditCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B6E2761147800DD602D /* EditCommands.swift */; };
+		ECEA1B71276114C100DD602D /* LayerCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B70276114C100DD602D /* LayerCommands.swift */; };
+		ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B722761FB7700DD602D /* MNMenuItem.swift.swift */; };
+		ECEA1B7527621AC900DD602D /* NSView+SearchSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7427621AC900DD602D /* NSView+SearchSubviews.swift */; };
+		ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B762762255500DD602D /* NSButtonEx.swift */; };
+		ECEA1B792762297000DD602D /* MNBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B782762297000DD602D /* MNBaseView.swift */; };
+		ECEA1B7B2762297600DD602D /* MNColoredStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7A2762297600DD602D /* MNColoredStackView.swift */; };
+		ECEA1B7D2762297C00DD602D /* MNColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7C2762297C00DD602D /* MNColoredView.swift */; };
+		ECEA1B7F2762299800DD602D /* MNSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7E2762299800DD602D /* MNSplitView.swift */; };
+		ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B802762299C00DD602D /* MNToolbarItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -203,17 +221,18 @@
 		EC218B7927593F5E00744400 /* IndexPathTuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IndexPathTuple.swift; sourceTree = "<group>"; };
 		EC218B7B275940E800744400 /* BUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BUID.swift; sourceTree = "<group>"; };
 		EC218B7E2759459700744400 /* ComparableEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComparableEx.swift; sourceTree = "<group>"; };
-		EC218B802759463500744400 /* BrickDocumentController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickDocumentController.swift; sourceTree = "<group>"; };
+		EC218B802759463500744400 /* BrickDocController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrickDocController.swift; sourceTree = "<group>"; };
 		EC218B822759466C00744400 /* BrickTemplateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickTemplateType.swift; sourceTree = "<group>"; };
 		EC218B842759468E00744400 /* BrickVersionControlType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickVersionControlType.swift; sourceTree = "<group>"; };
-		EC218B862759471100744400 /* BrickDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocument.swift; sourceTree = "<group>"; };
+		EC218B862759471100744400 /* BrickDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDoc.swift; sourceTree = "<group>"; };
 		EC332CB6275EB65B00546767 /* MNButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNButton.swift; sourceTree = "<group>"; };
 		EC332CCC275ECCA200546767 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		EC332CCF275ED29E00546767 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewcontroller+XIB.swift"; sourceTree = "<group>"; };
 		EC7F18BF275D100B00BC23DA /* Clearable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clearable.swift; sourceTree = "<group>"; };
+		EC9928A02762A97D00DD4C90 /* BricksApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BricksApplication.swift; sourceTree = "<group>"; };
 		EC9DEFD9275CCA810046F30A /* Brick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brick.swift; sourceTree = "<group>"; };
-		EC9DEFDB275CCACA0046F30A /* BrickDocumentObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocumentObserver.swift; sourceTree = "<group>"; };
+		EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocObserver.swift; sourceTree = "<group>"; };
 		EC9DEFDD275CCC0A0046F30A /* OptionalEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalEx.swift; sourceTree = "<group>"; };
 		EC9DEFE1275CCE730046F30A /* Splashscreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Splashscreen.storyboard; sourceTree = "<group>"; };
 		EC9DEFE3275CCF500046F30A /* BrickDocumentIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = BrickDocumentIcon.icns; path = ../../../test/bricks/bricks/Resources/BrickDocumentIcon.icns; sourceTree = "<group>"; };
@@ -244,7 +263,24 @@
 		EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPRouter.swift; sourceTree = "<group>"; };
 		ECA1B0CD2760101100B3D36A /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		ECA1B0D02760114700B3D36A /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+Commandable.swift"; sourceTree = "<group>"; };
+		ECAA83A827635CE70016578C /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
+		ECAA83A927635CE70016578C /* AboutVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutVC.xib; sourceTree = "<group>"; };
 		ECB52A86275FF22A0090CB81 /* NewProject.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NewProject.storyboard; sourceTree = "<group>"; };
+		ECEA1B622760F9DE00DD602D /* Invoker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invoker.swift; sourceTree = "<group>"; };
+		ECEA1B642760F9FB00DD602D /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		ECEA1B662760FAA800DD602D /* AppCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommand.swift; sourceTree = "<group>"; };
+		ECEA1B6C2761144F00DD602D /* FileCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCommands.swift; sourceTree = "<group>"; };
+		ECEA1B6E2761147800DD602D /* EditCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCommands.swift; sourceTree = "<group>"; };
+		ECEA1B70276114C100DD602D /* LayerCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayerCommands.swift; sourceTree = "<group>"; };
+		ECEA1B722761FB7700DD602D /* MNMenuItem.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNMenuItem.swift.swift; sourceTree = "<group>"; };
+		ECEA1B7427621AC900DD602D /* NSView+SearchSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+SearchSubviews.swift"; sourceTree = "<group>"; };
+		ECEA1B762762255500DD602D /* NSButtonEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSButtonEx.swift; sourceTree = "<group>"; };
+		ECEA1B782762297000DD602D /* MNBaseView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNBaseView.swift; sourceTree = "<group>"; };
+		ECEA1B7A2762297600DD602D /* MNColoredStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNColoredStackView.swift; sourceTree = "<group>"; };
+		ECEA1B7C2762297C00DD602D /* MNColoredView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNColoredView.swift; sourceTree = "<group>"; };
+		ECEA1B7E2762299800DD602D /* MNSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNSplitView.swift; sourceTree = "<group>"; };
+		ECEA1B802762299C00DD602D /* MNToolbarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNToolbarItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -354,6 +390,7 @@
 			isa = PBXGroup;
 			children = (
 				EC218AB8275931E700744400 /* AppDelegate.swift */,
+				ECEA1B662760FAA800DD602D /* AppCommand.swift */,
 				EC218B6927593DB300744400 /* AppConstants.swift */,
 				EC218B16275939DA00744400 /* AppSettings.swift */,
 				EC218B14275939CF00744400 /* AppDocumentHistory.swift */,
@@ -363,6 +400,7 @@
 				EC218B6F27593E7900744400 /* AppErrorCode.swift */,
 				EC218B6D27593DE100744400 /* AppStr.swift */,
 				EC218B10275939B600744400 /* AppStoryboard.swift */,
+				EC9928A02762A97D00DD4C90 /* BricksApplication.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -435,6 +473,7 @@
 		EC218B1C27593A5500744400 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				ECEA1B612760F9C700DD602D /* Command */,
 				EC218B7727593EED00744400 /* KeyboardKeys.swift */,
 				EC218B7327593EE300744400 /* AppSandboxer.swift */,
 				EC218B7427593EE300744400 /* FileFinder.swift */,
@@ -475,7 +514,9 @@
 				EC9DEFFC275CD1BE0046F30A /* NSWindowController+XIB.swift */,
 				EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */,
 				EC9DEFF8275CD1BE0046F30A /* NSViewEx.swift */,
+				ECEA1B7427621AC900DD602D /* NSView+SearchSubviews.swift */,
 				EC9DEFF6275CD1BE0046F30A /* UIImage+Utils.swift */,
+				ECEA1B762762255500DD602D /* NSButtonEx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -508,9 +549,11 @@
 		EC218B2527593B6600744400 /* Document */ = {
 			isa = PBXGroup;
 			children = (
-				EC218B802759463500744400 /* BrickDocumentController.swift */,
-				EC218B862759471100744400 /* BrickDocument.swift */,
-				EC9DEFDB275CCACA0046F30A /* BrickDocumentObserver.swift */,
+				ECEA1B6B2761143F00DD602D /* Commands */,
+				ECEA1B6827610A4700DD602D /* DocController */,
+				EC218B802759463500744400 /* BrickDocController.swift */,
+				EC218B862759471100744400 /* BrickDoc.swift */,
+				EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */,
 				EC9DEFD9275CCA810046F30A /* Brick.swift */,
 				EC218B2627593B7100744400 /* Components */,
 			);
@@ -561,7 +604,13 @@
 		EC9DF012275CD1DC0046F30A /* Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				ECEA1B802762299C00DD602D /* MNToolbarItem.swift */,
+				ECEA1B7E2762299800DD602D /* MNSplitView.swift */,
+				ECEA1B7C2762297C00DD602D /* MNColoredView.swift */,
+				ECEA1B7A2762297600DD602D /* MNColoredStackView.swift */,
+				ECEA1B782762297000DD602D /* MNBaseView.swift */,
 				EC332CB6275EB65B00546767 /* MNButton.swift */,
+				ECEA1B722761FB7700DD602D /* MNMenuItem.swift.swift */,
 			);
 			path = Subclasses;
 			sourceTree = "<group>";
@@ -577,11 +626,13 @@
 		EC9DF016275CD4550046F30A /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				ECA1B0CF2760113A00B3D36A /* MainMenu */,
+				EC9DEFE4275CD0900046F30A /* SplashVC */,
+				ECAA83A727635C700016578C /* misc */,
+				ECAA83A627635C310016578C /* Preferences */,
 				EC332CCC275ECCA200546767 /* Main.storyboard */,
+				ECA1B0CF2760113A00B3D36A /* MainMenu */,
 				EC18395F275FFFCF0001AB6D /* Document */,
 				ECB52A85275FF2010090CB81 /* NewProject */,
-				EC9DEFE4275CD0900046F30A /* SplashVC */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -605,12 +656,63 @@
 			path = MainMenu;
 			sourceTree = "<group>";
 		};
+		ECAA83A627635C310016578C /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
+		ECAA83A727635C700016578C /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				ECEA1B8227623BE900DD602D /* AboutVC */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
 		ECB52A85275FF2010090CB81 /* NewProject */ = {
 			isa = PBXGroup;
 			children = (
 				ECB52A86275FF22A0090CB81 /* NewProject.storyboard */,
 			);
 			path = NewProject;
+			sourceTree = "<group>";
+		};
+		ECEA1B612760F9C700DD602D /* Command */ = {
+			isa = PBXGroup;
+			children = (
+				ECEA1B642760F9FB00DD602D /* Command.swift */,
+				ECEA1B622760F9DE00DD602D /* Invoker.swift */,
+			);
+			path = Command;
+			sourceTree = "<group>";
+		};
+		ECEA1B6827610A4700DD602D /* DocController */ = {
+			isa = PBXGroup;
+			children = (
+				ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */,
+			);
+			path = DocController;
+			sourceTree = "<group>";
+		};
+		ECEA1B6B2761143F00DD602D /* Commands */ = {
+			isa = PBXGroup;
+			children = (
+				ECEA1B6C2761144F00DD602D /* FileCommands.swift */,
+				ECEA1B6E2761147800DD602D /* EditCommands.swift */,
+				ECEA1B70276114C100DD602D /* LayerCommands.swift */,
+			);
+			path = Commands;
+			sourceTree = "<group>";
+		};
+		ECEA1B8227623BE900DD602D /* AboutVC */ = {
+			isa = PBXGroup;
+			children = (
+				ECAA83A827635CE70016578C /* AboutVC.swift */,
+				ECAA83A927635CE70016578C /* AboutVC.xib */,
+			);
+			path = AboutVC;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -740,6 +842,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ECAA83AB27635CE70016578C /* AboutVC.xib in Resources */,
 				EC218ABF275931E800744400 /* Assets.xcassets in Resources */,
 				ECB52A87275FF22A0090CB81 /* NewProject.storyboard in Resources */,
 				ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */,
@@ -785,8 +888,10 @@
 				EC9DF00A275CD1BE0046F30A /* CGSizeEx.swift in Sources */,
 				EC218B7127593E7900744400 /* AppError.swift in Sources */,
 				EC218B5A27593CBF00744400 /* DispatchQueueEx.swift in Sources */,
+				ECEA1B792762297000DD602D /* MNBaseView.swift in Sources */,
 				EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */,
 				EC9DF003275CD1BE0046F30A /* CALayerEx.swift in Sources */,
+				ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */,
 				EC218B7527593EE300744400 /* AppSandboxer.swift in Sources */,
 				EC218B5D27593CBF00744400 /* StringEx.swift in Sources */,
 				EC218B11275939B600744400 /* AppStoryboard.swift in Sources */,
@@ -801,9 +906,11 @@
 				EC9DF006275CD1BE0046F30A /* CGPointEx.swift in Sources */,
 				EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */,
 				EC9DF007275CD1BE0046F30A /* UIImage+Utils.swift in Sources */,
-				EC218B812759463500744400 /* BrickDocumentController.swift in Sources */,
+				EC218B812759463500744400 /* BrickDocController.swift in Sources */,
+				ECEA1B7B2762297600DD602D /* MNColoredStackView.swift in Sources */,
 				EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */,
 				EC9DF009275CD1BE0046F30A /* NSViewEx.swift in Sources */,
+				ECEA1B6F2761147800DD602D /* EditCommands.swift in Sources */,
 				EC9DF01F275CE6DE0046F30A /* MVPVCBinder.swift in Sources */,
 				EC218B4527593BE000744400 /* LoadingHelper.swift in Sources */,
 				EC218B7F2759459700744400 /* ComparableEx.swift in Sources */,
@@ -811,9 +918,11 @@
 				EC218B3E27593BE000744400 /* CachesHelper.swift in Sources */,
 				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
 				EC218B5627593CBF00744400 /* ArrayEx.swift in Sources */,
+				ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */,
 				EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */,
 				EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */,
 				EC218B4027593BE000744400 /* HashableObject.swift in Sources */,
+				ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */,
 				EC218B7627593EE300744400 /* FileFinder.swift in Sources */,
 				EC218B5427593CBF00744400 /* SetEx.swift in Sources */,
 				EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */,
@@ -825,23 +934,29 @@
 				EC218B2427593B1D00744400 /* NSLock+Blocks.swift in Sources */,
 				EC218B3927593BE000744400 /* Box.swift in Sources */,
 				EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */,
+				EC9928A12762A97D00DD4C90 /* BricksApplication.swift in Sources */,
 				EC218B5B27593CBF00744400 /* URLEx.swift in Sources */,
+				ECEA1B7F2762299800DD602D /* MNSplitView.swift in Sources */,
 				EC218B7A27593F5E00744400 /* IndexPathTuple.swift in Sources */,
 				EC9DF008275CD1BE0046F30A /* NSView+Separators.swift in Sources */,
 				EC218B6C27593DDC00744400 /* AppResult.swift in Sources */,
+				ECEA1B71276114C100DD602D /* LayerCommands.swift in Sources */,
 				EC218AB9275931E700744400 /* AppDelegate.swift in Sources */,
 				EC218B7C275940E800744400 /* BUID.swift in Sources */,
 				EC218B5527593CBF00744400 /* DictionaryEx.swift in Sources */,
-				EC9DEFDC275CCACA0046F30A /* BrickDocumentObserver.swift in Sources */,
+				EC9DEFDC275CCACA0046F30A /* BrickDocObserver.swift in Sources */,
 				EC218B7227593E7900744400 /* AppErrorCode.swift in Sources */,
 				EC218B3F27593BE000744400 /* Codable+Serialize.swift in Sources */,
+				ECEA1B652760F9FB00DD602D /* Command.swift in Sources */,
 				EC9DF01E275CE6DE0046F30A /* MVP.swift in Sources */,
 				EC218B3A27593BE000744400 /* SkipEncoding.swift in Sources */,
 				EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */,
 				EC9DEFFF275CD1BE0046F30A /* NSTextFIeldEx.swift in Sources */,
 				EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */,
-				EC218B872759471100744400 /* BrickDocument.swift in Sources */,
+				EC218B872759471100744400 /* BrickDoc.swift in Sources */,
+				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
+				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
 				EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */,
 				EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */,
 				EC218B4227593BE000744400 /* Selectable.swift in Sources */,
@@ -850,10 +965,15 @@
 				EC218B7D2759448000744400 /* BrickBasicInfo.swift in Sources */,
 				EC9DF018275CDAD50046F30A /* SplashVM.swift in Sources */,
 				EC218B13275939CC00744400 /* AppConstants.swift in Sources */,
+				ECAA83AA27635CE70016578C /* AboutVC.swift in Sources */,
 				EC9DF001275CD1BE0046F30A /* NSAttributedStringEx.swift in Sources */,
+				ECEA1B7D2762297C00DD602D /* MNColoredView.swift in Sources */,
 				EC218B15275939CF00744400 /* AppDocumentHistory.swift in Sources */,
 				EC218B3C27593BE000744400 /* ProgressCounter.swift in Sources */,
 				EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */,
+				ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */,
+				ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */,
+				ECEA1B7527621AC900DD602D /* NSView+SearchSubviews.swift in Sources */,
 				EC218B4427593BE000744400 /* ThreadWaitLock.swift in Sources */,
 				EC9DF002275CD1BE0046F30A /* CGRectEx.swift in Sources */,
 				EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */,

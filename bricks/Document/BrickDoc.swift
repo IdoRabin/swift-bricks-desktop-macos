@@ -8,17 +8,17 @@
 import AppKit
 
 
-fileprivate let dlog : DSLogger? = DLog.forClass("BrickDocument")
+fileprivate let dlog : DSLogger? = DLog.forClass("BrickDoc")
 
 struct BrickDocUUID : BUID {
     var uid : UUID!
     var type : String { return TUID.Types.doc.rawValue }
 }
 
-class BrickDocument: NSDocument, Identifiable  {
+class BrickDoc: NSDocument, Identifiable  {
 
     // MARK: properties
-    var observers = ObserversArray<BrickDocumentObserver>()
+    var observers = ObserversArray<BrickDocObserver>()
     let brick : Brick
     
     // MARK: Identifiable

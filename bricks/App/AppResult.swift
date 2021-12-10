@@ -41,6 +41,20 @@ typealias AppResultUpdatedBlock = (AppResultUpdated)->Void
 typealias AppResult = Result<Any, AppError>
 typealias AppResultBlock = (AppResult)->Void
 
+extension Result {
+    var isFailed : Bool {
+        switch self {
+        case .failure:
+            return true
+        case .success:
+            return false
+        }
+    }
+    
+    var isSuccess : Bool {
+        return !isFailed
+    }
+}
 
 func AppResultOrErr(_ result:Any?, error:AppError)->AppResult {
     if let result = result {

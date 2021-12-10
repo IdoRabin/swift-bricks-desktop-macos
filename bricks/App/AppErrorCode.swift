@@ -14,11 +14,16 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case misc_unknown = 9000
     case misc_failed_loading = 9001
     case misc_failed_saving = 9002
+    case misc_operation_canceled = 9003
     
     // Misc
     case web_unknown = 1000
     case web_internet_connection_error = 1003
     case web_unexpected_response = 1100
+    
+    // Command
+    case cmd_failed_execute
+    case cmd_failed_undo
     
     // Doc
     case doc_unknown = 2000

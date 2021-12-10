@@ -41,7 +41,7 @@ struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, Identif
             return self._displayName
         }
         set {
-            let fileExtension = BrickDocument.extension() ?? AppConstants.BRICK_FILE_EXTENSION
+            let fileExtension = BrickDoc.extension() ?? AppConstants.BRICK_FILE_EXTENSION
             self._displayName = newValue?.trimmingSuffix("." + fileExtension)
         }
     }

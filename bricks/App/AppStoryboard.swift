@@ -13,7 +13,7 @@ enum AppStoryboard : String {
     case main = "Main"
     case newproject = "NewProject"
     case splashscreen = "Splashscreen"
-    case preferences = "Preferences"
+    case misc = "misc" // about, preferences
     
     var storyBoard : NSStoryboard {
         get {

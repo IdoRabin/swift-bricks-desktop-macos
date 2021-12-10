@@ -13,18 +13,18 @@ fileprivate let dlog : DSLogger? = DLog.forClass("AppDelegate")
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    weak var documentController : BrickDocumentController? = nil
+    weak var documentController : BrickDocController? = nil
     weak var mainMenu : MainMenu? = nil
     
     static var shared : AppDelegate {
-        return NSApplication.shared.delegate as! AppDelegate
+        return BricksApplication.shared.delegate as! AppDelegate
     }
     
-    override init() {
-        super.init()
-        dlog?.info("init")
-        NSApplication.shared.delegate = self
-    }
+//    override init() {
+//        super.init()
+//        dlog?.info("init")
+//        BricksApplication.shared.delegate = self
+//    }
     
     deinit {
         dlog?.info("deinit")
@@ -99,7 +99,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillFinishLaunching(_ notification: Notification) {
         // init for NSDocuemntController subclass MUST take place before app finishes launching
         dlog?.info("applicationWillFinishLaunching")
-        documentController = BrickDocumentController()
+        documentController = BrickDocController.shared
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -125,13 +125,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
-    }
-
-    // MARK: Menu actions
-    @IBAction func showPreferencesMenuAction(_ sender :Any) {
-        if let windowController = AppStoryboard.preferences.instantiateWindowController(id: "PreferencesWCID") {
-            windowController.window?.makeKeyAndOrderFront(self)
-        }
     }
 }
 

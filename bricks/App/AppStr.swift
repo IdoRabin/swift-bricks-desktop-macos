@@ -86,16 +86,79 @@ enum AppStr : Localizable {
     case ADD_NEW
     
     // Menu
-    case FILE // "File"
-    case VIEW // "View"
-    case WINDOW // "Window"
-    case HELP // "Help"
+    // App menu
+    case ABOUT_APP_FORMAT
+    case PREFERENCES
+    case PREFERENCES_DOT_DOT
+    case SERVICES
+    case HIDE_APP_FORMAT
+    case HIDE_OTHERS
+    case SHOW_ALL
+    case QUIT_APP_FORMAT
+
+    // "File" menu
+    case FILE
+    case   NEW_PROJECT_DOT_DOT
+    case   OPEN_PROJECT_DOT_DOT
+    case   OPEN_RECENT
+    case   CLEAR_MENU
+    case   CLOSE_FORMAT
+    case   REVERT_TO_SAVED_DOT_DOT
+    case   PAGE_SETUP_DOT_DOT
+    case   PRINT_DOT_DOT
+    
+    // Edit menu
+    case   UNDO_FORMAT
+    case   REDO_FORMAT
+    case   CUT
+    case   PASTE
+    case   FIND
+    case   FIND_DOT_DOT
+    case   FIND_NEXT
+    case   FIND_PREVIOUS
+    
+    // "View" menu
+    case VIEW
+    case   SHOW_TOOLBAR
+    case   HIDE_TOOLBAR
+    case   CUSTEMIZE_TOOLBAR_DOT_DOT
+    case   SHOW_PROJECTS_SIDEBAR
+    case   HIDE_PROJECTS_SIDEBAR
+    case   SHOW_UTILITY_SIDEBAR
+    case   HIDE_UTILITY_SIDEBAR
+    case   ZOOM
+    case   ZOOM_IN
+    case   ZOOM_TO_100_PRC
+    case   ZOOM_OUT
+    case   ZOOM_TO_FIT
+    case   ENTER_FULL_SCREEN
+    case   EXIT_FULL_SCREEN
+    
+    // "Window" menu
+    case WINDOW
+    case   MINIMIZE
+    case   BRING_ALL_TO_FRONT
+    
+    // "Help" menu
+    case HELP
+    case DOCUMENTATION
+    case SUPPORT
+    case KEYBOARD_SHORTCUT_TOOLTIP
+    
+    // "Layer" menu
+    case LAYER
+    case ADD
+    case DELETE_FORMAT_DOT_DOT
+    case EDIT_FORMAT_DOT_DOT
+    case SHOW
+    case HIDE
     
     // Splash screen
-    case BRICKS // product name
+    case PRODUCT_NAME // product name
     case START_A_NEW_PROJECT_DOT_DOT
     case OPEN_AN_EXISTING_PROJECT_DOT_DOT
     case COPYRIGHT_COMPANY_W_YEAR_FORMAT // "Copyright © %@ Bricks Biz Ltd." should be year string
+    case COPYRIGHT_COMPANY_W_YEAR_FORMAT_LONG // "Copyright © %@ Bricks Biz Ltd. All rights reserved. Logo and other icons are trademarks of Bricks Biz Ltd." should be year string
     
     // TOOLBAR
     case PROJECT
@@ -217,9 +280,15 @@ enum AppStr : Localizable {
     }
     
     func formatLocalized(_ args:CVarArg..., bundle: Bundle = .main, tableName: String = "Localizable") -> String {
-        let formatString = self.getLocalized(bundle: bundle, tableName: tableName)
+        var formatString = self.getLocalized(bundle: bundle, tableName: tableName)
         
         #if DEBUG
+        if formatString.hasPrefix("▹⚠️") && formatString.hasSuffix("⚠️◃") && formatString.contains("FORMAT") {
+            for _ in 0..<args.count {
+                formatString = formatString.appending(" %@")
+            }
+        }
+        
         if !AppStr.isFormatStr(string: formatString, key: self.key) {
             dlog?.raiseAssertFailure("AppString \(self.key) = \"\(formatString)\" is NOT a format string used as a format string!")
         }

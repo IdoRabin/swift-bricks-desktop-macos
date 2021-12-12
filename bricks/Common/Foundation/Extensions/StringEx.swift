@@ -368,6 +368,19 @@ extension String {
     }
     
     
+    /// Returns true when the string contains all of the given items as substrings - notee - does not account for overlaps.
+    /// - Parameter items: substrigs to find
+    /// - Returns: true if contains all of the given substrings
+    func contains(allOf items:[String])->Bool {
+        for item in items {
+            if !self.contains(item) {
+                return false // on of the substrings is missing
+            }
+        }
+        return true // contains all
+    }
+    
+    
     /// Returns true when the string ENDS with the wanted expression
     /// adds to the regex a "$" at the end
     func hasSuffixMatching(_ regex:String, options:NSRegularExpression.Options = [])->Bool {

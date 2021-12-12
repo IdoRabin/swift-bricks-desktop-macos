@@ -129,6 +129,7 @@
 		ECEA1B7F2762299800DD602D /* MNSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7E2762299800DD602D /* MNSplitView.swift */; };
 		ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B802762299C00DD602D /* MNToolbarItem.swift */; };
 		ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */; };
+		ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -302,6 +303,7 @@
 		ECEA1B7E2762299800DD602D /* MNSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNSplitView.swift; sourceTree = "<group>"; };
 		ECEA1B802762299C00DD602D /* MNToolbarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNToolbarItem.swift; sourceTree = "<group>"; };
 		ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImages.swift.swift; sourceTree = "<group>"; };
+		ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSSplitviewEx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -525,6 +527,7 @@
 		EC218B1D27593A6E00744400 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */,
 				EC9DEFF2275CD1BD0046F30A /* CALayerEx.swift */,
 				EC9DEFF5275CD1BD0046F30A /* CGPointEx.swift */,
 				EC9DEFEC275CD1BD0046F30A /* CGRect+Corners.swift */,
@@ -965,6 +968,7 @@
 				EC218B7F2759459700744400 /* ComparableEx.swift in Sources */,
 				EC218B17275939DA00744400 /* AppSettings.swift in Sources */,
 				EC218B3E27593BE000744400 /* CachesHelper.swift in Sources */,
+				ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */,
 				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
 				EC218B5627593CBF00744400 /* ArrayEx.swift in Sources */,
 				ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */,

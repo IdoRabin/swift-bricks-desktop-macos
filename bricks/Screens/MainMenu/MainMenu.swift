@@ -268,13 +268,68 @@ class MainMenu : NSMenu {
         }
     }
     
+    private static func internal_items(menu:NSMenu,conformingToTest test:(NSMenuItem)->Bool, recursive:Bool = true, depth:Int = 0)->[NSMenuItem] {
+        guard depth < 127 else {
+            return []
+        }
+        
+        var result : [NSMenuItem] = []
+        for item in menu.items {
+            if test(item) {
+                result.append(item)
+            }
+            
+            if item.hasSubmenu && recursive {
+                let subsz = self.internal_items(menu: item.submenu!, conformingToTest: test, recursive: recursive, depth: depth + 1)
+                result.append(contentsOf: subsz)
+            }
+        }
+        
+        return result
+    }
+    
+    func items(conformingToTest test:(NSMenuItem)->Bool, recursive:Bool = true)->[NSMenuItem] {
+        return Self.internal_items(menu:self, conformingToTest: test, recursive: recursive, depth: 0)
+    }
+    
+    func item(withCommand cmd:Command.Type)->NSMenuItem? {
+        return self.items { item in
+            return (item as? MNMenuItem)?.associatedCommand == cmd
+        }.first
+    }
+    
+    func item(withId id:String)->NSMenuItem? {
+        return self.items { item in
+            item.identifier?.rawValue == id
+        }.first
+    }
+    
+    func items(withIdFragments fragments: [String], caseSensitive:Bool = false)->[NSMenuItem] {
+        let frags = caseSensitive ? fragments : fragments.compactMap({ str in
+            str.lowercased()
+        })
+        
+        return self.items { item in
+            if let idr = item.identifier {
+                var id = idr.rawValue
+                if caseSensitive == false {
+                    id = id.lowercased()
+                }
+                return id.contains(allOf: frags)
+            }
+            return false
+        }
+    }
+    
+    // toggleTrailingSidebarMenuItemID
+    
     // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        //DispatchQueue.main.async {
-            // AppDelegate.shared.mainMenu = self
-        //}
+        DispatchQueue.main.async {
+             AppDelegate.shared.mainMenu = self
+        }
         
         topMnuItems = [
             bricksTopMnuItem, fileTopMnuItem, editTopMnuItem, viewTopMnuItem, windowTopMnuItem, helpTopMnuItem]

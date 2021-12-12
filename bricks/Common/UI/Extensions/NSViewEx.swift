@@ -166,3 +166,45 @@ extension NSView /* Layers*/ {
     }
 }
 
+extension NSView /* search subviews */ {
+    
+    
+    /// Returns all the subviews which answers the given test. similar to subviews.filter but with the ability tp test recursively.
+    /// - Parameters:
+    ///   - test: test performed for each subview
+    ///   - downtree: when true, will perform the function recursively, down the tree, depth first.
+    /// - Returns: all views answering the test block
+    func subviews(which test:(_ view:NSView)->Bool, downtree:Bool)->[NSView] {
+        var result : [NSView] = []
+        for view in self.subviews {
+            if test(view) {
+                result.append(view)
+            } else if downtree {
+                let subsubs = view.subviews(which: test, downtree: true)
+                if subsubs.count > 0 {
+                    result.append(contentsOf: subsubs)
+                }
+            }
+        }
+        return result.uniqueElements() // make sure one of any instance
+    }
+    
+    
+    /// Returns the first subview which answers the given test. similar to subviews.filter but with the ability tp test recursively.
+    /// - Parameters:
+    ///   - test: test performed for each subview
+    ///   - downtree: when true, will perform the function recursively, down the tree, depth first.
+    /// - Returns: the first encountered view answering the test block
+    func firstSubview(which test:(_ view:NSView)->Bool, downtree:Bool)->NSView? {
+        for view in self.subviews {
+            if test(view) {
+                return view
+            } else if downtree {
+                if let subsub = view.firstSubview(which: test, downtree: true) {
+                    return subsub
+                }
+            }
+        }
+        return nil
+    }
+}

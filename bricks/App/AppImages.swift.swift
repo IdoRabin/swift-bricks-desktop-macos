@@ -9,11 +9,10 @@ import AppKit
 
 // All image names used in the app
 struct AppImages {
-    let sideMenuLeftCollapsed   =           ImageString("sidebar.left.collapsed")
-    let sideMenuLeftUncollapsed =           ImageString("sidebar.left.uncollapsed")
-    let sideMenuRightCollapsed   =          ImageString("sidebar.right.collapsed")
-    let sideMenuRightUncollapsed =          ImageString("sidebar.right.uncollapsed")
-
+    static let sideMenuLeftCollapsed   =           ImageString("sidebar.left.collapsed")
+    static let sideMenuLeftUncollapsed =           ImageString("sidebar.left.uncollapsed")
+    static let sideMenuRightCollapsed   =          ImageString("sidebar.right.collapsed")
+    static let sideMenuRightUncollapsed =          ImageString("sidebar.right.uncollapsed")
 }
 
 class NSPlaceholderImage : NSImage {

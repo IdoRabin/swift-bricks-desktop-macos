@@ -6,11 +6,11 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Window Controller-->
+        <!--DocumentWC-->
         <scene sceneID="t6r-RU-XhI">
             <objects>
-                <windowController storyboardIdentifier="DocumentWCID" id="aUJ-eb-uWu" sceneMemberID="viewController">
-                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="jeG-Hn-tyM">
+                <windowController storyboardIdentifier="DocumentWCID" id="aUJ-eb-uWu" userLabel="DocumentWC" sceneMemberID="viewController">
+                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="164" y="462" width="741" height="492"/>
@@ -20,13 +20,8 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ">
-                            <allowedToolbarItems>
-                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="X6E-8S-Oii"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="VLS-ZC-WMV"/>
-                            </allowedToolbarItems>
-                            <defaultToolbarItems>
-                                <toolbarItem reference="VLS-ZC-WMV"/>
-                            </defaultToolbarItems>
+                            <allowedToolbarItems/>
+                            <defaultToolbarItems/>
                         </toolbar>
                         <connections>
                             <outlet property="delegate" destination="aUJ-eb-uWu" id="UHo-iq-sGo"/>
@@ -43,13 +38,13 @@
         <!--DocumentVC-->
         <scene sceneID="LEU-rn-2US">
             <objects>
-                <splitViewController identifier="DocumentVCID" storyboardIdentifier="DocumentVCID" id="CmF-ng-hYs" customClass="DocumentVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController storyboardIdentifier="DocumentVCID" id="CmF-ng-hYs" customClass="DocumentVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="BX1-p6-cIx"/>
                         <splitViewItem id="tJl-hh-Jnq"/>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="5ik-Wn-kDK"/>
                     </splitViewItems>
-                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="wo6-t0-en1">
+                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="wo6-t0-en1" customClass="MNSplitview" customModule="Bricks" customModuleProvider="target">
                         <rect key="frame" x="-105" y="0.0" width="630" height="509"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
@@ -104,7 +99,7 @@
                 </viewController>
                 <customObject id="0O2-Q8-GrE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="435" y="1248"/>
+            <point key="canvasLocation" x="435" y="1254"/>
         </scene>
     </scenes>
 </document>

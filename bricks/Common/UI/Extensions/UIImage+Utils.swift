@@ -239,24 +239,61 @@ extension NSImage {
         return self.croppedByInsets(xInset:-xPadding, yInset:-yPadding, xoffset:xoffset, yoffset:yoffset)
     }
     
-    func paddedWithPaddingEdges(top:CGFloat = 0.0, left:CGFloat = 1.0, bottom:CGFloat = 0.0, right:CGFloat = 0.0)->NSImage? {
+    func paddedWithPaddings(uniformSides allSides:CGFloat = 0.0)->NSImage? {
+        return self.paddedWithPaddingEdges(insets: NSEdgeInsets(top: allSides, left: allSides, bottom: allSides, right: allSides))
+    }
         
-        assert(false, "Implement NSImage.paddedWithPaddingEdges for NSImage")
-//        let newWidth = max(self.size.width + (left + right), 0)
-//        let newHeight = max(self.size.height + (top + bottom), 0)
-//
-//        if newWidth >= 1.0 && newHeight >= 1.0 {
-//            UIGraphicsBeginImageContextWithOptions(CGSize(width:newWidth, height:newHeight), /*opaque:*/false, /*scale:*/self.scale)
-//            self.draw(in: CGRect(x:left, y:top, width:self.size.width, height:self.size.height))
-//            let newImage = UIGraphicsGetImageFromCurrentImageContext()
-//            UIGraphicsEndImageContext()
-//
-//            return newImage
-//        }
+    func paddedWithPaddingEdges(top:CGFloat = 0.0, left:CGFloat = 1.0, bottom:CGFloat = 0.0, right:CGFloat = 0.0)->NSImage? {
+        return self.paddedWithPaddingEdges(insets: NSEdgeInsets(top: top, left: left, bottom: bottom, right: right))
+    }
+    
+    
+    func paddedWithPaddingEdgeParts(top:CGFloat = 0.0, left:CGFloat = 1.0, bottom:CGFloat = 0.0, right:CGFloat = 0.0)->NSImage? {
+        guard left > 0.0 && left < 1.0 else {
+            return nil
+        }
+        guard bottom > 0.0 && bottom < 1.0 else {
+            return nil
+        }
+        guard right > 0.0 && right < 1.0 else {
+            return nil
+        }
+        guard top > 0.0 && top < 1.0 else {
+            return nil
+        }
+        
+        let w = self.size.width
+        let h = self.size.height
+        let edges = NSEdgeInsets(top: h * top, left: w * left, bottom: h * bottom, right: w * right)
+        return self.paddedWithPaddingEdges(insets: edges)
+    }
+
+    func paddedWithPaddingEdges(insets:NSEdgeInsets)->NSImage? {
+        let newWidth = max(self.size.width + (insets.left + insets.right), 0)
+        let newHeight = max(self.size.height + (insets.top + insets.bottom), 0)
+        if newWidth >= 1.0 && newHeight >= 1.0 {
+            let newRect = CGRect(origin: .zero, size: CGSize(width: newWidth, height: newHeight))
+            let imgRect = newRect.insetted(by: insets)
+            guard let existingRep = self.bestRepresentation(for: imgRect.boundsRect(), context: nil, hints: nil) else {
+                return nil
+            }
+            let newImg = NSImage(size: newRect.size, flipped: false, drawingHandler: { (_) -> Bool in
+                return existingRep.draw(in: imgRect)
+            })
+
+            return newImg
+        }
+        
+
+
+
+//        let image = NSImage(size: targetSize, flipped: false, drawingHandler: { (_) -> Bool in
+//            return representation.draw(in: frame)
+//        })
         
         return nil
     }
-    
+
     /// Create solid colored image with a given size
     ///
     /// - Parameters:

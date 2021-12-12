@@ -233,15 +233,15 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="hB3-LF-h0Y"/>
-                            <menuItem title="Show Project Sidebar" keyEquivalent="0" id="kIP-vf-haE">
+                            <menuItem title="Show Project Sidebar" keyEquivalent="0" identifier="toggleLeadingSidebarMenuItemID" id="kIP-vf-haE">
                                 <connections>
-                                    <action selector="toggleSidebar:" target="-1" id="iwa-gc-5KM"/>
+                                    <action selector="toggleSidebarAction:" target="-1" id="DZ6-iJ-ATq"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Show Utility Sidebar" keyEquivalent="0" allowsKeyEquivalentWhenHidden="YES" id="bO6-qk-ASa">
+                            <menuItem title="Show Utility Sidebar" keyEquivalent="0" allowsKeyEquivalentWhenHidden="YES" identifier="toggleTrailingSidebarMenuItemID" id="bO6-qk-ASa">
                                 <modifierMask key="keyEquivalentModifierMask" shift="YES" command="YES"/>
                                 <connections>
-                                    <action selector="toggleSidebar:" target="-1" id="OjI-rY-EkB"/>
+                                    <action selector="toggleSidebarAction:" target="-1" id="anD-4R-5lD"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="vFH-wu-Bv5"/>

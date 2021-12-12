@@ -97,46 +97,47 @@ class MainMenu : NSMenu {
     
     enum State {
         enum StateSimplified : Int {
+            case disabled
             case splashScreen
-            case project
-            case projectModal
-            case appPreferences
+            case document
+            case documentWithModal
         }
         
+        case disabled
         case splashScreen
-        case project
-        case projectModal(String)
-        case appPreferences
+        case document
+        case documentWithModal(String)
         var simplified : StateSimplified {
             switch self {
+            case .disabled : return .disabled
             case .splashScreen: return .splashScreen
-            case .project: return .project
-            case .projectModal: return .projectModal
-            case .appPreferences: return .appPreferences
+            case .document: return .document
+            case .documentWithModal: return .documentWithModal
             }
         }
     }
     
-    var state : State = .projectModal("disableAll") {
+    var state : State = .disabled {
         didSet {
             if state.simplified != oldValue.simplified {
                 dlog?.info("state didSet \(state)")
             }
 
             switch state {
+            case .disabled:
+                self.disableAll(except: [bricksQuitMnuItem, bricksAboutMnuItem])
+                
             case .splashScreen:
                 let enabledItems : [NSMenuItem]  = [bricksAboutMnuItem, bricksPreferencesMnuItem, bricksHideMnuItem,
                                                     helpTooltipsShowKeyboardShortcutsMnuItem]
                 self.disableAll(except:enabledItems)
-            case .project:
+            case .document:
                 self.disableAll(except: [])
-            case .projectModal(let string):
+            case .documentWithModal(let string):
                 switch string {
                 default:
                     self.disableAll(except: [])
                 }
-            case .appPreferences:
-                self.disableAll(except: [])
             }
         }
     }
@@ -227,7 +228,7 @@ class MainMenu : NSMenu {
                     
                 case helpTopMnuItem: title = AppStr.HELP.localized()
                 case helpMnuItem: title = AppStr.DOCUMENTATION.localized() // + AppStr.SUPPORT.localized
-                case helpTooltipsShowKeyboardShortcutsMnuItem: title = AppStr.KEYBOARD_SHORTCUT_TOOLTIP.localized()
+                case helpTooltipsShowKeyboardShortcutsMnuItem: title = AppStr.KEY_BINDINGS_APPEAR_IN_TOOLTIPS.localized()
                 default:
                     title = "" // ❌Unknown❌"
                     if item.menu == fileOpenRecentSubmenu {
@@ -270,7 +271,10 @@ class MainMenu : NSMenu {
     // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
-        AppDelegate.shared.mainMenu = self
+        
+        //DispatchQueue.main.async {
+            // AppDelegate.shared.mainMenu = self
+        //}
         
         topMnuItems = [
             bricksTopMnuItem, fileTopMnuItem, editTopMnuItem, viewTopMnuItem, windowTopMnuItem, helpTopMnuItem]
@@ -324,21 +328,34 @@ class MainMenu : NSMenu {
     
     // MARK: state changes
     func determineState() {
-        let windowCount = NSApplication.shared.orderedWindows.count
-        let topVC = NSApplication.shared.orderedWindows.first?.contentViewController
-        // dlog?.info("determineState windows:\(windowCount) topVC:\(topVC.self.descOrNil)")
-        switch (windowCount, topVC) {
-        case (1, is SplashVC):
-            self.state = .splashScreen
-        default:
-            dlog?.info("unknown state")
-            self.state = .projectModal("disableAll")
+        let hasSplash = BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self)
+        let hasDocument = BrickDocController.shared.documents.count == 0 || BricksApplication.shared.isViewControllerExistsOfClass(DocumentVC.self)
+        
+        var result : State = .splashScreen
+        if hasSplash {
+            if hasDocument {
+                // Hide splash
+                result = .document
+            } else {
+                result = .splashScreen
+            }
+        } else if hasDocument {
+            result = .document
+        } else {
+            result = .disabled
         }
+        
+        // Change state
+        self.state = result
     }
     
     private func setEnabled(_ enabled:Bool, items:[NSMenuItem] = [], except:[NSMenuItem]) {
         for item in items {
-            item.isEnabled = (except.contains(item)) ? !enabled : enabled
+            var isEnable = (except.contains(item)) ? !enabled : enabled
+            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand {
+                isEnable = BrickDocController.shared.isAllowed(commandType: cmd)
+            }
+            item.isEnabled = isEnable
         }
     }
     

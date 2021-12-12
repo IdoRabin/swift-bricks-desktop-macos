@@ -30,7 +30,10 @@ class MNButton: NSButton {
     }
     
     // private properties
+    private var initFrame = CGRect.zero
     private var hoverTrackingArea : NSTrackingArea? = nil
+    private var preHoverTintColor : NSColor? = nil
+    
     var instrinsicContentSizePadding = NSEdgeInsets.zero
     
     // public var
@@ -39,6 +42,7 @@ class MNButton: NSButton {
             self.updateTrackingAreas()
         }
     }
+    
     @IBInspectable var hoverTextColor : NSColor? = nil {
         didSet {
             if hoverTextColor != nil {
@@ -57,7 +61,6 @@ class MNButton: NSButton {
         } else if isDetectHover == false && self.trackingAreas.count > 0, let area = self.hoverTrackingArea {
             self.removeTrackingArea(area)
         }
-        
     }
     
     override func mouseUp(with event: NSEvent) {
@@ -70,6 +73,7 @@ class MNButton: NSButton {
         //dlog?.info("mouseEntered")
         onMouseEnter?(self)
         if let color = hoverTextColor {
+            preHoverTintColor = self.contentTintColor
             self.contentTintColor = color
         }
     }
@@ -79,12 +83,14 @@ class MNButton: NSButton {
         //dlog?.info("mouseExited")
         onMouseExit?(self)
         if let _ = hoverTextColor {
-            self.contentTintColor = nil
+            self.contentTintColor = preHoverTintColor
         }
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        initFrame = self.frame
+        // dlog?.info("awakeFromNib [\(self.attributedTitle.string)] sze:\(self.frame.size)")
         DispatchQueue.main.async {[self] in
             self.updateTrackingAreas()
         }
@@ -102,7 +108,8 @@ class MNButton: NSButton {
     
     func calcedTitleSize()->CGSize {
         let attributes = self.attributesForWholeTitle
-        let result = (self.title as NSString).boundingRect(with: self.bounds.size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil)
+        let result = (self.title as NSString).boundingRect(with: self.bounds.size, options: .usesLineFragmentOrigin, attributes: attributes, context: nil).rounded()
+        // dlog?.info(" MNButton titleSze: \"\(self.attributedTitle.string)\": \(result)")
         return result.size
     }
     
@@ -110,17 +117,20 @@ class MNButton: NSButton {
         if let img = self.state == .on ? self.alternateImage : self.image {
             var result = CGRect(origin: CGPoint.zero, size: img.size.scaled(1.0 / (NSScreen.main?.backingScaleFactor ?? 1.0))).rounded()
             
-            let minSide = min(self.bounds.width, self.bounds.height)
+            var minSide = min(initFrame.width, initFrame.height)
+            if minSide == 0 {
+                minSide = min(self.frame.width, self.frame.height)
+            }
             let minBounds = CGRect(origin: self.bounds.origin, size: CGSize(width: minSide, height: minSide))
             
             // Calc scaling:
             switch self.imageScaling {
             case .scaleAxesIndependently:
-                result = self.bounds
+                result = self.bounds.rounded()
             case .scaleProportionallyDown:
                 let rct = result.aspectFit(rect: minBounds).rounded()
-                if rct.width <= img.size.width && rct.height <= img.size.height {
-                    result = rct
+                if rct.width >= img.size.width && rct.height >= img.size.height {
+                    result = CGRect(origin: self.bounds.origin, size: img.size)
                 }
             case .scaleProportionallyUpOrDown:
                 result = result.aspectFit(rect: minBounds).rounded()
@@ -129,12 +139,17 @@ class MNButton: NSButton {
             default:
                 break // keep size
             }
+            //dlog?.info(" MNButton imageSze: \"\(self.attributedTitle.string)\": \(result)")
             return result.size
         }
         return CGSize.zero
     }
     
     func calcedTitleRect()->CGRect {
+        guard self.title.count > 0 || self.attributedTitle.string.count > 0 else {
+            return CGRect.zero // .changed(height: self.bounds.height)
+        }
+        
         var result = CGRect(origin: CGPoint.zero, size: self.calcedTitleSize())
         let imgSize = self.calcedImageSize()
         if !imgSize.isZero {
@@ -170,6 +185,10 @@ class MNButton: NSButton {
     }
     
     func calcedImageRect()->CGRect? {
+        guard self.image != nil || self.alternateImage != nil else {
+            return CGRect.zero // .changed(height: self.bounds.height)
+        }
+        
         let size = calcedImageSize()
         if size.width != 0.0 && size.height != 0.0 {
             var result = CGRect(origin: CGPoint.zero, size: size)
@@ -214,9 +233,10 @@ class MNButton: NSButton {
         }
         var result = calcedTitleRect()
         if let imgrect = self.calcedImageRect() {
+            // dlog?.info("for [\(self.attributedTitle.string)] img:\(imgrect) ttl:\(result) total:\(result.union(imgrect))")
             result = result.union(imgrect)
         }
-        return result.size
+        return result.size.adding(widthAdd: 2)
     }
 }
 

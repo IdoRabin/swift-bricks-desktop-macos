@@ -129,7 +129,7 @@
 "HELP" = "Help";
 "DOCUMENTATION" = "Documentation";
 "SUPPORT" = "Support";
-"KEYBOARD_SHORTCUT_TOOLTIP" = "Key binding in Tooltips";
+"KEY_BINDINGS_APPEAR_IN_TOOLTIPS" = "Key binding in Tooltips";
 
 // "Layer" menu
 "LAYER" = "Layer";
@@ -158,3 +158,11 @@
 "ADD_NEW_PLAN_LAYER" = "Add new plan layer";
 "DELETE_SELECTED_LAYER_FROM_PLAN" = "Delete selected layer from plan";
 "EDIT_SELECTED_LAYER" = "Edit selected layer";
+
+// Preferences
+"GENERAL" = "General";
+"ACCOUNTS" = "Accounts";
+"KEY_BINDINGS" = "Key Bindings";
+"GENERAL_PREFERENCES_TOOLTIP" = "General settings";
+"ACCOUNTS_PREFERENCES_TOOLTIP" = "Accounts and git remote settings";
+"KEY_BINDINGS_PREFERENCES_TOOLTIP" = "Keyboard shortcuts assignment";

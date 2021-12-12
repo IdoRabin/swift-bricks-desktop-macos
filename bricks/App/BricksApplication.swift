@@ -11,12 +11,15 @@ import AppKit
 fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
 
 @objc class BricksApplication : NSApplication {
-    var appDelegate = AppDelegate()
+    
+    override class var shared: BricksApplication {
+        return super.shared as! BricksApplication
+    }
     
     override init() {
         dlog?.info("init")
         super.init()
-        self.delegate = appDelegate
+        self.delegate = AppDelegate.shared
         DispatchQueue.main.async {
             self.mainMenu = MainMenu.fromNib()
         }
@@ -29,6 +32,7 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
     }
     
     deinit {
-        
+        dlog?.info("deinit")
     }
+    
 }

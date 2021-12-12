@@ -1,17 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "CloseIcon@1x.png",
+      "filename" : "sidebar.right.collapsed.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "CloseIcon@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "CloseIcon@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

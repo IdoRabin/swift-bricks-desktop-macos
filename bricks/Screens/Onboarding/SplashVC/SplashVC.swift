@@ -36,6 +36,7 @@ class HistoryTableviewContainer : NSScrollView {
 class SplashVC : NSViewController {
     let DEBUG_DRAWING = IS_DEBUG && false
     let MIN_WIDTH : CGFloat = 420 // hhh
+    let TABLEVIEW_WIDTH : CGFloat = 220 // hhh
     var windowController : NSWindowController? = nil
     
     @IBOutlet weak var mainItemsconstainerHeightConstraint: NSLayoutConstraint!
@@ -50,13 +51,15 @@ class SplashVC : NSViewController {
     @IBOutlet weak var closeButton: MNButton!
     
     // Vertical stack buttons
+    @IBOutlet weak var mainButtonsStackViewWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var mainButtonsStackView: NSStackView!
     @IBOutlet weak var startNewProjectButton: MNButton!
     @IBOutlet weak var openExistinProjectButton: MNButton!
     
     private var historyFiles : [BrickBasicInfo] = []
     
-    fileprivate func setHistoryTableHidden(_ hidden:Bool) {
+    func setHistoryTableHidden(_ hidden:Bool) {
+        dlog?.info("setHistoryTableHidden: \(hidden)")
         if historyTableviewContainer.isHidden != hidden {
             historyTableviewContainer.isHidden = hidden
             waitFor("view load", interval: 0.1, timeout: 1.0, testOnMainThread: {
@@ -67,15 +70,11 @@ class SplashVC : NSViewController {
 
                         var rect = window.frame
                         if hidden {
-                            rect = rect.growAroundCener(widthAdd: -historyTableviewContainer.frame.width, heightAdd: 0)
-                            let delta = MIN_WIDTH - rect.width
-                            if delta > 0 {
-                                rect = rect.growAroundCener(widthAdd: delta, heightAdd: 0)
-                            }
+                            rect = rect.changed(width: MIN_WIDTH)
                         } else {
-                            rect = rect.growAroundCener(widthAdd: historyTableviewContainer.frame.width, heightAdd: 0)
+                            rect = rect.changed(width: MIN_WIDTH + TABLEVIEW_WIDTH)
                         }
-                        
+
                         window.setFrame(rect, display: true, animate: false)
                     }
                 }
@@ -84,13 +83,20 @@ class SplashVC : NSViewController {
     }
     
     private func layoutMainActionButtons() {
+        var maxW : CGFloat = 0
         [startNewProjectButton, openExistinProjectButton].forEach { button in
             if let button = button {
+                button.titleNBSPPrefixIfNeeded(count: 2)
                 button.needsLayout = true
                 button.needsUpdateConstraints = true
-                button.titleNBSPPrefixIfNeeded(count: 2)
-                button.sizeToFit()
+                maxW = max(maxW, button.intrinsicContentSize.width)
             }
+        }
+        if maxW > 0 {
+            maxW = maxW + 1 + mainButtonsStackView.edgeInsets.left + mainButtonsStackView.edgeInsets.right // + mainButtonsStackView.spacing
+            maxW = min(maxW, self.view.bounds.width - 24)
+            //dlog?.info("layout maxW:\(maxW)")
+            mainButtonsStackViewWidthConstraint.constant = maxW
         }
     }
     
@@ -117,18 +123,6 @@ class SplashVC : NSViewController {
         
         self.layoutMainActionButtons()
         
-        AppDocumentHistory.shared.whenLoaded { updated in
-            switch updated {
-            case .success:
-                self.setHistoryTableHidden(AppDocumentHistory.shared.history.count == 0)
-            case .failure:
-                self.setHistoryTableHidden(true)
-            }
-            DispatchQueue.main.async {
-                self.layoutMainActionButtons()
-            }
-        }
-        
         if DEBUG_DRAWING {
             // self.historyTableviewContainer.layer?.border(color: .red, width: 1)
             // self.mainItemsConstainer.layer?.border(color: .green, width: 1)
@@ -148,8 +142,25 @@ class SplashVC : NSViewController {
         let box : MNColoredView? = self.view.subviews.first { view in
             view is MNColoredView
         } as? MNColoredView
-        box?.layer?.border(color: .red, width: 1)
+        if DEBUG_DRAWING {
+            box?.layer?.border(color: .blue, width: 1)
+        }
         box?.frame = self.view.frame
+        dlog?.info("viewDidLayout")
+    }
+    
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        dlog?.info("viewDidAppear")
+    }
+    
+    // TODO: NSWindow with no title bar cannot become keyWindow -> and cannot recieve keyboard events except cmd+w and a few other winow mgmgt keys
+    override func cancelOperation(_ sender: Any?) {
+        self.closeButtonAction(sender ?? self)
+    }
+    
+    deinit {
+        dlog?.info("deinit")
     }
 }
 
@@ -165,21 +176,20 @@ extension SplashVC /* Actions */ {
                 } else {
                     DispatchQueue.main.async {
                         AppDelegate.shared.documentController?.invalidateMenu()
-                        NSApplication.shared.terminate(self)
+                        
+                        // Terminate the app:
+                        BricksApplication.shared.terminate("SplashVC")
                     }
                 }
             }
         }
         
-        if let window = self.view.window, let wc = (windowController as? SplashWC) {
+        if let window = self.view.window {
             if window.delegate?.windowShouldClose?(window) ?? true {
-                dlog?.info("Will fadeHide")
-                wc.isClosing = true
                 window.fadeHide {
-                    wc.isClosing = false
                     window.close()
-                    dlog?.info("fadeHide Done")
                     self.windowController = nil // dealloc windowController
+                    finalKill()
                 }
             }
         }
@@ -206,34 +216,14 @@ extension SplashVC /* Actions */ {
 
 extension SplashVC : NSTableViewDelegate, NSTableViewDataSource {
     
-}
-
-extension NSWindow {
-    
-    func fadeHide(completed:@escaping ()->Void) {
-        guard let cv = self.contentView, let wc = self.windowController as? SplashWC else {
-            return
-        }
-        
-        let precloseFrame = self.frame
-        
-        func finalize() {
-            cv.layer?.opacity = 0.0
-            wc.contentViewController?.view.alphaValue = 0.0
-            self.setFrame(precloseFrame, display: false, animate: false)
-            dlog?.info("fadeHide finalized")
-            completed()
-        }
-        let duration : TimeInterval = 0.2
-
-        NSAnimationContext.runAnimationGroup(
-            { (context) -> Void in
-        context.duration = duration
-                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-                self.animator().alphaValue = 0.0
-
-            }, completionHandler: {
-                finalize()
-        })
+    func numberOfRows(in tableView: NSTableView) -> Int {
+        return 0
     }
+    
+    func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any? {
+        return nil
+    }
+    
 }
+
+

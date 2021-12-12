@@ -10,6 +10,8 @@ import Cocoa
 // TODO: check out usage and adding XcodeKit.
 fileprivate let dlog : DSLogger? = DLog.forClass("AppDelegate")
 
+fileprivate var instance : AppDelegate? = nil
+
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
 
@@ -17,14 +19,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     weak var mainMenu : MainMenu? = nil
     
     static var shared : AppDelegate {
-        return BricksApplication.shared.delegate as! AppDelegate
+        return instance ?? AppDelegate()
     }
     
-//    override init() {
-//        super.init()
-//        dlog?.info("init")
-//        BricksApplication.shared.delegate = self
-//    }
+    private override init() {
+        super.init()
+        dlog?.info("init")
+        instance = self
+    }
     
     deinit {
         dlog?.info("deinit")
@@ -45,11 +47,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @discardableResult
-    private func presentSplashWindow()->Bool {
-        if let windowController = AppStoryboard.splashscreen.instantiateWindowController(id: "SplashWCID") {
-            windowController.window?.makeKeyAndOrderFront(self)
-            return true
-        }
+    private func presentSplashWindow(showsRecents:Bool)->Bool {
+        let cmd = CmdSplashWindow(showsRecents: showsRecents)
+        BrickDocController.shared.sendToInvoker(command: cmd)
         return false
     }
     
@@ -62,31 +62,39 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func presentFirstWindow() {
-        if AppSettings.shared.general.showsSplashScreenOnInit &&
-            self.presentSplashWindow() {
-            // Shows splash screen
-        } else {
-            AppDocumentHistory.shared.whenLoaded({ updated in
+        AppDocumentHistory.shared.whenLoaded({ updated in
+            let hasRecents = (AppDocumentHistory.shared.history.count > 0)
+            if AppSettings.shared.general.showsSplashScreenOnInit &&
+                self.presentSplashWindow(showsRecents: hasRecents) {
+                    // Splash screen was presented
+            } else {
                 if let docInfo = AppDocumentHistory.shared.history.first {
                     dlog?.info("Should load recent document: \(docInfo)")
                     self.loadAndPresentDocument(info: docInfo)
                 } else {
                     DispatchQueue.main.asyncAfter(delayFromNow: 0.5) {
-                        if NSApplication.shared.windows.count == 0 {
+                        if BricksApplication.shared.orderedWindows.count == 0 {
                             dlog?.note("No file loaded and no splash screen in settings")
-                            self.presentSplashWindow()
+                            
+                            // Splash screen will be presented
+                            self.presentSplashWindow(showsRecents: false)
                         }
                     }
                 }
-            })
-        }
+            }
+        })
     }
     
     // MARK: NSApplicationDelegate
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         dlog?.info("Reopen - user clicked on app icon again")
-        if sender.windows.count == 0 {
-            self.presentSplashWindow()
+        if BricksApplication.shared.orderedWindows.count == 0 {
+            AppDocumentHistory.shared.whenLoaded { updated in
+                let hasRecents = (AppDocumentHistory.shared.history.count > 0)
+                
+                // Splash screen will be presented
+                self.presentSplashWindow(showsRecents: hasRecents)
+            }
         }
         return true
     }
@@ -121,6 +129,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Insert code here to tear down your application
         UserDefaults.standard.synchronize()
+        
+        BricksApplication.shared.mainMenu = nil
+        instance = nil
     }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {

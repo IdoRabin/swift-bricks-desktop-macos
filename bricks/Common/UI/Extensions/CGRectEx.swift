@@ -350,7 +350,7 @@ extension CGRect { /* Aspect sizes */
     /// - Parameter boundingRect: rect that is the bounding rect for the currec rect's aspect ratio
     /// - Returns: a new rect bounded by the given bounding rect keeping the self's aspect ratio
     func aspectFit(rect boundingRect: CGRect) -> CGRect {
-        return boundingRect.aspectFitting(inside: self)
+        return self.aspectFitting(inside: boundingRect)
     }
     
     

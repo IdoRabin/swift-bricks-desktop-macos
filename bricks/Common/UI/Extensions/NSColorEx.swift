@@ -1,6 +1,5 @@
 //
 //  NSColorEx.swift
-//  grafo
 //
 //  Created by Ido on 28/01/2021.
 //

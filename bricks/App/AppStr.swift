@@ -143,7 +143,7 @@ enum AppStr : Localizable {
     case HELP
     case DOCUMENTATION
     case SUPPORT
-    case KEYBOARD_SHORTCUT_TOOLTIP
+    case KEY_BINDINGS_APPEAR_IN_TOOLTIPS
     
     // "Layer" menu
     case LAYER
@@ -154,6 +154,7 @@ enum AppStr : Localizable {
     case HIDE
     
     // Splash screen
+    case PRESENT_SPLASH_SCREEN
     case PRODUCT_NAME // product name
     case START_A_NEW_PROJECT_DOT_DOT
     case OPEN_AN_EXISTING_PROJECT_DOT_DOT
@@ -170,6 +171,14 @@ enum AppStr : Localizable {
     case ADD_NEW_PLAN_LAYER
     case DELETE_SELECTED_LAYER_FROM_PLAN
     case EDIT_SELECTED_LAYER
+    
+    // Preferences
+    case GENERAL
+    case ACCOUNTS
+    case KEY_BINDINGS
+    case GENERAL_PREFERENCES_TOOLTIP
+    case ACCOUNTS_PREFERENCES_TOOLTIP
+    case KEY_BINDINGS_PREFERENCES_TOOLTIP
     
     var key : String {
         return String(describing: self)

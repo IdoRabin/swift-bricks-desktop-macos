@@ -11,7 +11,10 @@ import Foundation
 fileprivate let dlog : DSLogger? = DLog.forClass("Cache")
 
 typealias CodableHashable = Codable & Hashable
-typealias AnyCodableHashable = AnyObject & Codable & Hashable
+typealias AnyCodable = Any & Codable
+typealias AnyEquatable = Any & Equatable
+typealias AnyCodableEquatable = Any & Codable & Equatable
+typealias AnyCodableHashable = Any & Codable & Hashable
 
 /// Cache observer protocol - called when a cache changes
 protocol CacheObserver {

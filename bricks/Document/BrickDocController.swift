@@ -9,6 +9,7 @@
 import Cocoa
 
 fileprivate let dlog : DSLogger? = DLog.forClass("BrickDocController")
+fileprivate let dlogWindows : DSLogger? = nil // DLog.forClass("BrickDocController+W")
 
 // NSWorkspace.shared.hideOtherApplications()
 
@@ -72,7 +73,7 @@ class BrickDocController: NSDocumentController {
 extension BrickDocController  /* Responder */ {
     
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
-        dlog?.info("validateMenuItem \(menuItem)")
+        // dlog?.info("validateMenuItem \(menuItem)")
         if let menuItem = menuItem as? MNMenuItem, let cmd = menuItem.associatedCommand {
             return self.isAllowed(commandType: cmd)
         }
@@ -80,7 +81,12 @@ extension BrickDocController  /* Responder */ {
     }
     
     override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-        dlog?.info("validateUserInterfaceItem \(item)")
+        if item is NSMenuItem || item is MNMenuItem {
+            
+        } else {
+            dlog?.info("validateUserInterfaceItem \(item)")
+        }
+        
         return true
     }
     
@@ -98,7 +104,7 @@ extension BrickDocController  /* Responder */ {
     
     func invalidateWindows() {
         dlog?.info("invalidateWindows")
-        NSApplication.shared.windows.forEach({ window in
+        BricksApplication.shared.windows.forEach({ window in
             window.invalidateShadow()
         })
     }
@@ -129,6 +135,32 @@ extension BrickDocController  /* Expected actions */ {
         commandInvoker.addCommand(CmdOpenProject())
     }
 
+    @IBAction func cancel(_ sender: Any?) {
+        if let topWindow = BricksApplication.shared.orderedWindows.first,let topVC = topWindow.contentViewController {
+            
+            dlog?.info("cancel action for sender: \(sender.descOrNil) topVC:\(topVC)")
+            
+            var isClose = false
+            switch topVC {
+            case is SplashVC:
+                isClose = AppSettings.shared.general.splashScreenCloseBtnWillCloseApp == false
+                if !isClose {
+                    topWindow.shake()
+                }
+            case is AboutVC: isClose = true
+            case is PreferencesVC: isClose = true
+            default:
+                break
+            }
+            
+            if isClose {
+                topWindow.fadeHide {
+                    topWindow.close()
+                }
+            }
+        }
+    }
+    
     //    override func openDocument(withContentsOf url: URL, display displayDocument: Bool, completionHandler: @escaping (NSDocument?, Bool, Error?) -> Void) {
     //        dlog?.info("openDocument \(url)")
     //    }
@@ -146,59 +178,60 @@ extension BrickDocController  /* Expected actions */ {
 extension BrickDocController : NSWindowDelegate {
     
     func windowWillClose(_ notification: Notification) {
-        //dlog?.info("windowWillClose \(notification.object.descOrNil)")
+        dlogWindows?.info("windowWillClose \(notification.object.descOrNil)")
     }
     
     func windowDidExpose(_ notification: Notification) {
-        //dlog?.info("windowDidExpose \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidExpose \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     // DO NOT implement windowDidUpdate(...) if no good reason: very rapid events..
     
     func windowDidResize(_ notification: Notification) {
-        //dlog?.info("windowDidResize \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidResize \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowDidResignMain(_ notification: Notification) {
-        //dlog?.info("windowDidResignMain \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidResignMain \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowDidBecomeMain(_ notification: Notification) {
-        //dlog?.info("windowDidBecomeMain \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidBecomeMain \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowDidChangeScreen(_ notification: Notification) {
-        //dlog?.info("windowDidChangeScreen \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidChangeScreen \(notification.object.descOrNil)")
     }
     
     func windowDidBecomeKey(_ notification: Notification) {
-        //dlog?.info("windowDidBecomeKey \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidBecomeKey \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowDidResignKey(_ notification: Notification) {
-        //dlog?.info("windowDidResignKey \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidResignKey \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowWillBeginSheet(_ notification: Notification) {
-        //dlog?.info("windowWillBeginSheet \(notification.object.descOrNil)")
+        dlogWindows?.info("windowWillBeginSheet \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowDidEndSheet(_ notification: Notification) {
-        //dlog?.info("windowDidEndSheet \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidEndSheet \(notification.object.descOrNil)")
         invalidateMenu()
     }
     
     func windowDidChangeOcclusionState(_ notification: Notification) {
-        //dlog?.info("windowDidChangeOcclusionState \(notification.object.descOrNil)")
+        dlogWindows?.info("windowDidChangeOcclusionState \(notification.object.descOrNil)")
         invalidateMenu()
     }
+    
     
     //func windowWillUseStandardFrame(_ window: NSWindow, defaultFrame newFrame: NSRect) -> NSRect {
     //    return window.frame
@@ -231,18 +264,21 @@ extension BrickDocController : NSWindowDelegate {
             self.invalidateMenu()
         }
     }
+    
     func didUnhideApplicationNotification(_ notification:NSNotification) {
         //dlog?.info("didUnhideApplicationNotification")
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
             self.invalidateMenu()
         }
     }
+    
     func didActivateApplicationNotification(_ notification:NSNotification) {
         //dlog?.info("didActivateApplicationNotification")
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
             self.invalidateMenu()
         }
     }
+    
     func didDeactivateApplicationNotification(_ notification:NSNotification) {
         //dlog?.info("didDeactivateApplicationNotification")
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {

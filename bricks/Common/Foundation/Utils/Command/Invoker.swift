@@ -161,6 +161,9 @@ class QueuedInvoker : Invoker {
         
         func finalize(result:CommandResult) {
             // Result
+            wrapper.executionDate = newWrapper.executionDate
+            wrapper.result = newWrapper.result
+            
             if newWrapper.result?.isFailed ?? true || result.isFailed {
                 self[.failed].append(newWrapper)
             } else {
@@ -282,7 +285,7 @@ class QueuedInvoker : Invoker {
                 let item = toBeExecutedCopy.first!
                 
                 if item.executionType == .execute {
-                    dlog?.warning("TODO REIMPLEMENT THIS >> Invoker updateActionDescription")
+                    // dlog?.warning("TODO REIMPLEMENT THIS >> Invoker updateActionDescription")
                     //DocumentView.current?.updateActionDescription(item.command as? ActionDescriptionable,
 //                                                                  for: item.isSucces ? .success : .failed,
 //                                                                  animated: true)

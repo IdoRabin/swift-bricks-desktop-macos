@@ -11,7 +11,17 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BrickDocController+Cmd")
 
 extension BrickDocController : Commandable {
     func isAllowed(commandType: Command.Type) -> Bool {
-        return true
+        var result = true
+        
+        switch commandType as AnyObject {
+        case is CmdAboutPanel.Type:
+            result = !BricksApplication.shared.isViewControllerExistsOfClass(AboutVC.self)
+        case is CmdPreferencesPanel.Type:
+            result = true // !BricksApplication.shared.isViewControllerExistsOfClass(prefERENCESvc.self)
+        default:
+            result = true
+        }
+        return result
     }
     
     func isAllowed(command: Command) -> Bool {
@@ -20,13 +30,13 @@ extension BrickDocController : Commandable {
         }
         
         var result = true
+        
         switch command {
         case let _ as CmdAboutPanel:
-            result = false
+            result = true
         case let _ as CmdPreferencesPanel:
-            result = false
+            result = true
         default:
-            
             result = true
         }
         return result

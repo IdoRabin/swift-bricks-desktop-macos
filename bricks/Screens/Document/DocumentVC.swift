@@ -78,24 +78,28 @@ extension DocumentVC /* Actions */ {
     }
     
     @IBAction @objc func toggleSidebarAction(_ sender : Any) {
-        super.toggleSidebar(sender)
         
         DispatchQueue.main.async {
+            var isLeadingSidebar = true
+            
             var sendr = sender
             if let btn = sender as? NSButton {
                 if let lft = self.leadingToggleSidebarItem,
                     lft.view == btn || btn.tag <= self.mnSplitView.leadingDividerIndex {
                     // Found leading
                     sendr = lft
+                    isLeadingSidebar = true
                 } else if let rgt = self.trailingToggleSidebarItem,
                           rgt.view == btn || btn.tag >= self.mnSplitView.trailingDividerIndex {
                     // Found trailing
                     sendr = rgt
+                    isLeadingSidebar = false
                 }
             }
             
             switch sendr {
-            case let _ as MNToggleToolbarItem:
+            case let mnToggle as MNToggleToolbarItem:
+                isLeadingSidebar = mnToggle.tag < 2
                 // let isCollapsed = (item.tag < 2) ? mnSplitView.isLeadingPanelCollapsed : mnSplitView.isTrailingPanelCollapsed
                 // item.isToggledOn = !isCollapsed
                 // dlog?.info("toggleSidebarAction toolbar item: \(item.itemIdentifier.rawValue) isCollapsed:\(isCollapsed)")
@@ -104,17 +108,16 @@ extension DocumentVC /* Actions */ {
             case let item as NSToolbarItem:
                 dlog?.info("toggleSidebarAction toolbar item: \(item.itemIdentifier.rawValue)")
             case let item as NSMenuItem:
-                switch item {
-                case self.leadingToggleSidebarItem?.menuFormRepresentation, self.trailingToggleSidebarItem?.menuFormRepresentation:
-                    self.updateSidebarToolbarItems()
-                default:
-                    break
-                }
+                isLeadingSidebar = (self.leadingToggleSidebarItem?.menuFormRepresentation == item)
             default:
                 dlog?.note("toggleSidebarAction sender: \(sender)")
             }
+            
+            // Toggle
+            if isLeadingSidebar {
+                super.toggleSidebar(sender)
+            }
         }
-
     }
     
 }
@@ -156,7 +159,7 @@ extension DocumentVC : NSToolbarDelegate {
         // dlog?.info("trailingToggleSidebarItem: \(self.trailingToggleSidebarItem.descOrNil)")
         if let leading = self.leadingToggleSidebarItem as? MNToggleToolbarItem {
             let isCollapsed = mnSplitView.isLeadingPanelCollapsed
-            dlog?.info("leading isCollapsed \(isCollapsed)")
+            // dlog?.info("leading isCollapsed \(isCollapsed)")
             leading.isToggledOn = isCollapsed
         } else {
             dlog?.note("FAILED finding leadingToggleSidebarItem!")
@@ -187,10 +190,10 @@ extension DocumentVC : NSToolbarDelegate {
             let items : [DToolbarItems] = [
                 // Leading
                 .leadingSidebarToggle,
-                //.leadingSidebarX,
-                //.leadingSidebarCenterSpacer,
-                //.leadingSidebarY,
-                // .leadingSidebarSeperator,
+                .leadingSidebarX,
+                .leadingSidebarCenterSpacer,
+                .leadingSidebarY,
+                .leadingSidebarSeperator,
 
                 // Spacer
 //                .centerPaneLeadingX,
@@ -251,10 +254,11 @@ extension DocumentVC : NSToolbarDelegate {
                 
             case .leadingSidebarCenterSpacer:
                 
-                result = NSToolbarItem(itemIdentifier: .flexibleSpace)
+                //result = NSToolbarItem(itemIdentifier: .flexibleSpace)
 //                let view = NSView(frame: NSRect(origin: .zero, size: CGSize(width: 32, height: 32)))
 //                view.autoresizingMask = [.width]
-                result?.view = view
+                ///result?.view = view
+                break
                 
             case .leadingSidebarY:
                 result = NSToolbarItem(itemIdentifier: tbid.asNSToolbarItemId)
@@ -263,9 +267,9 @@ extension DocumentVC : NSToolbarDelegate {
                 
             case .leadingSidebarSeperator:
                 
-                // You must implement this for custom separator identifiers, to connect the separator with a split view divider
-//                result = NSTrackingSeparatorToolbarItem(identifier: .sidebarTrackingSeparator, splitView: splitView, dividerIndex: 0)
-                break
+                //  You must implement this for custom separator identifiers, to connect the separator with a split view divider
+                result = NSTrackingSeparatorToolbarItem(identifier: .sidebarTrackingSeparator, splitView: splitView, dividerIndex: 0)
+                
             case .centerPaneLeadingX:
                 // result = NSToolbarItem(itemIdentifier: tbid.asNSToolbarItemId)
                 // result?.image = NSImage(systemSymbolName: "gearshape.fill", accessibilityDescription: nil)
@@ -313,5 +317,24 @@ extension DocumentVC : NSToolbarDelegate {
             }
         }
         return result
+    }
+    
+    // NSToolbarDelegate
+}
+
+// MARK: NSSplitViewDelegate
+extension DocumentVC /* NSSplitViewDelegate */ {
+    
+    private func calcSidebarbTNSstate() {
+        self.updateSidebarToolbarItems()
+    }
+    
+    override func splitViewDidResizeSubviews(_ notification: Notification) {
+        calcSidebarbTNSstate()
+    }
+    
+    override func splitView(_ splitView: NSSplitView, canCollapseSubview subview: NSView) -> Bool {
+        calcSidebarbTNSstate()
+        return true
     }
 }

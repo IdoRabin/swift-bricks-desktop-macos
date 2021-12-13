@@ -9,6 +9,7 @@ import AppKit
 fileprivate let dlog : DSLogger? = DLog.forClass("MNSplitview")
 
 class MNSplitview : NSSplitView {
+    
     // MARK: Properties
     private var _fwdDelegate : NSSplitViewDelegate? = nil
     
@@ -66,7 +67,59 @@ class MNSplitview : NSSplitView {
     //}
 }
 
+// Forwad delegated events:
 extension MNSplitview : NSSplitViewDelegate {
+    
+    func splitView(_ splitView: NSSplitView, canCollapseSubview subview: NSView) -> Bool {
+        let result = self._fwdDelegate?.splitView?(splitView, canCollapseSubview: subview) ?? true
+        return result
+    }
+    func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        let result = self._fwdDelegate?.splitView?(splitView, constrainMinCoordinate: proposedMinimumPosition, ofSubviewAt:dividerIndex) ?? proposedMinimumPosition
+        return result
+    }
+    
+    func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        let result = self._fwdDelegate?.splitView?(splitView, constrainMaxCoordinate: proposedMaximumPosition, ofSubviewAt:dividerIndex) ?? proposedMaximumPosition
+        return result
+    }
+    
+    func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
+        let result = self._fwdDelegate?.splitView?(splitView, constrainSplitPosition: proposedPosition, ofSubviewAt:dividerIndex) ?? proposedPosition
+        return result
+    }
+    
+    func splitView(_ splitView: NSSplitView, resizeSubviewsWithOldSize oldSize: NSSize) {
+        self._fwdDelegate?.splitView?(splitView, resizeSubviewsWithOldSize: oldSize)
+    }
+    
+    func splitView(_ splitView: NSSplitView, shouldAdjustSizeOfSubview view: NSView) -> Bool {
+        let result = self._fwdDelegate?.splitView?(splitView, shouldAdjustSizeOfSubview: view) ?? true
+        return result
+    }
+    
+    func splitView(_ splitView: NSSplitView, shouldHideDividerAt dividerIndex: Int) -> Bool {
+        let result = self._fwdDelegate?.splitView?(splitView, shouldHideDividerAt: dividerIndex) ?? true
+        return result
+    }
+    
+    func splitView(_ splitView: NSSplitView, effectiveRect proposedEffectiveRect: NSRect, forDrawnRect drawnRect: NSRect, ofDividerAt dividerIndex: Int) -> NSRect {
+        let result = self._fwdDelegate?.splitView?(splitView, effectiveRect: proposedEffectiveRect, forDrawnRect:drawnRect, ofDividerAt:dividerIndex) ?? proposedEffectiveRect
+        return result
+    }
+    
+    func splitView(_ splitView: NSSplitView, additionalEffectiveRectOfDividerAt dividerIndex: Int) -> NSRect {
+        let result = self._fwdDelegate?.splitView?(splitView, additionalEffectiveRectOfDividerAt: dividerIndex) ?? NSRect.zero
+        return result
+    }
+    
+    func splitViewWillResizeSubviews(_ notification: Notification) {
+        self._fwdDelegate?.splitViewWillResizeSubviews?(notification)
+    }
+    
+    func splitViewDidResizeSubviews(_ notification: Notification) {
+        self._fwdDelegate?.splitViewDidResizeSubviews?(notification)
+    }
     
 }
     
@@ -116,20 +169,7 @@ extension MNSplitview : NSSplitViewDelegate {
 //        
 //        return (self.lastPosition[index] ?? 0.0 == 0.0) && (self.lastPositivePosition[index] ?? 0 > 0)
 //    }
-//    
-//    var isLeftPanelCollapsed : Bool {
-//        if let constraint = self.leftMaxWidthConstraint, constraint.constant == 0 {
-//            return true
-//        }
-//        return isPanelCollapsed(at: self.minDivierIndex)
-//    }
-//    
-//    var isRightPanelCollapsed : Bool {
-//        if let constraint = self.rightMaxWidthConstraint, constraint.constant == 0 {
-//            return true
-//        }
-//        return isPanelCollapsed(at: self.maxDivierIndex)
-//    }
+
 //    
 //    // MARK: Private
 //    private func saveWidthsForPanel(at index:Int) {

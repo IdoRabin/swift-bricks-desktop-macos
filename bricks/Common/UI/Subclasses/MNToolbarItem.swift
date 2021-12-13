@@ -19,7 +19,7 @@ class MNToggleToolbarItem: MNToolbarItem {
     
     @IBInspectable var isToggledOn : Bool = true {
         didSet {
-            dlog?.info("  isToggledOn >>> \(isToggledOn)")
+            // dlog?.info("  isToggledOn >>> \(isToggledOn)")
             if isToggledOn != oldValue, let btn = self.view as? NSButton {
                 btn.state =  isToggledOn ? .on : .off
                 self.updateImage()
@@ -43,7 +43,7 @@ class MNToggleToolbarItem: MNToolbarItem {
             let rect = CGRect(origin: .zero, size: CGSize(width: DEFAULT_BUTTON_SIZE, height: DEFAULT_BUTTON_SIZE))
             
             if isToggledOn {
-                dlog?.info("isToggledOn YES")
+                // dlog?.info("isToggledOn YES")
                 if let onImg = self.onImage ?? self.image {
                     btn.image = onImg.scaledToFit(boundingSize: rect.size.scaled(self.imagesScale))
                 }
@@ -52,7 +52,7 @@ class MNToggleToolbarItem: MNToolbarItem {
                     btn.contentTintColor = onTint
                 }
             } else {
-                dlog?.info("isToggledOn NO")
+                // dlog?.info("isToggledOn NO")
                 if let offImg = self.offImage {
                     btn.image = offImg.scaledToFit(boundingSize: rect.size.scaled(self.imagesScale))
                 }
@@ -133,8 +133,6 @@ class MNToggleToolbarItem: MNToolbarItem {
         if let action = self.fwdAction {
             var targets : [AnyObject] = []
              
-            dlog?.info("Action ----------")
-            
             // Ugly.. // study chain of first responders to see how to find the correct one..
             if let ac = fwdTarget { targets.append(ac) }
             if let targ = self.view?.window?.contentView?.firstSubview(which: { aview in
@@ -156,9 +154,9 @@ class MNToggleToolbarItem: MNToolbarItem {
                 if target.responds(to: fwdAction) {
                     fwdTarget = target
                     
-                    if self.autovalidates {
-                        
-                    }
+                    // if self.autovalidates {
+                    // }
+                    
                     target.performSelector(onMainThread: action, with: self, waitUntilDone: false)
                     return
                 }

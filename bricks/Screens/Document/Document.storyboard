@@ -10,7 +10,7 @@
         <scene sceneID="t6r-RU-XhI">
             <objects>
                 <windowController storyboardIdentifier="DocumentWCID" id="aUJ-eb-uWu" userLabel="DocumentWC" sceneMemberID="viewController">
-                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
+                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="DocumentWCID" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="164" y="462" width="741" height="492"/>
@@ -38,7 +38,7 @@
         <!--DocumentVC-->
         <scene sceneID="LEU-rn-2US">
             <objects>
-                <splitViewController storyboardIdentifier="DocumentVCID" id="CmF-ng-hYs" customClass="DocumentVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController identifier="DocumentVCID" storyboardIdentifier="DocumentVCID" id="CmF-ng-hYs" customClass="DocumentVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="BX1-p6-cIx"/>
                         <splitViewItem id="tJl-hh-Jnq"/>

@@ -62,8 +62,16 @@ class MNSplitview : NSSplitView {
         if wasChanged, let mnDelegate = self.delegate as? MNSplitviewDelegate ?? self._fwdDelegate as? MNSplitviewDelegate {
             mnDelegate.splitviewSidebarsChanged(self, isLeadingCollapsed: isLeadingC, isTrailingCollapsed: isTrailingC)
         }
-        
     }
+    
+    var isLeadingSidebarCollapsed : Bool {
+        return lastIsLeadingPanelCollapsed
+    }
+    
+    var isTrailingSidebarCollapsed : Bool {
+        return lastIsTrailingPanelCollapsed
+    }
+    
     
     // MARK: Private func
     private func setup() {

@@ -118,6 +118,8 @@
 		ECCE07962764F259007F2A65 /* LicenseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */; };
 		ECCE07982764F5C5007F2A65 /* PreferencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */; };
 		ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */; };
+		ECDC8557276C8FAE0044101D /* MNToolbarSpacerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDC8552276C8FAE0044101D /* MNToolbarSpacerButton.swift */; };
+		ECDC8558276C8FAE0044101D /* DocToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDC8553276C8FAE0044101D /* DocToolbar.swift */; };
 		ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B622760F9DE00DD602D /* Invoker.swift */; };
 		ECEA1B652760F9FB00DD602D /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B642760F9FB00DD602D /* Command.swift */; };
 		ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B662760FAA800DD602D /* AppCommand.swift */; };
@@ -297,6 +299,8 @@
 		ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAgreementVC.swift; sourceTree = "<group>"; };
 		ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnkeyedEncodingContainerEx.swift; sourceTree = "<group>"; };
+		ECDC8552276C8FAE0044101D /* MNToolbarSpacerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNToolbarSpacerButton.swift; sourceTree = "<group>"; };
+		ECDC8553276C8FAE0044101D /* DocToolbar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocToolbar.swift; sourceTree = "<group>"; };
 		ECEA1B622760F9DE00DD602D /* Invoker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invoker.swift; sourceTree = "<group>"; };
 		ECEA1B642760F9FB00DD602D /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		ECEA1B662760FAA800DD602D /* AppCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommand.swift; sourceTree = "<group>"; };
@@ -350,7 +354,8 @@
 		EC18395F275FFFCF0001AB6D /* Document UI */ = {
 			isa = PBXGroup;
 			children = (
-				ECA67B8C2769FEAD00BC0D7D /* Toolbar */,
+				ECDC8550276C8FAE0044101D /* Toolbar */,
+				ECA67B8C2769FEAD00BC0D7D /* vcToolbar */,
 				ECCE07912764EF67007F2A65 /* DocVC.swift */,
 				EC6741A7276B518100E9BB84 /* DocWC.swift */,
 				EC332CCC275ECCA200546767 /* Doc.storyboard */,
@@ -715,14 +720,12 @@
 			path = MainMenu;
 			sourceTree = "<group>";
 		};
-		ECA67B8C2769FEAD00BC0D7D /* Toolbar */ = {
+		ECA67B8C2769FEAD00BC0D7D /* vcToolbar */ = {
 			isa = PBXGroup;
 			children = (
 				ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */,
-				ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */,
-				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */,
 			);
-			path = Toolbar;
+			path = vcToolbar;
 			sourceTree = "<group>";
 		};
 		ECAA83A627635C310016578C /* Preferences */ = {
@@ -749,6 +752,17 @@
 				EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */,
 			);
 			path = OnboardingVCs;
+			sourceTree = "<group>";
+		};
+		ECDC8550276C8FAE0044101D /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+				ECDC8553276C8FAE0044101D /* DocToolbar.swift */,
+				ECDC8552276C8FAE0044101D /* MNToolbarSpacerButton.swift */,
+				ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */,
+				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */,
+			);
+			path = Toolbar;
 			sourceTree = "<group>";
 		};
 		ECEA1B612760F9C700DD602D /* Command */ = {
@@ -1010,6 +1024,7 @@
 				EC218B3927593BE000744400 /* Box.swift in Sources */,
 				EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */,
 				EC9928A12762A97D00DD4C90 /* BricksApplication.swift in Sources */,
+				ECDC8557276C8FAE0044101D /* MNToolbarSpacerButton.swift in Sources */,
 				EC218B5B27593CBF00744400 /* URLEx.swift in Sources */,
 				ECEA1B7F2762299800DD602D /* MNSplitView.swift in Sources */,
 				EC218B7A27593F5E00744400 /* IndexPathTuple.swift in Sources */,
@@ -1026,6 +1041,7 @@
 				EC218B3F27593BE000744400 /* Codable+Serialize.swift in Sources */,
 				ECEA1B652760F9FB00DD602D /* Command.swift in Sources */,
 				EC9DF01E275CE6DE0046F30A /* MVP.swift in Sources */,
+				ECDC8558276C8FAE0044101D /* DocToolbar.swift in Sources */,
 				ECCE07982764F5C5007F2A65 /* PreferencesVC.swift in Sources */,
 				EC218B3A27593BE000744400 /* SkipEncoding.swift in Sources */,
 				EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */,

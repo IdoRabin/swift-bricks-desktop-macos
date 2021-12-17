@@ -14,6 +14,27 @@ fileprivate let dlog : DSLogger? = DLog.forClass("DocVC+Toolbar")
 
 // MARK: DocVC - Toolbar / NSToolbarDelegate
 extension DocVC : NSToolbarDelegate {
+    func updateSidebarToolbarItems() {
+        
+    }
+    
+    func updateSidebarMenuItems() {
+        
+    }
+    
+    var leadingToggleSidebarItem : NSToolbarItem? {
+        return nil
+    }
+    
+    var trailingToggleSidebarItem : NSToolbarItem? {
+        return nil
+    }
+}
+
+
+
+/*
+extension DocVC : NSToolbarDelegate {
     
     // MARK: Properties
     var leadingToggleSidebarItem : NSToolbarItem? {
@@ -222,27 +243,6 @@ extension DocVC : NSToolbarDelegate {
         self.updateToolbarItems(array: DToolbarItems.all)
     }
     
-    func setupToolbarIfPossible() {
-        guard self.isViewLoaded, let toolbar = self.view.window?.toolbar, toolbar.items.count == 0, splitView.arrangedSubviews.count >= 3 else  {
-            return
-        }
-        
-        if toolbar.items.count == 0 {
-            toolbar.delegate = self
-            let docName = self.document?.displayName ?? "<nil>"
-            dlog?.info("setupToolbarIfPossible \(docName) \(self.basicDesc) SidebarSeperator \n SidebarSeperator wind: \(self.view.window?.basicDesc)")
-            DToolbarItems.all.reversed().forEachIndex { index, ditem in
-                dlog?.info("setupToolbarIfPossible \(docName) toolbar \(String(memoryAddressOf: toolbar)) idx/cnt: \(index)/\(toolbar.items.count) adding item: [\(ditem)]")
-                toolbar.insertItem(withItemIdentifier: ditem.asNSToolbarItemId, at: 0)
-            }
-            
-            // After all were added
-            DispatchQueue.main.async {
-                self.updateToolbarItems()
-            }
-        }
-    }
-    
     // MARK: NSToolbarDelegate
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         
@@ -355,3 +355,4 @@ extension DocVC : NSToolbarDelegate {
     }
     
 }
+*/

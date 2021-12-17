@@ -21,7 +21,6 @@ class DocVC : NSSplitViewController {
     // MARK: Private
     private func setup() {
         self.mnSplitView.hostingSplitVC = self
-        self.setupToolbarIfPossible()
     }
     
     // MARK: Lifecycle
@@ -42,7 +41,6 @@ class DocVC : NSSplitViewController {
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        self.setupToolbarIfPossible()
     }
     
     // MARK: Public
@@ -60,8 +58,25 @@ class DocVC : NSSplitViewController {
 // MARK: DocumentVC - Actions
 extension DocVC /* Actions */ {
     
-    var toolbar : NSToolbar? {
-        return self.view.window?.toolbar
+    static var current :DocVC? {
+        for window in BricksApplication.shared.orderedWindows {
+            if let vc = window.contentViewController as? DocVC {
+                return vc
+            }
+        }
+        return nil
+    }
+    
+    var isLeadingSidebarCollapsed : Bool {
+        return (splitView as? MNSplitview)?.isLeadingSidebarCollapsed ?? false
+    }
+    
+    var isTrailingSidebarCollapsed : Bool {
+        return (splitView as? MNSplitview)?.isTrailingSidebarCollapsed ?? false
+    }
+    
+    var toolbar : DocToolbar? {
+        return self.view.window?.toolbar as? DocToolbar
     }
     
     var mainMenu : MainMenu? {

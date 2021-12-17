@@ -6,12 +6,28 @@
 //
 import AppKit
 
-fileprivate let dlog : DSLogger? = DLog.forClass("MNSplitview")
+fileprivate let dlog : DSLogger? = nil // DLog.forClass("MNSplitview")
+
+protocol MNSplitviewDelegate : NSSplitViewDelegate {
+    func splitviewSidebarsChanged(_ splitview:MNSplitview, isLeadingCollapsed:Bool, isTrailingCollapsed:Bool)
+}
 
 class MNSplitview : NSSplitView {
     
     // MARK: Properties
+    private var _isAnimating : [Int:Bool] = [:]
+    private var _isAnyAnimating = false
+    private var _isMousePressed : Bool = false
     private var _fwdDelegate : NSSplitViewDelegate? = nil
+    private var _leadingMinWidthToSnap : CGFloat? = nil
+    private var _trailingMinWidthToSnap : CGFloat? = nil
+    
+    private var lastPositivePosition : [Int:CGFloat] = [:]
+    private var lastPosition : [Int:CGFloat] = [:]
+    private var lastIsLeadingPanelCollapsed:Bool = false
+    private var lastIsTrailingPanelCollapsed:Bool = false
+    
+    weak var hostingSplitVC : NSSplitViewController? = nil
     
     override var delegate: NSSplitViewDelegate? {
         get {
@@ -22,20 +38,92 @@ class MNSplitview : NSSplitView {
                 super.delegate = newValue
             } else {
                 self._fwdDelegate = newValue
-                self.delegate = self
+                super.delegate = self
             }
         }
     }
     
     // MARK: Private util func
+    private func updateLastCollapsed() {
+        var wasChanged = false
+        let isLeadingC = self.isLeadingPanelCollapsed
+        if self.lastIsLeadingPanelCollapsed != isLeadingC {
+            self.lastIsLeadingPanelCollapsed = isLeadingC
+            wasChanged = true
+        }
+        
+        let isTrailingC = self.isLeadingPanelCollapsed
+        if self.lastIsLeadingPanelCollapsed != isTrailingC {
+            self.lastIsLeadingPanelCollapsed = isTrailingC
+            wasChanged = true
+        }
+        
+        // if MNSplitviewDelegate
+        if wasChanged, let mnDelegate = self.delegate as? MNSplitviewDelegate ?? self._fwdDelegate as? MNSplitviewDelegate {
+            mnDelegate.splitviewSidebarsChanged(self, isLeadingCollapsed: isLeadingC, isTrailingCollapsed: isTrailingC)
+        }
+        
+    }
     
     // MARK: Private func
     private func setup() {
-        if self.subviews.count > 0 {
-            DispatchQueue.main.performOncePerInstance(self) {
+        waitFor("arrangedSubviews to be added", interval: 0.04, timeout: 0.1, testOnMainThread: {
+            self.arrangedSubviews.count > 0
+        }, completion: { waitResult in
+            DispatchQueue.main.performOncePerInstance(self) { [self] in
                 dlog?.info("setup: leading dic idx: \(self.leadingDividerIndex) trailing div idx \(self.trailingDividerIndex)")
-                // self.saveWidths()
+                self._leadingMinWidthToSnap = self.minPossiblePositionOfDivider(at: leadingDividerIndex)
+                self._trailingMinWidthToSnap = self.minPossiblePositionOfDivider(at: self.trailingDividerIndex)
+                self.saveWidths()
+                DispatchQueue.main.asyncAfter(delayFromNow: 0.02) {
+                    self.calcSnappingSizes()
+                }
             }
+        }, counter: 1)
+    }
+    
+    private func saveWidthsForPanel(at index:Int) {
+        guard self._isAnyAnimating == false else {
+            return
+        }
+        var view : NSView? = nil
+        if index >= 0 && index <= self.arrangedSubviews.count  {
+            view = self.arrangedSubviews[index]
+            if let view = view {
+                let w : CGFloat = view.frame.width
+                self.lastPosition[index] = w
+                
+                var saveSide = true
+                if index == leadingDividerIndex && self.isLeadingPanelCollapsed {
+                    saveSide = false
+                } else if index == trailingDividerIndex + 1 && self.isTrailingPanelCollapsed {
+                    saveSide = false
+                }
+                
+                if saveSide {
+                    dlog?.success("saving w at \(index) = \(w)")
+                    self.lastPosition[index] = w
+                } else {
+                    dlog?.fail("saving w at \(index) [COLLAPSED]")
+                }
+            }
+        }
+    }
+    
+    private func calcSnappingSizes() {
+        // First ever save with snapping sizes
+        if let w = self._leadingMinWidthToSnap, w <= 10, self.arrangedSubviews.count > 1 {
+            self._leadingMinWidthToSnap = self.minPossiblePositionOfDivider(at: self.leadingDividerIndex + 1)
+            self._trailingMinWidthToSnap = abs(self.minPossiblePositionOfDivider(at:self.trailingDividerIndex))
+            dlog?.info("calcSnappingSizes widths leading:\(self._leadingMinWidthToSnap.descOrNil) trailing:\(self._trailingMinWidthToSnap.descOrNil)")
+        }
+    }
+    
+    private func saveWidths() {
+        
+        dlog?.info("saveWidths [\(leadingDividerIndex)..\(trailingDividerIndex)]")
+        for index in 0..<arrangedSubviews.count {
+            self.saveWidthsForPanel(at: index)
         }
     }
     
@@ -61,10 +149,140 @@ class MNSplitview : NSSplitView {
         super.awakeFromNib()
         setup()
     }
+
+    var isAnimating : Bool {
+        return _isAnyAnimating
+    }
     
-    //override var acceptsFirstResponder: Bool {
-    //    return true
-    //}
+    fileprivate func togglePanelUsingSplitVC(vc:NSSplitViewController, dividerIndex: Int, wantedPosition: CGFloat, animated: Bool, duration: TimeInterval, completion: (() -> Void)?) {
+        
+        let isLeading = (dividerIndex == 0)
+        var delay : TimeInterval = .zero
+        if let splitItem = isLeading ? vc.splitViewItems.first : vc.splitViewItems.last {
+            if animated {
+                splitItem.animator().isCollapsed = !splitItem.isCollapsed
+                delay = 0.25
+            } else {
+                splitItem.isCollapsed = !splitItem.isCollapsed
+            }
+            self.updateLastCollapsed()
+        }
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: delay, block: {
+            completion?()
+        })
+    }
+    
+    fileprivate func togglePanelUsingDivPosition( dividerIndex: Int, wantedPosition: CGFloat, animated: Bool, duration: TimeInterval, completion: (() -> Void)?) {
+        if animated {
+            NSAnimationContext.runAnimationGroup({ context in
+                context.allowsImplicitAnimation = true
+                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                context.duration = duration
+                
+                self.setPosition(wantedPosition, ofDividerAt: dividerIndex)
+                self.updateLastCollapsed()
+            }, completionHandler: { () -> Void in
+                completion?()
+            })
+        } else {
+            self.setPosition(wantedPosition, ofDividerAt: dividerIndex)
+            self.updateLastCollapsed()
+            
+            DispatchQueue.main.async {
+                completion?()
+            }
+        }
+    }
+    
+    private func togglePanel(at index :Int, animated:Bool = true, completion: (()->Void)? = nil) {
+        dlog?.todo("togglePanel at:\(index) animated:\(animated)")
+        
+        func finllize() {
+            self._isAnimating[index] = false
+            self._isAnyAnimating = false
+        }
+        
+        let dividerIndex = max(index - 1, 0)
+        let duration : TimeInterval = 0.25
+        let isLeading = dividerIndex == 0
+        let isCollapsed = isLeading ? self.isLeadingPanelCollapsed : self.isTrailingPanelCollapsed
+        var wantedPosition : CGFloat = 0.0
+        
+        switch (isLeading, isCollapsed) {
+        // leading
+        case (true, false) : wantedPosition = 0 // shoud collapse
+        case (true, true)  : wantedPosition = self.lastPositivePosition[0] ??  self.lastPosition[index] ?? self._leadingMinWidthToSnap ?? 140  // should uncollapse
+        
+        // trailing
+        case (false, false): wantedPosition = self.bounds.width // should collapse
+        case (false, true) : wantedPosition = self.bounds.width - (self.lastPositivePosition[index] ?? self.lastPosition[index] ?? self._trailingMinWidthToSnap ?? 0.0)   // should uncollapse
+        }
+        
+        if let vc = self.hostingSplitVC {
+            // Much smoother animation using the VC
+            self.togglePanelUsingSplitVC(vc: vc, dividerIndex: dividerIndex, wantedPosition: wantedPosition, animated: animated, duration: duration) {
+                completion?()
+                finllize()
+            }
+        } else {
+            // Chunky animation as fallback..
+            self.togglePanelUsingDivPosition(dividerIndex: dividerIndex, wantedPosition: wantedPosition, animated: animated, duration: duration) {
+                completion?()
+                finllize()
+            }
+        }
+        
+        if animated {
+            self._isAnimating[index] = true
+            self._isAnyAnimating = true
+        }
+    }
+ 
+    // MARK: Public
+    func toggleTrailingPanel(animated:Bool = true, completion: (()->Void)? = nil) {
+        self.togglePanel(at: self.trailingDividerIndex + 1, animated: animated, completion: completion)
+    }
+    
+    func toggleLeadingPanel(animated:Bool = true, completion: (()->Void)? = nil) {
+        self.togglePanel(at: self.leadingDividerIndex, animated: animated, completion: completion)
+    }
+    
+    func expandLeadingPanel(animated:Bool = true, completion: (()->Void)? = nil) {
+        guard self.isLeadingPanelCollapsed else {
+            return
+        }
+        
+        dlog?.info("expandLeadingPanel animated:\(animated)")
+        self.toggleLeadingPanel(animated: animated, completion: completion)
+    }
+    
+    func expandTrailingPanel(animated:Bool = true, completion: (()->Void)? = nil) {
+        guard self.isTrailingPanelCollapsed else {
+            return
+        }
+        
+        dlog?.info("expandTrailingPanel animated:\(animated)")
+        self.toggleTrailingPanel(animated: animated, completion: completion)
+    }
+    
+    func collapseLeadingPanel(animated:Bool = true, completion: (()->Void)? = nil) {
+        guard !self.isLeadingPanelCollapsed else {
+            return
+        }
+        
+        dlog?.info("collapseLeadingPanel animated:\(animated)")
+        self.toggleLeadingPanel(animated: animated, completion: completion)
+    }
+    
+    func collapseTrailingPanel(animated:Bool = true, completion: (()->Void)? = nil) {
+        guard !self.isTrailingPanelCollapsed else {
+            return
+        }
+        
+        dlog?.info("collapseTrailingPanel animated:\(animated)")
+        self.toggleTrailingPanel(animated: animated, completion: completion)
+    }
 }
 
 // Forwad delegated events:
@@ -74,6 +292,7 @@ extension MNSplitview : NSSplitViewDelegate {
         let result = self._fwdDelegate?.splitView?(splitView, canCollapseSubview: subview) ?? true
         return result
     }
+    
     func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat, ofSubviewAt dividerIndex: Int) -> CGFloat {
         let result = self._fwdDelegate?.splitView?(splitView, constrainMinCoordinate: proposedMinimumPosition, ofSubviewAt:dividerIndex) ?? proposedMinimumPosition
         return result
@@ -91,6 +310,7 @@ extension MNSplitview : NSSplitViewDelegate {
     
     func splitView(_ splitView: NSSplitView, resizeSubviewsWithOldSize oldSize: NSSize) {
         self._fwdDelegate?.splitView?(splitView, resizeSubviewsWithOldSize: oldSize)
+        saveWidths()
     }
     
     func splitView(_ splitView: NSSplitView, shouldAdjustSizeOfSubview view: NSView) -> Bool {
@@ -119,252 +339,11 @@ extension MNSplitview : NSSplitViewDelegate {
     
     func splitViewDidResizeSubviews(_ notification: Notification) {
         self._fwdDelegate?.splitViewDidResizeSubviews?(notification)
+        TimedEventFilter.shared.filterEvent(key: "splitViewDidResizeSubviews", threshold: 0.1) {
+            self.updateLastCollapsed()
+        }
+        saveWidths()
     }
     
 }
-    
-//    private var lastConstraintConstant : [Int:CGFloat] = [:]
-//    private var lastPositivePosition : [Int:CGFloat] = [:]
-//    private var lastPosition : [Int:CGFloat] = [:]
-
-//    private var _isAnimating : [Int:Bool] = [:]
-//    private var _isAnyAnimating = false
-//    private var _isMousePressed : Bool = false
-//    
-//    @IBOutlet var leftMaxWidthConstraint : NSLayoutConstraint? = nil
-//    @IBOutlet var rightMaxWidthConstraint : NSLayoutConstraint? = nil
-//    var leftMinWidthToSnap : CGFloat? = nil
-//    var rightMinWidthToSnap : CGFloat? = nil
-//
-//    private func findIntrinsincWidth(forView:NSView?)->CGFloat? {
-//        guard let view = forView else {
-//            return nil
-//        }
-//        var maxW : CGFloat = 9999.0
-//        for subv in view.subviews {
-//            let w = subv.frame.width * 0.5
-//            maxW = min(maxW, w)
-//        }
-//        return max(view.intrinsicContentSize.width, maxW)
-//    }
-//    
-//    deinit {
-//        leftMaxWidthConstraint = nil
-//        rightMaxWidthConstraint = nil
-//    }
-//
-//    func isPanelCollapsed(at index:Int)->Bool {
-//        if index == self.minDivierIndex, let constraint = self.leftMaxWidthConstraint, constraint.constant == 0 {
-//            return true
-//        }
-//        if index == self.maxDivierIndex, let constraint = self.rightMaxWidthConstraint, constraint.constant == 0 {
-//            return true
-//        }
-//        
-////        let view = self.subviews[index]
-////        if view.frame.width < 10 {
-////            dlog?.info("\(index) is collapsed by merit of width")
-////            return true
-////        }
-//        
-//        return (self.lastPosition[index] ?? 0.0 == 0.0) && (self.lastPositivePosition[index] ?? 0 > 0)
-//    }
-
-//    
-//    // MARK: Private
-//    private func saveWidthsForPanel(at index:Int) {
-//        guard self._isAnyAnimating == false else {
-//            return
-//        }
-//        var view : NSView? = nil
-//        if index >= self.minDivierIndex && index <= self.maxDivierIndex  {
-//            view = self.subviews[index]
-//            if let view = view {
-//                let w : CGFloat = view.frame.width
-//                self.lastPosition[index] = w
-//                var min : CGFloat = 0.0
-//                if index == 0, let minL = self.leftMinWidthToSnap {
-//                    min = minL
-//                } else if index == maxDivierIndex, let minR = self.rightMinWidthToSnap {
-//                    min = minR
-//                }
-//                if w > min {
-//                    dlog?.success("saving w at \(index) = \(w)")
-//                    self.lastPositivePosition[index] = w
-//                } else {
-//                    dlog?.fail("saving w at \(index)")
-//                }
-//            }
-//        }
-//    }
-//    
-//    func saveWidths() {
-//        // dlog?.info("saveWidths [\(minDivierIndex)..\(maxDivierIndex)]")
-//        for index in minDivierIndex...maxDivierIndex {
-//            self.saveWidthsForPanel(at: index)
-//        }
-//    }
-//    
-//    private func togglePanel(at index :Int, animated:Bool = true, completion: (()->Void)? = nil) {
-//        let isCollapse = !self.isPanelCollapsed(at: index)
-//        
-//        var constraint : NSLayoutConstraint? = nil
-//        if index == self.minDivierIndex {
-//            constraint = self.leftMaxWidthConstraint
-//            
-//        } else if index == self.maxDivierIndex {
-//            constraint = self.rightMaxWidthConstraint
-//        }
-//
-//        dlog?.info("Will toggle panel at \(index) will \(isCollapse ? "collapse" : "expand")")
-//        if let constraint = constraint {
-//            if constraint.constant > 0 {
-//                // Save positive constraint value
-//                lastConstraintConstant[index] = constraint.constant
-//            }
-//            
-//            self._isAnimating[index] = true
-//            self._isAnyAnimating = true
-//            NSView.animate(duration: 0.4, delay: 0.0) { (context) in
-//                context.allowsImplicitAnimation = true
-//                context.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-//                let constant = self.lastConstraintConstant[index] ?? 0.0
-//                constraint.animator().constant = isCollapse ? 0.0 : constant
-//                let view = self.subviews[index]
-//                if index == 0 {
-//                    view.animator.frame = view.frame.changed(width: self.lastPositivePosition[index] ?? constant)
-//                } else {
-//                    view.animator.frame = view.frame.changed(x: 0, width: self.lastPositivePosition[index] ?? constant)
-//                }
-//            } completionHandler: {
-//                self._isAnimating[index] = false
-//                self._isAnyAnimating = false
-//            }
-//        }
-//    }
-//    
-//    // MARK: Public
-//    func toggleRightPanel(animated:Bool = true, completion: (()->Void)? = nil) {
-//        self.togglePanel(at: self.maxDivierIndex, animated: animated, completion: completion)
-//    }
-//    
-//    func toggleLeftPanel(animated:Bool = true, completion: (()->Void)? = nil) {
-//        self.togglePanel(at: self.minDivierIndex, animated: animated, completion: completion)
-//    }
-//    
-//    func expandLeftPanel(animated:Bool = true, completion: (()->Void)? = nil) {
-//        guard self.isLeftPanelCollapsed else {
-//            return
-//        }
-//        
-//        dlog?.info("expandLeftPanel animated:\(animated)")
-//        self.toggleLeftPanel(animated: animated, completion: completion)
-//    }
-//    
-//    func expandRightPanel(animated:Bool = true, completion: (()->Void)? = nil) {
-//        guard self.isRightPanelCollapsed else {
-//            return
-//        }
-//        
-//        dlog?.info("expandRightPanel animated:\(animated)")
-//        self.toggleRightPanel(animated: animated, completion: completion)
-//    }
-//    
-//    func collapseLeftPanel(animated:Bool = true, completion: (()->Void)? = nil) {
-//        guard !self.isLeftPanelCollapsed else {
-//            return
-//        }
-//        
-//        dlog?.info("collapseLeftPanel animated:\(animated)")
-//        self.toggleLeftPanel(animated: animated, completion: completion)
-//    }
-//    
-//    func collapseRightPanel(animated:Bool = true, completion: (()->Void)? = nil) {
-//        guard !self.isRightPanelCollapsed else {
-//            return
-//        }
-//        
-//        dlog?.info("collapseRightPanel animated:\(animated)")
-//        self.toggleRightPanel(animated: animated, completion: completion)
-//    }
-//
-//}
-
-//extension MNSplitview : NSSplitViewDelegate {
-//    
-//    func splitView(_ splitView: NSSplitView, canCollapseSubview subview: NSView) -> Bool {
-//        return false
-//    }
-//    
-//    func splitView(_ splitView: NSSplitView, shouldCollapseSubview subview: NSView, forDoubleClickOnDividerAt dividerIndex: Int) -> Bool {
-//        return false
-//    }
-//    
-//    func splitView(_ splitView: NSSplitView, shouldHideDividerAt dividerIndex: Int) -> Bool {
-//        return false
-//    }
-//    
-//    @discardableResult
-//    private func calcSnappingIfNeeded()->Bool {
-//        var result = false
-//        
-//        if result == false, let lsnap = self.leftMinWidthToSnap, let lview = self.arrangedSubviews.first {
-//            if lview.bounds.width < lsnap {
-//                collapseLeftPanel(animated: true, completion: nil)
-//                result = true
-//            }
-//        }
-//        
-//        if result == false, let rsnap = self.rightMinWidthToSnap, let rview = self.arrangedSubviews.last {
-//            if rview.bounds.width < rsnap {
-//                collapseRightPanel(animated: true, completion: nil)
-//                result = true
-//            }
-//        }
-//        
-//        return result
-//    }
-//    
-//    private func calcSizing(_ notification: Notification) {
-//        let isPressed = NSEvent.pressedMouseButtons > 0
-//        if self._isMousePressed == false && isPressed {
-//            self._isMousePressed = true
-//            // started drag!
-//            dlog?.info("save last sze befoe drag \(isPressed)")
-//            if let index = notification.userInfo?["NSSplitViewDividerIndex"] as? Int {
-//                let isCollapsed = self.isPanelCollapsed(at: index)
-//                dlog?.info("drag panel index \(index) collapsed: \(isCollapsed)")
-//                if isCollapsed, let constraint = (index == 0) ? self.leftMaxWidthConstraint : self.rightMaxWidthConstraint {
-//                    constraint.constant = lastConstraintConstant[index] ?? 0.0
-//                } else {
-//                    self.saveWidthsForPanel(at: index)
-//                }
-//            } else {
-//                self.saveWidths()
-//            }
-//        }
-//    }
-//    
-//    func splitViewWillResizeSubviews(_ notification: Notification) {
-//        calcSizing(notification)
-//    }
-//    
-//    func splitViewDidResizeSubviews(_ notification: Notification) {
-//        calcSizing(notification)
-//    }
-//    
-//    override func mouseDown(with event: NSEvent) {
-//        super.mouseDown(with: event)
-//        let isPressed = NSEvent.pressedMouseButtons > 0
-//        if self._isMousePressed == true && !isPressed {
-//            self._isMousePressed = false
-//            // Ended drag!
-//            dlog?.info("calcing if should snap")
-//            if !self.calcSnappingIfNeeded() {
-//                self.saveWidths()
-//            }
-//            
-//        }
-//    }
-//}
 

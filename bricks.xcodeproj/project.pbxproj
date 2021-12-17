@@ -63,10 +63,11 @@
 		EC218B872759471100744400 /* BrickDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B862759471100744400 /* BrickDoc.swift */; };
 		EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC332CB6275EB65B00546767 /* MNButton.swift */; };
 		EC332CC9275ECAC600546767 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EC332CC6275ECAC500546767 /* Localizable.strings */; };
-		EC332CCD275ECCA300546767 /* Document.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC332CCC275ECCA200546767 /* Document.storyboard */; };
+		EC332CCD275ECCA300546767 /* Doc.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC332CCC275ECCA200546767 /* Doc.storyboard */; };
 		EC46DB142764DAFF0070A2DC /* NSWindowEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */; };
 		EC46DB162764ECD70070A2DC /* NSApplicationEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */; };
 		EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */; };
+		EC6741A8276B518100E9BB84 /* DocWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6741A7276B518100E9BB84 /* DocWC.swift */; };
 		EC71CE1F2764CDFE00947423 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71CE1E2764CDFE00947423 /* AboutVC.swift */; };
 		EC71CE222764CF5700947423 /* AppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71CE212764CF5700947423 /* AppCommands.swift */; };
 		EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */; };
@@ -106,13 +107,16 @@
 		EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */; };
 		ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA1B0CD2760101100B3D36A /* MainMenu.xib */; };
 		ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1B0D02760114700B3D36A /* MainMenu.swift */; };
+		ECA67B892767787200BC0D7D /* DocVC+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */; };
+		ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */; };
+		ECA67B8E2769FEC600BC0D7D /* DocNameToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */; };
+		ECA67B90276A013A00BC0D7D /* MainPanelToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */; };
 		ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */; };
 		ECAA83B12764A6730016578C /* OnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83AF2764A6730016578C /* OnboardingVC.swift */; };
-		ECCE07922764EF67007F2A65 /* DocumentVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07912764EF67007F2A65 /* DocumentVC.swift */; };
+		ECCE07922764EF67007F2A65 /* DocVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07912764EF67007F2A65 /* DocVC.swift */; };
 		ECCE07942764F238007F2A65 /* AcknowledgementsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07932764F238007F2A65 /* AcknowledgementsVC.swift */; };
 		ECCE07962764F259007F2A65 /* LicenseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */; };
 		ECCE07982764F5C5007F2A65 /* PreferencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */; };
-		ECCE079B27651DC8007F2A65 /* Codextended in Frameworks */ = {isa = PBXBuildFile; productRef = ECCE079A27651DC8007F2A65 /* Codextended */; };
 		ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */; };
 		ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B622760F9DE00DD602D /* Invoker.swift */; };
 		ECEA1B652760F9FB00DD602D /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B642760F9FB00DD602D /* Command.swift */; };
@@ -238,11 +242,12 @@
 		EC218B842759468E00744400 /* BrickVersionControlType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickVersionControlType.swift; sourceTree = "<group>"; };
 		EC218B862759471100744400 /* BrickDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDoc.swift; sourceTree = "<group>"; };
 		EC332CB6275EB65B00546767 /* MNButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNButton.swift; sourceTree = "<group>"; };
-		EC332CCC275ECCA200546767 /* Document.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Document.storyboard; sourceTree = "<group>"; };
+		EC332CCC275ECCA200546767 /* Doc.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Doc.storyboard; sourceTree = "<group>"; };
 		EC332CCF275ED29E00546767 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWindowEx.swift; sourceTree = "<group>"; };
 		EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationEx.swift; sourceTree = "<group>"; };
 		EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageVC.swift; sourceTree = "<group>"; };
+		EC6741A7276B518100E9BB84 /* DocWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocWC.swift; sourceTree = "<group>"; };
 		EC71CE1E2764CDFE00947423 /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
 		EC71CE212764CF5700947423 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewcontroller+XIB.swift"; sourceTree = "<group>"; };
@@ -281,9 +286,13 @@
 		EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPRouter.swift; sourceTree = "<group>"; };
 		ECA1B0CD2760101100B3D36A /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		ECA1B0D02760114700B3D36A /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocVC+Toolbar.swift"; sourceTree = "<group>"; };
+		ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMenuEx.swift; sourceTree = "<group>"; };
+		ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocNameToolbarItem.swift; sourceTree = "<group>"; };
+		ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPanelToolbarItem.swift; sourceTree = "<group>"; };
 		ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+Commandable.swift"; sourceTree = "<group>"; };
 		ECAA83AF2764A6730016578C /* OnboardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingVC.swift; sourceTree = "<group>"; };
-		ECCE07912764EF67007F2A65 /* DocumentVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentVC.swift; sourceTree = "<group>"; };
+		ECCE07912764EF67007F2A65 /* DocVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocVC.swift; sourceTree = "<group>"; };
 		ECCE07932764F238007F2A65 /* AcknowledgementsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsVC.swift; sourceTree = "<group>"; };
 		ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAgreementVC.swift; sourceTree = "<group>"; };
 		ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
@@ -311,7 +320,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ECCE079B27651DC8007F2A65 /* Codextended in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,13 +347,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		EC18395F275FFFCF0001AB6D /* Document */ = {
+		EC18395F275FFFCF0001AB6D /* Document UI */ = {
 			isa = PBXGroup;
 			children = (
-				ECCE07912764EF67007F2A65 /* DocumentVC.swift */,
-				EC332CCC275ECCA200546767 /* Document.storyboard */,
+				ECA67B8C2769FEAD00BC0D7D /* Toolbar */,
+				ECCE07912764EF67007F2A65 /* DocVC.swift */,
+				EC6741A7276B518100E9BB84 /* DocWC.swift */,
+				EC332CCC275ECCA200546767 /* Doc.storyboard */,
 			);
-			path = Document;
+			path = "Document UI";
 			sourceTree = "<group>";
 		};
 		EC218AAC275931E700744400 = {
@@ -548,6 +558,7 @@
 				EC9DEFF6275CD1BE0046F30A /* UIImage+Utils.swift */,
 				ECEA1B762762255500DD602D /* NSButtonEx.swift */,
 				EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */,
+				ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -680,7 +691,7 @@
 			children = (
 				EC9DEFE4275CD0900046F30A /* Onboarding */,
 				ECA1B0CF2760113A00B3D36A /* MainMenu */,
-				EC18395F275FFFCF0001AB6D /* Document */,
+				EC18395F275FFFCF0001AB6D /* Document UI */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -702,6 +713,16 @@
 				ECA1B0D02760114700B3D36A /* MainMenu.swift */,
 			);
 			path = MainMenu;
+			sourceTree = "<group>";
+		};
+		ECA67B8C2769FEAD00BC0D7D /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+				ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */,
+				ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */,
+				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */,
+			);
+			path = Toolbar;
 			sourceTree = "<group>";
 		};
 		ECAA83A627635C310016578C /* Preferences */ = {
@@ -777,7 +798,6 @@
 			);
 			name = Bricks;
 			packageProductDependencies = (
-				ECCE079A27651DC8007F2A65 /* Codextended */,
 			);
 			productName = bricks;
 			productReference = EC218AB5275931E700744400 /* Bricks.app */;
@@ -872,7 +892,6 @@
 			);
 			mainGroup = EC218AAC275931E700744400;
 			packageReferences = (
-				ECCE079927651DC8007F2A65 /* XCRemoteSwiftPackageReference "Codextended" */,
 			);
 			productRefGroup = EC218AB6275931E700744400 /* Products */;
 			projectDirPath = "";
@@ -894,7 +913,7 @@
 				EC218ABF275931E800744400 /* Assets.xcassets in Resources */,
 				ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */,
 				EC332CC9275ECAC600546767 /* Localizable.strings in Resources */,
-				EC332CCD275ECCA300546767 /* Document.storyboard in Resources */,
+				EC332CCD275ECCA300546767 /* Doc.storyboard in Resources */,
 				EC9DEFE2275CCE730046F30A /* Onboarding.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -935,6 +954,7 @@
 				EC9DF004275CD1BE0046F30A /* NSView+Animation.swift in Sources */,
 				EC9DF00A275CD1BE0046F30A /* CGSizeEx.swift in Sources */,
 				EC218B7127593E7900744400 /* AppError.swift in Sources */,
+				ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */,
 				EC218B5A27593CBF00744400 /* DispatchQueueEx.swift in Sources */,
 				ECEA1B792762297000DD602D /* MNBaseView.swift in Sources */,
 				EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */,
@@ -974,8 +994,10 @@
 				ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */,
 				EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */,
 				EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */,
+				ECA67B8E2769FEC600BC0D7D /* DocNameToolbarItem.swift in Sources */,
 				EC218B4027593BE000744400 /* HashableObject.swift in Sources */,
 				ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */,
+				ECA67B90276A013A00BC0D7D /* MainPanelToolbarItem.swift in Sources */,
 				EC218B7627593EE300744400 /* FileFinder.swift in Sources */,
 				EC218B5427593CBF00744400 /* SetEx.swift in Sources */,
 				EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */,
@@ -1016,6 +1038,7 @@
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
 				ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */,
 				EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */,
+				ECA67B892767787200BC0D7D /* DocVC+Toolbar.swift in Sources */,
 				EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */,
 				EC218B4227593BE000744400 /* Selectable.swift in Sources */,
 				EC9DEFFE275CD1BE0046F30A /* NSColorEx.swift in Sources */,
@@ -1023,8 +1046,9 @@
 				EC218B7D2759448000744400 /* BrickBasicInfo.swift in Sources */,
 				EC218B13275939CC00744400 /* AppConstants.swift in Sources */,
 				EC71CE1F2764CDFE00947423 /* AboutVC.swift in Sources */,
-				ECCE07922764EF67007F2A65 /* DocumentVC.swift in Sources */,
+				ECCE07922764EF67007F2A65 /* DocVC.swift in Sources */,
 				EC9DF001275CD1BE0046F30A /* NSAttributedStringEx.swift in Sources */,
+				EC6741A8276B518100E9BB84 /* DocWC.swift in Sources */,
 				ECEA1B7D2762297C00DD602D /* MNColoredView.swift in Sources */,
 				EC218B15275939CF00744400 /* AppDocumentHistory.swift in Sources */,
 				ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */,
@@ -1235,7 +1259,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = bricks/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_NSPrincipalClass = Bricks.BricksApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1260,7 +1284,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = bricks/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				INFOPLIST_KEY_NSPrincipalClass = Bricks.BricksApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1445,25 +1469,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		ECCE079927651DC8007F2A65 /* XCRemoteSwiftPackageReference "Codextended" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/JohnSundell/Codextended";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		ECCE079A27651DC8007F2A65 /* Codextended */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ECCE079927651DC8007F2A65 /* XCRemoteSwiftPackageReference "Codextended" */;
-			productName = Codextended;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EC218AAD275931E700744400 /* Project object */;
 }

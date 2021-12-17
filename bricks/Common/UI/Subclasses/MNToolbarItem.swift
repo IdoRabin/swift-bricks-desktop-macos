@@ -10,7 +10,44 @@ import Cocoa
 fileprivate let dlog : DSLogger? = DLog.forClass("MNToolbarItem")
 
 class MNToolbarItem: NSToolbarItem {
-    var associatedCommand : AppCommand.Type? = nil
+    var associatedCommand : AppCommand.Type? = nil {
+        didSet {
+            if let assoc = associatedCommand {
+                self.title = assoc.buttonTitle
+                self.toolTip = assoc.tooltipTitleFull
+                if let imgName = assoc.buttonImageName {
+                    if let img = NSImage(named: imgName) {
+                        img.accessibilityDescription = self.toolTip
+                        self.image = img
+                    } else if let img = NSImage(systemSymbolName: imgName, accessibilityDescription: self.toolTip) {
+                        self.image = img
+                    }
+                }
+                
+                if let btn = self.view as? NSButton {
+                    btn.keyEquivalent = assoc.keyboardShortcut.chars
+                    btn.keyEquivalentModifierMask = assoc.keyboardShortcut.modifiers
+                }
+            }
+        }
+    }
+    
+    private func setup() {
+        
+    }
+    
+    override init(itemIdentifier: NSToolbarItem.Identifier) {
+        super.init(itemIdentifier: itemIdentifier)
+        setup()
+    }
+    
+    override func awakeFromNib() {
+        if self.responds(to: #selector(self.awakeFromNib)) {
+            super.awakeFromNib()
+        }
+        
+        setup()
+    }
 }
 
 class MNToggleToolbarItem: MNToolbarItem {
@@ -33,6 +70,8 @@ class MNToggleToolbarItem: MNToolbarItem {
     @IBInspectable var onTint : NSColor? = nil
     @IBInspectable var offTint : NSColor? = nil
     @IBInspectable var imagesScale : CGFloat = 1.0
+    @IBInspectable var onTooltip : String? = nil
+    @IBInspectable var offTooltip : String? = nil
     
     var fwdAction : Selector? = nil
     weak var fwdTarget : AnyObject? = nil
@@ -51,6 +90,9 @@ class MNToggleToolbarItem: MNToolbarItem {
                     btn.image = btn.image?.tinted(onTint)
                     btn.contentTintColor = onTint
                 }
+                    
+                self.toolTip = onTooltip ?? offTooltip ?? self.toolTip
+                
             } else {
                 // dlog?.info("isToggledOn NO")
                 if let offImg = self.offImage {
@@ -60,6 +102,8 @@ class MNToggleToolbarItem: MNToolbarItem {
                     btn.image = btn.image?.tinted(offTint)
                     btn.contentTintColor = self.offTint
                 }
+                
+                self.toolTip = offTooltip ?? onTooltip ?? self.toolTip
             }
             
             btn.needsLayout = true

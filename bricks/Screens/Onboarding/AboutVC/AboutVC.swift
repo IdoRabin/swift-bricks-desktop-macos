@@ -36,7 +36,7 @@ class AboutVC: NSViewController {
     }
     
     deinit {
-        dlog?.info("deinit")
+        dlog?.info("deinit \(self.basicDesc)")
     }
     
 }

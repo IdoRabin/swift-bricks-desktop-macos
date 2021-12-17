@@ -29,8 +29,13 @@ class MainMenu : NSMenu {
     @IBOutlet weak var   fileOpenRecentSubmenu: NSMenu!
     @IBOutlet weak var      fileClearRecentsMenuItem: NSMenuItem!
     @IBOutlet weak var   fileCloseMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileCloseAllMnuItem: NSMenuItem!
     @IBOutlet weak var   fileSaveMnuItem: NSMenuItem!
     @IBOutlet weak var   fileSaveAsMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileDuplicateMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileRenameMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileMoveToMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileRevertToToMnuItem: NSMenuItem!
     @IBOutlet weak var   fileRevertToSavedMnuItem: NSMenuItem!
     @IBOutlet weak var   filePageSetupMnuItem: NSMenuItem!
     @IBOutlet weak var   filePrintMnuItem: NSMenuItem!
@@ -95,6 +100,8 @@ class MainMenu : NSMenu {
     var helpMnuItems   : [NSMenuItem] = []
     var allLeafItems    : [NSMenuItem] = []
     
+    var unhookedSystemItems : [NSMenuItem]? = IS_DEBUG ? [] : nil
+    
     enum State {
         enum StateSimplified : Int {
             case disabled
@@ -142,7 +149,37 @@ class MainMenu : NSMenu {
         }
     }
     
-    func localize(menu:NSMenu, depth:Int = 0) {
+    func hookupMenuSystemItem(_ item:NSMenuItem)->Bool {
+        guard item.action != nil || self.allLeafItems.contains(item) else {
+            return false
+        }
+        
+        let actionDesc = item.action.descOrNil
+        switch actionDesc {
+            // File
+            case "closeAll:": fileCloseAllMnuItem = item
+            case "duplicateDocument:": fileDuplicateMnuItem = item
+            case "renameDocument:": fileRenameMnuItem = item
+            case "moveDocument:": fileMoveToMnuItem = item
+            
+            // "Duplicate" is unknown. action: duplicateDocument:
+            // Revert To" is unknown. action: submenuAction:
+            // "Move To…" is unknown. action: moveDocument:
+            // "Rename…" is unknown. action: renameDocument:
+            // case "submenuAction:": break // ??
+            // case "startDictation:": break
+            // case "orderFrontCharacterPalette:": break
+            // case "toggleFullScreen:": break
+            // case "makeKeyAndOrderFront:": break
+        default:
+            // dlog?.note("unknown SystemItem:\(actionDesc)")
+            unhookedSystemItems?.append(item)
+            break
+        }
+        return false
+    }
+    
+    func setup(menu:NSMenu, depth:Int = 0) {
         guard depth < 10 else {
             dlog?.warning("localize recursion is > 10 depth. @ menu : \(menu.title)")
             return
@@ -151,6 +188,11 @@ class MainMenu : NSMenu {
         for item in menu.items {
             let skip = item.isSeparatorItem
             if !skip {
+                
+                if self.hookupMenuSystemItem(item) {
+                    // dlog?.info("Hooked up menu item:\(item.action.descOrNil)")
+                }
+                
                 var title = ""
                 let productName = AppStr.PRODUCT_NAME.localized()
                 let curProjectName = ""
@@ -178,8 +220,13 @@ class MainMenu : NSMenu {
                           title = AppStr.OPEN_RECENT.localized()
                 case      fileClearRecentsMenuItem: title = AppStr.CLEAR_MENU.localized()
                 case   fileCloseMnuItem: title = AppStr.CLOSE_FORMAT.formatLocalized(curProjectName)
+                case   fileCloseAllMnuItem: title = AppStr.CLOSE_ALL.localized()
                 case   fileSaveMnuItem: title = AppStr.SAVE.localized()
                 case   fileSaveAsMnuItem: title = AppStr.SAVE_AS_DOT_DOT.localized()
+                case   fileDuplicateMnuItem: title = AppStr.DUPLICATE.localized()
+                case   fileRenameMnuItem: title = AppStr.RENAME_DOT_DOT.localized()
+                case   fileMoveToMnuItem: title = AppStr.MOVE_TO_DOT_DOT.localized()
+                case   fileRevertToToMnuItem: title = AppStr.REVERT_TO_DOT_DOT.localized()
                 case   fileRevertToSavedMnuItem: title = AppStr.REVERT_TO_SAVED_DOT_DOT.localized()
                 case   filePageSetupMnuItem: title = AppStr.PAGE_SETUP_DOT_DOT.localized()
                 case   filePrintMnuItem: title = AppStr.PRINT_DOT_DOT.localized()
@@ -201,8 +248,8 @@ class MainMenu : NSMenu {
                 case viewTopMnuItem: title = AppStr.VIEW.localized()
                 case   viewShowToolbarMnuItem:  title = AppStr.SHOW_TOOLBAR.localized()
                 case   viewCustomizeToolbarMnuItem: title = AppStr.CUSTEMIZE_TOOLBAR_DOT_DOT.localized()
-                case   viewShowProjectSidebarMnuItem:   title = AppStr.SHOW_PROJECTS_SIDEBAR.localized() //+ AppStr.HIDE_PROJECTS_SIDEBAR.localized()
-                case   viewShowUtilitySidebarMnuItem:   title = AppStr.SHOW_UTILITY_SIDEBAR.localized() //+ AppStr.HIDE_UTILITY_SIDEBAR.localized()
+                case   viewShowProjectSidebarMnuItem: title = AppStr.SHOW_PROJECTS_SIDEBAR.localized() //+ AppStr.HIDE_PROJECTS_SIDEBAR.localized()
+                case   viewShowUtilitySidebarMnuItem: title = AppStr.SHOW_UTILITY_SIDEBAR.localized() //+ AppStr.HIDE_UTILITY_SIDEBAR.localized()
                 case   viewZoomMnuItem, viewZoomSubmenu:
                           title = AppStr.ZOOM.localized()
                           note = curZoomTitle
@@ -237,14 +284,16 @@ class MainMenu : NSMenu {
                             title = AppStr.CLEAR_MENU.localized()
                         }
                     }
-                    if title.count == 0 {
-                        dlog?.note("Localized title for \"\(item.title)\" is unknown \(type(of: item))")
+                    if title.count == 0, unhookedSystemItems != nil  {
+                        unhookedSystemItems?.append(item)
+                         // dlog?.note("Localized title for \"\(item.title)\" is unknown. action: \(item.action.descOrNil)")
                     }
                     break
                 }
 
                 if let cmd = cmd, let item = item as? MNMenuItem {
                     item.associatedCommand = cmd
+                    cmd.menuRepresentation = item
                 } else if title.count > 0 {
                     if note.count != 0 {
                         let attributes = item.attributedTitle?.attributes(at: 0, effectiveRange: nil)
@@ -262,67 +311,43 @@ class MainMenu : NSMenu {
                 
                 if item.hasSubmenu, let submenu = item.submenu {
                     submenu.title = title
-                    self.localize(menu: submenu, depth: depth + 1)
+                    self.setup(menu: submenu, depth: depth + 1)
                 }
             }
         }
-    }
-    
-    private static func internal_items(menu:NSMenu,conformingToTest test:(NSMenuItem)->Bool, recursive:Bool = true, depth:Int = 0)->[NSMenuItem] {
-        guard depth < 127 else {
-            return []
-        }
         
-        var result : [NSMenuItem] = []
-        for item in menu.items {
-            if test(item) {
-                result.append(item)
-            }
-            
-            if item.hasSubmenu && recursive {
-                let subsz = self.internal_items(menu: item.submenu!, conformingToTest: test, recursive: recursive, depth: depth + 1)
-                result.append(contentsOf: subsz)
-            }
-        }
-        
-        return result
-    }
-    
-    func items(conformingToTest test:(NSMenuItem)->Bool, recursive:Bool = true)->[NSMenuItem] {
-        return Self.internal_items(menu:self, conformingToTest: test, recursive: recursive, depth: 0)
-    }
-    
-    func item(withCommand cmd:Command.Type)->NSMenuItem? {
-        return self.items { item in
-            return (item as? MNMenuItem)?.associatedCommand == cmd
-        }.first
-    }
-    
-    func item(withId id:String)->NSMenuItem? {
-        return self.items { item in
-            item.identifier?.rawValue == id
-        }.first
-    }
-    
-    func items(withIdFragments fragments: [String], caseSensitive:Bool = false)->[NSMenuItem] {
-        let frags = caseSensitive ? fragments : fragments.compactMap({ str in
-            str.lowercased()
-        })
-        
-        return self.items { item in
-            if let idr = item.identifier {
-                var id = idr.rawValue
-                if caseSensitive == false {
-                    id = id.lowercased()
-                }
-                return id.contains(allOf: frags)
-            }
-            return false
+        if depth == 0 {
+            unhookedSystemItems = unhookedSystemItems?.uniqueElements()
         }
     }
+
     
-    // toggleTrailingSidebarMenuItemID
-    
+    // MARK: Update menu using the current Doc:
+    func updateMenuItems(_ items:[NSMenuItem], inVC vc:DocVC) {
+        guard items.count > 0 else {
+            dlog?.note("updateMenuItems with 0 items as input!")
+            return
+        }
+        
+        self.recalcLeafItems()
+        
+        for item in items {
+            switch item {
+            case viewShowProjectSidebarMnuItem:
+                // dlog?.info("Update leading sidebar menu item")
+                item.title = vc.mnSplitView.isLeadingPanelCollapsed ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
+                
+            case viewShowUtilitySidebarMnuItem:
+                // dlog?.info("Update trailing sidebar menu item")
+                item.title = vc.mnSplitView.isTrailingPanelCollapsed ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
+                
+            default:
+                break
+            }
+        }
+        
+    }
+
     // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -357,7 +382,7 @@ class MainMenu : NSMenu {
         ]
         
         DispatchQueue.main.async {
-            self.localize(menu: self)
+            self.setup(menu: self)
             self.recalcLeafItems()
         }
     }
@@ -384,7 +409,7 @@ class MainMenu : NSMenu {
     // MARK: state changes
     func determineState() {
         let hasSplash = BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self)
-        let hasDocument = BrickDocController.shared.documents.count == 0 || BricksApplication.shared.isViewControllerExistsOfClass(DocumentVC.self)
+        let hasDocument = BrickDocController.shared.documents.count == 0 || BricksApplication.shared.isViewControllerExistsOfClass(DocVC.self)
         
         var result : State = .splashScreen
         if hasSplash {
@@ -437,5 +462,20 @@ extension MainMenu /* load from nib */ {
             } as? Self
         }
         return nil
+    }
+}
+
+
+extension Array where Element : NSMenuItem {
+    
+    func filter(commands:[AppCommand.Type], recursive:Bool = false)->[NSMenuItem] {
+        let cmdTypes = commands.typeNames
+        return filter(conformingToTest: { item in
+            if let item = item as? MNMenuItem, let cmd = item.associatedCommand, cmdTypes.contains(cmd.typeName) {
+                return true
+            }
+            
+            return false
+        }, recursive: true)
     }
 }

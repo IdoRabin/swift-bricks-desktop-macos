@@ -37,7 +37,7 @@ class SplashVC : NSViewController {
     let DEBUG_DRAWING = IS_DEBUG && false
     let MIN_WIDTH : CGFloat = 420 // hhh
     let TABLEVIEW_WIDTH : CGFloat = 220 // hhh
-    var windowController : NSWindowController? = nil
+    static var sharedWindowController : NSWindowController? = nil
     
     @IBOutlet weak var mainItemsconstainerHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var mainItemsconstainerWidthConstraint: NSLayoutConstraint!
@@ -149,6 +149,14 @@ class SplashVC : NSViewController {
         dlog?.info("viewDidLayout")
     }
     
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        if Self.sharedWindowController != nil {
+            dlog?.warning("Two splash screens opened at once!")
+        }
+        Self.sharedWindowController = self.view.window?.windowController
+    }
+    
     override func viewDidAppear() {
         super.viewDidAppear()
         dlog?.info("viewDidAppear")
@@ -160,7 +168,8 @@ class SplashVC : NSViewController {
     }
     
     deinit {
-        dlog?.info("deinit")
+        Self.sharedWindowController = nil
+        dlog?.info("deinit \(self.basicDesc)")
     }
 }
 
@@ -169,9 +178,11 @@ extension SplashVC /* Actions */ {
     @IBAction func closeButtonAction(_ sender:Any) {
         dlog?.info("closeButtonAction")
         
-        func finalKill() {
+        func terminateAppIfNeeded() {
             if AppSettings.shared.general.splashScreenCloseBtnWillCloseApp {
-                if NSDocumentController.shared.hasEditedDocuments {
+                BrickDocController.shared.lastClosedWasOnSplashScreen = (BrickDocController.shared.brickDocWindows.count == 0)
+                
+                if BrickDocController.shared.hasEditedDocuments {
                     DLog.splash.raisePreconditionFailure("TODO: Handle unsaved documents")
                 } else {
                     DispatchQueue.main.async {
@@ -188,8 +199,8 @@ extension SplashVC /* Actions */ {
             if window.delegate?.windowShouldClose?(window) ?? true {
                 window.fadeHide {
                     window.close()
-                    self.windowController = nil // dealloc windowController
-                    finalKill()
+                    
+                    terminateAppIfNeeded()
                 }
             }
         }

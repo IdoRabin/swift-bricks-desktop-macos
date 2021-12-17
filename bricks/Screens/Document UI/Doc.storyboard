@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19455" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19455"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
         <capability name="NSView safe area layout guides" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--DocumentWC-->
+        <!--DocWC-->
         <scene sceneID="t6r-RU-XhI">
             <objects>
-                <windowController storyboardIdentifier="DocumentWCID" id="aUJ-eb-uWu" userLabel="DocumentWC" sceneMemberID="viewController">
-                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="DocumentWCID" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
+                <windowController storyboardIdentifier="DocWCID" id="aUJ-eb-uWu" userLabel="DocWC" customClass="DocWC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-                        <rect key="contentRect" x="164" y="462" width="741" height="492"/>
+                        <rect key="contentRect" x="164" y="462" width="651" height="398"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
                         <view key="contentView" id="DE3-zT-tbJ">
-                            <rect key="frame" x="0.0" y="0.0" width="741" height="492"/>
+                            <rect key="frame" x="0.0" y="0.0" width="651" height="398"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ">
-                            <allowedToolbarItems/>
+                            <allowedToolbarItems>
+                                <toolbarItem implicitItemIdentifier="39F9CFAB-03E2-409E-AC03-4EB1BC283403" explicitItemIdentifier="MainPanelToolbaritemID" label="Main Panel" paletteLabel="Main Panel" tag="-1" sizingBehavior="auto" id="02d-mb-Z0J" customClass="MainPanelToolbarItem" customModule="Bricks" customModuleProvider="target">
+                                    <nil key="toolTip"/>
+                                    <customView key="view" id="Ky2-34-ngU">
+                                        <rect key="frame" x="0.0" y="14" width="247" height="37"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                    </customView>
+                                </toolbarItem>
+                                <toolbarItem implicitItemIdentifier="BD48D376-8F3D-471F-B38B-967C4004456A" explicitItemIdentifier="DocNameToolbarItemID" label="Document name" paletteLabel="Document name" title="Doc Name" sizingBehavior="auto" id="MxJ-Q3-XgJ" customClass="DocNameToolbarItem" customModule="Bricks" customModuleProvider="target">
+                                    <nil key="toolTip"/>
+                                    <button key="view" imageHugsTitle="YES" id="csJ-bc-9Le" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
+                                        <rect key="frame" x="13" y="14" width="68" height="16"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <buttonCell key="cell" type="square" title="Doc Name" bezelStyle="shadowlessSquare" imagePosition="leading" alignment="left" imageScaling="proportionallyUpOrDown" inset="2" id="Kfz-fo-fmd">
+                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isDetectHover" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                    </button>
+                                </toolbarItem>
+                            </allowedToolbarItems>
                             <defaultToolbarItems/>
+                            <connections>
+                                <outlet property="delegate" destination="aUJ-eb-uWu" id="kPy-bR-zBF"/>
+                            </connections>
                         </toolbar>
                         <connections>
                             <outlet property="delegate" destination="aUJ-eb-uWu" id="UHo-iq-sGo"/>
@@ -33,19 +58,19 @@
                 </windowController>
                 <customObject id="UxU-dv-l8D" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-963" y="724"/>
+            <point key="canvasLocation" x="-1008.5" y="677"/>
         </scene>
-        <!--DocumentVC-->
+        <!--DocVC-->
         <scene sceneID="LEU-rn-2US">
             <objects>
-                <splitViewController identifier="DocumentVCID" storyboardIdentifier="DocumentVCID" id="CmF-ng-hYs" customClass="DocumentVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                <splitViewController identifier="DocVCID" storyboardIdentifier="DocVCID" id="CmF-ng-hYs" customClass="DocVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="BX1-p6-cIx"/>
                         <splitViewItem id="tJl-hh-Jnq"/>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="5ik-Wn-kDK"/>
                     </splitViewItems>
                     <splitView key="splitView" dividerStyle="thin" vertical="YES" id="wo6-t0-en1" customClass="MNSplitview" customModule="Bricks" customModuleProvider="target">
-                        <rect key="frame" x="-105" y="0.0" width="630" height="509"/>
+                        <rect key="frame" x="-105" y="0.0" width="563" height="461"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
                     <connections>
@@ -56,7 +81,7 @@
                 </splitViewController>
                 <customObject id="Inw-qn-92a" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-154" y="724.5"/>
+            <point key="canvasLocation" x="-187.5" y="700.5"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="2Ly-LW-srj">

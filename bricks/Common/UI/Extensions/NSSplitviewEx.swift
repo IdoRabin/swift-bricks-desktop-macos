@@ -19,21 +19,25 @@ extension NSSplitView {
     }
     
     func isPanelCollapsed(at index:Int)->Bool {
+
+        // leading
         if index == self.leadingDividerIndex, let subview = self.arrangedSubviews.first {
             let minPos = self.minPossiblePositionOfDivider(at: index)
             // dlog?.info("L minPos \(minPos) w:\(subview.frame.width)")
-            return self.isSubviewCollapsed(subview) || abs(minPos - subview.frame.maxX) < 10.0 
+            return self.isSubviewCollapsed(subview) || abs(minPos - subview.frame.maxX) < 10.0 || subview.frame.width < 10.0
         }
         
-//        if index == self.trailingDividerIndex, let subview = self.arrangedSubviews.last {
-//            let minPos = self.minPossiblePositionOfDivider(at: index)
-//            dlog?.info("T minPos \(minPos) w:\(subview.frame.width)")
-//            return self.isSubviewCollapsed(subview)
-//        }
-//
-//        if self.arrangedSubviews.count > 2 && index > 0 && index < self.arrangedSubviews.count - 1 {
-//            return self.isSubviewCollapsed(self.arrangedSubviews[index])
-//        }
+        // trailing
+        if index == self.trailingDividerIndex + 1, let subview = self.arrangedSubviews.last {
+            let minPos = self.minPossiblePositionOfDivider(at: index)
+            // dlog?.info("T minPos \(minPos) w:\(subview.frame.width)")
+            return self.isSubviewCollapsed(subview) || abs(minPos - subview.frame.width) < 10.0 || subview.frame.width < 10.0
+        }
+
+        // Not leding or trailing - middle panel collapsed?
+        if self.arrangedSubviews.count > 2 && index > 0 && index < self.arrangedSubviews.count - 1 {
+            return self.isSubviewCollapsed(self.arrangedSubviews[index])
+        }
         
         return false
     }
@@ -43,6 +47,6 @@ extension NSSplitView {
     }
     
     var isTrailingPanelCollapsed : Bool {
-        return isPanelCollapsed(at: self.trailingDividerIndex)
+        return isPanelCollapsed(at: self.trailingDividerIndex + 1)
     }
 }

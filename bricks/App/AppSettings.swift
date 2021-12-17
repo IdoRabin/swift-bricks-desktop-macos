@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Codextended
+// import Codextended
 
 fileprivate let dlog : DSLogger? = DLog.forClass("AppSettings")
 
@@ -153,13 +153,16 @@ final class AppSettings : JSONFileSerializable {
     }
     
     private init() {
-        dlog?.info("Init")
         _isLoading = false
         general = AppSettingsGeneral()
         stats = AppSettingsStats()
         debug = IS_DEBUG ? AppSettingsDebug() : nil
+        dlog?.info("Init \(String(memoryAddressOf: self))")
     }
     
+    deinit {
+        dlog?.info("deinit \(String(memoryAddressOf: self))")
+    }
     // MARK: Codable
     func encode(to encoder: Encoder) throws {
         var cont = encoder.container(keyedBy: CodingKeys.self)
@@ -228,9 +231,10 @@ struct AppSettable<T:Equatable & Codable> : Codable {
     
     init(_ wrappedValue:T, name newName:String) {
         if AppSettings.sharedWasLoaded {
-            dlog?.info("searching for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
+            // dlog?.info("searching for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
             if let loadedVal = AppSettings.shared.other[newName] as? T {
                 self._value = loadedVal
+                dlog?.success("found and set for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
             } else {
                 dlog?.warning("failed cast \(AppSettings.shared.other[newName].descOrNil) as \(T.self)")
                 self._value = wrappedValue

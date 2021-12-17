@@ -9,14 +9,21 @@
 import Foundation
 
 class BrickStats: Codable {
-    var sessionCount : Int = 0
-    var indexingCount : Int = 0
+    
+    var sessionCount : UInt = 1
+    var indexingCount : UInt = 0
+    var modificationsCount : UInt = 0
+    var savesCount : UInt = 0
+    var loadsCount : UInt = 0
     
     var statsDisplayDictionary : [String:String] {
         get {
             var result : [String:String] = [:]
             result["sessions"] = String(sessionCount)
             result["indexing"] = String(indexingCount)
+            result["savesCount"] = String(savesCount)
+            result["modificationsCount"] = String(modificationsCount)
+            result["loadsCount"] = String(loadsCount)
             return result
         }
     }

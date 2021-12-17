@@ -6,7 +6,7 @@
 //
 
 import AppKit
-import Codextended
+// import Codextended
 
 fileprivate let dlog : DSLogger? = DLog.forClass("PreferencesVC")
 
@@ -137,7 +137,7 @@ class PreferencesVC : NSPageController {
     }
     
     deinit {
-        dlog?.info("deinit")
+        dlog?.info("deinit \(self.basicDesc)")
     }
     
     func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {

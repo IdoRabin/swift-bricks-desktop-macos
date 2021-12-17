@@ -24,6 +24,10 @@ extension NSWindow {
         NSWindow.forceWindowCornerRadius(self, cornerRadius:radius, setup: setup)
     }
     
+    func bringToFront() {
+        self.orderedIndex = 0
+    }
+    
 }
 
 extension NSWindow {
@@ -96,5 +100,9 @@ extension NSWindowController {
         }, completion: { waitResult in
             self.window?.forceWindowCornerRadius(radius, setup: setup)
         }, counter: 1)
+    }
+    
+    func bringWindowToFront() {
+        self.window?.bringToFront()
     }
 }

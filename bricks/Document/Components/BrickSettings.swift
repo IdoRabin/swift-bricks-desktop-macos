@@ -9,6 +9,7 @@
 import Cocoa
 
 struct BrickSettings : Codable {
+    
     var drawingSnapToGrid : Bool = true
     var drawingGridSize : CGFloat = 10.0
 }

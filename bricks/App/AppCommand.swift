@@ -8,7 +8,7 @@
 import Foundation
 import AppKit
 
-fileprivate let dlog : DSLogger? = DLog.forClass("BrickDocController")
+fileprivate let dlog : DSLogger? = DLog.forClass("CmdCenter")
 
 enum AppCommandCategory {
     case app
@@ -29,6 +29,7 @@ protocol AppCommand : Command, AnyObject {
     static var buttonTitle : String { get }
     static var buttonImageName : String? { get }
     static var menuTitle : String? { get }
+    /* weak */ static var menuRepresentation : MNMenuItem? { get set}
     static var tooltipTitle : String? { get }
     
     static var tooltipTitleFull : String { get }
@@ -52,6 +53,18 @@ extension AppCommand /* default implementation */ {
         }
         return nil
     }
+}
+
+extension Array where Element == AppCommand.Type {
+    var typeNames : [String] {
+        return self.map { cmd in
+            return cmd.typeName
+        }
+    }
+}
+
+protocol DocCommand : AppCommand {
+    
 }
 
 // TODO: If keyboardShortcut become customizable, MacOS allows to save a .dict plist with the custom key bindings
@@ -106,6 +119,7 @@ class CommandCenter {
     
     
     func registerCommandType(_ cmd: Command.Type)->Bool {
+        dlog?.info("registerCommandType \(cmd)")
         return true
     }
 }

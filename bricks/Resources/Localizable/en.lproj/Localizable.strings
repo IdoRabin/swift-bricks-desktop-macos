@@ -50,9 +50,15 @@
 "UPGRADE" = "Upgrade";    // "Upgrade" // Button or title that calls the user to "upgrade" functionality (purchase of premium) // Android: "upgrade"
 "MY_PROFILE" = "My Profile";    // "My Profile" // Title: My Profile
 "UNNAMED" = "Unnamed"; // "Unnamed" // an unnamed element will have this title / name
+"UNSAVED" = "Unsaved"; // "Unsaved" // an un-saved file - was never saved into a file.
 "SAVE" = "Save";
+"SAVE_DOT_DOT" = "Save..";
 "SAVE_AS" = "Save as";
 "SAVE_AS_DOT_DOT" = "Save as..";
+"DUPLICATE"  = "Duplicate";
+"RENAME_DOT_DOT"  = "Rename..";
+"MOVE_TO_DOT_DOT"  = "Move to..";
+"REVERT_TO_DOT_DOT"  = "Revert to..";
 "OPEN" = "Open";
 "UNTITLED" = "Untitled"; // "Untitled" // an untitled (no filename yet) document / element - will display this title
 
@@ -89,6 +95,7 @@
 "OPEN_RECENT" = "Open Recent";
 "CLEAR_MENU" = "Clear Menu";
 "CLOSE_FORMAT" = "Close %@";
+"CLOSE_ALL" = "Close All";
 "REVERT_TO_SAVED_DOT_DOT" = "Revert to saved..";
 "PAGE_SETUP_DOT_DOT" = "Page Setup..";
 "PRINT_DOT_DOT" = "Print..";

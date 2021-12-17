@@ -17,8 +17,8 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
     }
     
     override init() {
-        dlog?.info("init")
         super.init()
+        dlog?.info("init \(basicDesc)")
         self.delegate = AppDelegate.shared
         DispatchQueue.main.async {
             self.mainMenu = MainMenu.fromNib()
@@ -32,7 +32,7 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
     }
     
     deinit {
-        dlog?.info("deinit")
+        dlog?.info("deinit \(self.basicDesc)")
     }
     
 }

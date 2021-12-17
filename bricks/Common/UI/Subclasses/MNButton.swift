@@ -10,7 +10,6 @@ import AppKit
 fileprivate let dlog : DSLogger? = DLog.forClass("MNButton")
 
 class MNButton: NSButton {
-    
     var associatedCommand : AppCommand.Type? = nil {
         didSet {
             if let cmd = self.associatedCommand {
@@ -156,6 +155,20 @@ class MNButton: NSButton {
             // Calc location
             if imageHugsTitle {
                 // dlog?.todo("implement calcedTitleRect for when imageHugsTitle == true")
+                switch cell?.alignment ?? .left {
+                case .center:
+                    return result.settingNewCenter(self.bounds.center)
+                case .justified:
+                    return result.changed(x: 0)
+                case .left:
+                    return result.changed(x: 0)
+                case .right:
+                    return result.changed(x: self.bounds.width - result.width)
+                case .natural:
+                    return result.settingNewCenter(self.bounds.center)
+                @unknown default:
+                    return result.changed(x: 0)
+                }
             } else {
                 switch imagePosition {
                 case .noImage:
@@ -228,12 +241,14 @@ class MNButton: NSButton {
     }
     
     override var intrinsicContentSize: NSSize {
-        if imageHugsTitle {
-            return super.intrinsicContentSize
-        }
         var result = calcedTitleRect()
-        if let imgrect = self.calcedImageRect() {
-            // dlog?.info("for [\(self.attributedTitle.string)] img:\(imgrect) ttl:\(result) total:\(result.union(imgrect))")
+        let imgrect = self.calcedImageRect()
+        if imageHugsTitle {
+            var mx = super.intrinsicContentSize
+            mx.width = max(mx.width + 2, result.width + (imgrect?.width ?? 0.0) + 2)
+            return mx.adding(widthAdd: instrinsicContentSizePadding.left + instrinsicContentSizePadding.right, heightAdd: instrinsicContentSizePadding.top + instrinsicContentSizePadding.bottom)
+        }
+        if let imgrect = imgrect {
             result = result.union(imgrect)
         }
         return result.size.adding(widthAdd: 2)

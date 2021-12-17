@@ -64,9 +64,15 @@ enum AppStr : Localizable {
     case UPGRADE    // "Upgrade" // Button or title that calls the user to "upgrade" functionality (purchase of premium) // Android: "upgrade"
     case MY_PROFILE    // "My Profile" // Title: My Profile
     case UNNAMED // "Unnamed" // an unnamed element will have this title / name
+    case UNSAVED // "Unsaved" // an un-saved file - was never saved into a file.
     case SAVE
+    case SAVE_DOT_DOT
     case SAVE_AS
     case SAVE_AS_DOT_DOT
+    case DUPLICATE
+    case RENAME_DOT_DOT
+    case MOVE_TO_DOT_DOT
+    case REVERT_TO_DOT_DOT
     case OPEN
     case UNTITLED // "Untitled" // an untitled (no filename yet) document / element - will display this title
     
@@ -103,6 +109,7 @@ enum AppStr : Localizable {
     case   OPEN_RECENT
     case   CLEAR_MENU
     case   CLOSE_FORMAT
+    case   CLOSE_ALL
     case   REVERT_TO_SAVED_DOT_DOT
     case   PAGE_SETUP_DOT_DOT
     case   PRINT_DOT_DOT

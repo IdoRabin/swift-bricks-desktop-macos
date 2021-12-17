@@ -803,6 +803,20 @@ extension String {
     }
 }
 
+extension Array where Element == String {
+    var lowercased : [String] {
+        return self.compactMap { str in
+            return str.lowercased()
+        }
+    }
+    
+    var uppercased : [String] {
+        return self.compactMap { str in
+            return str.lowercased()
+        }
+    }
+}
+
 //extension String /* bounding rectangles */ {
 //    func height(withConstrainedWidth width: CGFloat, font: UIFont) -> CGFloat {
 //        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)

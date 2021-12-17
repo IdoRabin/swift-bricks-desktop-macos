@@ -18,6 +18,8 @@ extension UnkeyedEncodingContainer {
     mutating func encode(dic:[String:Any], encoder:Encoder) throws {
         for (key, value) in dic {
             switch value {
+            case let val as Bool: try self.encode("\(key) : Bool = \(val)")
+                
             case let val as UInt: try self.encode("\(key) : UInt = \(val)")
             case let val as UInt8: try self.encode("\(key) : Int = \(val)")
             case let val as UInt16: try self.encode("\(key) : Int = \(val)")
@@ -84,8 +86,9 @@ extension StringAnyDictionary {
 extension UnkeyedDecodingContainer {
     
     mutating private func decode(decoder:Decoder, key:String, typeName:String, value:String) throws ->Any? {
+        let typeNameClean = typeName.replacingOccurrences(ofFromTo: ["Swift.":""])
         
-        switch typeName {
+        switch typeNameClean {
         case "UInt": return UInt(value)
         case "UInt8": return UInt8(value)
         case "UInt16": return UInt16(value)
@@ -101,6 +104,7 @@ extension UnkeyedDecodingContainer {
         case "Date": return Date(timeIntervalSince1970: TimeInterval(value)!)
         case "NSColor": if value != "null" { return value.colorFromHex()! }
         case "UUID": return UUID(uuidString: value)
+        case "Bool": return Bool(value.trimmingPrefix("."))
         default:
             if let aatype = codingRegisteredIffyClasses[typeName] as? LosslessStringConvertible.Type {
                 let val = aatype.init(value.trimmingPrefix("."))

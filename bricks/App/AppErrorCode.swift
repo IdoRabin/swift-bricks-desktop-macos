@@ -27,12 +27,19 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     
     // Doc
     case doc_unknown = 2000
-    case doc_layer_insert_failed = 2010
-    case doc_layer_insert_undo_failed = 2011
-    case doc_layer_move_failed = 2012
-    case doc_layer_move_undo_failed = 2013
-    case doc_layer_delete_failed = 2020
-    case doc_layer_delete_undo_failed = 2021
+    case doc_create_new_failed = 2010
+    case doc_create_from_template_failed = 2011
+    case doc_open_existing_failed = 2012
+    case doc_save_failed = 2013
+    case doc_close_failed = 2014
+    case doc_change_failed = 2015
+    
+    case doc_layer_insert_failed = 2030
+    case doc_layer_insert_undo_failed = 2031
+    case doc_layer_move_failed = 2032
+    case doc_layer_move_undo_failed = 2033
+    case doc_layer_delete_failed = 2040
+    case doc_layer_delete_undo_failed = 2041
     
     // db
     case db_unknown = 3000

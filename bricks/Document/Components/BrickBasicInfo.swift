@@ -9,7 +9,7 @@
 import Foundation
 
 struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, Identifiable {
-
+    
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
@@ -24,6 +24,7 @@ struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, Identif
     var lastOpenedDate:Date? = nil
     var lastClosedDate:Date? = nil
     var lastModifiedDate:Date? = nil
+    var shouldRestoreOnInit:Bool = false
     
     // MARK: Identifiable
     var id : BrickDocUUID

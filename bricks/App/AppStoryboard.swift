@@ -11,7 +11,7 @@ fileprivate let dlog : DSLogger? = DLog.forClass("AppStoryboard")
 
 enum AppStoryboard : String {
     
-    case document = "Document"
+    case document = "Doc"
     case newproject = "NewProject"
     case onboarding = "Onboarding"
     case misc = "misc" // about, preferences

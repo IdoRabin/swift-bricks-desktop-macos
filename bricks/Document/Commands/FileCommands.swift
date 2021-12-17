@@ -15,22 +15,20 @@ class CmdNewProject : AppCommand {
     static let buttonImageName: String? = nil
     static let menuTitle: String? = AppStr.NEW_PROJECT_DOT_DOT.localized()
     static let tooltipTitle: String? = AppStr.START_A_NEW_PROJECT_DOT_DOT.localized()
+    static weak var menuRepresentation: MNMenuItem? = nil
     
     func execute(compeltion: @escaping CommandResultBlock) {
         dlog?.info("execute")
-        AppStoryboard.document.instantiateWCAndPresent(from: nil, id: "DocumentWCID", asMain: true, asKey: true) { wc in
-            if let vc = wc.contentViewController as? DocumentVC {
-                // new document
-                if let screen = wc.window?.screen {
-                    let rect = screen.frame.boundsRect().insetBy(dx: screen.frame.width * 0.15, dy: screen.frame.height * 0.15).rounded()
-                    wc.window?.setFrame(rect, display: false, animate: false)
-                }
-                
-                // call completion
-                compeltion(.success("<DocumentVC \(String(memoryAddressOf: vc))>"))
-            } else {
-                compeltion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading about screen.")))
-            }
+        do {
+            let doc = try BrickDocController.shared.openUntitledDocumentAndDisplay(true)
+            
+            // call completion
+            compeltion(.success("created \(doc.basicDesc)"))
+        } catch let error {
+            dlog?.note("failed creating new document error:\(error.localizedDescription)")
+            
+            // call completion
+            compeltion(.failure(AppError(AppErrorCode.doc_create_new_failed, detail: "openUntitledDocumentAndDisplay returned nil")))
         }
     }
     
@@ -47,6 +45,7 @@ class CmdOpenProject : AppCommand {
     static let buttonImageName: String? = nil
     static let menuTitle: String? = AppStr.OPEN_PROJECT_DOT_DOT.localized()
     static let tooltipTitle: String? = AppStr.OPEN_AN_EXISTING_PROJECT_DOT_DOT.localized()
+    static weak var menuRepresentation: MNMenuItem? = nil
     
     func execute(compeltion: @escaping CommandResultBlock) {
         dlog?.info("execute")

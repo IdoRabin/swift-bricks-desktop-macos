@@ -24,18 +24,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     private override init() {
         super.init()
-        dlog?.info("init")
+        dlog?.info("init \(basicDesc)")
         instance = self
+        _ = AppSettings.shared
     }
     
     deinit {
-        dlog?.info("deinit")
+        dlog?.info("deinit \(self.basicDesc)")
     }
     
     // MARK: Private
     private func onLaunchActions(completion:@escaping AppResultBlock) {
         // Init singletons
-        _ = AppSettings.shared
         _ = AppDocumentHistory.shared
         AppSandboxer.loadBookmarks()
         
@@ -48,8 +48,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @discardableResult
     private func presentSplashWindow(showsRecents:Bool)->Bool {
-        let cmd = CmdSplashWindow(showsRecents: showsRecents)
-        BrickDocController.shared.sendToInvoker(command: cmd)
+        if BrickDocController.shared.documents.count == 0 {
+            let cmd = CmdSplashWindow(showsRecents: showsRecents)
+            BrickDocController.shared.sendToInvoker(command: cmd)
+            return true
+        }
         return false
     }
     
@@ -61,12 +64,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
     }
     
-    private func presentFirstWindow() {
+    private func isShouldShowSplashWindowOnInit()->Bool {
+        let aDocNeedsRestoringOnInit = AppDocumentHistory.shared.history.contains { info in
+            info.shouldRestoreOnInit
+        }
+        return BrickDocController.shared.lastClosedWasOnSplashScreen || (aDocNeedsRestoringOnInit == false)
+    }
+    
+    func presentFirstWindow() {
+        guard abs(AppSettings.shared.stats.lastLaunchDate.timeIntervalSinceNow) < 2.0 else {
+            dlog?.note("presentFirstWindow cannot be called after app launch")
+            return
+        }
+        
         AppDocumentHistory.shared.whenLoaded({ updated in
             let hasRecents = (AppDocumentHistory.shared.history.count > 0)
-            if AppSettings.shared.general.showsSplashScreenOnInit &&
-                self.presentSplashWindow(showsRecents: hasRecents) {
-                    // Splash screen was presented
+            if self.isShouldShowSplashWindowOnInit() {
+                self.presentSplashWindow(showsRecents: hasRecents)
+                // Splash screen was presented
             } else {
                 if let docInfo = AppDocumentHistory.shared.history.first {
                     dlog?.info("Should load recent document: \(docInfo)")
@@ -100,8 +115,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationShouldOpenUntitledFile(_ sender: NSApplication) -> Bool {
-        dlog?.info("applicationShouldOpenUntitledFile")
-        return false
+        let result = BrickDocController.shared.lastClosedWasOnSplashScreen == false
+        dlog?.info("applicationShouldOpenUntitledFile: \(result)")
+        return result
     }
 
     func applicationWillFinishLaunching(_ notification: Notification) {
@@ -125,13 +141,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        dlog?.info("applicationWillTerminate")
+        dlog?.info("applicationWillTerminate START")
         
         // Insert code here to tear down your application
-        UserDefaults.standard.synchronize()
-        
+        AppSettings.shared.saveIfNeeded()
         BricksApplication.shared.mainMenu = nil
         instance = nil
+        
+        dlog?.info("applicationWillTerminate END")
     }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {

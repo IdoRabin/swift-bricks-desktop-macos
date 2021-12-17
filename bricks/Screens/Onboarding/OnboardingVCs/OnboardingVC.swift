@@ -18,6 +18,6 @@ class OnboardingVC: NSPageController {
     }
     
     deinit {
-        dlog?.info("deinit")
+        dlog?.info("deinit \(self.basicDesc)")
     }
 }

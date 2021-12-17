@@ -13,6 +13,14 @@ struct AppImages {
     static let sideMenuLeftUncollapsed =           ImageString("sidebar.left.uncollapsed")
     static let sideMenuRightCollapsed   =          ImageString("sidebar.right.collapsed")
     static let sideMenuRightUncollapsed =          ImageString("sidebar.right.uncollapsed")
+    
+    static let docNewEmptyDocumentIcon =           ImageString("brick.new.empty.file.icon")
+    static let docNewDocumentIcon =                ImageString("brick.new.file.icon")
+    static let docRegularDocumentIcon =           ImageString("brick.file.icon")
+    
+    static func `bool`(_ `bool`:Bool, `true` trueVal:ImageString, `false` falseVal:ImageString)->ImageString {
+        return bool ? trueVal : falseVal
+    }
 }
 
 class NSPlaceholderImage : NSImage {
@@ -44,5 +52,13 @@ struct ImageString {
     
     func imageTinted(_ color:NSColor)->NSImage {
         return self.image.tinted(color)!
+    }
+    
+    func imageScaled(_ scale:CGFloat)->NSImage {
+        return self.image.scaled(scale)!
+    }
+    
+    func image(scale:CGFloat, tintColor:NSColor)->NSImage {
+        return self.image.scaled(scale)!.tinted(tintColor)!
     }
 }

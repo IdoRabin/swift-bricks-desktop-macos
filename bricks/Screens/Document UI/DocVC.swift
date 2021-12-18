@@ -21,7 +21,7 @@ class DocVC : NSSplitViewController {
     // MARK: Private
     private func setup() {
         self.mnSplitView.hostingSplitVC = self
-        self.setupToolbarIfPossible()
+        // self.setupToolbarIfPossible()
     }
     
     // MARK: Lifecycle
@@ -41,8 +41,9 @@ class DocVC : NSSplitViewController {
     }
     
     override func viewWillAppear() {
+        dlog?.info("viewWillAppear")
         super.viewWillAppear()
-        self.setupToolbarIfPossible()
+        // self.setupToolbarIfPossible()
     }
     
     // MARK: Public

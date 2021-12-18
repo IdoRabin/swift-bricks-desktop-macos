@@ -20,29 +20,7 @@
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ">
-                            <allowedToolbarItems>
-                                <toolbarItem implicitItemIdentifier="39F9CFAB-03E2-409E-AC03-4EB1BC283403" explicitItemIdentifier="MainPanelToolbaritemID" label="Main Panel" paletteLabel="Main Panel" tag="-1" sizingBehavior="auto" id="02d-mb-Z0J" customClass="MainPanelToolbarItem" customModule="Bricks" customModuleProvider="target">
-                                    <nil key="toolTip"/>
-                                    <customView key="view" id="Ky2-34-ngU">
-                                        <rect key="frame" x="0.0" y="14" width="247" height="37"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                    </customView>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="BD48D376-8F3D-471F-B38B-967C4004456A" explicitItemIdentifier="DocNameToolbarItemID" label="Document name" paletteLabel="Document name" title="Doc Name" sizingBehavior="auto" id="MxJ-Q3-XgJ" customClass="DocNameToolbarItem" customModule="Bricks" customModuleProvider="target">
-                                    <nil key="toolTip"/>
-                                    <button key="view" imageHugsTitle="YES" id="csJ-bc-9Le" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="13" y="14" width="68" height="16"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <buttonCell key="cell" type="square" title="Doc Name" bezelStyle="shadowlessSquare" imagePosition="leading" alignment="left" imageScaling="proportionallyUpOrDown" inset="2" id="Kfz-fo-fmd">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="isDetectHover" value="YES"/>
-                                        </userDefinedRuntimeAttributes>
-                                    </button>
-                                </toolbarItem>
-                            </allowedToolbarItems>
+                            <allowedToolbarItems/>
                             <defaultToolbarItems/>
                             <connections>
                                 <outlet property="delegate" destination="aUJ-eb-uWu" id="kPy-bR-zBF"/>

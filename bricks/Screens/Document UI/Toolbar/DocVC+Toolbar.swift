@@ -12,6 +12,9 @@ fileprivate let dlog : DSLogger? = DLog.forClass("DocVC+Toolbar")
 // NSToolbarSidebarTrackingSeparatorItemIdentifier
 // NSToolbarToggleSidebarItem
 
+fileprivate var leadingSidebarTrackingSeperator : NSTrackingSeparatorToolbarItem? = nil
+fileprivate var trailingSidebarTrackingSeperator : NSTrackingSeparatorToolbarItem? = nil
+
 // MARK: DocVC - Toolbar / NSToolbarDelegate
 extension DocVC : NSToolbarDelegate {
     
@@ -227,19 +230,23 @@ extension DocVC : NSToolbarDelegate {
             return
         }
         
-        if toolbar.items.count == 0 {
-            toolbar.delegate = self
-            let docName = self.document?.displayName ?? "<nil>"
-            dlog?.info("setupToolbarIfPossible \(docName) \(self.basicDesc) SidebarSeperator \n SidebarSeperator wind: \(self.view.window?.basicDesc)")
-            DToolbarItems.all.reversed().forEachIndex { index, ditem in
-                dlog?.info("setupToolbarIfPossible \(docName) toolbar \(String(memoryAddressOf: toolbar)) idx/cnt: \(index)/\(toolbar.items.count) adding item: [\(ditem)]")
-                toolbar.insertItem(withItemIdentifier: ditem.asNSToolbarItemId, at: 0)
+        DispatchQueue.main.performOncePerInstance(toolbar) {
+            
+            if toolbar.items.count == 0 {
+                toolbar.delegate = self
+                let docName = self.document?.displayName ?? "<nil>"
+                dlog?.info("setupToolbarIfPossible \(docName) \(self.basicDesc) SidebarSeperator \n SidebarSeperator wind: \(self.view.window?.basicDesc ?? "<nil>")")
+                DToolbarItems.all.forEachIndex { index, ditem in
+                    dlog?.info("setupToolbarIfPossible \(docName) toolbar \(String(memoryAddressOf: toolbar)) idx/cnt: \(index)/\(toolbar.items.count) adding item: [\(ditem)]")
+                    toolbar.insertItem(withItemIdentifier: ditem.asNSToolbarItemId, at: index)
+                }
+                
+                // After all were added
+                DispatchQueue.main.async {
+                    self.updateToolbarItems()
+                }
             }
             
-            // After all were added
-            DispatchQueue.main.async {
-                self.updateToolbarItems()
-            }
         }
     }
     
@@ -273,8 +280,14 @@ extension DocVC : NSToolbarDelegate {
             case .leadingSidebarSeperator:
                 
                 //  You must implement this for custom separator identifiers, to connect the separator with a split view divider
-                dlog?.info("   leadingSidebarSeperator splitView \(splitView.basicDesc) count:\(splitView.arrangedSubviews.count) dividerIndex: 0")
-                result = NSTrackingSeparatorToolbarItem(identifier: .sidebarTrackingSeparator, splitView: splitView, dividerIndex: 0)
+                if let item = leadingSidebarTrackingSeperator {
+                    result = item
+                } else {
+                    dlog?.info("   leadingSidebarSeperator splitView \(splitView.basicDesc) count:\(splitView.arrangedSubviews.count) dividerIndex: 0")
+                    leadingSidebarTrackingSeperator = NSTrackingSeparatorToolbarItem(identifier: .sidebarTrackingSeparator, splitView: splitView, dividerIndex: 0)
+                    result = leadingSidebarTrackingSeperator
+                }
+                
                 break
                 
             // Center items:
@@ -300,8 +313,14 @@ extension DocVC : NSToolbarDelegate {
             // Trailing items:
             case .trailingSidebarSeperator:
                 //  You must implement this for custom separator identifiers, to connect the separator with a split view divider
-                dlog?.info("   trailingSidebarSeperator splitView \(splitView.basicDesc) count:\(splitView.arrangedSubviews.count) dividerIndex: 1")
-                 result = NSTrackingSeparatorToolbarItem(identifier: .sidebarTrackingSeparator, splitView: splitView, dividerIndex: 1)
+//                dlog?.info("   trailingSidebarSeperator splitView \(splitView.basicDesc) count:\(splitView.arrangedSubviews.count) dividerIndex: 1")
+//                if let item = trailingSidebarTrackingSeperator {
+//                    result = item
+//                } else {
+//                    trailingSidebarTrackingSeperator = NSTrackingSeparatorToolbarItem(identifier: .sidebarTrackingSeparator, splitView: splitView, dividerIndex: 1)
+//                    result = trailingSidebarTrackingSeperator
+//                }
+                result = createToolbarSingleSpacingItem()
                 break
                 
             case .trailingSidebarX:

@@ -2,9 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
-        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="NSView safe area layout guides" minToolsVersion="12.0"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -12,7 +10,7 @@
         <scene sceneID="t6r-RU-XhI">
             <objects>
                 <windowController storyboardIdentifier="DocWCID" id="aUJ-eb-uWu" userLabel="DocWC" customClass="DocWC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window" customClass="DocWindow" customModule="Bricks" customModuleProvider="target">
+                    <window key="window" separatorStyle="line" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" titlebarAppearsTransparent="YES" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window" customClass="DocWindow" customModule="Bricks" customModuleProvider="target">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="164" y="462" width="651" height="398"/>
@@ -21,156 +19,9 @@
                             <rect key="frame" x="0.0" y="0.0" width="651" height="398"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
-                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ" customClass="DocToolbar" customModule="Bricks" customModuleProvider="target">
-                            <allowedToolbarItems>
-                                <toolbarItem implicitItemIdentifier="39F9CFAB-03E2-409E-AC03-4EB1BC283403" explicitItemIdentifier="MainPanelToolbaritemID" label="Main Panel" paletteLabel="Main Panel" tag="-1" sizingBehavior="auto" id="02d-mb-Z0J" customClass="MainPanelToolbarItem" customModule="Bricks" customModuleProvider="target">
-                                    <nil key="toolTip"/>
-                                    <customView key="view" id="Ky2-34-ngU" customClass="MNColoredView" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="14" width="247" height="37"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="backgroundColor">
-                                                <color key="value" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" name="AccentColor"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </customView>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="UsO-Zv-5QC"/>
-                                <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="3Jx-Qc-kF2"/>
-                                <toolbarItem implicitItemIdentifier="AFF3F600-D25A-4552-8463-A45E1C7173F5" explicitItemIdentifier="GenerateToolbarItemID" label="Generate" paletteLabel="Generate" tag="-1" image="play.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="RIC-HP-db1"/>
-                                <toolbarItem implicitItemIdentifier="3702E47B-CC88-4C2E-A8D8-A54B62D187C2" explicitItemIdentifier="StopToolbarItemID" label="Stop" paletteLabel="Stop" tag="-1" image="stop.fill" catalog="system" bordered="YES" sizingBehavior="auto" id="7dF-8v-0zP"/>
-                                <toolbarItem implicitItemIdentifier="0FC3325C-899A-4FCC-9BD4-19FF58C5DFDE" explicitItemIdentifier="AddItemToolbarItemID" label="Add item" paletteLabel="Add item" tag="-1" image="plus" catalog="system" bordered="YES" sizingBehavior="auto" id="u9O-b2-DrU"/>
-                                <toolbarItem implicitItemIdentifier="BB22AAFC-97C5-43E3-BF2D-91F8EC98AC6A" explicitItemIdentifier="DocNameToolbarItemID" label="Document Name" paletteLabel="Document Name" tag="-1" sizingBehavior="auto" id="oZd-bZ-L0J" customClass="DocNameToolbarItem" customModule="Bricks" customModuleProvider="target">
-                                    <nil key="toolTip"/>
-                                    <stackView key="view" distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="250" misplaced="YES" detachesHiddenViews="YES" id="Hfl-lJ-S9o">
-                                        <rect key="frame" x="0.0" y="14" width="318" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <subviews>
-                                            <imageView focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4YR-16-ahO">
-                                                <rect key="frame" x="0.0" y="-34" width="32" height="32"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" secondItem="4YR-16-ahO" secondAttribute="height" id="jYi-tK-p0L"/>
-                                                    <constraint firstAttribute="width" constant="32" id="slO-CS-RTz"/>
-                                                </constraints>
-                                                <imageCell key="cell" refusesFirstResponder="YES" focusRingType="none" alignment="left" imageScaling="proportionallyDown" image="brick.file.icon" id="WY1-wn-gqp"/>
-                                            </imageView>
-                                            <stackView focusRingType="none" distribution="fill" orientation="vertical" alignment="leading" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yKf-fw-oh4">
-                                                <rect key="frame" x="40" y="0.0" width="278" height="37"/>
-                                                <subviews>
-                                                    <button focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="UWH-y6-0f6">
-                                                        <rect key="frame" x="4" y="18" width="48.5" height="20"/>
-                                                        <buttonCell key="cell" type="square" title="Title" bezelStyle="shadowlessSquare" imagePosition="trailing" alignment="center" focusRingType="none" imageScaling="proportionallyUpOrDown" inset="2" id="hqC-Zh-hSN">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="systemMedium" size="15"/>
-                                                            <imageReference key="image" image="arrow.right" catalog="system" symbolScale="small"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                    <button focusRingType="none" verticalHuggingPriority="249" translatesAutoresizingMaskIntoConstraints="NO" id="AuE-je-dyp">
-                                                        <rect key="frame" x="4" y="0.0" width="93" height="16"/>
-                                                        <buttonCell key="cell" type="square" title="Please wait..." bezelStyle="shadowlessSquare" imagePosition="leading" alignment="center" focusRingType="none" imageScaling="proportionallyUpOrDown" inset="2" id="drN-cg-pHw">
-                                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                            <font key="font" metaFont="system"/>
-                                                            <imageReference key="image" image="hourglass" catalog="system" symbolScale="small"/>
-                                                        </buttonCell>
-                                                    </button>
-                                                </subviews>
-                                                <edgeInsets key="edgeInsets" left="4" right="4" top="-1" bottom="0.0"/>
-                                                <visibilityPriorities>
-                                                    <integer value="1000"/>
-                                                    <integer value="1000"/>
-                                                </visibilityPriorities>
-                                                <customSpacing>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                    <real value="3.4028234663852886e+38"/>
-                                                </customSpacing>
-                                            </stackView>
-                                        </subviews>
-                                        <visibilityPriorities>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
-                                        </visibilityPriorities>
-                                        <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
-                                        </customSpacing>
-                                    </stackView>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="C7E466A6-75C7-406B-8134-B73746B804A3" explicitItemIdentifier="projectToolbarItemID" label="Project" paletteLabel="Project" tag="-1" image="sidebar.left" catalog="system" bordered="YES" sizingBehavior="auto" id="PtL-TS-l3e" customClass="MNToggleToolbarItem" customModule="Bricks" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="image" keyPath="offImage" value="sidebar.left.collapsed"/>
-                                        <userDefinedRuntimeAttribute type="image" keyPath="onImage" value="sidebar.left.uncollapsed"/>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="imagesScale">
-                                            <real key="value" value="0.65000000000000002"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="color" keyPath="onTint">
-                                            <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="color" keyPath="offTint">
-                                            <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="toggleSidebarAction:" target="UxU-dv-l8D" id="2P4-xn-8bK"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="EA08E52F-2959-4BDD-8024-EF99DD5ED1B9" explicitItemIdentifier="propertiesToolbarItemID" label="Properties" paletteLabel="Properties" tag="-1" image="sidebar.right" catalog="system" bordered="YES" sizingBehavior="auto" id="1AM-tH-oeL" customClass="MNToggleToolbarItem" customModule="Bricks" customModuleProvider="target">
-                                    <userDefinedRuntimeAttributes>
-                                        <userDefinedRuntimeAttribute type="image" keyPath="offImage" value="sidebar.right.collapsed"/>
-                                        <userDefinedRuntimeAttribute type="image" keyPath="onImage" value="sidebar.right.uncollapsed"/>
-                                        <userDefinedRuntimeAttribute type="number" keyPath="imagesScale">
-                                            <real key="value" value="0.65000000000000002"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="color" keyPath="onTint">
-                                            <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                        </userDefinedRuntimeAttribute>
-                                        <userDefinedRuntimeAttribute type="color" keyPath="offTint">
-                                            <color key="value" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                        </userDefinedRuntimeAttribute>
-                                    </userDefinedRuntimeAttributes>
-                                    <connections>
-                                        <action selector="toggleSidebarAction:" target="UxU-dv-l8D" id="IYL-KN-xjt"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="4CFAF6FD-D07B-4D9C-B2A6-EE6803D3E8D8" explicitItemIdentifier="projectToolbarItemSpacerID" label="Leading spacer" paletteLabel="Leading spacer" sizingBehavior="auto" id="p7B-T2-BfX">
-                                    <nil key="toolTip"/>
-                                    <button key="view" verticalHuggingPriority="750" id="ov5-ND-Nhk" customClass="MNToolbarSpacerButton" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="44" y="14" width="0.0" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" transparent="YES" imageScaling="proportionallyDown" inset="2" id="QaB-fa-OzM">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                    </button>
-                                    <connections>
-                                        <action selector="toggleLSidebarAction:" target="UxU-dv-l8D" id="ekw-vD-97l"/>
-                                    </connections>
-                                </toolbarItem>
-                                <toolbarItem implicitItemIdentifier="534F7FC4-FFC3-41D9-84D9-D051F2EEA777" explicitItemIdentifier="propertiesToolbarItemSpacerID" label="Trailing spacer" paletteLabel="Trailing spacer" sizingBehavior="auto" id="XKV-7v-Hwj">
-                                    <nil key="toolTip"/>
-                                    <button key="view" verticalHuggingPriority="750" id="iJt-7r-7EV" customClass="MNToolbarSpacerButton" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="42" y="14" width="0.0" height="0.0"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" alignment="center" lineBreakMode="truncatingTail" state="on" transparent="YES" imageScaling="proportionallyDown" inset="2" id="qdX-5M-UZG">
-                                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                    </button>
-                                    <connections>
-                                        <action selector="toggleRSidebarAction:" target="UxU-dv-l8D" id="ATn-ag-3em"/>
-                                    </connections>
-                                </toolbarItem>
-                            </allowedToolbarItems>
-                            <defaultToolbarItems>
-                                <toolbarItem reference="PtL-TS-l3e"/>
-                                <toolbarItem reference="p7B-T2-BfX"/>
-                                <toolbarItem reference="oZd-bZ-L0J"/>
-                            </defaultToolbarItems>
+                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ" customClass="DocToolbar" customModule="Bricks" customModuleProvider="target">
+                            <allowedToolbarItems/>
+                            <defaultToolbarItems/>
                             <connections>
                                 <outlet property="delegate" destination="aUJ-eb-uWu" id="kPy-bR-zBF"/>
                             </connections>
@@ -209,7 +60,7 @@
                 </splitViewController>
                 <customObject id="Inw-qn-92a" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-187.5" y="700.5"/>
+            <point key="canvasLocation" x="-242" y="668"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="2Ly-LW-srj">
@@ -255,21 +106,4 @@
             <point key="canvasLocation" x="435" y="1254"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="arrow.right" catalog="system" width="13" height="10"/>
-        <image name="brick.file.icon" width="171" height="171"/>
-        <image name="hourglass" catalog="system" width="9" height="12"/>
-        <image name="play.fill" catalog="system" width="12" height="13"/>
-        <image name="plus" catalog="system" width="14" height="13"/>
-        <image name="sidebar.left" catalog="system" width="18" height="14"/>
-        <image name="sidebar.left.collapsed" width="278" height="225"/>
-        <image name="sidebar.left.uncollapsed" width="278" height="225"/>
-        <image name="sidebar.right" catalog="system" width="18" height="14"/>
-        <image name="sidebar.right.collapsed" width="278" height="225"/>
-        <image name="sidebar.right.uncollapsed" width="278" height="225"/>
-        <image name="stop.fill" catalog="system" width="14" height="13"/>
-        <namedColor name="AccentColor">
-            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-    </resources>
 </document>

@@ -23,11 +23,11 @@ extension DocVC : NSToolbarDelegate {
     }
     
     var leadingToggleSidebarItem : NSToolbarItem? {
-        return nil
+        return self.toolbar?.leadingSidebarMNToggleBtn
     }
     
     var trailingToggleSidebarItem : NSToolbarItem? {
-        return nil
+        return self.toolbar?.trailingSidebarMNToggleBtn
     }
 }
 

@@ -41,6 +41,11 @@ class DocVC : NSSplitViewController {
     
     override func viewWillAppear() {
         super.viewWillAppear()
+
+        if DEBUG_DRAWING {
+            self.splitView.wantsLayer = true
+            self.splitView.layer?.border(color: .red, width: 1)
+        }
     }
     
     // MARK: Public
@@ -91,18 +96,15 @@ extension DocVC /* Actions */ {
         // dlog?.info("toggleSidebarAction sender:\(sender)")
         
         var isLeadingSidebar = true
-        
         var sendr = sender
         if let btn = sender as? NSButton {
-            if let lft = self.leadingToggleSidebarItem,
-                lft.view == btn || btn.tag <= self.mnSplitView.leadingDividerIndex {
+            if self.leadingToggleSidebarItem?.view == btn {
                 // Found leading
-                sendr = lft
+                sendr = self.leadingToggleSidebarItem ?? sender
                 isLeadingSidebar = true
-            } else if let rgt = self.trailingToggleSidebarItem,
-                rgt.view == btn || btn.tag >= self.mnSplitView.trailingDividerIndex {
+            } else if self.trailingToggleSidebarItem?.view == btn {
                 // Found trailing
-                sendr = rgt
+                sendr = self.trailingToggleSidebarItem ?? sender
                 isLeadingSidebar = false
             }
         }
@@ -124,7 +126,7 @@ extension DocVC /* Actions */ {
             }
             
         default:
-            dlog?.note("toggleSidebarAction sender: \(sender)")
+            dlog?.note("toggleSidebarAction sender faile to id src: \(sender)")
         }
         
         // Toggle

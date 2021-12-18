@@ -14,19 +14,44 @@ fileprivate let dlog : DSLogger? = DLog.forClass("DocToolbar")
 // NSToolbarDelegate
 
 class DocToolbar : NSToolbar {
+    let MIN_SEPARATOR_WIDTH : CGFloat = 10
     
-    enum ItemType : String /* IB Identifier */ {
-        case infoPanel = "MainPanelToolbaritemID"
-        case docPanel = "DocNameToolbarItemID"
+    enum ToolbarItemType : String /* IB Identifier */ {
+        // Leading
+        case leadingSidebarToggle = "projectToolbarItemID"
+        case leadingSidebarSpacer = "leadingSidebarSpacerID"
+        case leadingSidebarStop = "leadingSidebarStopID"
+        case leadingSidebarGenerate = "leadingSidebarGenerateID"
+        case leadingSidebarSeparator = "leadingSidebarSeparatorID"
         
-        case leadingProjectMNToggleItem = "projectToolbarItemID"
-        case leadingSidebarSpacer = "projectToolbarItemSpacerID"
+        // Spacer
+        case centerPaneLeadingDocName = "DocNameToolbarItemID"
+        case centerPaneLeadingFlxSpacer = "centerPaneLeadingFlxSpacerID"
+        case centerPaneCenteredMainPanel = "MainPanelToolbaritemID"
+        case centerPaneTrailingFlxSpacer = "centerPaneTrailingFlxSpacerID"
+        case centerPaneTrailingAddItem = "AddItemToolbarItemID"
         
-        case trailingPropertiesMNToggleItem = "propertiesToolbarItemID"
-        case trailingSidebarSpacer = "propertiesToolbarItemSpacerID"
+        // Trailing
+        case trailingSidebarSeparator = "trailingSidebarSeparatorID"
+        //case trailingSidebarX = "trailingSidebarXID"
+        case trailingSidebarSpacer = "trailingSidebarSpacerID"
+        //case trailingSidebarY = "trailingSidebarYID"
+        case trailingSidebarToggle = "propertiesToolbarItemID"
         
-        case generateItem = "generateToolbarItemID"
-        case addItem = "addToolbarItemID"
+        static var all : [ToolbarItemType] = [
+            .leadingSidebarToggle, .leadingSidebarSpacer, .leadingSidebarStop, .leadingSidebarGenerate, .leadingSidebarSeparator, .
+             centerPaneLeadingDocName,
+            .centerPaneLeadingFlxSpacer, .centerPaneCenteredMainPanel, .centerPaneTrailingFlxSpacer,
+            .centerPaneTrailingAddItem,
+            .trailingSidebarSeparator, /*.trailingSidebarX,*/ .trailingSidebarSpacer, /*.trailingSidebarY,*/ .trailingSidebarToggle
+        ]
+        
+        var asNSToolbarItemId : NSToolbarItem.Identifier {
+            return NSToolbarItem.Identifier(rawValue: self.rawValue)
+        }
+        var isSpacer : Bool {
+            return self.rawValue.lowercased().contains("spcaer")
+        }
     }
     
     // MARK: Properties
@@ -44,6 +69,9 @@ class DocToolbar : NSToolbar {
     var trailingSpacer : NSToolbarItem? = nil
     var itemsInLeadingPanel : [NSToolbarItem] = []
     var itemsInTrailingPanel : [NSToolbarItem] = []
+    var leadingUnderview : NSView? = nil
+    var trailingUnderview : NSView? = nil
+    
     private var _isAnimatingSpacers = false
     
     static var TOOLBAR_HEIGHT : CGFloat {
@@ -79,30 +107,45 @@ class DocToolbar : NSToolbar {
         }
         return xsize
     }
+
+    private func addItem(type:ToolbarItemType, atIndex index:Int, completion:@escaping ()->Void) {
+        let preCount = self.items.count
+        self.insertItem(withItemIdentifier: type.asNSToolbarItemId, at: preCount)
+        waitFor("item adding", interval: 0.01, timeout: 0.1, testOnMainThread: {
+            self.items.count > preCount
+        }, completion: { waitResult in
+            DispatchQueue.mainIfNeeded {
+                // dlog?.successOrFail(condition: waitResult.isSuccess, items: "added item at index:\(index)")
+                if waitResult.isTimeout {
+                    dlog?.note("failed adding item at index: \(index) type:\(type)")
+                }
+                self.items.last?.tag = index
+                completion()
+            }
+        }, counter: 1)
+    }
     
-    private func addItem(type itemType:ItemType, atIndex index:Int)->NSToolbarItem? {
-//        let id =  NSToolbarItem.Identifier(rawValue: itemType.rawValue)
-//        let preCount = self.items.count
-//        if index <=  preCount {
-//            dlog?.info("Adding item: \(itemType) at index:\(index)")
-//            self.insertItem(withItemIdentifier: id, at: index)
-//            if self.items.count > preCount {
-//                let item = self.items[index]
-//                item.tag = index
-//                let xsize = self.fittingSizeForItem(item)
-//                // item.minSize = xsize.adding(widthAdd: -2)
-//                // item.maxSize = xsize.adding(widthAdd: 2)
-//                item.isBordered = false
-//                item.view?.translatesAutoresizingMaskIntoConstraints = false
-//                dlog?.info("    addItem: \(itemType) at index: [\(index)] size: \(xsize)")
-//                return item
-//            } else {
-//                dlog?.note("Failed adding item with id: [\(id.rawValue)] into index:\(index) cur count:\(self.items.count) count before:\(preCount)")
-//            }
-//        } else {
-//            dlog?.note("addItem Index \(index) is invalid")
-//        }
-        return nil
+    private func addItems(types:[ToolbarItemType], depth:Int = 0) {
+        guard depth < 30 else {
+            return
+        }
+        
+        if let itemType = types.first {
+            self.addItem(type: itemType, atIndex: self.items.count) {
+                self.addItems(types: types.removing(at: 0), depth: depth + 1)
+            }
+        }
+    }
+    
+    private func whenItems(_ completion : @escaping (_ items:[NSToolbarItem])->Void){
+        waitFor("items", interval: 0.02, timeout: 0.3, testOnMainThread: {
+            self.items.count >= Int(Float(ToolbarItemType.all.count) * 0.75)
+        }, completion: { waitResult in
+            dlog?.successOrFail(condition: waitResult.isSuccess, items: "whenItems")
+            DispatchQueue.mainIfNeeded {
+                completion(self.items)
+            }
+        }, counter: 1)
     }
     
     private func whenWindow(_ completion : @escaping (_ window:DocWindow?)->Void){
@@ -110,16 +153,18 @@ class DocToolbar : NSToolbar {
             self.wc?.window != nil && self.vc?.isViewLoaded == true
         }, completion: { waitResult in
             dlog?.successOrFail(condition: waitResult.isSuccess, items: "whenWindow")
-            completion(self.wc?.window as? DocWindow)
+            DispatchQueue.mainIfNeeded {
+                completion(self.wc?.window as? DocWindow)
+            }
         }, counter: 1)
     }
     
     fileprivate func setupDebugDrawing() {
         if DEBUG_DRAWING {
-            waitFor("", interval: 0.03, timeout: 0.1, testOnMainThread: {
-                self.items.count > 0
+            waitFor("setupDebugDrawing:items", interval: 0.03, timeout: 0.1, testOnMainThread: {
+                self.items.count > 0 && self.vc?.isViewLoaded == true
             }, completion: { waitResult in
-                DispatchQueue.mainIfNeeded {
+                DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
                     for item in self.items {
                         item.view?.wantsLayer = true
                         item.view?.layer?.border(color: .cyan, width: 1)
@@ -127,6 +172,17 @@ class DocToolbar : NSToolbar {
                 }
             }, counter: 1)
         }
+    }
+
+    private func addUnderTitleViews(window:DocWindow?) {
+        if let layer = window?.contentView?.layer {
+            layer.border(color: .green, width: 4)
+        }
+//        if let parent = self.leadingSidebarMNToggleBtn?.view?.superview {
+//            let view = MNColoredView(frame: NSRect(origin: .zero, size: CGSize(width: 180, height: 2000)))
+//            view.backgroundColor = .red // isDarkThemeActive(view: parent) ? .white.withAlphaComponent(0.3) : .black.withAlphaComponent(0.3)
+//            parent.addSubview(view, positioned: .below, relativeTo: nil)
+//        }
     }
     
     /// Called from external sources to setup the toolbar,  window should set some properties and settings before.
@@ -136,49 +192,39 @@ class DocToolbar : NSToolbar {
         self.wc?.docToolbar.delegate = self
         
         DispatchQueue.main.performOncePerInstance(self) {
+            self.centeredItemIdentifier = NSToolbarItem.Identifier(rawValue: ToolbarItemType.centerPaneCenteredMainPanel.rawValue)
+            self.addItems(types: ToolbarItemType.all)
+            
             whenWindow { window in
                 if let window = window {
+                    // Window setup
                     window.toolbarStyle = .unifiedCompact
                     window.titleVisibility = .hidden // Will not show the document name and sheets / dropdowns associated
                     window.titlebarAppearsTransparent = true
-                    // self.createUnderToolbarWindowViewsIfNeeded()
-                    dlog?.info("items == \(self.wc?.docToolbar.items.count ?? 0)")
+                    window.titlebarSeparatorStyle = .line
+                }
+                
+                self.whenItems { items in
+                    items.forEachIndex {[self] index, item in
+                        item.tag = index
+                        if let itemType = ToolbarItemType(rawValue: item.itemIdentifier.rawValue) {
+                            switch itemType {
+                            case .leadingSidebarToggle:
+                                self.leadingSidebarMNToggleBtn = item as? MNToggleToolbarItem
+                            case .centerPaneCenteredMainPanel:
+                                self.centeredItemIdentifier = item.itemIdentifier
+                            case .trailingSidebarToggle:
+                                self.trailingSidebarMNToggleBtn = item as? MNToggleToolbarItem
+                            default:
+                                break
+                            }
+                        }
+                    }
                     
+                    self.addUnderTitleViews(window:window)
                     self.setupDebugDrawing()
                 }
             }
-            
-            // Leading sidebar:
-//            let projectToggle = self.addItem(type: .leadingProjectMNToggleItem, atIndex: self.items.count) as? MNToggleToolbarItem
-//            self.leadingSidebarMNToggleBtn = projectToggle
-//
-//            // Leading spacer - for "projects" sidebar / panel
-//            self.addLeadingSpacer()
-//            self._isAnimatingSpacers = true
-//
-//            // Middle items:
-//            let docPanel = self.addItem(type: .docPanel, atIndex: self.items.count)
-//            docPanel?.view?.superview?.needsLayout = true
-//            self.insertItem(withItemIdentifier: .flexibleSpace, at: self.items.count)
-//            let infoPanel = self.addItem(type: .infoPanel, atIndex: self.items.count)
-//            self.insertItem(withItemIdentifier: .flexibleSpace, at: self.items.count)
-//            infoPanel?.view?.superview?.needsLayout = true
-//            infoPanel?.view?.wantsLayer = true
-//
-//            // Trailing sidebar:
-//            // Trailing spacer - for "properties" sidebar / panel
-//            self.addTrailingSpacer()
-//
-//            let propsToggle = self.addItem(type: .trailingPropertiesMNToggleItem, atIndex: self.items.count) as? MNToggleToolbarItem
-//            self.trailingSidebarMNToggleBtn = propsToggle
-//
-//            // Final steps
-//            self.setupSidebarButtonSizes()
-//            self.setupDebugDrawing()
-//            self.setupCaptureWcVc(windowController: windowController) {
-//                // Captured WC and VC
-//                self.finalizeSetup()
-//            }
         }
     }
     
@@ -189,14 +235,156 @@ class DocToolbar : NSToolbar {
 }
 
 extension DocToolbar : NSToolbarDelegate {
+    
+    func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        dlog?.info("toolbarAllowedItemIdentifiers")
+        return ToolbarItemType.all.compactMap { item in
+            item.asNSToolbarItemId
+        }
+    }
+    
+    func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
+        return ToolbarItemType.all.compactMap { item in
+            item.asNSToolbarItemId
+        }
+    }
+    
+    private func createSeparator(id: NSToolbarItem.Identifier)->NSToolbarItem {
+        let view = MNColoredView(frame: NSRect(origin: .zero, size: CGSize(width: MIN_SEPARATOR_WIDTH, height: Self.ITEMS_HEIGHT)))
+        if id.rawValue.contains("SidebarSpacer") {
+            view.backgroundColor = .blue
+        } else {
+            view.backgroundColor = .red
+        }
+        
+        view.widthAnchor.constraint(equalToConstant: MIN_SEPARATOR_WIDTH).isActive = true
+        view.heightAnchor.constraint(equalToConstant: Self.ITEMS_HEIGHT).isActive = true
+        
+        let result = NSToolbarItem(itemIdentifier: id)
+        result.view = view
+        return result
+    }
+    
+    private func createSidebarToggle(id: NSToolbarItem.Identifier, isTrailing:Bool)->NSToolbarItem {
+        let result = MNToggleToolbarItem(itemIdentifier: id)
+        if isTrailing {
+            result.onImage = AppImages.sideMenuRightCollapsed.image
+            result.offImage = AppImages.sideMenuRightUncollapsed.image
+        } else {
+            result.onImage = AppImages.sideMenuLeftCollapsed.image
+            result.offImage = AppImages.sideMenuLeftUncollapsed.image
+        }
+        result.imagesScale = 0.45
+        result.onTint = nil
+        result.offTint = nil
+        
+        if isTrailing {
+            trailingSidebarMNToggleBtn = result
+        } else {
+            leadingSidebarMNToggleBtn = result
+        }
+        
+        return result
+    }
+    
+    private func createToolbarFlexibleSpacingItem(minWidth:CGFloat = 30.0, maxWidth:CGFloat = 1000.0)->NSToolbarItem {
+        let result = NSToolbarItem(itemIdentifier: .flexibleSpace)
+        let view = NSView(frame: CGRect(origin: .zero, size: CGSize(width: minWidth, height: 30)))
+        if DEBUG_DRAWING {
+            view.wantsLayer = true
+            view.layer?.debugBorder(color: .cyan, width: 1)
+        }
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: minWidth).isActive = true // min size
+        view.widthAnchor.constraint(lessThanOrEqualToConstant: maxWidth).isActive = true // max size
+        result.view = view
+        
+        return result
+    }
+    
+    private func createToolbarSingleSpacingItem(width:CGFloat = 30.0)->NSToolbarItem {
+        let result = NSToolbarItem(itemIdentifier: .space)
+        let view = NSView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: 30)))
+        if DEBUG_DRAWING {
+            view.wantsLayer = true
+            view.layer?.debugBorder(color: .cyan, width: 1)
+        }
+        view.widthAnchor.constraint(equalToConstant: width).isActive = true // min size
+        result.view = view
+        return result
+    }
+    
+    private func createItem(id: NSToolbarItem.Identifier, image:NSImage, title:String)->NSToolbarItem {
+        let result = NSToolbarItem(itemIdentifier: id)
+        result.image = image
+        result.title = title
+        return result
+    }
+    
+    private func createItem(id: NSToolbarItem.Identifier, cmd:Command)->NSToolbarItem {
+        return createItem(id: id, image: NSImage(systemSymbolName: "gearshape.fill", accessibilityDescription: nil)!, title: "CMD")
+    }
+    
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        return super.toolbar(self, itemForItemIdentifier: itemIdentifier, willBeInsertedIntoToolbar: flag)
+        var result : NSToolbarItem? = nil
+        if let type = ToolbarItemType(rawValue: itemIdentifier.rawValue) {
+            switch type {
+            case .leadingSidebarToggle:
+                result = createSidebarToggle(id: itemIdentifier, isTrailing:false)
+                result?.target = self.vc
+                result?.action = #selector(toggleSidebarAction(_:))
+                
+            case .leadingSidebarSpacer:
+                result = createSeparator(id: itemIdentifier)
+                
+            case .leadingSidebarStop:
+                result = createItem(id: itemIdentifier, image: NSImage(systemSymbolName: "stop.fill", accessibilityDescription: nil)!, title: "stop")
+                
+            case .leadingSidebarGenerate:
+                result = createItem(id: itemIdentifier, image: NSImage(systemSymbolName: "play.fill", accessibilityDescription: nil)!, title: "stop")
+                
+            case .leadingSidebarSeparator:
+                result = createSeparator(id: itemIdentifier)
+                
+            case .centerPaneLeadingDocName:
+                result = createItem(id: itemIdentifier, image: NSImage(systemSymbolName: "circle.fill", accessibilityDescription: nil)!, title: "doc name")
+                
+            case .centerPaneLeadingFlxSpacer:
+                return createToolbarFlexibleSpacingItem(minWidth: 2, maxWidth: 1000)
+                
+            case .centerPaneCenteredMainPanel:
+                result = createItem(id: itemIdentifier, image: NSImage(systemSymbolName: "circle.fill", accessibilityDescription: nil)!, title: "main panel")
+                
+            case .centerPaneTrailingFlxSpacer:
+                return createToolbarFlexibleSpacingItem(minWidth: 2, maxWidth: 1000)
+                
+            case .centerPaneTrailingAddItem:
+                result = createItem(id: itemIdentifier, image: NSImage(systemSymbolName: "plus", accessibilityDescription: nil)!, title: "stop")
+                
+            case .trailingSidebarSeparator:
+                result = createSeparator(id: itemIdentifier)
+                
+            case .trailingSidebarSpacer:
+                result = createSeparator(id: itemIdentifier)
+                
+            case .trailingSidebarToggle:
+                result = createSidebarToggle(id: itemIdentifier, isTrailing:true)
+                result?.target = self.vc
+                result?.action = #selector(toggleSidebarAction(_:))
+                // result?.tag = 15
+            }
+        }
+        if result == nil {
+            dlog?.warning("toolbar(_ toolbar: NSToolbar, itemForItemIdentifier.. ) returns nil fo id:\(itemIdentifier)!")
+        }
+        return result
+    }
+    
+    @objc func toggleSidebarAction(_ sender : Any) {
+        
     }
 }
+
    /*
-    
-    
-    
     // MARK: Private
 
     

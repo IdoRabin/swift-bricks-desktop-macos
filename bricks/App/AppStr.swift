@@ -173,11 +173,15 @@ enum AppStr : Localizable {
     case PROGRESS
     case TASKS
     case PROPERTIES
+    case GENERATE
+    case GENERATE_TOOLTIP
+    case STOP_GENERATION
+    case STOP_GENERATION_TOOLTIP
     
     // Tooltips
-    case ADD_NEW_PLAN_LAYER
-    case DELETE_SELECTED_LAYER_FROM_PLAN
-    case EDIT_SELECTED_LAYER
+    case ADD_NEW_PLAN_LAYER_TOOLTIP
+    case DELETE_SELECTED_LAYER_FROM_PLAN_TOOLTIP
+    case EDIT_SELECTED_LAYER_TOOLTIP
     
     // Preferences
     case GENERAL

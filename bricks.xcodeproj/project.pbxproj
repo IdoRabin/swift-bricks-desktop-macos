@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC069207276E46F700D9DD43 /* MainPanelToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */; };
+		EC069209276E4AC900D9DD43 /* DocNameToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */; };
+		EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920A276E545700D9DD43 /* NSScreenEx.swift */; };
 		EC218AB9275931E700744400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AB8275931E700744400 /* AppDelegate.swift */; };
 		EC218ABF275931E800744400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC218ABE275931E800744400 /* Assets.xcassets */; };
 		EC218ACE275931E800744400 /* bricksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ACD275931E800744400 /* bricksTests.swift */; };
@@ -107,10 +110,9 @@
 		EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */; };
 		ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA1B0CD2760101100B3D36A /* MainMenu.xib */; };
 		ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1B0D02760114700B3D36A /* MainMenu.swift */; };
-		ECA67B892767787200BC0D7D /* DocVC+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */; };
 		ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */; };
-		ECA67B8E2769FEC600BC0D7D /* DocNameToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */; };
-		ECA67B90276A013A00BC0D7D /* MainPanelToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */; };
+		ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */; };
+		ECA67B90276A013A00BC0D7D /* MainPanelToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */; };
 		ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */; };
 		ECAA83B12764A6730016578C /* OnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83AF2764A6730016578C /* OnboardingVC.swift */; };
 		ECCE07922764EF67007F2A65 /* DocVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07912764EF67007F2A65 /* DocVC.swift */; };
@@ -175,6 +177,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainPanelToolbarView.xib; sourceTree = "<group>"; };
+		EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocNameToolbarView.xib; sourceTree = "<group>"; };
+		EC06920A276E545700D9DD43 /* NSScreenEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSScreenEx.swift; sourceTree = "<group>"; };
 		EC1A28BA275F9203008446A8 /* bump_build_nr.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bump_build_nr.sh; sourceTree = "<group>"; };
 		EC218AB5275931E700744400 /* Bricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC218AB8275931E700744400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -286,10 +291,9 @@
 		EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPRouter.swift; sourceTree = "<group>"; };
 		ECA1B0CD2760101100B3D36A /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		ECA1B0D02760114700B3D36A /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
-		ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocVC+Toolbar.swift"; sourceTree = "<group>"; };
 		ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMenuEx.swift; sourceTree = "<group>"; };
-		ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocNameToolbarItem.swift; sourceTree = "<group>"; };
-		ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPanelToolbarItem.swift; sourceTree = "<group>"; };
+		ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocNameToolbarView.swift; sourceTree = "<group>"; };
+		ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPanelToolbarView.swift; sourceTree = "<group>"; };
 		ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+Commandable.swift"; sourceTree = "<group>"; };
 		ECAA83AF2764A6730016578C /* OnboardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingVC.swift; sourceTree = "<group>"; };
 		ECCE07912764EF67007F2A65 /* DocVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocVC.swift; sourceTree = "<group>"; };
@@ -559,6 +563,7 @@
 				ECEA1B762762255500DD602D /* NSButtonEx.swift */,
 				EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */,
 				ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */,
+				EC06920A276E545700D9DD43 /* NSScreenEx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -718,9 +723,10 @@
 		ECA67B8C2769FEAD00BC0D7D /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
-				ECA67B882767787200BC0D7D /* DocVC+Toolbar.swift */,
-				ECA67B8D2769FEC600BC0D7D /* DocNameToolbarItem.swift */,
-				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarItem.swift */,
+				ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */,
+				EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */,
+				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */,
+				EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */,
 			);
 			path = Toolbar;
 			sourceTree = "<group>";
@@ -910,10 +916,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EC069207276E46F700D9DD43 /* MainPanelToolbarView.xib in Resources */,
 				EC218ABF275931E800744400 /* Assets.xcassets in Resources */,
 				ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */,
 				EC332CC9275ECAC600546767 /* Localizable.strings in Resources */,
 				EC332CCD275ECCA300546767 /* Doc.storyboard in Resources */,
+				EC069209276E4AC900D9DD43 /* DocNameToolbarView.xib in Resources */,
 				EC9DEFE2275CCE730046F30A /* Onboarding.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -980,6 +988,7 @@
 				EC218B812759463500744400 /* BrickDocController.swift in Sources */,
 				ECEA1B7B2762297600DD602D /* MNColoredStackView.swift in Sources */,
 				ECAA83B12764A6730016578C /* OnboardingVC.swift in Sources */,
+				EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */,
 				EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */,
 				EC9DF009275CD1BE0046F30A /* NSViewEx.swift in Sources */,
 				ECEA1B6F2761147800DD602D /* EditCommands.swift in Sources */,
@@ -994,10 +1003,10 @@
 				ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */,
 				EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */,
 				EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */,
-				ECA67B8E2769FEC600BC0D7D /* DocNameToolbarItem.swift in Sources */,
+				ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */,
 				EC218B4027593BE000744400 /* HashableObject.swift in Sources */,
 				ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */,
-				ECA67B90276A013A00BC0D7D /* MainPanelToolbarItem.swift in Sources */,
+				ECA67B90276A013A00BC0D7D /* MainPanelToolbarView.swift in Sources */,
 				EC218B7627593EE300744400 /* FileFinder.swift in Sources */,
 				EC218B5427593CBF00744400 /* SetEx.swift in Sources */,
 				EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */,
@@ -1038,7 +1047,6 @@
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
 				ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */,
 				EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */,
-				ECA67B892767787200BC0D7D /* DocVC+Toolbar.swift in Sources */,
 				EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */,
 				EC218B4227593BE000744400 /* Selectable.swift in Sources */,
 				EC9DEFFE275CD1BE0046F30A /* NSColorEx.swift in Sources */,

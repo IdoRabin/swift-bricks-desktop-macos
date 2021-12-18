@@ -36,6 +36,13 @@ class DocVC : NSSplitViewController {
         }
     }
     
+    var docWC : DocWC? {
+        guard self.isViewLoaded else {
+            return nil
+        }
+        return self.view.window?.windowController as? DocWC
+    }
+    
     deinit {
         dlog?.info("deinit for docVC: [\(self.title.descOrNil)]")
     }
@@ -69,8 +76,23 @@ extension DocVC /* Actions */ {
         return BrickDocController.shared.menu
     }
     
+    var leadingToggleSidebarItem : NSToolbarItem? {
+        return nil
+    }
+    
+    var trailingToggleSidebarItem : NSToolbarItem? {
+        return nil
+    }
+    
     override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
         return true
+    }
+    
+    func updateSidebarMenuItems() {
+        
+    }
+    func updateSidebarToolbarItems() {
+        
     }
     
     @IBAction @objc func toggleSidebarAction(_ sender : Any) {
@@ -102,12 +124,7 @@ extension DocVC /* Actions */ {
             
         case let item as NSMenuItem:
             // dlog?.info("toggleSidebarAction sender menu item id:\(item.identifier?.rawValue ?? "<nil>" )")
-            switch item.identifier?.rawValue ?? "" {
-            case "toggleLeadingSidebarMenuItemID":  isLeadingSidebar = true
-            case "toggleTrailingSidebarMenuItemID": isLeadingSidebar = false
-            default:
-                dlog?.note("toggleSidebarAction was called from menu with unhandled identifier: \(item.identifier?.rawValue ?? "<nil>")")
-            }
+            isLeadingSidebar = (item.identifier?.rawValue ?? "").lowercased().contains("leading")
             
         default:
             dlog?.note("toggleSidebarAction sender: \(sender)")

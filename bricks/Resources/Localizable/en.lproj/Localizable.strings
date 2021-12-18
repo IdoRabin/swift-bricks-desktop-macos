@@ -160,11 +160,15 @@
 "PROGRESS" = "Progress";
 "TASKS" = "Tasks";
 "PROPERTIES" = "Properties";
+"GENERATE" = "Generate code";
+"GENERATE_TOOLTIP" = "Generate code using the laid bricks";
+"STOP_GENERATION" = "Stop generating";
+"STOP_GENERATION_TOOLTIP" = "Stop all code generation, revert to previous code structure";
 
 // Tooltips
-"ADD_NEW_PLAN_LAYER" = "Add new plan layer";
-"DELETE_SELECTED_LAYER_FROM_PLAN" = "Delete selected layer from plan";
-"EDIT_SELECTED_LAYER" = "Edit selected layer";
+"ADD_NEW_PLAN_LAYER_TOOLTIP" = "Add new plan layer";
+"DELETE_SELECTED_LAYER_FROM_PLAN_TOOLTIP" = "Delete selected layer from plan";
+"EDIT_SELECTED_LAYER_TOOLTIP" = "Edit selected layer";
 
 // Preferences
 "GENERAL" = "General";

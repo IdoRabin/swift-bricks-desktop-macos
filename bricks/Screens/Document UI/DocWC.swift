@@ -16,6 +16,9 @@ extension NSObject {
 }
 
 class DocWC : NSWindowController {
+    let DEBUG_DRAWING = IS_DEBUG && true
+    let TOOLBAR_MIN_SPACER_WIDTH : CGFloat = 1.0
+    let TOOLBAR_ITEMS_HEIGHT : CGFloat = 32
     
     override init(window: NSWindow?) {
         super.init(window: window)
@@ -31,12 +34,25 @@ class DocWC : NSWindowController {
         dlog?.info("deinit \(basicDesc)")
     }
     
+    func finalizeToolbar() {
+        self.window?.toolbar?.items.forEachIndex({ index, item in
+            item.tag = index
+            if DEBUG_DRAWING, let view = item.view {
+                view.wantsLayer = true
+                view.layer?.debugBorder(color: .cyan.withAlphaComponent(0.5), width: 1)
+            }
+        })
+    }
+    
     override func windowDidLoad() {
         super.windowDidLoad()
+        
         waitFor("document", interval: 0.05, timeout: 0.2, testOnMainThread: {
             self.document != nil
         }, completion: { waitResult in
             DispatchQueue.mainIfNeeded {
+                self.finalizeToolbar()
+                
                 switch waitResult {
                 case .success:
                     dlog?.success("windowDidLoad document:\(self.document.descOrNil) toolbar: \(self.window?.toolbar?.basicDesc ?? "<nil>" ) window: \(self.window?.basicDesc ?? "<nil>" )")
@@ -55,7 +71,7 @@ extension DocWC : NSToolbarDelegate {
     enum ToolbarItemType : String {
         // Leading
         case leadingSidebarToggle = "leadingSidebarToggleID"
-        case leadingSidebarX = "leadingSidebarXID"
+        case leadingSidebarSettings = "leadingSidebarSettingsID"
         case leadingSidebarCenterSpacer = "leadingSidebarCenterSpacerID"
         case leadingSidebarStop = "leadingSidebarStopID"
         case leadingSidebarPlay = "leadingSidebarPlayID"
@@ -66,7 +82,7 @@ extension DocWC : NSToolbarDelegate {
         case centerPaneLeadingSpacer = "centerPaneLeadingSpacerID"
         case centerPaneCenteredMainPanel = "MainPanelToolbaritemID"
         case centerPaneTrailingSpacer = "centerPaneTrailingSpacerID"
-        case centerPaneTrailingZ = "centerPaneTrailingZID"
+        case centerPaneTrailingPlusAdd = "centerPaneTrailingZID"
         
         // Trailing
         case trailingSidebarSeperator = "trailingSidebarSeperatorID"
@@ -78,12 +94,12 @@ extension DocWC : NSToolbarDelegate {
         static var all : [ToolbarItemType] = [
             // Leading
             .leadingSidebarToggle,
-            .leadingSidebarX, .leadingSidebarCenterSpacer, .leadingSidebarY,
+            .leadingSidebarSettings, .leadingSidebarCenterSpacer, .leadingSidebarStop, .leadingSidebarPlay,
             .leadingSidebarSeperator,
             
             // Center
             .centerPaneLeadingDocName, .centerPaneLeadingSpacer, .centerPaneCenteredMainPanel, .centerPaneTrailingSpacer,
-            .centerPaneTrailingZ,
+            .centerPaneTrailingPlusAdd,
             
             // Trailing
             .trailingSidebarSeperator,
@@ -96,9 +112,19 @@ extension DocWC : NSToolbarDelegate {
         }
     }
     
+    private func createToolbarItemWrappingNib(id:NSToolbarItem.Identifier, nibClass:NSView.Type)->NSToolbarItem {
+        let view = nibClass.fromNib()!
+        return self.createToolbarItemWrapping(id: id, view: view)
+    }
     private func createToolbarItemWrapping(id:NSToolbarItem.Identifier, view:NSView)->NSToolbarItem {
         let result = NSToolbarItem(itemIdentifier: id)
         result.view = view
+        return result
+    }
+    
+    private func createToolbarItem(id:NSToolbarItem.Identifier, systemSymbolName:String, accessDesc:String?)->NSToolbarItem {
+        let result = NSToolbarItem(itemIdentifier: id)
+        result.image = NSImage(systemSymbolName: systemSymbolName, accessibilityDescription: accessDesc)
         return result
     }
     
@@ -117,45 +143,88 @@ extension DocWC : NSToolbarDelegate {
         return result
     }
     
+    private func createToolbarSingleSpace()->NSToolbarItem {
+        return NSToolbarItem(itemIdentifier: .space)
+    }
+    
+    private func createToolbarFlexibleSpace()->NSToolbarItem {
+        let result = NSToolbarItem(itemIdentifier: .flexibleSpace)
+        let view = NSView(frame: NSRect(origin: .zero, size: CGSize(width: TOOLBAR_MIN_SPACER_WIDTH, height: TOOLBAR_ITEMS_HEIGHT)))
+        view.widthAnchor.constraint(lessThanOrEqualToConstant: NSScreen.widest?.frame.width ?? 9000).isActive = true
+        view.widthAnchor.constraint(greaterThanOrEqualToConstant: TOOLBAR_MIN_SPACER_WIDTH).isActive = true
+        view.heightAnchor.constraint(equalToConstant: TOOLBAR_ITEMS_HEIGHT).isActive = true
+        result.view = view
+        
+        return result
+    }
+    
     // MARK: Delegate implementation
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
-        dlog?.info("toolbar:itemForItemIdentifier \(itemIdentifier.rawValue)")
+        let id = itemIdentifier
+        dlog?.info("toolbar:itemForItemIdentifier \(id)")
         var result : NSToolbarItem? = nil
-        let itemType = ToolbarItemType(rawValue: itemIdentifier.rawValue)!
+        let itemType = ToolbarItemType(rawValue: id.rawValue)!
         switch itemType {
         case .leadingSidebarToggle:
-            result = self.createToggleSidebarToolbarItemg(id: itemIdentifier, isLeading: true)
+            result = self.createToggleSidebarToolbarItemg(id: id, isLeading: true)
+            result?.target = self.contentViewController
+            result?.action = #selector(DocVC.toggleSidebarAction(_:))
             
-        case .leadingSidebarX:
-            break
+        case .leadingSidebarSettings:
+            result = createToolbarItem(id: id, systemSymbolName: "gearshape.fill", accessDesc: AppStr.SETTINGS.localized())
+            
         case .leadingSidebarCenterSpacer:
-            break
-        case .leadingSidebarY:
-            break
+            result = createToolbarFlexibleSpace()
+            
+        case .leadingSidebarStop:
+            result = createToolbarItem(id: id, systemSymbolName: "stop.fill", accessDesc: AppStr.STOP_GENERATION_TOOLTIP.localized())
+            
+        case .leadingSidebarPlay:
+            result = createToolbarItem(id: id, systemSymbolName: "play.fill", accessDesc: AppStr.GENERATE_TOOLTIP.localized())
+            
         case .leadingSidebarSeperator:
             let splitView = (self.contentViewController! as? NSSplitViewController)!.splitView
             result = NSTrackingSeparatorToolbarItem(identifier: itemIdentifier, splitView: splitView, dividerIndex: 0)
             
         case .centerPaneLeadingDocName:
-            break
+            result = createToolbarItemWrappingNib(id: id, nibClass: DocNameToolbarView.self)
+            toolbar.centeredItemIdentifier = id
+            if let view = result?.view {
+                view.widthAnchor.constraint(greaterThanOrEqualToConstant: 120.0).isActive = true
+                view.heightAnchor.constraint(equalToConstant: TOOLBAR_ITEMS_HEIGHT).isActive = true
+            }
+            
         case .centerPaneLeadingSpacer:
-            break
+            result = createToolbarFlexibleSpace()
+            
         case .centerPaneCenteredMainPanel:
-            break
+            result = createToolbarItemWrappingNib(id: id, nibClass: MainPanelToolbarView.self)
+            if let view = result?.view {
+                view.widthAnchor.constraint(lessThanOrEqualToConstant: NSScreen.widest?.frame.width ?? 9000).isActive = true
+                view.widthAnchor.constraint(greaterThanOrEqualToConstant: TOOLBAR_MIN_SPACER_WIDTH).isActive = true
+                view.heightAnchor.constraint(equalToConstant: TOOLBAR_ITEMS_HEIGHT).isActive = true
+            }
+            
         case .centerPaneTrailingSpacer:
+            result = createToolbarFlexibleSpace()
+            
+        case .centerPaneTrailingPlusAdd:
+            result = createToolbarItem(id: id, systemSymbolName: "plus", accessDesc: AppStr.ADD_NEW.localized())
             break
-        case .centerPaneTrailingZ:
-            break
+            
         case .trailingSidebarSeperator:
             let splitView = (self.contentViewController! as? NSSplitViewController)!.splitView
-            result = NSTrackingSeparatorToolbarItem(identifier: itemIdentifier, splitView: splitView, dividerIndex: 1)
+            result = NSTrackingSeparatorToolbarItem(identifier: id, splitView: splitView, dividerIndex: 1)
             
         case .trailingSidebarX:
-            break
+            result = createToolbarItem(id: id, systemSymbolName: "circle.fill", accessDesc: AppStr.ADD_NEW.localized())
+            
         case .trailingSidebarCenterSpacer:
-            break
+            result = createToolbarFlexibleSpace()
+            
         case .trailingSidebarY:
-            break
+            result = createToolbarItem(id: id, systemSymbolName: "circle.empty", accessDesc: AppStr.ADD_NEW.localized())
+
         case .trailingSidebarToggle:
             result = self.createToggleSidebarToolbarItemg(id: itemIdentifier, isLeading: false)
         }
@@ -165,7 +234,7 @@ extension DocWC : NSToolbarDelegate {
     
     func toolbarAllowedItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
         dlog?.info("toolbarAllowedItemIdentifiers")
-        return [] // ToolbarItemType.all.asNSToolbarItemIDs
+        return ToolbarItemType.all.asNSToolbarItemIDs
     }
     
     func toolbarDefaultItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
@@ -182,7 +251,7 @@ extension DocWC : NSToolbarDelegate {
     }
     
     func toolbarSelectableItemIdentifiers(_ toolbar: NSToolbar) -> [NSToolbarItem.Identifier] {
-        dlog?.info("toolbarSelectableItemIdentifiers")
+        // dlog?.info("toolbarSelectableItemIdentifiers")
         return []
     }
 }

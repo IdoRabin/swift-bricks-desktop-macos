@@ -9,7 +9,7 @@ import AppKit
 
 fileprivate let dlog : DSLogger? = DLog.forClass("MainPanelToolbarItem")
 
-class MainPanelToolbarItem : MNToolbarItem {
+class MainPanelToolbarView : NSView {
     override func awakeFromNib() {
         super.awakeFromNib()
         // dlog?.info("awoken!")

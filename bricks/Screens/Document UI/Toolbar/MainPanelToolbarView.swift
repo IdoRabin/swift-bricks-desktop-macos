@@ -23,11 +23,13 @@ class MainPanelToolbarView : NSView {
         @IBOutlet weak var centerStackView: NSStackView!
         @IBOutlet weak var pathControl: NSPathControl!
     
-        @IBOutlet weak var activiyLabelLeadingConstraint: NSLayoutConstraint!
-        @IBOutlet weak var activityLabel: NSTextField!
-        
-        @IBOutlet weak var progressWidthConstraint: NSLayoutConstraint!
-        @IBOutlet weak var progress: CircleProgressView? = nil
+    
+        @IBOutlet weak var progressActivityContainer: NSView!
+            @IBOutlet weak var activiyLabelLeadingConstraint: NSLayoutConstraint!
+            @IBOutlet weak var activityLabel: NSTextField!
+            
+            @IBOutlet weak var progressWidthConstraint: NSLayoutConstraint!
+            @IBOutlet weak var progress: CircleProgressView? = nil
     
     @IBOutlet weak var trailingExtButton1: NSButton!
     @IBOutlet weak var trailingextButton2: NSButton!
@@ -59,43 +61,79 @@ class MainPanelToolbarView : NSView {
             return
         }
         
-        updateWithDoc(nil)
-        setupProgressIndicator()
-        centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)
-        centerBoxContainer.borderColor = .quaternaryLabelColor.withAlphaComponent(0.1)
-        centerBoxContainer.borderWidth = 0.5
-        progress?.widthConstraint = self.progressWidthConstraint
-        let targetW : CGFloat = 2
-        progress?.onHideAnimating = {(context) in
-             let existingW = self.progress?.bounds.width ?? 28
-             self.progressWidthConstraint.constant = targetW
-             self.activiyLabelLeadingConstraint.constant = 18 + existingW - targetW
-        }
-        progress?.onUnhideAnimating = {(context) in
-             self.progressWidthConstraint.constant = 28
-             self.activiyLabelLeadingConstraint.constant = 18
+        DispatchQueue.main.performOncePerInstance(self) {
+            updateWithDoc(nil)
+            setupProgressIndicator()
+            centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)
+            centerBoxContainer.borderColor = .quaternaryLabelColor.withAlphaComponent(0.1)
+            centerBoxContainer.borderWidth = 0.5
+            
+            // Setup progress:
+            if let progress = progress {
+                progress.widthConstraint = self.progressWidthConstraint
+                let targetW : CGFloat = 2
+                progress.onHideAnimating = {[weak self] (context) in
+                     let existingW = self?.progress?.bounds.width ?? 28
+                     self?.progressWidthConstraint.constant = targetW
+                     self?.activiyLabelLeadingConstraint.constant = 18 + existingW - targetW
+                }
+                progress.onUnhideAnimating = {[weak self] (context) in
+                     self?.progressWidthConstraint.constant = 28
+                     self?.activiyLabelLeadingConstraint.constant = 18
+                }
+                if progress.progress == 0.0 {
+                    progress.resetToZero(animated: false, hides: true) {
+                        dlog?.info("reset")
+                    }
+                }
+            }
+            
+            if DEBUG_DRAWING {
+                for item in self.subviews {
+                    item.wantsLayer = true
+                    item.layer?.border(color: .orange.withAlphaComponent(0.7), width: 1)
+                }
+                for item in centerStackView.subviews {
+                    item.wantsLayer = true
+                    item.layer?.border(color: .yellow.withAlphaComponent(0.7), width: 1)
+                }
+            }
         }
         
-        if DEBUG_DRAWING {
-            for item in self.subviews {
-                item.wantsLayer = true
-                item.layer?.border(color: .orange.withAlphaComponent(0.7), width: 1)
-            }
-            for item in centerStackView.subviews {
-                item.wantsLayer = true
-                item.layer?.border(color: .yellow.withAlphaComponent(0.7), width: 1)
-            }
-        }
     }
     
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         self.progress?.needsLayout = true
         self.needsLayout = true
+        DispatchQueue.main.async {
+            self.showItemsIfPossible()
+        }
     }
 
+    override func viewDidMoveToWindow() {
+        super.viewDidMoveToWindow()
+        DispatchQueue.main.async {
+            self.showItemsIfPossible()
+        }
+    }
+    
+    func showItemsIfPossible() {
+        guard self.window != nil && self.superview != nil else {
+            return
+        }
+        
+        DispatchQueue.main.performOncePerInstance(self) {
+            NSView.animate(duration: 0.5, delay: 0.1) { context in
+                self.progressActivityContainer.animator().alphaValue = 1.0
+            }
+        }
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
+        progressActivityContainer.alphaValue = 0.01
+        
         //dlog?.info("awakeFromNib \(self.basicDesc) window: \(self.window?.basicDesc ?? "<nil>" )")
         DispatchQueue.main.async {
             self.setup()

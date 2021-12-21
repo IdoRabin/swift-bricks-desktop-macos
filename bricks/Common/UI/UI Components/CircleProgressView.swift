@@ -8,16 +8,17 @@
 import AppKit
 import Cocoa
 
-fileprivate let dlog : DSLogger? = DLog.forClass("PieSlice")
+fileprivate let dlog : DSLogger? = DLog.forClass("CircleProgressView")
 
 // @IBDesignable
 final public class CircleProgressView: NSView {
     let DEBUG_DRAWING = false
     let DEBUG_DRAW_MASK_AS_LAYER = false
-    let DEBUG_DEV_TIMED_TEST = true
+    let DEBUG_DEV_TIMED_TEST = false
     
     let MAX_WIDTH : CGFloat = 1200.0
     let MAX_HEIGHT : CGFloat = 1200.0
+    
     enum ShowHideAnimationType {
         case none
         case shrinkToLeading
@@ -73,11 +74,11 @@ final public class CircleProgressView: NSView {
     @IBOutlet weak var heightConstraint : NSLayoutConstraint? = nil
     
     var onBeforeHideAnimating: (()->Void)? = nil
-    var onHideAnimating: ((NSAnimationContext)->Void)? = nil
+    var onHideAnimating: ((NSAnimationContext?)->Void)? = nil
     var onBeforeUnhideAnimating: (()->Void)? = nil
-    var onUnhideAnimating: ((NSAnimationContext)->Void)? = nil
+    var onUnhideAnimating: ((NSAnimationContext?)->Void)? = nil
     
-    var _spinningProgress = 0.50
+    var _spinningProgress = 0.0
     @IBInspectable var spinningProgress : CGFloat {
         get {
             return _spinningProgress
@@ -163,8 +164,8 @@ final public class CircleProgressView: NSView {
             }
             self.setupIfNeeded()
             self.updateLayers()
+            self.forceUpdateCurProgress()
         }
-        
     }
     
     public override func layout() {
@@ -310,6 +311,19 @@ final public class CircleProgressView: NSView {
         }
     }
     
+    private func forceUpdateCurProgress() {
+        var prog : CGFloat = 0.0
+        switch progressType {
+        case .determinate:
+            prog = _progress
+        case .determinateSpin:
+            prog = _spinningProgress
+        case .indeterminateSpin:
+            prog = 0.5
+        }
+        setNewProgress(prog, animated: false, forced: true)
+    }
+    
     private func rectForLayers()->CGRect {
         let rect = self.frame.boundsRect().boundedSquare().insetBy(dx: 0, dy: 0).offset(by: self.centerOffset).rounded()
         
@@ -447,6 +461,22 @@ final public class CircleProgressView: NSView {
         }
     }
     
+    private func transformForHiding()->CATransform3D {
+        let w : CGFloat = self.bounds.width * 0.9
+        let h : CGFloat = self.bounds.height * 0.5
+        
+        var transform = CATransform3DIdentity
+        switch self.showHideAnimationType {
+        case .shrinkToCenter, .none:
+            transform = CATransform3DTranslate(transform, 0, -h, 0)
+        case .shrinkToLeading:
+            transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? w : -w, -h, 0)
+        case .shrinkToTrailing:
+            transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? -w : w, -h, 0)
+        }
+        return CATransform3DScale(transform, 0.01, 0.01, 1)
+    }
+    
     private func hideAnimation(duration:TimeInterval, delay:TimeInterval, completion:(()->Void)? = nil) {
         
         if !isAnimatingShowHide {
@@ -457,27 +487,16 @@ final public class CircleProgressView: NSView {
             ringsLayer.centrizeAnchor(animated: false)
             
             let supr = self.superview?.superview?.superview?.superview ?? self.superview?.superview?.superview ?? self.superview?.superview ?? self.superview
-
-            let w : CGFloat = self.bounds.width * 0.9
-            let h : CGFloat = self.bounds.height * 0.5
+            let finalTransform = self.transformForHiding()
+            
             widthBeforeLastHideAnimation = self.widthConstraint?.constant ?? self.ringsLayer.bounds.width
             onBeforeHideAnimating?()
             NSView.animate(duration: duration, delay: delay) { context in
                 dlog?.info("hideAnimation START")
                 context.allowsImplicitAnimation = true
                 
-                var transform = CATransform3DIdentity
-                switch self.showHideAnimationType {
-                case .shrinkToCenter, .none:
-                    transform = CATransform3DTranslate(transform, 0, -h, 0)
-                case .shrinkToLeading:
-                    transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? w : -w, -h, 0)
-                case .shrinkToTrailing:
-                    transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? -w : w, -h, 0)
-                }
                 
-                transform = CATransform3DScale(transform, 0.01, 0.01, 1)
-                self.ringsLayer.transform = transform
+                self.ringsLayer.transform = finalTransform
                 self.widthConstraint?.constant = 1.0
                 self.onHideAnimating?(context)
                 
@@ -513,6 +532,15 @@ final public class CircleProgressView: NSView {
         return result
     }
     
+    private func setNewProgressStrokeEnd(part:CGFloat, animated:Bool) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(!animated)
+        
+        self.progressRingLayerMask.strokeEnd = part
+        
+        CATransaction.commit()
+    }
+    
     private func setNewProgress(_ newVal:CGFloat, animated:Bool = true, forced:Bool = false) {
         let newValue = clamp(value: newVal, lowerlimit: 0.0, upperlimit: 1.0)
         let prev = self.progressType.isSpinable ? _spinningProgress : _progress
@@ -531,12 +559,8 @@ final public class CircleProgressView: NSView {
                 dlog?.info("setNew \(prog): \(newValue) animated: \(animated)")
             }
             
-            CATransaction.begin()
-            CATransaction.setDisableActions(!animated)
-            
-            self.progressRingLayerMask.strokeEnd = newValue
-            
-            CATransaction.commit()
+            // Actuallt change the progress mask layer here
+            self.setNewProgressStrokeEnd(part: newValue, animated:animated)
             
             if progressType.isDeterminate && showHideAnimationType != .none &&
                 !isAnimatingShowHide {
@@ -552,7 +576,7 @@ final public class CircleProgressView: NSView {
         }
     }
     
-    //MARK: Indeterminate
+    //MARK: Animations / Spinner
     private func startSpinAnimations() {
         
         let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
@@ -587,6 +611,38 @@ final public class CircleProgressView: NSView {
             startSpinAnimations()
         } else if !self.progressType.isSpinable && isAnimatingSpin {
             stopSpinAnimations()
+        }
+    }
+    
+    public func resetToZero(animated:Bool = true, hides:Bool = true, completion:(()->Void)? = nil) {
+        self._progress = 0
+        self._spinningProgress = 0
+        self.setNewProgress(0.0, animated: animated, forced: true)
+        if hides {
+            if animated {
+                self.hideAnimation(duration:0.3, delay: 0.001, completion: completion)
+            } else {
+                CATransaction.begin()
+                CATransaction.setDisableActions(true)
+                
+                setNewProgressStrokeEnd(part: 0.0, animated: false)
+                rootLayer.centrizeAnchor(animated: false)
+                ringsLayer.centrizeAnchor(animated: false)
+                widthBeforeLastHideAnimation = self.widthConstraint?.constant ?? self.ringsLayer.bounds.width
+                self.onBeforeHideAnimating?()
+                self.ringsLayer.transform = transformForHiding()
+                self.widthConstraint?.constant = 1.0
+                self.needsLayout = true
+                self.superview?.needsLayout = true
+                self.superview?.superview?.needsLayout = true
+                self.onHideAnimating?(nil)
+                
+                CATransaction.commit()
+                
+                completion?()
+            }
+        } else {
+            completion?()
         }
     }
     

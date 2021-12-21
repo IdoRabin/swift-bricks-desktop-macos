@@ -149,6 +149,7 @@
                 <outlet property="leadingExtButton" destination="gTD-XU-hdq" id="HLi-1o-wFx"/>
                 <outlet property="pathControl" destination="HXu-y9-XuN" id="yk6-9N-YZV"/>
                 <outlet property="progress" destination="nFo-Pt-og7" id="4HK-MY-qne"/>
+                <outlet property="progressActivityContainer" destination="hIJ-Uy-M36" id="k9y-7L-Dgg"/>
                 <outlet property="progressWidthConstraint" destination="PqJ-qG-o03" id="fz7-ZA-gpK"/>
                 <outlet property="trailingExtButton1" destination="tgs-fw-1Je" id="asj-Bn-fs6"/>
                 <outlet property="trailingextButton2" destination="YUN-jD-1mP" id="rhO-sp-aas"/>

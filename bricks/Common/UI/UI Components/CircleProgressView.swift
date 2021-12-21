@@ -86,6 +86,7 @@ final public class CircleProgressView: NSView {
         var sze = super.intrinsicContentSize
         sze.width = max(sze.width, lastUsedRect.width)
         sze.height = max(sze.width, lastUsedRect.height)
+        dlog?.info("intrinsicContentSize \(sze)")
         return sze
     }
     
@@ -121,8 +122,10 @@ final public class CircleProgressView: NSView {
             if self._scale != val {
                 self._scale = val
             }
+            self.setupIfNeeded()
             self.updateLayers()
         }
+        
     }
     
     public override func layout() {
@@ -291,44 +294,53 @@ final public class CircleProgressView: NSView {
         progressRingLayerMask.actions = ["lineWidth": CABasicAnimation(), "path": CABasicAnimation()]
     }
     
+    private func setupIfNeeded() {
+        guard self.layer != rootLayer else {
+            return
+        }
+        self.setup()
+    }
+        
     private func setup() {
-        DispatchQueue.main.performOncePerInstance(self) {
-            lastUsedRect = self.frame.boundsRect()
-            self.layer = rootLayer
-            self.wantsLayer = true
-            dlog?.info("setup bounds: \(self.bounds)")
-            if let layer = self.layer {
-                layer.masksToBounds = true
-                if DEBUG_DRAWING {
-                    layer.backgroundColor = NSColor.blue.withAlphaComponent(0.1).cgColor
-                    layer.border(color: .blue.withAlphaComponent(0.5), width: 1)
-                }
+
+        lastUsedRect = self.frame.boundsRect()
+        self.layer = rootLayer
+        self.wantsLayer = true
+        dlog?.info("setup bounds: \(self.bounds)")
+        if let layer = self.layer {
+            layer.masksToBounds = true
+            if DEBUG_DRAWING {
+                layer.backgroundColor = NSColor.blue.withAlphaComponent(0.1).cgColor
+                layer.border(color: .blue.withAlphaComponent(0.5), width: 1)
             }
-            
-            let rect = self.rectForLayers()
-            let layers = [backgroundLayer, bkgRingLayer, progressRingLayer]
-            layers.forEachIndex { index, layer in
-                layer.autoresizingMask =  [.layerWidthSizable, .layerHeightSizable]
-                layer.frame = rect
-                rootLayer.addSublayer(layer)
-                if DEBUG_DRAWING && index == 0 {
-                    layer.border(color: .blue.withAlphaComponent(0.5), width: 0.5)
-                }
+        }
+        
+        let rect = self.rectForLayers()
+        let layers = [backgroundLayer, bkgRingLayer, progressRingLayer]
+        layers.forEachIndex { index, layer in
+            layer.autoresizingMask =  [.layerWidthSizable, .layerHeightSizable]
+            layer.frame = rect
+            rootLayer.addSublayer(layer)
+            if DEBUG_DRAWING && index == 0 {
+                layer.border(color: .blue.withAlphaComponent(0.5), width: 0.5)
             }
-            
-            if DEBUG_DRAW_MASK_AS_LAYER == false {
-                progressRingLayer.mask = progressRingLayerMask
-            } else {
-                self.progressRingLayer.addSublayer(progressRingLayerMask)
-            }
-            
-            setupBackgroundLayer()
-            setupBkgRingLayer()
-            setupProgressRingLayer()
-            setupProgressMaskLayer()
-            self.needsDisplay = true
-            self.needsLayout = true
-            
+        }
+        
+        if DEBUG_DRAW_MASK_AS_LAYER == false {
+            progressRingLayer.mask = progressRingLayerMask
+        } else {
+            self.progressRingLayer.addSublayer(progressRingLayerMask)
+        }
+        
+        setupBackgroundLayer()
+        setupBkgRingLayer()
+        setupProgressRingLayer()
+        setupProgressMaskLayer()
+        self.needsDisplay = true
+        self.needsLayout = true
+        self.superview?.needsLayout = true
+        
+        DispatchQueue.main.performOncePerSession {
             self.devTestIfNeeded()
         }
     }
@@ -365,26 +377,26 @@ final public class CircleProgressView: NSView {
     }
     //MARK: Indeterminate
     private func startIndeterminateAnimations() {
-//        dlog?.info("startIndeterminateAnimations")
-//        let layer = DEBUG_DRAW_MASK_AS_LAYER ? mask : progressRingLayer
-//        layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-////        layer.startSpinAnimation()
-//        indeterminateAnimating = true
+        dlog?.info("startIndeterminateAnimations")
+        let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
+        layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        layer.startSpinAnimation()
+        indeterminateAnimating = true
     }
     
     private func stopIndeterminateAnimations() {
-//        dlog?.info("stopIndeterminateAnimations")
-//        let layer = DEBUG_DRAW_MASK_AS_LAYER ? mask : progsRingLayer
-//        layer.stopSpinAnimation()
-//        indeterminateAnimating = false
+        dlog?.info("stopIndeterminateAnimations")
+        let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
+        layer.stopSpinAnimation()
+        indeterminateAnimating = false
     }
     
     private func updateIndeterminateAnimations() {
-//        if isIndeterminate && !indeterminateAnimating {
-//            startIndeterminateAnimations()
-//        } else if !isIndeterminate && indeterminateAnimating {
-//            stopIndeterminateAnimations()
-//        }
+        if isIndeterminate && !indeterminateAnimating {
+            startIndeterminateAnimations()
+        } else if !isIndeterminate && indeterminateAnimating {
+            stopIndeterminateAnimations()
+        }
     }
     
     // MARK: Dev / Debug
@@ -404,9 +416,9 @@ final public class CircleProgressView: NSView {
             self.progress = 0.75
         }
         
-//        DispatchQueue.main.asyncAfter(delayFromNow: 2) {
-//            self.isIndeterminate = true
-//        }
+        DispatchQueue.main.asyncAfter(delayFromNow: 2) {
+            self.isIndeterminate = true
+        }
                     
 //        DispatchQueue.main.asyncAfter(delayFromNow: 8) {
 //            self.progress?.isIndeterminate = false

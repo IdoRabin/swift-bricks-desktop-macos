@@ -76,6 +76,8 @@ class MainPanelToolbarView : NSView {
     
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
+        self.progress?.needsLayout = true
+        self.needsLayout = true
     }
 
     override func awakeFromNib() {

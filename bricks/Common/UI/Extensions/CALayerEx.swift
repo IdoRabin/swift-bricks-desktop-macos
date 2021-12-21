@@ -53,7 +53,7 @@ extension CALayer /* borders*/ {
 
 extension CALayer /* spin animation */ {
     
-    func startSpinAnimation(duration:CFTimeInterval = 2, clockwise:Bool = true) {
+    func startSpinAnimation(duration:CFTimeInterval = 1, clockwise:Bool = true) {
         let rotationAnimation = CABasicAnimation()
         rotationAnimation.keyPath = "transform.rotation.z"
 

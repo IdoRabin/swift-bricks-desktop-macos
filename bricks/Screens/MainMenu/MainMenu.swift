@@ -133,7 +133,7 @@ class MainMenu : NSMenu {
             switch state {
             case .disabled:
                 self.disableAll(except: [bricksQuitMnuItem, bricksAboutMnuItem])
-                
+
             case .splashScreen:
                 let enabledItems : [NSMenuItem]  = [bricksAboutMnuItem, bricksPreferencesMnuItem, bricksHideMnuItem,
                                                     helpTooltipsShowKeyboardShortcutsMnuItem]
@@ -180,6 +180,7 @@ class MainMenu : NSMenu {
     }
     
     func setup(menu:NSMenu, depth:Int = 0) {
+
         guard depth < 10 else {
             dlog?.warning("localize recursion is > 10 depth. @ menu : \(menu.title)")
             return
@@ -321,9 +322,35 @@ class MainMenu : NSMenu {
         }
     }
 
+    var docWindowsItems : [NSMenuItem] {
+        guard let submenu = windowTopMnuItem.submenu else {
+            return []
+        }
+        
+        var result : [NSMenuItem] = submenu.items.filter({ menuItem in
+            return "\(type(of: menuItem))" == "NSWindowRepresentingMenuItem"
+        })
+        
+        if result.count == 0, let index = submenu.items.firstIndex(of: windowBringAllToFrontMnuItem) {
+            result = Array(submenu.items.suffix(from: index))
+        }
+        return result
+    }
+    
+    func updateWindowsMenuItems() {
+        
+        // Updates the menu items correlated with the document windows (NSWindowRepresentingMenuItem)
+        let items = self.docWindowsItems
+        for item in items {
+            if let window = item.target as? NSWindow, let docWC = window.windowController as? DocWC, let doc = docWC.document as? BrickDoc {
+                item.image = doc.docSaveState.iconImage.scaledToFit(boundingSizes: 22)
+            }
+        }
+    }
     
     // MARK: Update menu using the current Doc:
-    func updateMenuItems(_ items:[NSMenuItem], inVC vc:DocVC) {
+    func updateMenuItems(_ items:[NSMenuItem], inVC vc:DocVC?) {
+
         guard items.count > 0 else {
             dlog?.note("updateMenuItems with 0 items as input!")
             return
@@ -331,27 +358,35 @@ class MainMenu : NSMenu {
         
         self.recalcLeafItems()
         
+        // Get cur doc:
+        //let curWC = BrickDocController.shared.curDocWC
+        let curVC = BrickDocController.shared.curDocVC
+        //let curDoc = BrickDocController.shared.curDoc
+
         for item in items {
             switch item {
+            case viewShowToolbarMnuItem:
+                item.title = (curVC?.toolbar?.isVisible ?? false) ? AppStr.HIDE_TOOLBAR.localized() : AppStr.SHOW_TOOLBAR.localized()
+                item.isHidden = true
+                
             case viewShowProjectSidebarMnuItem:
                 // dlog?.info("Update leading sidebar menu item")
-                item.title = vc.mnSplitView.isLeadingPanelCollapsed ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
+                item.title = (vc?.mnSplitView.isLeadingPanelCollapsed ?? false) ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
                 
             case viewShowUtilitySidebarMnuItem:
                 // dlog?.info("Update trailing sidebar menu item")
-                item.title = vc.mnSplitView.isTrailingPanelCollapsed ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
+                item.title = (vc?.mnSplitView.isTrailingPanelCollapsed ?? false) ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
                 
             default:
                 break
             }
         }
-        
     }
-
+                         
     // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         DispatchQueue.main.async {
              AppDelegate.shared.mainMenu = self
         }
@@ -381,6 +416,8 @@ class MainMenu : NSMenu {
             helpMnuItem, helpTooltipsShowKeyboardShortcutsMnuItem
         ]
         
+        viewCustomizeToolbarMnuItem.isHidden = true
+        
         DispatchQueue.main.async {
             self.setup(menu: self)
             self.recalcLeafItems()
@@ -388,7 +425,7 @@ class MainMenu : NSMenu {
     }
     
     func recalcLeafItems() {
-        
+
         allLeafItems.removeAll()
         func addLeafItems(_ xitems:[NSMenuItem], depth:Int = 0) {
             guard depth < 127 else {
@@ -408,6 +445,7 @@ class MainMenu : NSMenu {
     
     // MARK: state changes
     func determineState() {
+
         let hasSplash = BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self)
         let hasDocument = BrickDocController.shared.documents.count == 0 || BricksApplication.shared.isViewControllerExistsOfClass(DocVC.self)
         
@@ -430,6 +468,7 @@ class MainMenu : NSMenu {
     }
     
     private func setEnabled(_ enabled:Bool, items:[NSMenuItem] = [], except:[NSMenuItem]) {
+
         for item in items {
             var isEnable = (except.contains(item)) ? !enabled : enabled
             if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand {
@@ -440,19 +479,23 @@ class MainMenu : NSMenu {
     }
     
     private func setAllEnabled(_ enabled:Bool, except:[NSMenuItem] = []) {
+
         self.setEnabled(enabled, items: allLeafItems, except: except)
     }
     
     func disableAll(except:[NSMenuItem] = []) {
+
         self.setAllEnabled(false, except: except)
     }
     
     func enableAll(except:[NSMenuItem] = []) {
+
         self.setAllEnabled(true, except: except)
     }
 }
 
 extension MainMenu /* load from nib */ {
+    
     @objc class func fromNib()-> MainMenu? {
         var contentViews : NSArray? = nil
         let name = String(describing: self)

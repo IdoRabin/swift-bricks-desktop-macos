@@ -4,6 +4,7 @@ import Foundation
 
 typealias TimedEventBlock = ()->Void
 fileprivate typealias EventValues = (time:Date, contents:TimedEventBlock?)
+fileprivate let dlog : DSLogger? = nil // DLog.forClass("TimedEventFilter")
 
 /// Filter incoming event so that even if the event is fired multiple times in short time interval, the event will be passes on according to a minimum time threshold between events.
 /// Example: Even if "saveToDisk" is called 10 times in one second, only the last call will trigger the save to disk, thus limiting the overhead I/O of 10 saves just because of repeated events.
@@ -35,7 +36,6 @@ final class TimedEventFilter {
         return result
     }
     
-    // SMI-860
     private func safeAccumValsByKey(_ key:String)->[Any]? {
         var result : [Any]? = nil
         _lock.safeSync {
@@ -57,10 +57,10 @@ final class TimedEventFilter {
 
         // TODO: create dispatchQueue by key?
         DispatchQueue.notMainIfNeeded {
-            var interval : TimeInterval = threshold + 1
+            var interval : TimeInterval = (0.01 * threshold)
             if let evt = self.safeEventByKey(key) {
                 interval = fabs(evt.time.timeIntervalSinceNow)
-                // DLog.info("last event time:\(interval)")
+                dlog?.info("internal_FilterEvent [\(key)] last event time: \(interval)")
             }
             
             if interval > threshold {
@@ -68,6 +68,7 @@ final class TimedEventFilter {
                 // The event was called when enough time has passed since last call, so we execute it immediately:
                 // Perform event now
                 DispatchQueue.mainIfNeeded {
+                    dlog?.info("internal_FilterEvent [\(key)] completion time: (\(interval))")
                     completion()
                 }
                 
@@ -87,25 +88,31 @@ final class TimedEventFilter {
             } else {
                 
                 // The event was called when NOT enough time has passed since last call, so we wait until later to execute
+                // dlog?.info("event [\(key)] will skip")
                 willSkip?()
                 
                 // Save event completion for later
-                let time:Date = Date()
+                let time : Date = Date()
                 self._lock.safeSync {
                     self._eventByKey[key] = EventValues(time:time, contents:completion)
                 }
                 
                 // Dispatch after threshold time
                 self._lock.asyncAfter(delayFromNow: threshold) {
-                    if let evt = self.safeEventByKey(key), evt.time == time {
-                            
-                        // last event was the event we are talking about, was not overrriden by newerr event
-                        DispatchQueue.main.safeSync {
-                            evt.contents?()
-                        }
+                    // dlog?.info("asyncAfter done for : [\(key)] interval: \(abs(time.timeIntervalSinceNow))")
+                    
+                    if let evt = self.safeEventByKey(key), evt.time.timeIntervalSince1970Int64 == time.timeIntervalSince1970Int64 {
                         
                         self._lock.safeSync {
                             self._eventByKey[key] = EventValues(time:Date(), contents:nil)
+                        }
+                        
+                        // last event was the event we are talking about, was not overrriden by newerr event
+                        if let contents = evt.contents {
+                            DispatchQueue.main.safeSync {
+                                dlog?.info("event [\(key)] will call the event block -")
+                                contents()
+                            }
                         }
                     }
                 }
@@ -154,13 +161,12 @@ final class TimedEventFilter {
         self.internal_FilterEvent(key: key, threshold: threshold) {
             
             // Skipped - completion was not called yet
-            //DLog.misc.info("TimedEventFilter.\(key) Skipped....")
+            // dlog?.info("internal_FilterEvent key: .\(key) Skipped....")
             accum(t: accumArray)
             
         } completion: {
             // Completed
-            // DLog.misc.info("TimedEventFilter.\(key) Completion....")
-            // SMI-860
+            // dlog?.info("internal_FilterEvent key: .\(key) Completion....")
             let sumArr = accum(t: accumArray)
             
             DispatchQueue.main.safeSync {
@@ -168,7 +174,7 @@ final class TimedEventFilter {
             }
             
             // Aftr we call
-            self._lock.asyncAfter(delayFromNow: threshold * 1.1) {
+            self._lock.asyncAfter(delayFromNow: threshold * 1.1) {[self, key] in
                 self._accumValuesByKey[key] = nil
             }
         }

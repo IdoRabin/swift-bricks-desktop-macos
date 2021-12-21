@@ -79,6 +79,9 @@ enum AppStr : Localizable {
     case PLEASE_WAIT    // "Please Wait" // Message displayed to the user while some operation is in progress
     case PLEASE_WAIT_DOT_DOT    // "Please Wait.." // Message displayed to the user while some operation is in progress
     case PLEASE_WAIT_A_MOMENT_DOT_DOT    // "Please wait a moment..." // Tells the user to wait a moment until an opertation is complete
+    case LOADING // "Loading"
+    case LOADING_DOT_DOT // "Loading.."
+    case LOADING_X_DOT_DOT_FORMAT // "Loading X.."
     
     case YEAR    // "Year" // Word for one single year
     case MONTH    // "Month" // Word for one single month

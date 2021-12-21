@@ -10,8 +10,9 @@
         <scene sceneID="t6r-RU-XhI">
             <objects>
                 <windowController storyboardIdentifier="DocWCID" id="aUJ-eb-uWu" userLabel="DocWC" customClass="DocWC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
-                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
+                    <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="documentWindow" frameAutosaveName="" tabbingMode="preferred" titleVisibility="hidden" id="jeG-Hn-tyM" userLabel="Document Window">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES" fullSizeContentView="YES"/>
+                        <windowCollectionBehavior key="collectionBehavior" participatesInCycle="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="164" y="462" width="651" height="398"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
@@ -19,16 +20,13 @@
                             <rect key="frame" x="0.0" y="0.0" width="651" height="398"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
-                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ">
+                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ" customClass="DocToolbar" customModule="Bricks" customModuleProvider="target">
                             <allowedToolbarItems/>
                             <defaultToolbarItems/>
                             <connections>
                                 <outlet property="delegate" destination="aUJ-eb-uWu" id="kPy-bR-zBF"/>
                             </connections>
                         </toolbar>
-                        <connections>
-                            <outlet property="delegate" destination="aUJ-eb-uWu" id="UHo-iq-sGo"/>
-                        </connections>
                     </window>
                     <connections>
                         <segue destination="CmF-ng-hYs" kind="relationship" relationship="window.shadowedContentViewController" id="hqc-Ho-y1N"/>

@@ -108,6 +108,7 @@ class AppDocumentHistory : WhenLoadedable {
             self.save()
             
             DLog.docHistory.info("loaded w/ \(self.history.count). was loaded from recent urls")
+            
             self.orbservers.enumerateOnMainThread(block: { (observer) in
                 observer.appDeocumentHistoryDidChange()
             })

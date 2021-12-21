@@ -10,6 +10,10 @@
 		EC069207276E46F700D9DD43 /* MainPanelToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */; };
 		EC069209276E4AC900D9DD43 /* DocNameToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */; };
 		EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920A276E545700D9DD43 /* NSScreenEx.swift */; };
+		EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920E276F65BB00D9DD43 /* DocToolbar.swift */; };
+		EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */; };
+		EC1BFD16276FB3CB009DC45A /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */; };
+		EC1BFD18276FB4AB009DC45A /* NSBezierPathEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */; };
 		EC218AB9275931E700744400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AB8275931E700744400 /* AppDelegate.swift */; };
 		EC218ABF275931E800744400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC218ABE275931E800744400 /* Assets.xcassets */; };
 		EC218ACE275931E800744400 /* bricksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ACD275931E800744400 /* bricksTests.swift */; };
@@ -180,7 +184,11 @@
 		EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainPanelToolbarView.xib; sourceTree = "<group>"; };
 		EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocNameToolbarView.xib; sourceTree = "<group>"; };
 		EC06920A276E545700D9DD43 /* NSScreenEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSScreenEx.swift; sourceTree = "<group>"; };
+		EC06920E276F65BB00D9DD43 /* DocToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocToolbar.swift; sourceTree = "<group>"; };
 		EC1A28BA275F9203008446A8 /* bump_build_nr.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bump_build_nr.sh; sourceTree = "<group>"; };
+		EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocWC+Toolbar.swift"; sourceTree = "<group>"; };
+		EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
+		EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBezierPathEx.swift; sourceTree = "<group>"; };
 		EC218AB5275931E700744400 /* Bricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC218AB8275931E700744400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EC218ABE275931E800744400 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -429,6 +437,7 @@
 		EC218AE72759326400744400 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				EC9928A02762A97D00DD4C90 /* BricksApplication.swift */,
 				EC218AB8275931E700744400 /* AppDelegate.swift */,
 				ECEA1B662760FAA800DD602D /* AppCommand.swift */,
 				EC218B6927593DB300744400 /* AppConstants.swift */,
@@ -440,7 +449,6 @@
 				EC218B6F27593E7900744400 /* AppErrorCode.swift */,
 				EC218B6D27593DE100744400 /* AppStr.swift */,
 				EC218B10275939B600744400 /* AppStoryboard.swift */,
-				EC9928A02762A97D00DD4C90 /* BricksApplication.swift */,
 				ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */,
 			);
 			path = App;
@@ -543,6 +551,7 @@
 			children = (
 				ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */,
 				EC9DEFF2275CD1BD0046F30A /* CALayerEx.swift */,
+				EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */,
 				EC9DEFF5275CD1BD0046F30A /* CGPointEx.swift */,
 				EC9DEFEC275CD1BD0046F30A /* CGRect+Corners.swift */,
 				EC9DEFFB275CD1BE0046F30A /* CGRect+Quadrants.swift */,
@@ -665,6 +674,7 @@
 			children = (
 				EC9DF013275CD29A0046F30A /* Gridview */,
 				EC9DEFEA275CD0E70046F30A /* NSTitleDetailTableCellView.swift */,
+				EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -727,6 +737,8 @@
 				EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */,
 				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */,
 				EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */,
+				EC06920E276F65BB00D9DD43 /* DocToolbar.swift */,
+				EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */,
 			);
 			path = Toolbar;
 			sourceTree = "<group>";
@@ -975,6 +987,7 @@
 				EC218B7827593EED00744400 /* KeyboardKeys.swift in Sources */,
 				EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */,
 				EC218B3B27593BE000744400 /* TimedEventFilter.swift in Sources */,
+				EC1BFD16276FB3CB009DC45A /* CircleProgressView.swift in Sources */,
 				EC9DF00B275CD1BE0046F30A /* Lerpable.swift in Sources */,
 				EC218B5827593CBF00744400 /* Array+Identifiable.swift in Sources */,
 				EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */,
@@ -1012,6 +1025,7 @@
 				EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */,
 				EC218B2227593ADA00744400 /* UserDefaults+Counters.swift in Sources */,
 				EC9DF010275CD1CE0046F30A /* MNFocus.swift in Sources */,
+				EC1BFD18276FB4AB009DC45A /* NSBezierPathEx.swift in Sources */,
 				EC9DEFEB275CD0E70046F30A /* NSTitleDetailTableCellView.swift in Sources */,
 				EC71CE222764CF5700947423 /* AppCommands.swift in Sources */,
 				EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */,
@@ -1042,6 +1056,8 @@
 				EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */,
 				EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */,
 				EC218B872759471100744400 /* BrickDoc.swift in Sources */,
+				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
+				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,
 				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
@@ -1267,6 +1283,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = bricks/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = Bricks.BricksApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1292,6 +1309,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = bricks/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainNibFile = MainMenu;
 				INFOPLIST_KEY_NSPrincipalClass = Bricks.BricksApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

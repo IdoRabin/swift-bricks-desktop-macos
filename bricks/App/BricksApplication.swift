@@ -21,7 +21,9 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
         dlog?.info("init \(basicDesc)")
         self.delegate = AppDelegate.shared
         DispatchQueue.main.async {
-            self.mainMenu = MainMenu.fromNib()
+            if self.mainMenu == nil {
+                self.mainMenu = MainMenu.fromNib()
+            }
         }
     }
     
@@ -35,4 +37,20 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
         dlog?.info("deinit \(self.basicDesc)")
     }
     
+    func updateWindowsMenuItems() {
+        // Update the windows menu item - because we load the menu from nib manually,
+        // it does not update with the initial doc windows autotmatically.
+        // For the rest of the app operation this seems to be automatically handled
+        for doc in BrickDocController.shared.documents {
+            if let window = (doc.windowControllers.first as? DocWC)?.windowIfLoaded {
+                self.addWindowsItem(window, title: doc.displayName, filename: false)
+            }
+        }
+        
+        BrickDocController.shared.menu?.updateWindowsMenuItems()
+    }
+    
+    func didLoadViewControllersAfterInit() {
+        self.updateWindowsMenuItems()
+    }
 }

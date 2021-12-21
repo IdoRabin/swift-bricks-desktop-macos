@@ -18,28 +18,6 @@ extension NSView {
     }
 }
 
-
-public extension NSBezierPath {
-
-    var cgPath: CGPath {
-        let path = CGMutablePath()
-        var points = [CGPoint](repeating: .zero, count: 3)
-        for i in 0 ..< self.elementCount {
-            let type = self.element(at: i, associatedPoints: &points)
-            switch type {
-            case .moveTo: path.move(to: points[0])
-            case .lineTo: path.addLine(to: points[0])
-            case .curveTo: path.addCurve(to: points[2], control1: points[0], control2: points[1])
-            case .closePath: path.closeSubpath()
-            @unknown default:
-                fatalError()
-            }
-        }
-        return path
-    }
-
-}
-
 extension CALayer /* borders*/ {
     
     func border(color:NSColor = NSColor.cyan, width:CGFloat = 1.0) {
@@ -66,4 +44,57 @@ extension CALayer /* borders*/ {
         self.border(color:color, width:width)
         #endif
     }
+    
+    // MARK: Needed for YPRingProgressView
+    func disableActions(for keyPathes: [String]) {
+        actions = Dictionary(uniqueKeysWithValues: keyPathes.map { ($0, NSNull()) })
+    }
+}
+
+extension CALayer /* spin animation */ {
+    
+    func startSpinAnimation(duration:CFTimeInterval = 2, clockwise:Bool = true) {
+        let rotationAnimation = CABasicAnimation()
+        rotationAnimation.keyPath = "transform.rotation.z"
+
+        let direction = clockwise ? -1.0 : 1.0
+        let toValue = Double.pi * 2.0 * direction
+        let someInterval = CFTimeInterval(duration)
+        rotationAnimation.toValue = toValue
+        rotationAnimation.duration = someInterval
+        rotationAnimation.isCumulative = true
+        rotationAnimation.repeatCount = Float.infinity
+        
+        self.add(rotationAnimation, forKey: "spinRotationAnimation")
+    }
+    
+    func startSpinAnimationForPathLayer(duration:CFTimeInterval = 2, clockwise:Bool = true) {
+        
+        let rotationAnimation = CABasicAnimation()
+        rotationAnimation.keyPath = "transform.rotation.z"
+        let direction = clockwise ? -1.0 : 1.0
+        let toValue = Double.pi * 2.0 * direction
+        let someInterval = CFTimeInterval(duration)
+        rotationAnimation.toValue = toValue
+        rotationAnimation.duration = someInterval
+        rotationAnimation.isCumulative = true
+        rotationAnimation.repeatCount = Float.infinity
+        
+        let pathChangeAnimation = CABasicAnimation()
+        pathChangeAnimation.keyPath = "transform.rotation.z"
+        let pathChangeDirection = clockwise ? -1.0 : 1.0
+        let toPathValue = 360 * pathChangeDirection
+        rotationAnimation.toValue = toPathValue
+        rotationAnimation.duration = someInterval
+        rotationAnimation.isCumulative = true
+        rotationAnimation.repeatCount = Float.infinity
+        
+        self.add(rotationAnimation, forKey: "spinRotationAnimation")
+    }
+    
+    func stopSpinAnimation() {
+        self.removeAnimation(forKey: "spinRotationAnimation")
+    }
+    
+    
 }

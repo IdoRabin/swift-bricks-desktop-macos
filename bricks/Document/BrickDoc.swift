@@ -17,7 +17,15 @@ struct BrickDocUUID : BUID {
 
 class BrickDoc: NSDocument, Identifiable  {
 
-    enum DocState {
+    enum DocActivityState {
+        case idle
+        case userActive
+        case operationActive(String, CGFloat)
+        case loading(CGFloat)
+        case saving(CGFloat)
+    }
+    
+    enum DocSaveState {
         case emptyAndUnsaved
         case unsaved
         case regular
@@ -84,7 +92,13 @@ class BrickDoc: NSDocument, Identifiable  {
         return self.fileNameExtension(forType: "com.idorabin.bricks", saveOperation: .saveAsOperation)
     }
     
-    var docState : DocState {
+    var docActivityState : DocActivityState = .idle {
+        didSet {
+            
+        }
+    }
+    
+    var docSaveState : DocSaveState {
         if self.isDraft && self.isDocumentEdited == false {
             return .emptyAndUnsaved
         } else if self.isDraft && brick.info.filePath == nil {
@@ -123,6 +137,7 @@ class BrickDoc: NSDocument, Identifiable  {
 }
 
  extension BrickDoc /* overrides */ {
+     
      override func defaultDraftName() -> String {
          return AppStr.UNTITLED.localized()
      }

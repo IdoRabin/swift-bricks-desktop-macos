@@ -179,18 +179,20 @@ class MNToggleToolbarItem: MNToolbarItem {
              
             // Ugly.. // study chain of first responders to see how to find the correct one..
             if let ac = fwdTarget { targets.append(ac) }
-            if let targ = self.view?.window?.contentView?.firstSubview(which: { aview in
-                aview.responds(to: action)
-            }, downtree: true) {
-                targets.append(targ)
+            if let window = self.view?.window {
+                if let targ = window.contentView?.firstSubview(which: { aview in
+                    aview.responds(to: action)
+                }, downtree: true) {
+                    targets.append(targ)
+                }
+                targets.append(window)
+                if let ac = window.contentViewController { targets.append(ac) }
+                if let ac = window.contentViewController?.presentedViewControllers { targets.append(contentsOf: ac) }
+                if let ac = window.contentViewController?.presentingViewController { targets.append(ac) }
+                if let ac = window.contentView { targets.append(ac) }
+                if let ac = window.firstResponder { targets.append(ac) }
             }
-            if let ac = self.view?.window?.contentViewController { targets.append(ac) }
-            if let ac = self.view?.window?.contentViewController?.presentedViewControllers { targets.append(contentsOf: ac) }
-            if let ac = self.view?.window?.contentViewController?.presentingViewController { targets.append(ac) }
-            if let ac = self.view?.window?.contentViewController { targets.append(ac) }
-            if let ac = self.view?.window?.contentView { targets.append(ac) }
-            if let ac = self.view?.window { targets.append(ac) }
-            if let ac = self.view?.window?.firstResponder { targets.append(ac) }
+            
             if let ac = self.target { targets.append(ac) }
             if let ac = self.toolbar { targets.append(ac) }
             

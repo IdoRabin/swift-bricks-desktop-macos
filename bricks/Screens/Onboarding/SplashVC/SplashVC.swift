@@ -186,7 +186,7 @@ extension SplashVC /* Actions */ {
                     DLog.splash.raisePreconditionFailure("TODO: Handle unsaved documents")
                 } else {
                     DispatchQueue.main.async {
-                        AppDelegate.shared.documentController?.invalidateMenu()
+                        AppDelegate.shared.documentController?.invalidateMenu(context: "terminateAppIfNeeded")
                         
                         // Terminate the app:
                         BricksApplication.shared.terminate("SplashVC")

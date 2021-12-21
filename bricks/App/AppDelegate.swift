@@ -65,6 +65,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     private func isShouldShowSplashWindowOnInit()->Bool {
+        guard BrickDocController.shared.brickDocWindows.count == 0 else {
+            return false
+        }
+        
         let aDocNeedsRestoringOnInit = AppDocumentHistory.shared.history.contains { info in
             info.shouldRestoreOnInit
         }

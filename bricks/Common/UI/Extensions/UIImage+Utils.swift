@@ -18,6 +18,12 @@ import UIKit
 import Cocoa
 
 extension NSImage {
+    static func systemSymbol(named systemSymbolName:String, pointSize:CGFloat = 16, weight:NSFont.Weight = .regular, accessibilityDescription:String?)->NSImage? {
+        let image = self.init(systemSymbolName: systemSymbolName, accessibilityDescription: accessibilityDescription)
+        let config = NSImage.SymbolConfiguration(pointSize: pointSize, weight: weight)
+        return image?.withSymbolConfiguration(config)
+    }
+    
     
     @objc var cgImage: CGImage? {
         get {

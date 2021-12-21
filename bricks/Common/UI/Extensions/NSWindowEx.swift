@@ -103,6 +103,9 @@ extension NSWindowController {
     }
     
     func bringWindowToFront() {
+        guard self.isWindowLoaded else {
+            return
+        }
         self.window?.bringToFront()
     }
 }

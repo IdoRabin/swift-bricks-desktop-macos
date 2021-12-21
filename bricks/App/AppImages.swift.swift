@@ -14,6 +14,7 @@ struct AppImages {
     static let sideMenuRightCollapsed   =          ImageString("sidebar.right.collapsed")
     static let sideMenuRightUncollapsed =          ImageString("sidebar.right.uncollapsed")
     
+    // TODO: Create nicer-version icons for document icons @ small sizes: i.e with better defined outlines.
     static let docNewEmptyDocumentIcon =           ImageString("brick.new.empty.file.icon")
     static let docNewDocumentIcon =                ImageString("brick.new.file.icon")
     static let docRegularDocumentIcon =           ImageString("brick.file.icon")

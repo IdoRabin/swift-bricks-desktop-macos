@@ -19,6 +19,9 @@ import Foundation
 ///   - lowerlimit: the lower limit for the value to be clamped by, if value is smaller (<) than the lower limit, the result will be the lower limit
 ///   - upperlimit: the upper limit for the value to be clamped by, if value is bigger (>) than the upper limit, the result will be the upper limit
 /// - Returns: the value itself, or if bigger or smaller than the limits, the respective limit
-public func clamp<T:Comparable>(value:T, lowerlimit:T, upperlimit:T)->T {
+public func clamp<T:Comparable>(value:T, lowerlimit:T, upperlimit:T, outOfBounds:((T)->Void)? = nil)->T {
+    if let outOfBounds = outOfBounds, value < lowerlimit || value > upperlimit {
+        outOfBounds(value)
+    }
     return min(max(value, lowerlimit), upperlimit)
 }

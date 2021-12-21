@@ -21,18 +21,32 @@ class DocVC : NSSplitViewController {
     // MARK: Private
     private func setup() {
         self.mnSplitView.hostingSplitVC = self
-        // self.setupToolbarIfPossible()
     }
+    
     
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
-        dlog?.info("viewDidLoad")
-        
+
         DispatchQueue.main.async {
             self.title = self.document?.displayName ?? AppStr.UNTITLED.localized()
-            dlog?.info("viewDidLoad - for docVC: [\(self.title.descOrNil)]")
+            self.wc?.updateToolbarDocNameView()
+            self.wc?.updateToolbarMainPanelView()
+            
+            dlog?.info("viewDidLoad [\(self.title.descOrNil)]")
+            if abs(AppSettings.shared.stats.lastLaunchDate.timeIntervalSinceNow) < 4 {
+                TimedEventFilter.shared.filterEvent(key: "DocVC.viewDidLoad", threshold: 0.2, accumulating: self.title.descOrNil) { titles in
+                    dlog?.info("Last viewDidLoad loaded: \(titles?.descriptionsJoined ?? "<nil>" )")
+                    if titles?.count ?? 0 > 1 {
+                        BricksApplication.shared.arrangeInFront(self)
+                        BricksApplication.shared.didLoadViewControllersAfterInit()
+                        BrickDocController.shared.didLoadViewControllersAfterInit()
+                    }
+                }
+            } else {
+                self.mainMenu?.updateWindowsMenuItems()
+            }
         }
     }
     
@@ -48,19 +62,18 @@ class DocVC : NSSplitViewController {
     }
     
     override func viewWillAppear() {
-        dlog?.info("viewWillAppear")
         super.viewWillAppear()
         // self.setupToolbarIfPossible()
     }
     
     // MARK: Public
     var document : BrickDoc? {
-        guard self.isViewLoaded else {
+        guard self.isViewLoaded, let window = self.view.window else {
             dlog?.note("cannot access .document property before self.view is loaded!")
             return nil
         }
         
-        return BrickDocController.shared.document(for: self.view.window!) as? BrickDoc
+        return BrickDocController.shared.document(for: window) as? BrickDoc
     }
 }
 
@@ -68,31 +81,37 @@ class DocVC : NSSplitViewController {
 // MARK: DocumentVC - Actions
 extension DocVC /* Actions */ {
     
+    var docNameOrNil : String {
+        return self.wc?.docNameOrNil ?? "<nil>"
+    }
+    
     var toolbar : NSToolbar? {
         return self.view.window?.toolbar
+    }
+    
+    var wc : DocWC? {
+        return self.view.window?.windowController as? DocWC
     }
     
     var mainMenu : MainMenu? {
         return BrickDocController.shared.menu
     }
-    
-    var leadingToggleSidebarItem : NSToolbarItem? {
-        return nil
-    }
-    
-    var trailingToggleSidebarItem : NSToolbarItem? {
-        return nil
-    }
-    
+        
     override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
         return true
     }
     
     func updateSidebarMenuItems() {
-        
+        if let menu = self.mainMenu {
+            menu.updateMenuItems([menu.viewShowProjectSidebarMnuItem,
+                                  menu.viewShowUtilitySidebarMnuItem],
+                                 inVC: self)
+        }
     }
+    
     func updateSidebarToolbarItems() {
-        
+        self.wc?.updateSidebarToolbarItems(isLeadingPanelCollapsed: self.mnSplitView.isLeadingPanelCollapsed,
+                                          isTrailingPanelCollapsed:self.mnSplitView.isTrailingPanelCollapsed)
     }
     
     @IBAction @objc func toggleSidebarAction(_ sender : Any) {
@@ -102,12 +121,12 @@ extension DocVC /* Actions */ {
         
         var sendr = sender
         if let btn = sender as? NSButton {
-            if let lft = self.leadingToggleSidebarItem,
+            if let lft = self.wc?.leadingToggleSidebarItem,
                 lft.view == btn || btn.tag <= self.mnSplitView.leadingDividerIndex {
                 // Found leading
                 sendr = lft
                 isLeadingSidebar = true
-            } else if let rgt = self.trailingToggleSidebarItem,
+            } else if let rgt = self.wc?.trailingToggleSidebarItem,
                 rgt.view == btn || btn.tag >= self.mnSplitView.trailingDividerIndex {
                 // Found trailing
                 sendr = rgt
@@ -137,9 +156,23 @@ extension DocVC /* Actions */ {
         } else {
             self.mnSplitView.toggleTrailingPanel()
         }
-        DispatchQueue.main.async {
+
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
             self.updateSidebarMenuItems()
+        }
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: 0.35) {
             self.updateSidebarToolbarItems()
+        }
+    }
+    
+    func docController(didChangeCurVCFrom fromVC: DocVC?, toVC: DocVC?) {
+        if toVC == self {
+            // This vc's window became key and main -
+        }
+        else if fromVC == self {
+            // This vc's window stopped being key and main -
         }
     }
     

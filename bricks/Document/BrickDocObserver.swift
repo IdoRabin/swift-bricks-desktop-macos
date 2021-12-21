@@ -15,4 +15,7 @@ protocol BrickDocObserver : AnyObject {
     
     func brickDocumentWillOpen(_ brick:BrickDoc)
     func brickDocumentDidOpen(_ brick:BrickDoc)
+    
+    func brickDocumentDidChange(_ brick:BrickDoc, activityState:BrickDoc.DocActivityState)
+    func brickDocumentDidChange(_ brick:BrickDoc, saveState:BrickDoc.DocSaveState)
 }

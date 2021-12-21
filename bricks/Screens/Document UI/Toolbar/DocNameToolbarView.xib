@@ -2,51 +2,49 @@
 <document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <customObject id="-2" userLabel="File's Owner" customClass="DocNameToolbarView" customModule="Bricks" customModuleProvider="target"/>
+        <customObject id="-2" userLabel="File's Owner"/>
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe" customClass="DocNameToolbarView" customModule="Bricks" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="229" height="47"/>
+            <rect key="frame" x="0.0" y="0.0" width="229" height="44"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dpd-Z4-qOs">
-                    <rect key="frame" x="2" y="11" width="26" height="26"/>
+                    <rect key="frame" x="2" y="9" width="26" height="26"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="26" id="Bub-Uc-uXo"/>
                         <constraint firstAttribute="width" constant="26" id="Xqh-Dl-w4u"/>
                     </constraints>
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="brick.new.empty.file.icon" id="Cgs-WZ-q3o"/>
                 </imageView>
-                <button horizontalCompressionResistancePriority="740" imageHugsTitle="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DH2-5v-nEZ">
-                    <rect key="frame" x="32" y="22" width="69.5" height="25"/>
-                    <constraints>
-                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="26" id="hap-GQ-3Hz"/>
-                    </constraints>
-                    <buttonCell key="cell" type="square" title="Untitled" bezelStyle="shadowlessSquare" image="hourglass" catalog="system" imagePosition="trailing" alignment="center" imageScaling="proportionallyDown" inset="2" id="IUU-4o-99i">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="systemMedium" size="14"/>
-                    </buttonCell>
-                </button>
-                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bKr-Lj-7tN" userLabel="Bottom Stack View">
-                    <rect key="frame" x="32" y="0.0" width="122" height="24"/>
+                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h6M-Xi-U4y" userLabel="Top Stack View">
+                    <rect key="frame" x="34" y="20" width="148" height="24"/>
                     <subviews>
-                        <progressIndicator maxValue="100" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="q78-0i-sQH">
-                            <rect key="frame" x="0.0" y="4" width="16" height="16"/>
-                        </progressIndicator>
-                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="32T-3y-2nJ">
-                            <rect key="frame" x="18" y="5" width="106" height="14"/>
-                            <textFieldCell key="cell" lineBreakMode="clipping" title="Label is the second" id="C0I-Ua-QTs">
-                                <font key="font" metaFont="system" size="11"/>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="T82-Tp-wxv">
+                            <rect key="frame" x="-2" y="4" width="132" height="17"/>
+                            <textFieldCell key="cell" lineBreakMode="clipping" title="Label is the second" id="6Rp-eC-MoG">
+                                <font key="font" metaFont="systemMedium" size="14"/>
                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
                             </textFieldCell>
                         </textField>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Frt-Nn-iMU">
+                            <rect key="frame" x="132" y="4" width="16" height="16"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="16" id="Mjj-4r-scs"/>
+                                <constraint firstAttribute="width" secondItem="Frt-Nn-iMU" secondAttribute="height" id="Q0P-EB-UVY"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="w2s-cY-XOh">
+                                <imageReference key="image" image="warning.triangle.grey" symbolScale="large"/>
+                            </imageCell>
+                        </imageView>
                     </subviews>
                     <constraints>
-                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="24" id="Wra-4L-8Nd"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="24" id="6pV-nF-hpO"/>
                     </constraints>
                     <visibilityPriorities>
                         <integer value="1000"/>
@@ -57,37 +55,73 @@
                         <real value="3.4028234663852886e+38"/>
                     </customSpacing>
                 </stackView>
-                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jCa-74-dFG">
-                    <rect key="frame" x="158" y="-0.5" width="24.5" height="24.5"/>
+                <stackView distribution="fill" orientation="horizontal" alignment="centerY" spacing="4" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bKr-Lj-7tN" userLabel="Bottom Stack View">
+                    <rect key="frame" x="34" y="0.0" width="144" height="24"/>
+                    <subviews>
+                        <progressIndicator maxValue="100" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="q78-0i-sQH">
+                            <rect key="frame" x="0.0" y="4" width="16" height="16"/>
+                        </progressIndicator>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" horizontalCompressionResistancePriority="500" translatesAutoresizingMaskIntoConstraints="NO" id="32T-3y-2nJ">
+                            <rect key="frame" x="18" y="5" width="106" height="14"/>
+                            <textFieldCell key="cell" lineBreakMode="clipping" title="Label is the second" id="C0I-Ua-QTs">
+                                <font key="font" metaFont="smallSystem"/>
+                                <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="displayP3"/>
+                            </textFieldCell>
+                        </textField>
+                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8D5-b4-TPT">
+                            <rect key="frame" x="126" y="2" width="18" height="20"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="8D5-b4-TPT" secondAttribute="height" id="HsT-A1-OuO"/>
+                            </constraints>
+                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="FT6-hm-7EO">
+                                <imageReference key="image" image="chevron.down" catalog="system" symbolScale="large"/>
+                            </imageCell>
+                        </imageView>
+                    </subviews>
                     <constraints>
-                        <constraint firstAttribute="width" constant="24" id="NU2-Kr-BqJ"/>
-                        <constraint firstAttribute="height" constant="24" id="ySr-cF-KCv"/>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="24" id="Wra-4L-8Nd"/>
                     </constraints>
-                    <buttonCell key="cell" type="disclosure" bezelStyle="roundedDisclosure" image="chevron.down" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="IFO-Pb-QaC">
-                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES" changeBackground="YES" changeGray="YES"/>
-                        <font key="font" metaFont="systemBold" size="16"/>
-                    </buttonCell>
-                </button>
+                    <visibilityPriorities>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                        <integer value="1000"/>
+                    </visibilityPriorities>
+                    <customSpacing>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                        <real value="3.4028234663852886e+38"/>
+                    </customSpacing>
+                </stackView>
             </subviews>
             <constraints>
-                <constraint firstItem="bKr-Lj-7tN" firstAttribute="leading" secondItem="DH2-5v-nEZ" secondAttribute="leading" id="3Xq-Rl-uMf"/>
-                <constraint firstItem="DH2-5v-nEZ" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="AJl-zU-zxC"/>
+                <constraint firstItem="h6M-Xi-U4y" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="03o-69-3oL"/>
+                <constraint firstItem="bKr-Lj-7tN" firstAttribute="top" secondItem="h6M-Xi-U4y" secondAttribute="bottom" constant="-4" id="EDZ-vR-k7w"/>
                 <constraint firstAttribute="bottom" secondItem="bKr-Lj-7tN" secondAttribute="bottom" id="FgI-1l-TQA"/>
-                <constraint firstItem="jCa-74-dFG" firstAttribute="leading" secondItem="bKr-Lj-7tN" secondAttribute="trailing" constant="4" id="IKJ-F5-nkW"/>
-                <constraint firstItem="jCa-74-dFG" firstAttribute="centerY" secondItem="32T-3y-2nJ" secondAttribute="centerY" id="PXg-Uh-XrQ"/>
+                <constraint firstItem="h6M-Xi-U4y" firstAttribute="leading" secondItem="dpd-Z4-qOs" secondAttribute="trailing" constant="6" id="OaA-cR-esE"/>
+                <constraint firstItem="bKr-Lj-7tN" firstAttribute="leading" secondItem="dpd-Z4-qOs" secondAttribute="trailing" constant="6" id="Re5-nL-xBY"/>
                 <constraint firstItem="dpd-Z4-qOs" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="2" id="Y7H-s6-eiV"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="h6M-Xi-U4y" secondAttribute="trailing" constant="6" id="Z2O-xz-mEA"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="bKr-Lj-7tN" secondAttribute="trailing" constant="6" id="ZQV-Ag-Ooo"/>
                 <constraint firstItem="dpd-Z4-qOs" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="gsU-GX-cz1"/>
-                <constraint firstItem="DH2-5v-nEZ" firstAttribute="leading" secondItem="dpd-Z4-qOs" secondAttribute="trailing" constant="4" id="iLv-b5-bBD"/>
-                <constraint firstItem="bKr-Lj-7tN" firstAttribute="top" secondItem="DH2-5v-nEZ" secondAttribute="bottom" constant="-2" id="olI-Z0-y1L"/>
-                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="DH2-5v-nEZ" secondAttribute="trailing" constant="12" id="tah-Rh-ai2"/>
-                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="jCa-74-dFG" secondAttribute="trailing" constant="2" id="wQu-lz-Nvs"/>
             </constraints>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="boolean" keyPath="isDetectHover" value="YES"/>
+            </userDefinedRuntimeAttributes>
+            <connections>
+                <outlet property="mainImageView" destination="dpd-Z4-qOs" id="aeE-K2-eaa"/>
+                <outlet property="subtitleChevronImageView" destination="8D5-b4-TPT" id="q4n-DL-krG"/>
+                <outlet property="subtitleLabel" destination="32T-3y-2nJ" id="sap-WE-SnR"/>
+                <outlet property="subtitleProgressIndicator" destination="q78-0i-sQH" id="uMt-8w-AOd"/>
+                <outlet property="titleImageView" destination="Frt-Nn-iMU" id="sNx-xC-ATB"/>
+                <outlet property="titleLabel" destination="T82-Tp-wxv" id="4i2-oN-nQu"/>
+            </connections>
             <point key="canvasLocation" x="13.5" y="68"/>
         </customView>
     </objects>
     <resources>
-        <image name="brick.new.empty.file.icon" width="170.5" height="170.5"/>
-        <image name="chevron.down" catalog="system" width="15" height="9"/>
-        <image name="hourglass" catalog="system" width="11" height="14"/>
+        <image name="brick.new.empty.file.icon" width="171" height="171"/>
+        <image name="chevron.down" catalog="system" width="18" height="11"/>
+        <image name="warning.triangle.grey" width="86" height="86"/>
     </resources>
 </document>

@@ -51,9 +51,33 @@ extension CALayer /* borders*/ {
     }
 }
 
+extension CAShapeLayer /* spin animation */ {
+    func startFluctuaingPathLayer(duration:CFTimeInterval = 1, clockwise:Bool = true, flucMinPath:CGFloat = 0.1, flucMaxPath:CGFloat = 0.9) {
+        let someInterval = CFTimeInterval(duration)
+        
+        // Change the path part being presented:
+        let pathChangeAnimation = CABasicAnimation()
+        pathChangeAnimation.keyPath = "strokeEnd"
+        // let pathChangeDirection = clockwise ? 1.0 : -1.0
+        let fromPathValue = clamp(value: flucMinPath, lowerlimit: 0.0, upperlimit: 1.0)
+        let toPathValue = clamp(value: flucMaxPath, lowerlimit: 0.0, upperlimit: 1.0)
+        pathChangeAnimation.fromValue = fromPathValue
+        pathChangeAnimation.toValue = toPathValue
+        pathChangeAnimation.duration = someInterval
+        pathChangeAnimation.isCumulative = false
+        pathChangeAnimation.autoreverses = true
+        pathChangeAnimation.repeatCount = Float.infinity
+        self.add(pathChangeAnimation, forKey: "fluctuatingPathSpinAnimation")
+    }
+    
+    func stopFluctuaingPathLayer() {
+        self.removeAnimation(forKey: "fluctuatingPathSpinAnimation")
+    }
+}
+
 extension CALayer /* spin animation */ {
     
-    func startSpinAnimation(duration:CFTimeInterval = 1, clockwise:Bool = true) {
+    func startSpinAnimation(duration:CFTimeInterval = 0.7, clockwise:Bool = true) {
         let rotationAnimation = CABasicAnimation()
         rotationAnimation.keyPath = "transform.rotation.z"
 
@@ -61,30 +85,6 @@ extension CALayer /* spin animation */ {
         let toValue = Double.pi * 2.0 * direction
         let someInterval = CFTimeInterval(duration)
         rotationAnimation.toValue = toValue
-        rotationAnimation.duration = someInterval
-        rotationAnimation.isCumulative = true
-        rotationAnimation.repeatCount = Float.infinity
-        
-        self.add(rotationAnimation, forKey: "spinRotationAnimation")
-    }
-    
-    func startSpinAnimationForPathLayer(duration:CFTimeInterval = 2, clockwise:Bool = true) {
-        
-        let rotationAnimation = CABasicAnimation()
-        rotationAnimation.keyPath = "transform.rotation.z"
-        let direction = clockwise ? -1.0 : 1.0
-        let toValue = Double.pi * 2.0 * direction
-        let someInterval = CFTimeInterval(duration)
-        rotationAnimation.toValue = toValue
-        rotationAnimation.duration = someInterval
-        rotationAnimation.isCumulative = true
-        rotationAnimation.repeatCount = Float.infinity
-        
-        let pathChangeAnimation = CABasicAnimation()
-        pathChangeAnimation.keyPath = "transform.rotation.z"
-        let pathChangeDirection = clockwise ? -1.0 : 1.0
-        let toPathValue = 360 * pathChangeDirection
-        rotationAnimation.toValue = toPathValue
         rotationAnimation.duration = someInterval
         rotationAnimation.isCumulative = true
         rotationAnimation.repeatCount = Float.infinity

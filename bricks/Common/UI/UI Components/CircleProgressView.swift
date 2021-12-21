@@ -44,6 +44,7 @@ final public class CircleProgressView: NSView {
     @IBInspectable var progressRingColor : NSColor = .controlAccentColor { didSet { if progressRingColor != oldValue { updateLayers() } } }
     @IBInspectable var progressRingInset : CGFloat = 3.5 { didSet { if progressRingInset != oldValue { updateLayers() } } }
     @IBInspectable var centerOffset : CGPoint = .zero { didSet { if centerOffset != oldValue { updateLayers() } } }
+    @IBInspectable var indeterminateProgressFlucuates : Bool = true { didSet { if indeterminateProgressFlucuates != oldValue { updateLayers(); updateIndeterminateAnimations() } } }
     
     var _indeterminateProgress = 0.50
     @IBInspectable var indeterminateProgress : CGFloat {
@@ -51,6 +52,10 @@ final public class CircleProgressView: NSView {
             return _indeterminateProgress
         }
         set {
+            if isIndeterminate && indeterminateAnimating && indeterminateProgressFlucuates {
+                dlog?.note("Cannot change progress while indeterminateProgressFlucuates")
+                return
+            }
             self.setNewProgress(newValue, animated: true)
         }
     }
@@ -72,6 +77,10 @@ final public class CircleProgressView: NSView {
             return _progress
         }
         set {
+            if isIndeterminate && indeterminateAnimating && indeterminateProgressFlucuates {
+                dlog?.note("Cannot change progress while indeterminateProgressFlucuates")
+                return
+            }
             self.setNewProgress(newValue, animated: true)
         }
     }
@@ -377,10 +386,18 @@ final public class CircleProgressView: NSView {
     }
     //MARK: Indeterminate
     private func startIndeterminateAnimations() {
-        dlog?.info("startIndeterminateAnimations")
+        
         let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
         layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        layer.startSpinAnimation()
+        if indeterminateProgressFlucuates {
+            dlog?.info("startIndeterminateAnimations - fluctuates")
+            layer.startSpinAnimation()
+            progressRingLayerMask.startFluctuaingPathLayer()
+        } else {
+            dlog?.info("startIndeterminateAnimations - simple")
+            layer.startSpinAnimation()
+        }
+        
         indeterminateAnimating = true
     }
     
@@ -388,6 +405,7 @@ final public class CircleProgressView: NSView {
         dlog?.info("stopIndeterminateAnimations")
         let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
         layer.stopSpinAnimation()
+        progressRingLayerMask.stopFluctuaingPathLayer()
         indeterminateAnimating = false
     }
     

@@ -524,6 +524,7 @@
 		EC218B1C27593A5500744400 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				EC2F5EEB277271F400201865 /* MNProgress */,
 				ECEA1B612760F9C700DD602D /* Command */,
 				EC218B7727593EED00744400 /* KeyboardKeys.swift */,
 				EC218B7327593EE300744400 /* AppSandboxer.swift */,
@@ -536,8 +537,6 @@
 				EC218B2D27593BDA00744400 /* LoadingHelper.swift */,
 				EC218B3627593BDB00744400 /* Logger.swift */,
 				EC218B2A27593BDA00744400 /* ObserversArray.swift */,
-				EC218B3127593BDB00744400 /* XXProgressCounter.swift */,
-				EC2F5EE927726DCC00201865 /* MNProgress.swift */,
 				EC218B2C27593BDA00744400 /* Selectable.swift */,
 				EC218B2E27593BDA00744400 /* SkipEncoding.swift */,
 				EC218B2B27593BDA00744400 /* ThreadWaitLock.swift */,
@@ -629,6 +628,15 @@
 				EC218B2927593B7100744400 /* BrickBasicInfo.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		EC2F5EEB277271F400201865 /* MNProgress */ = {
+			isa = PBXGroup;
+			children = (
+				EC2F5EE927726DCC00201865 /* MNProgress.swift */,
+				EC218B3127593BDB00744400 /* XXProgressCounter.swift */,
+			);
+			path = MNProgress;
 			sourceTree = "<group>";
 		};
 		EC332CC5275ECAC500546767 /* Localizable */ = {

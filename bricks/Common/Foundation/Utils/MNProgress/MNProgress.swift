@@ -7,14 +7,20 @@
 
 import Foundation
 
+struct MNProgressAction {
+    let title : String
+    let subtitle : String?
+    let info : Any?
+}
+
 // Mix of the native Progress class and other ideas:
 protocol MNProgressObserver {
-    func mnProgressDidChange(emitter:FractionalMNProg?, progress:CGFloat, count:Int?, total:Int?, info:Any?)
+    func mnProgressDidChange(emitter:FractionalMNProg?, progress:CGFloat, count:Int?, total:Int?, action:MNProgressAction?)
 }
 
 protocol FractionalMNProg {
-    var lastActionComplated : String? { get }
-    var fractionComplated : Double { get }
+    var lastActionCompleted : MNProgressAction? { get }
+    var fractionCompleted : Double { get }
 }
 
 protocol DiscreteMNProg : FractionalMNProg {
@@ -38,5 +44,9 @@ enum MNProgress {
 
 protocol MNProgressEmitter : DiscreteMNProg {
     var childMNProgressEmitters : [MNProgressEmitter] {get}
+    
+}
+
+extension MNProgressEmitter {
     
 }

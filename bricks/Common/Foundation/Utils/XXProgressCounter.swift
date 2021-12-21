@@ -23,7 +23,7 @@ protocol CountedProgressEmitter : ProgressEmitter {
     func setProgress(count:Int, total:Int)->CGFloat
 }
 
-/// Progress emitter for multiple coubteres, using a key to identify each counter
+/// Progress emitter for multiple counters, using a key to identify each counter
 protocol MultiProgressEmitter {
     
     /// Total progress the multi progress made in all its counters summed up.
@@ -301,8 +301,7 @@ class MultiProgressCounter<Key:Hashable> {
         return false
     }
     
-    func setProgress(_ val:CGFloat, forKey key:Key)
-    {
+    func setProgress(_ val:CGFloat, forKey key:Key) {
         if !self.createProgIfNeeded(val, forKey: key) {
             progreii[key]?.progress = val
         }
@@ -326,6 +325,7 @@ class MultiProgressCounter<Key:Hashable> {
             }
         }
     }
+    
     private func notifyObservers() {
         var prog = self.lastTotalProg
         if let decimalPr = self.decimalPercision {

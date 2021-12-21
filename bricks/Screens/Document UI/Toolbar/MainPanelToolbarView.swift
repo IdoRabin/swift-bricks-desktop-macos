@@ -22,9 +22,12 @@ class MainPanelToolbarView : NSView {
     @IBOutlet weak var centerBoxContainer: NSBox!
         @IBOutlet weak var centerStackView: NSStackView!
         @IBOutlet weak var pathControl: NSPathControl!
-        @IBOutlet weak var activityTrailingLabel: NSTextField!
-        @IBOutlet weak var progress: CircleProgressView? = nil
     
+        @IBOutlet weak var activiyLabelLeadingConstraint: NSLayoutConstraint!
+        @IBOutlet weak var activityLabel: NSTextField!
+        
+        @IBOutlet weak var progressWidthConstraint: NSLayoutConstraint!
+        @IBOutlet weak var progress: CircleProgressView? = nil
     
     @IBOutlet weak var trailingExtButton1: NSButton!
     @IBOutlet weak var trailingextButton2: NSButton!
@@ -61,6 +64,17 @@ class MainPanelToolbarView : NSView {
         centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)
         centerBoxContainer.borderColor = .quaternaryLabelColor.withAlphaComponent(0.1)
         centerBoxContainer.borderWidth = 0.5
+        progress?.widthConstraint = self.progressWidthConstraint
+        let targetW : CGFloat = 2
+        progress?.onHideAnimating = {(context) in
+             let existingW = self.progress?.bounds.width ?? 28
+             self.progressWidthConstraint.constant = targetW
+             self.activiyLabelLeadingConstraint.constant = 18 + existingW - targetW
+        }
+        progress?.onUnhideAnimating = {(context) in
+             self.progressWidthConstraint.constant = 28
+             self.activiyLabelLeadingConstraint.constant = 18
+        }
         
         if DEBUG_DRAWING {
             for item in self.subviews {
@@ -99,7 +113,7 @@ class MainPanelToolbarView : NSView {
             _lastDoc = doc
             _lastDoc?.observers.add(observer: self)
             
-            if let doc = doc {
+            if let _ = doc {
                 // TODO: Update progress
                 progress?.isHidden = false
                 

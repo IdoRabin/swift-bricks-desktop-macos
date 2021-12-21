@@ -12,61 +12,95 @@ fileprivate let dlog : DSLogger? = DLog.forClass("PieSlice")
 
 // @IBDesignable
 final public class CircleProgressView: NSView {
-    let DEBUG_DRAWING = true
+    let DEBUG_DRAWING = false
     let DEBUG_DRAW_MASK_AS_LAYER = false
     let DEBUG_DEV_TIMED_TEST = true
     
-    
     let MAX_WIDTH : CGFloat = 1200.0
     let MAX_HEIGHT : CGFloat = 1200.0
+    enum ShowHideAnimationType {
+        case none
+        case shrinkToLeading
+        case shrinkToCenter
+        case shrinkToTrailing
+    }
+    
+    enum ProgressType  : String, Equatable {
+        case determinate        // Progress in a circle, animating a filling arc
+        case determinateSpin    // Progress in a circle, animating a filling arc, while the whole object continuesly rotates
+        case indeterminateSpin  // Progress arc fluctuates between min and max, while the whole object continuesly rotates - setting progress if ignored until ProgressType is changed to another type
+        
+        var isSpinable : Bool {
+            return self != .determinate
+        }
+        
+        var isDeterminate : Bool {
+            return self != .indeterminateSpin
+        }
+    }
     
     // MARK: - Private Properties
     private let rootLayer = CALayer()
+    private let ringsLayer = CALayer()
     private let backgroundLayer = CALayer()
     private var bkgRingLayer = CAShapeLayer()
     private var progressRingLayer = CAShapeLayer()
     private var progressRingLayerMask = CAShapeLayer()
     private var lastUsedRect : CGRect = .zero
-    private var indeterminateAnimating = false
+    private var isAnimatingSpin = false
+    private var showHideAnimationType : ShowHideAnimationType = .shrinkToLeading
+    private var isAnimatingShowHide = false
+    private var wasHiddenByAnimation: ShowHideAnimationType = .none
+    private var widthBeforeLastHideAnimation: CGFloat = 28
     
     // keypathes
-    private let basicDisabledKeypathes = ["position", "frame", "bounds", "zPosition", "anchorPointZ", "contentsScale", "anchorPoint"]
+    private let basicDisabledKeypathes : [String] = [] // ["position", "frame", "bounds", "zPosition", "anchorPointZ", "contentsScale", "anchorPoint"]
     
     // Inspectables:
     @IBInspectable var backgroundColor  : NSColor = .clear { didSet { updateLayers() } }
     var bkgRingIsFull : Bool = false { didSet { if bkgRingIsFull != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingWidth : CGFloat = 2.0 { didSet { if bkgRingWidth != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingColor : NSColor = .tertiaryLabelColor.blended(withFraction: 0.2, of: .secondaryLabelColor)! { didSet { if bkgRingColor != oldValue { updateLayers() } } }
-    @IBInspectable var bkgRingInset : CGFloat =  3.5 { didSet { if bkgRingInset != oldValue { updateLayers() } } }
+    @IBInspectable var bkgRingInset : CGFloat =  1.5 { didSet { if bkgRingInset != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingOpacity : Float =  0.5 { didSet { if bkgRingOpacity != oldValue { updateLayers() } } }
     
     @IBInspectable var progressRingWidth : CGFloat = 2.0 { didSet { if progressRingWidth != oldValue { updateLayers() } } }
     @IBInspectable var progressRingColor : NSColor = .controlAccentColor { didSet { if progressRingColor != oldValue { updateLayers() } } }
-    @IBInspectable var progressRingInset : CGFloat = 3.5 { didSet { if progressRingInset != oldValue { updateLayers() } } }
+    @IBInspectable var progressRingInset : CGFloat = 1.5 { didSet { if progressRingInset != oldValue { updateLayers() } } }
     @IBInspectable var centerOffset : CGPoint = .zero { didSet { if centerOffset != oldValue { updateLayers() } } }
-    @IBInspectable var indeterminateProgressFlucuates : Bool = true { didSet { if indeterminateProgressFlucuates != oldValue { updateLayers(); updateIndeterminateAnimations() } } }
     
-    var _indeterminateProgress = 0.50
-    @IBInspectable var indeterminateProgress : CGFloat {
+    @IBOutlet weak var widthConstraint : NSLayoutConstraint? = nil
+    @IBOutlet weak var heightConstraint : NSLayoutConstraint? = nil
+    
+    var onBeforeHideAnimating: (()->Void)? = nil
+    var onHideAnimating: ((NSAnimationContext)->Void)? = nil
+    var onBeforeUnhideAnimating: (()->Void)? = nil
+    var onUnhideAnimating: ((NSAnimationContext)->Void)? = nil
+    
+    var _spinningProgress = 0.50
+    @IBInspectable var spinningProgress : CGFloat {
         get {
-            return _indeterminateProgress
+            return _spinningProgress
         }
         set {
-            if isIndeterminate && indeterminateAnimating && indeterminateProgressFlucuates {
-                dlog?.note("Cannot change progress while indeterminateProgressFlucuates")
-                return
-            }
             self.setNewProgress(newValue, animated: true)
         }
     }
         
-    @IBInspectable var isIndeterminate : Bool = false {
+    var progressType : ProgressType = .determinate {
         didSet {
-            if isIndeterminate != oldValue {
-                dlog?.info(">> \(isIndeterminate ? "Starting" : "Stopping") indeterminate state")
-                self.setNewProgress(isIndeterminate ? _indeterminateProgress : _progress, animated: true, force:true)
-                updateIndeterminateAnimations()
-                updateLayers()
+            if progressType != oldValue {
+                if !self.progressType.isDeterminate && self.wasHiddenByAnimation != .none {
+                    self.unhideAnimation(duration: 0.3, delay: 0.1)
+                }
+                
+                if progressType.isSpinable != oldValue.isSpinable {
+                    dlog?.info(">> \(progressType.isSpinable ? "Starting" : "Stopping") spinning state")
+                    self.setNewProgress(progressType.isDeterminate ? _spinningProgress : _progress, animated: true, forced:true)
+                    updateSpinAnimations()
+                    updateLayers()
+                }
+                
             }
         }
     }
@@ -77,10 +111,6 @@ final public class CircleProgressView: NSView {
             return _progress
         }
         set {
-            if isIndeterminate && indeterminateAnimating && indeterminateProgressFlucuates {
-                dlog?.note("Cannot change progress while indeterminateProgressFlucuates")
-                return
-            }
             self.setNewProgress(newValue, animated: true)
         }
     }
@@ -106,7 +136,7 @@ final public class CircleProgressView: NSView {
         
         result = result ^ progressRingWidth.hashValue ^ progressRingColor.hashValue ^ progressRingInset.hashValue ^ centerOffset.hashValue
         
-        result = result ^ _indeterminateProgress.hashValue ^ _progress.hashValue ^ _scale.hashValue
+        result = result ^ _spinningProgress.hashValue ^ _progress.hashValue ^ _scale.hashValue
         
         return result
     }
@@ -122,7 +152,7 @@ final public class CircleProgressView: NSView {
         setup()
     }
     
-    public override var frame: NSRect { didSet { if frame != oldValue { layout(); updateLayers() }  } }
+    public override var frame: NSRect { didSet { if frame != oldValue { layout() }  } }
     
     public override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
@@ -141,10 +171,18 @@ final public class CircleProgressView: NSView {
         super.layout()
         let rect = self.rectForLayers()
         let layers = [backgroundLayer, bkgRingLayer, progressRingLayer]
+        var changes = 0
         layers.forEachIndex { index, layer in
-            layer.frame = rect
+            if layer.frame != rect {
+                layer.frame = rect
+                layer.frame = rect
+                changes += 1
+            }
         }
-        self.updateLayers()
+        if !isAnimatingShowHide && changes > 0 {
+            dlog?.info(">> will update on layout")
+            self.updateLayers()
+        }
     }
     
     // MARK: - private Updates
@@ -154,7 +192,7 @@ final public class CircleProgressView: NSView {
         if lastBkgHash != newBkgHash {
             lastBkgHash = newBkgHash
             
-            dlog?.info("   updateBackgroundLayer")
+            //dlog?.info("   updateBackgroundLayer")
             backgroundLayer.bounds = rect
             backgroundLayer.backgroundColor = self.backgroundColor.cgColor
             backgroundLayer.disableActions(for: basicDisabledKeypathes)
@@ -167,7 +205,7 @@ final public class CircleProgressView: NSView {
         
         if lastBkgRingHash != newBkgRingHash {
             lastBkgRingHash = newBkgRingHash
-            dlog?.info("   updateBkgRingLayer")
+            //dlog?.info("   updateBkgRingLayer")
             
             // Bkg ring - full / empty circle
             let rct = rect.insetBy(dx: bkgRingInset, dy: bkgRingInset)
@@ -198,7 +236,7 @@ final public class CircleProgressView: NSView {
         if lastProgressRingHash != newProgressRingHash {
             lastProgressRingHash = newProgressRingHash
             
-            dlog?.info("   updateProgressRingLayer")
+            //dlog?.info("   updateProgressRingLayer")
             
             // Bkg ring - full / empty circle
             let rct = rect.insetBy(dx: progressRingInset, dy: progressRingInset)
@@ -228,7 +266,7 @@ final public class CircleProgressView: NSView {
         if lastProgressRingMaskHash != newProgressRingMaskHash {
             lastProgressRingMaskHash = newProgressRingMaskHash
             
-            dlog?.info("   updateProgressRingLayerMask")
+            //dlog?.info("   updateProgressRingLayerMask")
             let mask = self.progressRingLayerMask
             
             let rct = rect.insetBy(dx: progressRingInset, dy: progressRingInset).rounded()
@@ -248,7 +286,7 @@ final public class CircleProgressView: NSView {
             ringPath.appendArc(withCenter: center, radius: radius, startAngle: 90, endAngle: -270, clockwise: true)
 
             mask.path = ringPath.cgPath
-            dlog?.info("progressRingLayerMask \(mask.frame.center) pmg:\(backgroundLayer.frame.center)")
+            //dlog?.info("      mask center \(mask.frame.center) bkgLayer center:\(backgroundLayer.frame.center)")
         }
     }
     
@@ -258,6 +296,12 @@ final public class CircleProgressView: NSView {
         if lastTotalHash != newTotalHash {
             lastTotalHash = newTotalHash
             let rect = self.rectForLayers().boundsRect()
+            
+            if self.layer != rootLayer {
+                self.layer = rootLayer
+            }
+            rootLayer.centrizeAnchor(animated: false, preventMoving: true)
+            
             dlog?.info("updateLayers bounds:\(rect)")
             updateBackgroundLayer(bounds: rect)
             updateBkgRingLayer(bounds: rect)
@@ -267,7 +311,7 @@ final public class CircleProgressView: NSView {
     }
     
     private func rectForLayers()->CGRect {
-        let rect = rootLayer.frame.boundsRect().boundedSquare().insetBy(dx: 1, dy: 1).offset(by: self.centerOffset).rounded()
+        let rect = self.frame.boundsRect().boundedSquare().insetBy(dx: 0, dy: 0).offset(by: self.centerOffset).rounded()
         
         if !rect.isEmpty && !rect.isInfinite &&
             rect.width > 0 && rect.width < MAX_WIDTH &&
@@ -315,7 +359,8 @@ final public class CircleProgressView: NSView {
         lastUsedRect = self.frame.boundsRect()
         self.layer = rootLayer
         self.wantsLayer = true
-        dlog?.info("setup bounds: \(self.bounds)")
+        rootLayer.centrizeAnchor()
+        dlog?.info("setup bounds: \(self.bounds) rootLayer.anchor:\(rootLayer.anchorPoint) center:\(rootLayer.contentsCenter)")
         if let layer = self.layer {
             layer.masksToBounds = true
             if DEBUG_DRAWING {
@@ -325,15 +370,23 @@ final public class CircleProgressView: NSView {
         }
         
         let rect = self.rectForLayers()
+        
+        ringsLayer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        ringsLayer.contentsCenter = lastUsedRect
+        ringsLayer.frame = rect
+        rootLayer.addSublayer(ringsLayer)
+        
         let layers = [backgroundLayer, bkgRingLayer, progressRingLayer]
         layers.forEachIndex { index, layer in
             layer.autoresizingMask =  [.layerWidthSizable, .layerHeightSizable]
             layer.frame = rect
-            rootLayer.addSublayer(layer)
+            layer.centrizeAnchor()
+            ringsLayer.addSublayer(layer)
             if DEBUG_DRAWING && index == 0 {
                 layer.border(color: .blue.withAlphaComponent(0.5), width: 0.5)
             }
         }
+        ringsLayer.centrizeAnchor()
         
         if DEBUG_DRAW_MASK_AS_LAYER == false {
             progressRingLayer.mask = progressRingLayerMask
@@ -354,25 +407,127 @@ final public class CircleProgressView: NSView {
         }
     }
     
-    private func setNewProgress(_ newValue:CGFloat, animated:Bool = true, force:Bool = false) {
-        let newValue = clamp(value: newValue, lowerlimit: 0.0, upperlimit: 1.0)
-        var sigFraction : CGFloat = 360
-        if self.bounds.width > 200 || self.bounds.height > 200 {
-            sigFraction = 1440
-        } else if self.bounds.width > 100 || self.bounds.height > 100 {
-            sigFraction = 720
+    private func unhideAnimation(duration:TimeInterval, delay:TimeInterval, completion:(()->Void)? = nil) {
+        if !isAnimatingShowHide {
+            isAnimatingShowHide = true
+            dlog?.info("unhideAnimation duration: \(duration) delay:\(delay)")
+
+            rootLayer.centrizeAnchor(animated: false)
+            ringsLayer.centrizeAnchor(animated: false)
+
+            let supr = self.superview?.superview?.superview?.superview ?? self.superview?.superview?.superview ?? self.superview?.superview ?? self.superview
+            
+            onBeforeUnhideAnimating?()
+            self.isHidden = false
+            NSView.animate(duration: duration, delay: delay) { context in
+                dlog?.info("unhideAnimation START")
+                context.allowsImplicitAnimation = true
+                self.ringsLayer.transform = CATransform3DIdentity
+                self.widthConstraint?.constant = self.widthBeforeLastHideAnimation
+                self.onUnhideAnimating?(context)
+                
+                if let supr = supr {
+                    // Will probably not cause window resize
+                    supr.layoutSubtreeIfNeeded()
+                } else {
+                    // May cause window resize
+                    self.window?.layoutIfNeeded()
+                }
+
+            } completionHandler: {[weak self] in
+                if let self = self {
+                    
+                    dlog?.info("unhideAnimation DONE")
+                    self.rootLayer.removeAllAnimations()
+                    self.isAnimatingShowHide = false
+                    self.wasHiddenByAnimation = .none
+                    completion?()
+                }
+            }
         }
+    }
+    
+    private func hideAnimation(duration:TimeInterval, delay:TimeInterval, completion:(()->Void)? = nil) {
         
-        let prev = self.isIndeterminate ? _indeterminateProgress : _progress
-        if (abs(newValue - prev) > 1.0 / sigFraction) || force {
-            if self.isIndeterminate {
-                _indeterminateProgress = newValue
+        if !isAnimatingShowHide {
+            isAnimatingShowHide = true
+            dlog?.info("hideAnimation duration:\(duration) delay:\(delay)")
+            
+            rootLayer.centrizeAnchor(animated: false)
+            ringsLayer.centrizeAnchor(animated: false)
+            
+            let supr = self.superview?.superview?.superview?.superview ?? self.superview?.superview?.superview ?? self.superview?.superview ?? self.superview
+
+            let w : CGFloat = self.bounds.width * 0.9
+            let h : CGFloat = self.bounds.height * 0.5
+            widthBeforeLastHideAnimation = self.widthConstraint?.constant ?? self.ringsLayer.bounds.width
+            onBeforeHideAnimating?()
+            NSView.animate(duration: duration, delay: delay) { context in
+                dlog?.info("hideAnimation START")
+                context.allowsImplicitAnimation = true
+                
+                var transform = CATransform3DIdentity
+                switch self.showHideAnimationType {
+                case .shrinkToCenter, .none:
+                    transform = CATransform3DTranslate(transform, 0, -h, 0)
+                case .shrinkToLeading:
+                    transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? w : -w, -h, 0)
+                case .shrinkToTrailing:
+                    transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? -w : w, -h, 0)
+                }
+                
+                transform = CATransform3DScale(transform, 0.01, 0.01, 1)
+                self.ringsLayer.transform = transform
+                self.widthConstraint?.constant = 1.0
+                self.onHideAnimating?(context)
+                
+                if let supr = supr {
+                    // Will probably not cause window resize
+                    supr.layoutSubtreeIfNeeded()
+                } else {
+                    // May cause window resize
+                    self.window?.layoutIfNeeded()
+                }
+
+            } completionHandler: {[weak self] in
+                if let self = self {
+                    
+                    dlog?.info("hideAnimation DONE")
+                    self.rootLayer.removeAllAnimations()
+                    self.isHidden = true
+                    self.isAnimatingShowHide = false
+                    self.wasHiddenByAnimation = self.showHideAnimationType
+                    completion?()
+                }
+            }
+        }
+    }
+    
+    private func newProgressSensitivityFraction()->CGFloat {
+        var result : CGFloat = 360
+        if self.bounds.width > 200 || self.bounds.height > 200 {
+            result = 1440
+        } else if self.bounds.width > 100 || self.bounds.height > 100 {
+            result = 720
+        }
+        return result
+    }
+    
+    private func setNewProgress(_ newVal:CGFloat, animated:Bool = true, forced:Bool = false) {
+        let newValue = clamp(value: newVal, lowerlimit: 0.0, upperlimit: 1.0)
+        let prev = self.progressType.isSpinable ? _spinningProgress : _progress
+        let fraction = newProgressSensitivityFraction()
+        
+        // dlog?.info("newVal=\(newVal) delta:\(abs(newValue - prev)) > frac:\((1.0 / fraction))")
+        if (abs(newValue - prev) > (1.0 / fraction)) || forced {
+            if self.progressType.isDeterminate {
+                _spinningProgress = newValue
             } else {
                 _progress = newValue
             }
             
             if IS_DEBUG {
-                let prog = isIndeterminate ? "Indeterminate" : "Progress"
+                let prog = self.progressType == .determinate ? "Progress" : "Spinning progress"
                 dlog?.info("setNew \(prog): \(newValue) animated: \(animated)")
             }
             
@@ -382,38 +537,56 @@ final public class CircleProgressView: NSView {
             self.progressRingLayerMask.strokeEnd = newValue
             
             CATransaction.commit()
+            
+            if progressType.isDeterminate && showHideAnimationType != .none &&
+                !isAnimatingShowHide {
+                // Animate show / hide on progress value changed:
+                if newValue == 1.0 {
+                    self.hideAnimation(duration: 0.4, delay: 0.2)
+                } else if newValue < 1.0 && self.isHidden && self.wasHiddenByAnimation != .none {
+                    self.unhideAnimation(duration: 0.3, delay: 0.1)
+                }
+            } else if !self.progressType.isDeterminate && self.wasHiddenByAnimation != .none {
+                self.unhideAnimation(duration: 0.3, delay: 0.1)
+            }
         }
-    }
-    //MARK: Indeterminate
-    private func startIndeterminateAnimations() {
-        
-        let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
-        layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)
-        if indeterminateProgressFlucuates {
-            dlog?.info("startIndeterminateAnimations - fluctuates")
-            layer.startSpinAnimation()
-            progressRingLayerMask.startFluctuaingPathLayer()
-        } else {
-            dlog?.info("startIndeterminateAnimations - simple")
-            layer.startSpinAnimation()
-        }
-        
-        indeterminateAnimating = true
     }
     
-    private func stopIndeterminateAnimations() {
-        dlog?.info("stopIndeterminateAnimations")
+    //MARK: Indeterminate
+    private func startSpinAnimations() {
+        
+        let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
+        layer.centrizeAnchor(animated: false, preventMoving: false)
+        switch progressType {
+        case .determinate:
+            dlog?.note("startSpinAnimations called for progressType .none!")
+            
+        case .determinateSpin:
+            dlog?.info("startSpinAnimations - simple")
+            layer.startSpinAnimation()
+            
+        case .indeterminateSpin:
+            dlog?.info("startSpinAnimations - fluctuates")
+            layer.startSpinAnimation()
+            progressRingLayerMask.startFluctuaingPathLayer()
+        }
+        
+        isAnimatingSpin = progressType.isSpinable
+    }
+    
+    private func stopSpinAnimations() {
+        dlog?.info("stopSpinAnimations")
         let layer = DEBUG_DRAW_MASK_AS_LAYER ? progressRingLayerMask : progressRingLayer
         layer.stopSpinAnimation()
         progressRingLayerMask.stopFluctuaingPathLayer()
-        indeterminateAnimating = false
+        isAnimatingSpin = false
     }
     
-    private func updateIndeterminateAnimations() {
-        if isIndeterminate && !indeterminateAnimating {
-            startIndeterminateAnimations()
-        } else if !isIndeterminate && indeterminateAnimating {
-            stopIndeterminateAnimations()
+    private func updateSpinAnimations() {
+        if self.progressType.isSpinable && !isAnimatingSpin {
+            startSpinAnimations()
+        } else if !self.progressType.isSpinable && isAnimatingSpin {
+            stopSpinAnimations()
         }
     }
     
@@ -423,6 +596,7 @@ final public class CircleProgressView: NSView {
             return
         }
 
+        self.progressType = .determinate
         DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
             dlog?.info("DEBUG_DEV_TIMED_TEST")
             self.progress = 0.2
@@ -431,17 +605,22 @@ final public class CircleProgressView: NSView {
             self.progress = 0.5
         }
         DispatchQueue.main.asyncAfter(delayFromNow: 1.5) {
-            self.progress = 0.75
+            self.progress = 1.0
         }
         
-        DispatchQueue.main.asyncAfter(delayFromNow: 2) {
-            self.isIndeterminate = true
+        DispatchQueue.main.asyncAfter(delayFromNow: 3.0) {
+            self.progress = 0.5
         }
-                    
-//        DispatchQueue.main.asyncAfter(delayFromNow: 8) {
-//            self.progress?.isIndeterminate = false
-//        }
-                    
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: 3.5) {
+            self.progressType = .determinateSpin
+        }
+        DispatchQueue.main.asyncAfter(delayFromNow: 4.5) {
+            self.progress = 1.0
+        }
+        DispatchQueue.main.asyncAfter(delayFromNow: 4.5) {
+            self.progressType = .indeterminateSpin
+        }
     }
 }
 /*

@@ -19,7 +19,7 @@ extension NSView {
                        completionHandler: (() -> Void)? = nil) {
         DispatchQueue.main.asyncAfter(delayFromNow: delay) {
             NSAnimationContext.runAnimationGroup({ (context) in
-                context.duration = duration
+                context.duration = CFTimeInterval(duration)
                 changes(context)
             }, completionHandler: completionHandler)
         }

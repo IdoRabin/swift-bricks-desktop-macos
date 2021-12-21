@@ -76,6 +76,33 @@ extension CAShapeLayer /* spin animation */ {
 }
 
 extension CALayer /* spin animation */ {
+    func centrizeAnchor(animated:Bool = false, preventMoving:Bool = true) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(!animated)
+        let newAnchorPoint = CGPoint(x: 0.5, y: 0.5)
+        if preventMoving {
+            var newPoint = CGPoint(x: bounds.width * newAnchorPoint.x,
+                                   y: bounds.height * newAnchorPoint.y)
+            
+            
+            var oldPoint = CGPoint(x: bounds.width * self.anchorPoint.x,
+                                   y: bounds.height * self.anchorPoint.y)
+            
+            newPoint = newPoint.applying(CATransform3DGetAffineTransform(self.transform))
+            oldPoint = oldPoint.applying(CATransform3DGetAffineTransform(self.transform))
+            
+            var position = self.position
+            position.x -= oldPoint.x
+            position.x += newPoint.x
+            
+            position.y -= oldPoint.y
+            position.y += newPoint.y
+            
+            self.position = position
+        }
+        self.anchorPoint = newAnchorPoint
+        CATransaction.commit()
+    }
     
     func startSpinAnimation(duration:CFTimeInterval = 0.7, clockwise:Bool = true) {
         let rotationAnimation = CABasicAnimation()
@@ -83,9 +110,8 @@ extension CALayer /* spin animation */ {
 
         let direction = clockwise ? -1.0 : 1.0
         let toValue = Double.pi * 2.0 * direction
-        let someInterval = CFTimeInterval(duration)
         rotationAnimation.toValue = toValue
-        rotationAnimation.duration = someInterval
+        rotationAnimation.duration = CFTimeInterval(duration)
         rotationAnimation.isCumulative = true
         rotationAnimation.repeatCount = Float.infinity
         
@@ -96,5 +122,16 @@ extension CALayer /* spin animation */ {
         self.removeAnimation(forKey: "spinRotationAnimation")
     }
     
-    
+    func animateScale(duration:CFTimeInterval, to toValue:CGFloat) {
+
+        let scaleAnimation = CABasicAnimation()
+        scaleAnimation.keyPath = #keyPath(CALayer.transform)
+        // scaleAnimation.fromValue = CATransform3DScale(CATransform3DIdentity, 1, 1, 1)
+        scaleAnimation.toValue = CATransform3DScale(CATransform3DIdentity, toValue, toValue, 1)
+        scaleAnimation.duration =  CFTimeInterval(duration)
+        scaleAnimation.isAdditive = true
+        scaleAnimation.isCumulative = true
+        
+        self.add(scaleAnimation, forKey: "scaleAnimation")
+    }
 }

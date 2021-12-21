@@ -27,38 +27,45 @@
                             </buttonCell>
                         </button>
                         <box boxType="custom" cornerRadius="6" title="Box is here" translatesAutoresizingMaskIntoConstraints="NO" id="fqw-sr-Z5z">
-                            <rect key="frame" x="40" y="4" width="593" height="35"/>
+                            <rect key="frame" x="40" y="5" width="593" height="32"/>
                             <view key="contentView" id="WVM-jr-TD3">
-                                <rect key="frame" x="1" y="1" width="591" height="33"/>
+                                <rect key="frame" x="1" y="1" width="591" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <stackView focusRingType="none" distribution="fill" orientation="horizontal" alignment="centerY" spacing="2" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="263-oV-TRw">
-                                        <rect key="frame" x="0.0" y="0.0" width="591" height="33"/>
+                                    <stackView focusRingType="none" distribution="fill" orientation="horizontal" alignment="centerY" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="263-oV-TRw">
+                                        <rect key="frame" x="0.0" y="0.0" width="591" height="30"/>
                                         <subviews>
                                             <pathControl focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HXu-y9-XuN">
-                                                <rect key="frame" x="2" y="0.0" width="388" height="33"/>
+                                                <rect key="frame" x="2" y="0.0" width="461" height="30"/>
                                                 <pathCell key="cell" controlSize="small" lineBreakMode="truncatingHead" selectable="YES" editable="YES" focusRingType="none" alignment="left" id="9tc-Tc-742">
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </pathCell>
                                             </pathControl>
                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="hIJ-Uy-M36">
-                                                <rect key="frame" x="392" y="0.0" width="46" height="33"/>
+                                                <rect key="frame" x="463" y="0.0" width="126" height="30"/>
+                                                <subviews>
+                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q4j-8k-78y">
+                                                        <rect key="frame" x="16" y="7" width="80" height="16"/>
+                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Please wait.." id="ZuJ-iK-vV2">
+                                                            <font key="font" usesAppearanceFont="YES"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="nFo-Pt-og7" customClass="CircleProgressView" customModule="Bricks" customModuleProvider="target">
+                                                        <rect key="frame" x="96" y="2" width="28" height="26"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="28" id="PqJ-qG-o03"/>
+                                                        </constraints>
+                                                    </customView>
+                                                </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="46" id="GYD-XR-Blj"/>
-                                                </constraints>
-                                            </customView>
-                                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ILz-8d-cs5">
-                                                <rect key="frame" x="438" y="9" width="121" height="14"/>
-                                                <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Please wait | Loading.." id="Vq5-cj-Xn5">
-                                                    <font key="font" metaFont="smallSystem"/>
-                                                    <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                </textFieldCell>
-                                            </textField>
-                                            <customView focusRingType="none" translatesAutoresizingMaskIntoConstraints="NO" id="ebt-vS-1fT" userLabel="Progress container" customClass="CircleProgressView" customModule="Bricks" customModuleProvider="target">
-                                                <rect key="frame" x="559" y="0.0" width="30" height="33"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="30" id="fmK-3X-erw"/>
+                                                    <constraint firstItem="Q4j-8k-78y" firstAttribute="centerY" secondItem="hIJ-Uy-M36" secondAttribute="centerY" id="0dQ-38-WPc"/>
+                                                    <constraint firstItem="Q4j-8k-78y" firstAttribute="leading" secondItem="hIJ-Uy-M36" secondAttribute="leading" constant="18" id="5BX-2X-Xmb"/>
+                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="height" secondItem="hIJ-Uy-M36" secondAttribute="height" multiplier="0.848485" id="5kV-dA-7bG"/>
+                                                    <constraint firstAttribute="trailing" secondItem="nFo-Pt-og7" secondAttribute="trailing" constant="2" id="9XG-Ko-myX"/>
+                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="centerY" secondItem="Q4j-8k-78y" secondAttribute="centerY" id="BlZ-8A-Fiu"/>
+                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="leading" secondItem="Q4j-8k-78y" secondAttribute="trailing" constant="2" id="CAM-VK-bMA"/>
                                                 </constraints>
                                             </customView>
                                         </subviews>
@@ -66,12 +73,8 @@
                                         <visibilityPriorities>
                                             <integer value="1000"/>
                                             <integer value="1000"/>
-                                            <integer value="1000"/>
-                                            <integer value="1000"/>
                                         </visibilityPriorities>
                                         <customSpacing>
-                                            <real value="3.4028234663852886e+38"/>
-                                            <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                             <real value="3.4028234663852886e+38"/>
                                         </customSpacing>
@@ -113,7 +116,7 @@
                     <constraints>
                         <constraint firstItem="YUN-jD-1mP" firstAttribute="width" secondItem="YUN-jD-1mP" secondAttribute="height" multiplier="1:1" id="3lV-Hg-GsX"/>
                         <constraint firstItem="tgs-fw-1Je" firstAttribute="width" secondItem="tgs-fw-1Je" secondAttribute="height" multiplier="1:1" id="DZI-Zz-e6K"/>
-                        <constraint firstItem="fqw-sr-Z5z" firstAttribute="height" secondItem="27J-zp-Ugh" secondAttribute="height" constant="-7" id="joZ-oa-EU2"/>
+                        <constraint firstItem="fqw-sr-Z5z" firstAttribute="height" secondItem="27J-zp-Ugh" secondAttribute="height" constant="-10" id="joZ-oa-EU2"/>
                         <constraint firstItem="YUN-jD-1mP" firstAttribute="width" secondItem="YUN-jD-1mP" secondAttribute="height" multiplier="1:1" id="tu1-LN-ZTc"/>
                         <constraint firstAttribute="height" constant="42" placeholder="YES" id="yXY-ev-yKt"/>
                     </constraints>
@@ -138,13 +141,15 @@
                 <constraint firstAttribute="bottom" secondItem="27J-zp-Ugh" secondAttribute="bottom" id="pV9-lf-jXT"/>
             </constraints>
             <connections>
-                <outlet property="activityTrailingLabel" destination="ILz-8d-cs5" id="45I-Kb-2Ha"/>
+                <outlet property="activityLabel" destination="Q4j-8k-78y" id="kHC-uJ-OwH"/>
+                <outlet property="activiyLabelLeadingConstraint" destination="5BX-2X-Xmb" id="QSc-zH-Y5f"/>
                 <outlet property="centerBoxContainer" destination="fqw-sr-Z5z" id="7GE-Ie-dFb"/>
                 <outlet property="centerStackView" destination="263-oV-TRw" id="8nI-Th-kYM"/>
                 <outlet property="extStackView" destination="27J-zp-Ugh" id="SM2-Tt-MQz"/>
                 <outlet property="leadingExtButton" destination="gTD-XU-hdq" id="HLi-1o-wFx"/>
                 <outlet property="pathControl" destination="HXu-y9-XuN" id="yk6-9N-YZV"/>
-                <outlet property="progress" destination="ebt-vS-1fT" id="yU2-yj-uTU"/>
+                <outlet property="progress" destination="nFo-Pt-og7" id="4HK-MY-qne"/>
+                <outlet property="progressWidthConstraint" destination="PqJ-qG-o03" id="fz7-ZA-gpK"/>
                 <outlet property="trailingExtButton1" destination="tgs-fw-1Je" id="asj-Bn-fs6"/>
                 <outlet property="trailingextButton2" destination="YUN-jD-1mP" id="rhO-sp-aas"/>
             </connections>

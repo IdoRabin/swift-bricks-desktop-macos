@@ -149,7 +149,7 @@ final class TimedEventFilter {
         @discardableResult func accum(t:[T])->[T] {
             var result : [T] = t
             
-            self._lock.safeSync {
+            self._lock.safeSync {[key] in
                 let vals = (self.safeAccumValsByKey(key) as? [T]) ?? [] // get existing array or create a new empty one
                 result = vals.union(with: t) // union old with new array - uniqueElements kept..
                 self._accumValuesByKey[key] = result

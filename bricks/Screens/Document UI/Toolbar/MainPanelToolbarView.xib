@@ -44,28 +44,28 @@
                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="hIJ-Uy-M36">
                                                 <rect key="frame" x="463" y="0.0" width="126" height="30"/>
                                                 <subviews>
-                                                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q4j-8k-78y">
-                                                        <rect key="frame" x="16" y="7" width="80" height="16"/>
-                                                        <textFieldCell key="cell" lineBreakMode="clipping" title="Please wait.." id="ZuJ-iK-vV2">
-                                                            <font key="font" usesAppearanceFont="YES"/>
-                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                        </textFieldCell>
-                                                    </textField>
-                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="nFo-Pt-og7" customClass="CircleProgressView" customModule="Bricks" customModuleProvider="target">
+                                                    <customView ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nFo-Pt-og7" customClass="CircleProgressView" customModule="Bricks" customModuleProvider="target">
                                                         <rect key="frame" x="96" y="2" width="28" height="26"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="28" id="PqJ-qG-o03"/>
                                                         </constraints>
                                                     </customView>
+                                                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="de3-OU-YKr">
+                                                        <rect key="frame" x="16" y="7" width="80" height="16"/>
+                                                        <textFieldCell key="cell" truncatesLastVisibleLine="YES" allowsUndo="NO" alignment="right" title="Please wait.." id="kTy-bv-Ejt">
+                                                            <font key="font" usesAppearanceFont="YES"/>
+                                                            <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
+                                                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                        </textFieldCell>
+                                                    </textField>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="Q4j-8k-78y" firstAttribute="centerY" secondItem="hIJ-Uy-M36" secondAttribute="centerY" id="0dQ-38-WPc"/>
-                                                    <constraint firstItem="Q4j-8k-78y" firstAttribute="leading" secondItem="hIJ-Uy-M36" secondAttribute="leading" constant="18" id="5BX-2X-Xmb"/>
                                                     <constraint firstItem="nFo-Pt-og7" firstAttribute="height" secondItem="hIJ-Uy-M36" secondAttribute="height" multiplier="0.848485" id="5kV-dA-7bG"/>
                                                     <constraint firstAttribute="trailing" secondItem="nFo-Pt-og7" secondAttribute="trailing" constant="2" id="9XG-Ko-myX"/>
-                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="centerY" secondItem="Q4j-8k-78y" secondAttribute="centerY" id="BlZ-8A-Fiu"/>
-                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="leading" secondItem="Q4j-8k-78y" secondAttribute="trailing" constant="2" id="CAM-VK-bMA"/>
+                                                    <constraint firstItem="de3-OU-YKr" firstAttribute="height" relation="lessThanOrEqual" secondItem="hIJ-Uy-M36" secondAttribute="height" constant="-2" id="GU2-HQ-ESn"/>
+                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="leading" secondItem="de3-OU-YKr" secondAttribute="trailing" constant="2" id="Jfb-91-uwc"/>
+                                                    <constraint firstItem="de3-OU-YKr" firstAttribute="leading" secondItem="hIJ-Uy-M36" secondAttribute="leading" constant="18" id="JuQ-Y4-oYs"/>
+                                                    <constraint firstItem="de3-OU-YKr" firstAttribute="centerY" secondItem="hIJ-Uy-M36" secondAttribute="centerY" id="U6V-SV-06W"/>
                                                 </constraints>
                                             </customView>
                                         </subviews>
@@ -141,8 +141,9 @@
                 <constraint firstAttribute="bottom" secondItem="27J-zp-Ugh" secondAttribute="bottom" id="pV9-lf-jXT"/>
             </constraints>
             <connections>
-                <outlet property="activityLabel" destination="Q4j-8k-78y" id="kHC-uJ-OwH"/>
-                <outlet property="activiyLabelLeadingConstraint" destination="5BX-2X-Xmb" id="QSc-zH-Y5f"/>
+                <outlet property="activityLabel" destination="de3-OU-YKr" id="0Ym-ZJ-HMa"/>
+                <outlet property="activityLabelCenterYConstraint" destination="U6V-SV-06W" id="t9J-wi-ymL"/>
+                <outlet property="activityLabelLeadingConstraint" destination="JuQ-Y4-oYs" id="59z-MI-X7o"/>
                 <outlet property="centerBoxContainer" destination="fqw-sr-Z5z" id="7GE-Ie-dFb"/>
                 <outlet property="centerStackView" destination="263-oV-TRw" id="8nI-Th-kYM"/>
                 <outlet property="extStackView" destination="27J-zp-Ugh" id="SM2-Tt-MQz"/>

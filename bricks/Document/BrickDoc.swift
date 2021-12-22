@@ -85,7 +85,10 @@ class BrickDoc: NSDocument, Identifiable  {
         return Self.fileNameExtension(forType: typeName, saveOperation: saveOperation)
     }
     
-    
+//    override func canClose(withDelegate delegate: Any, shouldClose shouldCloseSelector: Selector?, contextInfo: UnsafeMutableRawPointer?) {
+//        
+//        return super.canClose(withDelegate: delegate, shouldClose: shouldCloseSelector, contextInfo: contextInfo)
+//    }
     /// default file extension regardless of file type uti or save operation
     /// - Returns: string for the extension of the filename
     static func `extension`()->String? {

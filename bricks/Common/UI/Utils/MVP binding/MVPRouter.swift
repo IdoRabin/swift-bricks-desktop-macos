@@ -74,7 +74,8 @@ class MVPRouter : Router {
     // MARK: Singleton
     /// Singleton instance of the SAManager
     static let shared = MVPRouter()
-    
+    private init() {
+    }
     // MARK: Memebrs:
     
     // The actual router - this way we can plug in here other router implementors, (not neccasarily dependant on view controllers)

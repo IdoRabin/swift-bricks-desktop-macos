@@ -19,8 +19,7 @@ class MNFocus {
     // MARK: Shared instance and lifecycle
     // Singleton
     static let shared = MNFocus()
-    private init()
-    {
+    private init() {
         // Setup
     }
     

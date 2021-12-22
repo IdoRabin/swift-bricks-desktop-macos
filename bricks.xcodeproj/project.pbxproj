@@ -68,6 +68,7 @@
 		EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B842759468E00744400 /* BrickVersionControlType.swift */; };
 		EC218B872759471100744400 /* BrickDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B862759471100744400 /* BrickDoc.swift */; };
 		EC2F5EEA27726DCC00201865 /* MNProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2F5EE927726DCC00201865 /* MNProgress.swift */; };
+		EC2F5EED27732D9A00201865 /* MNTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2F5EEC27732D9A00201865 /* MNTree.swift */; };
 		EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC332CB6275EB65B00546767 /* MNButton.swift */; };
 		EC332CC9275ECAC600546767 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EC332CC6275ECAC500546767 /* Localizable.strings */; };
 		EC332CCD275ECCA300546767 /* Doc.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC332CCC275ECCA200546767 /* Doc.storyboard */; };
@@ -221,7 +222,6 @@
 		EC218B2E27593BDA00744400 /* SkipEncoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkipEncoding.swift; sourceTree = "<group>"; };
 		EC218B2F27593BDA00744400 /* HashableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashableObject.swift; sourceTree = "<group>"; };
 		EC218B3027593BDA00744400 /* Box.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Box.swift; sourceTree = "<group>"; };
-		EC218B3127593BDB00744400 /* XXProgressCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XXProgressCounter.swift; sourceTree = "<group>"; };
 		EC218B3227593BDB00744400 /* Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
 		EC218B3327593BDB00744400 /* Codable+Serialize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Codable+Serialize.swift"; sourceTree = "<group>"; };
 		EC218B3427593BDB00744400 /* CachesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachesHelper.swift; sourceTree = "<group>"; };
@@ -255,6 +255,7 @@
 		EC218B842759468E00744400 /* BrickVersionControlType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickVersionControlType.swift; sourceTree = "<group>"; };
 		EC218B862759471100744400 /* BrickDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDoc.swift; sourceTree = "<group>"; };
 		EC2F5EE927726DCC00201865 /* MNProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNProgress.swift; sourceTree = "<group>"; };
+		EC2F5EEC27732D9A00201865 /* MNTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNTree.swift; sourceTree = "<group>"; };
 		EC332CB6275EB65B00546767 /* MNButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNButton.swift; sourceTree = "<group>"; };
 		EC332CCC275ECCA200546767 /* Doc.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Doc.storyboard; sourceTree = "<group>"; };
 		EC332CCF275ED29E00546767 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -543,6 +544,7 @@
 				EC218B3527593BDB00744400 /* TimedEventFilter.swift */,
 				EC218B3727593BDB00744400 /* WeakWrapper.swift */,
 				EC218B7927593F5E00744400 /* IndexPathTuple.swift */,
+				EC2F5EEC27732D9A00201865 /* MNTree.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -634,7 +636,6 @@
 			isa = PBXGroup;
 			children = (
 				EC2F5EE927726DCC00201865 /* MNProgress.swift */,
-				EC218B3127593BDB00744400 /* XXProgressCounter.swift */,
 			);
 			path = MNProgress;
 			sourceTree = "<group>";
@@ -1066,6 +1067,7 @@
 				EC9DEFFF275CD1BE0046F30A /* NSTextFIeldEx.swift in Sources */,
 				EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */,
 				EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */,
+				EC2F5EED27732D9A00201865 /* MNTree.swift in Sources */,
 				EC218B872759471100744400 /* BrickDoc.swift in Sources */,
 				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
 				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,

@@ -114,6 +114,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 // Splash screen will be presented
                 self.presentSplashWindow(showsRecents: hasRecents)
             }
+        } else {
+            // Bring all to front
+            BricksApplication.shared.arrangeInFront(sender)
         }
         return true
     }

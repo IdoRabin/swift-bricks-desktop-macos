@@ -76,6 +76,7 @@ enum AppStr : Localizable {
     case OPEN
     case UNTITLED // "Untitled" // an untitled (no filename yet) document / element - will display this title
     
+    // Progress / loading
     case PLEASE_WAIT    // "Please Wait" // Message displayed to the user while some operation is in progress
     case PLEASE_WAIT_DOT_DOT    // "Please Wait.." // Message displayed to the user while some operation is in progress
     case PLEASE_WAIT_A_MOMENT_DOT_DOT    // "Please wait a moment..." // Tells the user to wait a moment until an opertation is complete
@@ -83,6 +84,7 @@ enum AppStr : Localizable {
     case LOADING_DOT_DOT // "Loading.."
     case LOADING_X_DOT_DOT_FORMAT // "Loading X.."
     
+    // Date / time
     case YEAR    // "Year" // Word for one single year
     case MONTH    // "Month" // Word for one single month
     case MONTHS_FORMAT    // "%zd Months" // Word for a few months. Example: "7 Months"
@@ -90,6 +92,13 @@ enum AppStr : Localizable {
     case LAST_UPDATED_AT_FORMAT    // "Last updated at %@" // Present a last updated date / time for a data field
     case GOT_IT    // "Got it!" // Usually a button title to dismiss a dialog // android
     
+    // Errors
+    case OOPS_EXCL_POINT // "Oops!"
+    case SOMETHING_WENT_WRONG // "Something went wrong"
+    case AN_ERROR_HAS_OCCURES // "An Error has occured"
+    case ERROR_FORMAT // "Error %@"
+    
+    // Layers actions
     case LOCK
     case UNLOCK
     case ADD_NEW

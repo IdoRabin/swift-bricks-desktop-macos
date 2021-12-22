@@ -173,6 +173,10 @@ extension NSMutableAttributedString {
     /// - Returns: number of matches found and changed
     @discardableResult
     func setAtttibutesForStrings(matching match:String, within : String? = nil, filter:AttributedStringMatchFilter = .all, isCaseSensitive:Bool = true, attributes:[NSAttributedString.Key : Any])->Int {
+        guard string.count > 0 else {
+            return 0
+        }
+        
         return self.setAtttibutesForStrings(matching: [match], within:within, filter:filter, isCaseSensitive:isCaseSensitive, attributes: attributes)
     }
     
@@ -192,27 +196,29 @@ extension NSMutableAttributedString {
         }
         
         for match in matches {
-            let foundItems = self.string.findAllStringRangeMatches(substring: match, isCaseSensitive:isCaseSensitive, isStopAtFirstResult:(filter == .first))
-            
-            if withinRanges.count > 0 {
-                for item in foundItems {
-                    for withinItem in withinRanges {
-                        if item.range.intersection(withinItem.range) != nil {
-                            rangesItems.append(item)
-                            break
+            if match.count > 0 {
+                let foundItems = self.string.findAllStringRangeMatches(substring: match, isCaseSensitive:isCaseSensitive, isStopAtFirstResult:(filter == .first))
+                
+                if withinRanges.count > 0 {
+                    for item in foundItems {
+                        for withinItem in withinRanges {
+                            if item.range.intersection(withinItem.range) != nil {
+                                rangesItems.append(item)
+                                break
+                            }
+                        }
+                        
+                        if filter == .first && rangesItems.count > 0 {
+                            break // Optimization
                         }
                     }
                     
-                    if filter == .first && rangesItems.count > 0 {
+                } else {
+                    rangesItems.append(contentsOf: foundItems)
+                    
+                    if filter == .first {
                         break // Optimization
                     }
-                }
-                
-            } else {
-                rangesItems.append(contentsOf: foundItems)
-                
-                if filter == .first {
-                    break // Optimization
                 }
             }
         }

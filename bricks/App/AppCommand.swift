@@ -116,7 +116,8 @@ class CommandCenter {
     
     // MARK: Singleton
     public static let shared = CommandCenter()
-    
+    private init() {
+    }
     
     func registerCommandType(_ cmd: Command.Type)->Bool {
         dlog?.info("registerCommandType \(cmd)")

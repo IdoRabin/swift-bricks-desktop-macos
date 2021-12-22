@@ -25,7 +25,7 @@ class AppDocumentHistory : WhenLoadedable {
     
     // MARK: Singleton
     public static let shared = AppDocumentHistory()
-    
+
     // Private properties
     private let _historyLock = NSRecursiveLock()
     private var _history : AppDocHistory = [:]

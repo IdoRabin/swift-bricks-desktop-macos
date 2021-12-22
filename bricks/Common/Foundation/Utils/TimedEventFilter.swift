@@ -18,7 +18,7 @@ final class TimedEventFilter {
     
     // MARK: Singleton
     public static let shared = TimedEventFilter()
-    public init() {
+    private init() {
         
     }
     

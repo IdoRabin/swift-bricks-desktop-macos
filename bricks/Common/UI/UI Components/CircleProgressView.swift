@@ -126,7 +126,7 @@ final public class CircleProgressView: NSView {
         var sze = super.intrinsicContentSize
         sze.width = max(sze.width, lastUsedRect.width)
         sze.height = max(sze.width, lastUsedRect.height)
-        dlog?.info("intrinsicContentSize \(sze)")
+        // dlog?.info("intrinsicContentSize \(sze)")
         return sze
     }
     

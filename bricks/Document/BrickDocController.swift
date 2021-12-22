@@ -25,6 +25,8 @@ class BrickDocController: NSDocumentController {
         return super.shared as! BrickDocController
     }
     
+    var isKillingSelfAppWithNoDialogs : Bool = false
+    
     // MARK: Properties
     private var _appIsTerminating = false
     var appIsTerminating : Bool {
@@ -69,7 +71,7 @@ class BrickDocController: NSDocumentController {
     }
     
     // MARK: Lifecycle
-    override init() {
+    override private init() {
         super.init()
         observeWorkspaceNotifications()
         observeAppDelegateNotifications()
@@ -118,9 +120,14 @@ class BrickDocController: NSDocumentController {
         // let forceShowSplash = self.lastClosedWasOnSplashScreen && (AppSettings.shared.stats.lastLaunchDate.timeIntervalSinceNow < 2.0)
         
         if self.documents.count == 0 { // } || forceShowSplash {
-            // Show the splash window
-            dlog?.info("will present the splash window")
-            self.sendToInvoker(command: CmdSplashWindow(showsRecents: AppDocumentHistory.shared.history.count > 0))
+            
+            if !isKillingSelfAppWithNoDialogs {
+                // Show the splash window
+                dlog?.info("will present the splash window")
+                self.sendToInvoker(command: CmdSplashWindow(showsRecents: AppDocumentHistory.shared.history.count > 0))
+            } else {
+                dlog?.note("is killing app with no dialogs!")
+            }
         } else {
             // Find and close the splash window
             closeSplashWindow(wasLastWindow: false)
@@ -166,6 +173,18 @@ class BrickDocController: NSDocumentController {
 //    override class func restoreWindow(withIdentifier identifier: NSUserInterfaceItemIdentifier, state: NSCoder) async throws -> NSWindow {
 //        ret
 //    }
+    
+    override func closeAllDocuments(withDelegate delegate: Any?, didCloseAllSelector: Selector?, contextInfo: UnsafeMutableRawPointer?) {
+        if self.isKillingSelfAppWithNoDialogs {
+            dlog?.note("closeAllDocuments : is killing app with no dialogs!")
+            
+            for doc in self.documents {
+                doc.updateChangeCount(.changeDiscardable)
+            }
+        }
+        
+        super.closeAllDocuments(withDelegate: delegate, didCloseAllSelector: didCloseAllSelector, contextInfo: contextInfo)
+    }
     
     override func clearRecentDocuments(_ sender: Any?) {
         super.clearRecentDocuments(sender)
@@ -304,7 +323,14 @@ extension BrickDocController  /* Expected actions */ {
     // Layer Menu
     
     // Window Menu
+    func bringAllWindowsToFront(_ sender: Any?){
+        // Convenience semantics method
+        self.arrangeInFront(sender)
+    }
+    
     @IBAction func arrangeInFront(_ sender: Any?) {
+        // "arrangeInFront" is the default, cannonical Cocoa out-of-the-box function name for this action.
+        
         BricksApplication.shared.arrangeInFront(sender)
     }
     
@@ -405,10 +431,37 @@ extension BrickDocController : NSWindowDelegate {
 }
 
 @objc extension BrickDocController /* NSWorkspace observation */ {
+    private func checkForOtherAppInstancesRunning() {
+        // Prevent another instance from loading?
+        for app in NSWorkspace.shared.runningApplications {
+            if app != NSRunningApplication.current, let bid = app.bundleIdentifier, bid == NSRunningApplication.current.bundleIdentifier {
+                
+                // App
+                if self.isKillingSelfAppWithNoDialogs == false {
+                    dlog?.warning("OS is launching another instance of this app!!")
+                    
+                    self.isKillingSelfAppWithNoDialogs = true
+                    BrickDocController.shared.closeAllDocuments(withDelegate: self, didCloseAllSelector: nil, contextInfo: nil)
+                    // will change how the document func canClose(withDelegate:shouldClose:contextInfo).. closes the docs
+                    
+                    // TODO: Test this situation of two app intances intalled in two different paths, prevent dupliate instances running.
+                    // Kill current
+                    let curApp = NSRunningApplication.current
+                    dlog?.warning("Intentionally killing this app")
+                    curApp.terminate()
+                    
+                    // Activate the previous instance
+                    app.activate(options: [.activateIgnoringOtherApps, .activateAllWindows])
+                    return
+                }
+            }
+        }
+    }
     
     func observeWorkspaceNotifications() {
         let pairs : [(selector:Selector, name:NSNotification.Name)] = [
             (#selector(willLaunchApplicationNotification(_:)), NSWorkspace.willLaunchApplicationNotification),
+            (#selector(didLaunchApplicationNotification(_:)), NSWorkspace.didLaunchApplicationNotification),
             (#selector(didHideApplicationNotification(_:)), NSWorkspace.didHideApplicationNotification),
             (#selector(didUnhideApplicationNotification(_:)), NSWorkspace.didUnhideApplicationNotification),
             (#selector(didActivateApplicationNotification(_:)), NSWorkspace.didActivateApplicationNotification),
@@ -419,35 +472,90 @@ extension BrickDocController : NSWindowDelegate {
         }
     }
     
+    func didLaunchApplicationNotification(_ notification:NSNotification) {
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app else {
+            return
+        }
+        
+        if app == NSRunningApplication.current  {
+            dlog?.info("didLaunchApplicationNotification [\(app.localizedName ?? app.description)]")
+        } else {
+            // Prevent another instance from loading?
+            self.checkForOtherAppInstancesRunning()
+        }
+    }
+    
     func willLaunchApplicationNotification(_ notification:NSNotification) {
-        //dlog?.info("willLaunchApplicationNotification")
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app else {
+            return
+        }
+        
+        if app == NSRunningApplication.current  {
+            dlog?.info("willLaunchApplicationNotification [\(app.localizedName ?? app.description)]")
+        } else {
+            // Prevent another instance from loading?
+            self.checkForOtherAppInstancesRunning()
+        }
     }
     
     func didHideApplicationNotification(_ notification:NSNotification) {
-        //dlog?.info("didHideApplicationNotification")
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app, app == NSRunningApplication.current else {
+            return
+        }
+        
+        dlog?.info("didHideApplicationNotification [\(app.localizedName ?? app.description)]")
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
             self.invalidateMenu(context: "didHideApplicationNotification")
         }
     }
     
     func didUnhideApplicationNotification(_ notification:NSNotification) {
-        dlog?.info("didUnhideApplicationNotification")
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app, app == NSRunningApplication.current else {
+            return
+        }
+        
+        dlog?.info("didUnhideApplicationNotification [\(app.debugName)]")
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
             self.invalidateMenu(context: "didUnhideApplicationNotification")
         }
     }
     
     func didActivateApplicationNotification(_ notification:NSNotification) {
-        dlog?.info("didActivateApplicationNotification")
-        DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
-            self.invalidateMenu(context: "didActivateApplicationNotification")
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app else {
+            return
+        }
+        
+        if app == NSRunningApplication.current {
+            dlog?.info("didActivateApplicationNotification \(app.debugName)")
+            DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
+                self.invalidateMenu(context: "didActivateApplicationNotification")
+            }
+        } else {
+            self.checkForOtherAppInstancesRunning()
         }
     }
     
     func didDeactivateApplicationNotification(_ notification:NSNotification) {
-        dlog?.info("didDeactivateApplicationNotification")
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app, app == NSRunningApplication.current else {
+            return
+        }
+        
+        dlog?.info("didDeactivateApplicationNotification \(app.debugName)")
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
             self.invalidateMenu(context: "didDeactivateApplicationNotification")
         }
+    }
+}
+
+fileprivate extension NSRunningApplication {
+    
+    var debugName : String {
+        return "[" + (self.localizedName ?? self.bundleIdentifier ?? "Unknown") + "]"
     }
 }

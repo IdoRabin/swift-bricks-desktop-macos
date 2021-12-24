@@ -16,6 +16,10 @@ final public class CircleProgressView: NSView {
     let DEBUG_DRAW_MASK_AS_LAYER = false
     let DEBUG_DEV_TIMED_TEST = false
     
+    let HIDE_ANIM_DURATION : TimeInterval = 0.4
+    let HIDE_ANIM_DELAY : TimeInterval = 0.2
+    let UNHIDE_ANIM_DURATION : TimeInterval = 0.3
+    let UNHIDE_ANIM_DELAY : TimeInterval = 0.1
     let MAX_WIDTH : CGFloat = 1200.0
     let MAX_HEIGHT : CGFloat = 1200.0
     
@@ -49,7 +53,6 @@ final public class CircleProgressView: NSView {
     private var progressRingLayerMask = CAShapeLayer()
     private var lastUsedRect : CGRect = .zero
     private var isAnimatingSpin = false
-    private var showHideAnimationType : ShowHideAnimationType = .shrinkToLeading
     private var isAnimatingShowHide = false
     private var wasHiddenByAnimation: ShowHideAnimationType = .none
     private var widthBeforeLastHideAnimation: CGFloat = 28
@@ -57,7 +60,7 @@ final public class CircleProgressView: NSView {
     // keypathes
     private let basicDisabledKeypathes : [String] = [] // ["position", "frame", "bounds", "zPosition", "anchorPointZ", "contentsScale", "anchorPoint"]
     
-    // Inspectables:
+    // MARK: Inspectables properties
     @IBInspectable var backgroundColor  : NSColor = .clear { didSet { updateLayers() } }
     var bkgRingIsFull : Bool = false { didSet { if bkgRingIsFull != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingWidth : CGFloat = 2.0 { didSet { if bkgRingWidth != oldValue { updateLayers() } } }
@@ -73,6 +76,10 @@ final public class CircleProgressView: NSView {
     @IBOutlet weak var widthConstraint : NSLayoutConstraint? = nil
     @IBOutlet weak var heightConstraint : NSLayoutConstraint? = nil
     
+    // MARK: Public properties
+    var showHideAnimationType : ShowHideAnimationType = .shrinkToLeading
+    
+    // MARK: Evented properties
     var onBeforeHideAnimating: (()->Void)? = nil
     var onHideAnimating: ((NSAnimationContext?)->Void)? = nil
     var onBeforeUnhideAnimating: (()->Void)? = nil
@@ -130,6 +137,36 @@ final public class CircleProgressView: NSView {
         return sze
     }
     
+    public override var isHidden: Bool {
+        get {
+            return super.isHidden
+        }
+        set {
+            if super.isHidden != newValue {
+                super.isHidden = newValue
+                
+                let isInUI = self.superview != nil && self.window != nil
+                dlog?.info("isHidden set to: \(newValue) isInUI: \(isInUI)")
+                if !self.isAnimatingShowHide && self.showHideAnimationType != .none {
+                    if newValue {
+                        // Hide
+                        if isInUI {
+                            self.hideAnimation(duration: HIDE_ANIM_DURATION, delay: HIDE_ANIM_DELAY, completion: nil)
+                        } else {
+                            self.resetToZero(animated: false, hides: true, completion: nil)
+                        }
+                    } else {
+                        // Show
+                        if isInUI {
+                            self.unhideAnimation(duration: UNHIDE_ANIM_DURATION, delay: UNHIDE_ANIM_DELAY, completion: nil)
+                        } else {
+                            // No need to do anything
+                        }
+                    }
+                }
+            }
+        }
+    }
     // MARK: Hashable
     public override var hash: Int {
         var result : Int = self.frame.hashValue
@@ -158,6 +195,7 @@ final public class CircleProgressView: NSView {
     public override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
         if let screen = self.window?.screen {
+            dlog?.info("viewDidMoveToWindow START")
             let val = clamp(value: self.window?.backingScaleFactor ?? screen.backingScaleFactor, lowerlimit: 0.01, upperlimit: 4.0)
             if self._scale != val {
                 self._scale = val
@@ -165,6 +203,7 @@ final public class CircleProgressView: NSView {
             self.setupIfNeeded()
             self.updateLayers()
             self.forceUpdateCurProgress()
+            dlog?.info("viewDidMoveToWindow DONE")
         }
     }
     
@@ -181,11 +220,20 @@ final public class CircleProgressView: NSView {
             }
         }
         if !isAnimatingShowHide && changes > 0 {
-            dlog?.info(">> will update on layout")
             self.updateLayers()
         }
     }
     
+    func clearAllClosureProperties() {
+        self.onBeforeHideAnimating = nil
+        self.onHideAnimating = nil
+        self.onBeforeUnhideAnimating = nil
+        self.onUnhideAnimating = nil
+    }
+    
+    deinit {
+        clearAllClosureProperties()
+    }
     // MARK: - private Updates
     private var lastBkgHash : Int = 0
     func updateBackgroundLayer(bounds rect: CGRect) {
@@ -303,7 +351,7 @@ final public class CircleProgressView: NSView {
             }
             rootLayer.centrizeAnchor(animated: false, preventMoving: true)
             
-            dlog?.info("updateLayers bounds:\(rect)")
+            // dlog?.info("updateLayers bounds:\(rect) isHidden: \(self.isHidden) wasHidden: \(self.wasHiddenByAnimation)")
             updateBackgroundLayer(bounds: rect)
             updateBkgRingLayer(bounds: rect)
             updateProgressRingLayer(bounds: rect)
@@ -545,9 +593,15 @@ final public class CircleProgressView: NSView {
         let newValue = clamp(value: newVal, lowerlimit: 0.0, upperlimit: 1.0)
         let prev = self.progressType.isSpinable ? _spinningProgress : _progress
         let fraction = newProgressSensitivityFraction()
+        var isForcedChange = forced
+        if !isForcedChange {
+            if self.isHidden && self.wasHiddenByAnimation != .none && newValue >= 0.0 {
+                isForcedChange = true
+            }
+        }
         
         // dlog?.info("newVal=\(newVal) delta:\(abs(newValue - prev)) > frac:\((1.0 / fraction))")
-        if (abs(newValue - prev) > (1.0 / fraction)) || forced {
+        if (abs(newValue - prev) > (1.0 / fraction)) || isForcedChange {
             if self.progressType.isDeterminate {
                 _spinningProgress = newValue
             } else {
@@ -556,7 +610,8 @@ final public class CircleProgressView: NSView {
             
             if IS_DEBUG {
                 let prog = self.progressType == .determinate ? "Progress" : "Spinning progress"
-                dlog?.info("setNew \(prog): \(newValue) animated: \(animated)")
+                let hid = [self.isHidden ? "true" : "false", self.wasHiddenByAnimation != .none ? "*" : ":("].joined(separator: " ").trimmingCharacters(in: .whitespaces)
+                dlog?.info("setNewProgress: \(prog): \(newValue) animated: \(animated) hidden: \(hid) forced:\(forced)")
             }
             
             // Actuallt change the progress mask layer here
@@ -566,12 +621,12 @@ final public class CircleProgressView: NSView {
                 !isAnimatingShowHide {
                 // Animate show / hide on progress value changed:
                 if newValue == 1.0 {
-                    self.hideAnimation(duration: 0.4, delay: 0.2)
+                    self.hideAnimation(duration: HIDE_ANIM_DURATION, delay: HIDE_ANIM_DELAY)
                 } else if newValue < 1.0 && self.isHidden && self.wasHiddenByAnimation != .none {
-                    self.unhideAnimation(duration: 0.3, delay: 0.1)
+                    self.unhideAnimation(duration: UNHIDE_ANIM_DURATION, delay: UNHIDE_ANIM_DELAY)
                 }
             } else if !self.progressType.isDeterminate && self.wasHiddenByAnimation != .none {
-                self.unhideAnimation(duration: 0.3, delay: 0.1)
+                self.unhideAnimation(duration: UNHIDE_ANIM_DURATION, delay: UNHIDE_ANIM_DELAY)
             }
         }
     }
@@ -619,9 +674,12 @@ final public class CircleProgressView: NSView {
         self._spinningProgress = 0
         self.setNewProgress(0.0, animated: animated, forced: true)
         if hides {
+            dlog?.info("resetToZero animated : \(animated)")
             if animated {
+                // Animated hide
                 self.hideAnimation(duration:0.3, delay: 0.001, completion: completion)
             } else {
+                // Non-Animated
                 CATransaction.begin()
                 CATransaction.setDisableActions(true)
                 
@@ -636,8 +694,11 @@ final public class CircleProgressView: NSView {
                 self.superview?.needsLayout = true
                 self.superview?.superview?.needsLayout = true
                 self.onHideAnimating?(nil)
-                
+                    
                 CATransaction.commit()
+                
+                // We make as if we were hidden
+                wasHiddenByAnimation = showHideAnimationType
                 
                 completion?()
             }

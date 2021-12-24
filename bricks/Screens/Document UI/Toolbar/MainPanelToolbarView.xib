@@ -9,11 +9,11 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="c22-O7-iKe" customClass="MainPanelToolbarView" customModule="Bricks" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="713" height="42"/>
+            <rect key="frame" x="0.0" y="0.0" width="520" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="27J-zp-Ugh">
-                    <rect key="frame" x="0.0" y="0.0" width="713" height="42"/>
+                    <rect key="frame" x="0.0" y="0.0" width="520" height="42"/>
                     <subviews>
                         <button translatesAutoresizingMaskIntoConstraints="NO" id="gTD-XU-hdq">
                             <rect key="frame" x="0.0" y="2" width="32" height="38"/>
@@ -27,24 +27,24 @@
                             </buttonCell>
                         </button>
                         <box boxType="custom" cornerRadius="6" title="Box is here" translatesAutoresizingMaskIntoConstraints="NO" id="fqw-sr-Z5z">
-                            <rect key="frame" x="40" y="5" width="593" height="32"/>
+                            <rect key="frame" x="40" y="5" width="400" height="32"/>
                             <view key="contentView" id="WVM-jr-TD3">
-                                <rect key="frame" x="1" y="1" width="591" height="30"/>
+                                <rect key="frame" x="1" y="1" width="398" height="30"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
                                     <stackView focusRingType="none" distribution="fill" orientation="horizontal" alignment="centerY" spacing="0.0" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="263-oV-TRw">
-                                        <rect key="frame" x="0.0" y="0.0" width="591" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="398" height="30"/>
                                         <subviews>
                                             <pathControl focusRingType="none" horizontalHuggingPriority="249" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HXu-y9-XuN">
-                                                <rect key="frame" x="2" y="0.0" width="461" height="30"/>
+                                                <rect key="frame" x="2" y="0.0" width="268" height="30"/>
                                                 <pathCell key="cell" controlSize="small" lineBreakMode="truncatingHead" selectable="YES" editable="YES" focusRingType="none" alignment="left" id="9tc-Tc-742">
                                                     <font key="font" metaFont="smallSystem"/>
                                                 </pathCell>
                                             </pathControl>
                                             <customView translatesAutoresizingMaskIntoConstraints="NO" id="hIJ-Uy-M36">
-                                                <rect key="frame" x="463" y="0.0" width="126" height="30"/>
+                                                <rect key="frame" x="270" y="0.0" width="126" height="30"/>
                                                 <subviews>
-                                                    <customView ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nFo-Pt-og7" customClass="CircleProgressView" customModule="Bricks" customModuleProvider="target">
+                                                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="nFo-Pt-og7" customClass="CircleProgressView" customModule="Bricks" customModuleProvider="target">
                                                         <rect key="frame" x="96" y="2" width="28" height="26"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="28" id="PqJ-qG-o03"/>
@@ -66,6 +66,7 @@
                                                     <constraint firstItem="nFo-Pt-og7" firstAttribute="leading" secondItem="de3-OU-YKr" secondAttribute="trailing" constant="2" id="Jfb-91-uwc"/>
                                                     <constraint firstItem="de3-OU-YKr" firstAttribute="leading" secondItem="hIJ-Uy-M36" secondAttribute="leading" constant="18" id="JuQ-Y4-oYs"/>
                                                     <constraint firstItem="de3-OU-YKr" firstAttribute="centerY" secondItem="hIJ-Uy-M36" secondAttribute="centerY" id="U6V-SV-06W"/>
+                                                    <constraint firstItem="nFo-Pt-og7" firstAttribute="centerY" secondItem="de3-OU-YKr" secondAttribute="centerY" id="j2h-E9-VgC"/>
                                                 </constraints>
                                             </customView>
                                         </subviews>
@@ -91,7 +92,7 @@
                             <color key="fillColor" name="quaternaryLabelColor" catalog="System" colorSpace="catalog"/>
                         </box>
                         <button translatesAutoresizingMaskIntoConstraints="NO" id="tgs-fw-1Je">
-                            <rect key="frame" x="639.5" y="2.5" width="34" height="40"/>
+                            <rect key="frame" x="446.5" y="2.5" width="34" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="32" id="iMi-V2-Ezc"/>
                                 <constraint firstAttribute="width" secondItem="tgs-fw-1Je" secondAttribute="height" multiplier="1:1" id="nqW-bc-qPD"/>
@@ -102,7 +103,7 @@
                             </buttonCell>
                         </button>
                         <button translatesAutoresizingMaskIntoConstraints="NO" id="YUN-jD-1mP">
-                            <rect key="frame" x="679.5" y="2.5" width="34" height="40"/>
+                            <rect key="frame" x="486.5" y="2.5" width="34" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="YUN-jD-1mP" secondAttribute="height" multiplier="1:1" id="YJR-Te-o7z"/>
                                 <constraint firstAttribute="height" constant="32" id="boE-ya-YnB"/>
@@ -115,7 +116,10 @@
                     </subviews>
                     <constraints>
                         <constraint firstItem="YUN-jD-1mP" firstAttribute="width" secondItem="YUN-jD-1mP" secondAttribute="height" multiplier="1:1" id="3lV-Hg-GsX"/>
+                        <constraint firstAttribute="width" priority="750" constant="520" identifier="extStackViewPreferredWidthConstraintID" id="5RA-UT-gDQ"/>
                         <constraint firstItem="tgs-fw-1Je" firstAttribute="width" secondItem="tgs-fw-1Je" secondAttribute="height" multiplier="1:1" id="DZI-Zz-e6K"/>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="340" id="RXA-79-dry"/>
+                        <constraint firstAttribute="width" relation="lessThanOrEqual" priority="999" constant="820" identifier="extStackViewMaxWidthConstraintID" id="epa-X1-hIA"/>
                         <constraint firstItem="fqw-sr-Z5z" firstAttribute="height" secondItem="27J-zp-Ugh" secondAttribute="height" constant="-10" id="joZ-oa-EU2"/>
                         <constraint firstItem="YUN-jD-1mP" firstAttribute="width" secondItem="YUN-jD-1mP" secondAttribute="height" multiplier="1:1" id="tu1-LN-ZTc"/>
                         <constraint firstAttribute="height" constant="42" placeholder="YES" id="yXY-ev-yKt"/>
@@ -147,6 +151,9 @@
                 <outlet property="centerBoxContainer" destination="fqw-sr-Z5z" id="7GE-Ie-dFb"/>
                 <outlet property="centerStackView" destination="263-oV-TRw" id="8nI-Th-kYM"/>
                 <outlet property="extStackView" destination="27J-zp-Ugh" id="SM2-Tt-MQz"/>
+                <outlet property="extStackViewMaxWidthConstraint" destination="epa-X1-hIA" id="wZc-hU-rI0"/>
+                <outlet property="extStackViewMinWidthConstraint" destination="RXA-79-dry" id="xws-t0-NZQ"/>
+                <outlet property="extStackViewPreferredWidthConstraint" destination="5RA-UT-gDQ" id="4cm-R5-2YT"/>
                 <outlet property="leadingExtButton" destination="gTD-XU-hdq" id="HLi-1o-wFx"/>
                 <outlet property="pathControl" destination="HXu-y9-XuN" id="yk6-9N-YZV"/>
                 <outlet property="progress" destination="nFo-Pt-og7" id="4HK-MY-qne"/>
@@ -155,7 +162,7 @@
                 <outlet property="trailingExtButton1" destination="tgs-fw-1Je" id="asj-Bn-fs6"/>
                 <outlet property="trailingextButton2" destination="YUN-jD-1mP" id="rhO-sp-aas"/>
             </connections>
-            <point key="canvasLocation" x="383.5" y="117"/>
+            <point key="canvasLocation" x="383" y="117"/>
         </customView>
     </objects>
     <resources>

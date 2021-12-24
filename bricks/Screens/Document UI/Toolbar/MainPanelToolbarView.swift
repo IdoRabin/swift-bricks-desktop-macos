@@ -17,6 +17,9 @@ class MainPanelToolbarView : NSView {
     // MARK: Properties
     
     // External stack view -
+    @IBOutlet weak var extStackViewMinWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var extStackViewMaxWidthConstraint: NSLayoutConstraint!
+    @IBOutlet weak var extStackViewPreferredWidthConstraint: NSLayoutConstraint!
     @IBOutlet weak var extStackView: NSStackView!
     @IBOutlet weak var leadingExtButton: NSButton!
     
@@ -36,7 +39,6 @@ class MainPanelToolbarView : NSView {
     
     @IBOutlet weak var trailingExtButton1: NSButton!
     @IBOutlet weak var trailingextButton2: NSButton!
-    
     
     private weak var _lastDoc : BrickDoc? = nil
     
@@ -63,9 +65,9 @@ class MainPanelToolbarView : NSView {
         guard self.superview != nil else {
             return
         }
-        
+        dlog?.info("setup")
         DispatchQueue.main.performOncePerInstance(self) {
-            updateWithDoc(nil)
+            updateWithDoc(self.window?.windowController?.document as? BrickDoc)
             setupProgressIndicator()
             centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)
             centerBoxContainer.borderColor = .quaternaryLabelColor.withAlphaComponent(0.1)
@@ -83,11 +85,6 @@ class MainPanelToolbarView : NSView {
                 progress.onUnhideAnimating = {[weak self] (context) in
                      self?.progressWidthConstraint.constant = 28
                      self?.activityLabelLeadingConstraint.constant = 18
-                }
-                if progress.progress == 0.0 {
-                    progress.resetToZero(animated: false, hides: true) {
-                        dlog?.info("reset")
-                    }
                 }
             }
             
@@ -148,7 +145,9 @@ class MainPanelToolbarView : NSView {
     }
     
     deinit {
-        //dlog?.info("deinit")
+        progress?.clearAllClosureProperties() // will deinit nicely even if we have a cyclic reference in the blocks..
+        TestMNProgressEmitter.shared.observers.remove(observer: self)
+        dlog?.info("deinit")
     }
     
     // MARK: Public
@@ -158,12 +157,11 @@ class MainPanelToolbarView : NSView {
             _lastDoc = doc
             _lastDoc?.observers.add(observer: self)
             
+            dlog?.info("updateWithDoc \((doc?.displayName).descOrNil) updating progress hidden: \(doc != nil)")
+            progress?.isHidden = doc != nil
+            
             if let _ = doc {
                 // TODO: Update progress
-                progress?.isHidden = false
-                
-            } else {
-                progress?.isHidden = true
             }
         }
     }
@@ -222,54 +220,36 @@ extension MainPanelToolbarView : BrickDocObserver {
 extension MainPanelToolbarView : MNProgressObserver {
 
     private func setTitles(for action: MNProgressAction? = nil, discretes: DiscreteMNProgStruct?, error: AppError?) {
-        var title = ""
+        dlog?.info("setTitles action:\(action?.title ?? "<nil>" ) dicretes:\(discretes?.progressUnitsDisplayString ?? "<nil>" )")
+        var titleStrings : [String] = []
         var subtitle : String? = nil
         if let action = action ?? lastRecievedProgressAction {
             lastRecievedProgressAction = action
-            title = action.title
+            titleStrings.append(action.title)
             subtitle = action.subtitle
             self.progress?.progressType = action.isLongTimeAction ? .determinateSpin : .determinate
         } else {
             self.progress?.progressType = .determinate
             if let error = error {
-                title = AppStr.ERROR_FORMAT.formatLocalized(error.localizedDescription)
+                titleStrings.append(AppStr.ERROR_FORMAT.formatLocalized(error.localizedDescription))
             }
         }
-        
+
         if let units = discretes {
-            title += " | \(units.progressUnitsDisplayString)"
+            titleStrings.append(units.progressUnitsDisplayString)
         }
-        
-        var totalStr = title
+
+        var totalStr = titleStrings.joined(separator: " | ")
+        if totalStr.count == 0 && progress?.isHidden == false, let discretes = discretes {
+            totalStr = discretes.fractionCompletedDisplayString
+        }
         if let subtitle = subtitle, subtitle.count > 0 {
             totalStr += "\n\(subtitle.prefix(40))"
         }
         let font = activityLabel.font ?? NSFont.systemFont(ofSize: NSFont.systemFontSize)
         let attr = NSMutableAttributedString(string: totalStr, attributes: [.font:font])
         attr.setAtttibutesForStrings(matching: subtitle ?? "", attributes: [.font:font.withSize(NSFont.systemFontSize(for: .mini))])
-        activityLabel.stringValue = title
-    }
-    
-    func mnProgress(emitter: MNProgressEmitter, action: MNProgressAction?, hadError error: AppError, didStopAllProgress: Bool) {
-        dlog?.todo("Handle reported errors! \(error) didStopAllProgress:\(didStopAllProgress)")
-        if didStopAllProgress {
-            self.progress?.resetToZero(animated: true, hides: true, completion: nil)
-        }
-    }
-    
-    func mnProgress(emitter: MNProgressEmitter, didChangeLastAction lastAction: MNProgressAction?, fraction: Double, discretes: DiscreteMNProgStruct?) {
-        dlog?.info("mnProgress: \(type(of: emitter)) fraction: \(round(fraction * 100))%")
-        
-        // Progress view:
-        let fract = clamp(value: fraction, lowerlimit: 0.0, upperlimit: 1.0) { frac in
-            dlog?.note("mnProgress(emitter \(emitter) emitted a fraction that is out-of bounds: \(fraction) should be in the range [0.0...1.0]")
-        }
-        
-        // Set progress fraction
-        self.progress?.progress = fract
-        
-        // Action title:
-        self.setTitles(for: lastAction, discretes: discretes, error: nil)
+        activityLabel.attributedStringValue = attr
     }
     
     func debugTestProgressObservations() {
@@ -277,8 +257,8 @@ extension MainPanelToolbarView : MNProgressObserver {
             return
         }
         dlog?.info("debugTestProgressObservations")
-        
-        TestMNProgressEmitter.shared.timedTest(delay: 0.3,
+        TestMNProgressEmitter.shared.observers.add(observer: self)
+        TestMNProgressEmitter.shared.timedTest(delay: 0.7,
                                                interval: 3,
                                                changesCount: 10,
                                                finishWith: .failure(AppError(AppErrorCode.misc_unknown, detail: "Final call of test")),

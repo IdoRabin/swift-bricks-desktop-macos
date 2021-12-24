@@ -10,11 +10,18 @@ import Foundation
 typealias AppErrorInt = Int
 enum AppErrorCode : AppErrorInt, AppErrorCodable {
     
+    // Cancel
+    case user_canceled = 999
+    
     // Misc
     case misc_unknown = 9000
     case misc_failed_loading = 9001
     case misc_failed_saving = 9002
     case misc_operation_canceled = 9003
+    case misc_failed_creating = 9010
+    case misc_failed_removing = 9011
+    case misc_failed_inserting = 9012
+    case misc_failed_updating = 9013
     
     // Misc
     case web_unknown = 1000
@@ -59,7 +66,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case ui_unknown = 5000
     
     var domain : String {
-        var result = "xplan"
+        var result = "bricks"
         if let prefix = "\(self)".split(separator: "_").first {
             result.append(".\(prefix)")
         }

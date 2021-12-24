@@ -139,6 +139,9 @@
 		ECEA1B7D2762297C00DD602D /* MNColoredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7C2762297C00DD602D /* MNColoredView.swift */; };
 		ECEA1B7F2762299800DD602D /* MNSplitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B7E2762299800DD602D /* MNSplitView.swift */; };
 		ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B802762299C00DD602D /* MNToolbarItem.swift */; };
+		ECF685ED2774DF6A00BD68FB /* TestMNProgressEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */; };
+		ECF685EF2774DF9F00BD68FB /* MNProgress protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */; };
+		ECF685F12774DFC900BD68FB /* MNProgressAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685F02774DFC900BD68FB /* MNProgressAction.swift */; };
 		ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */; };
 		ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */; };
 /* End PBXBuildFile section */
@@ -325,6 +328,9 @@
 		ECEA1B7C2762297C00DD602D /* MNColoredView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNColoredView.swift; sourceTree = "<group>"; };
 		ECEA1B7E2762299800DD602D /* MNSplitView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNSplitView.swift; sourceTree = "<group>"; };
 		ECEA1B802762299C00DD602D /* MNToolbarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNToolbarItem.swift; sourceTree = "<group>"; };
+		ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMNProgressEmitter.swift; sourceTree = "<group>"; };
+		ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MNProgress protocols.swift"; sourceTree = "<group>"; };
+		ECF685F02774DFC900BD68FB /* MNProgressAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNProgressAction.swift; sourceTree = "<group>"; };
 		ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImages.swift.swift; sourceTree = "<group>"; };
 		ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSSplitviewEx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -635,7 +641,10 @@
 		EC2F5EEB277271F400201865 /* MNProgress */ = {
 			isa = PBXGroup;
 			children = (
+				ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */,
+				ECF685F02774DFC900BD68FB /* MNProgressAction.swift */,
 				EC2F5EE927726DCC00201865 /* MNProgress.swift */,
+				ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */,
 			);
 			path = MNProgress;
 			sourceTree = "<group>";
@@ -1006,6 +1015,7 @@
 				EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */,
 				ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */,
 				EC218B5927593CBF00744400 /* CustomStringConvertibleEx.swift in Sources */,
+				ECF685EF2774DF9F00BD68FB /* MNProgress protocols.swift in Sources */,
 				EC9DF006275CD1BE0046F30A /* CGPointEx.swift in Sources */,
 				EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */,
 				EC9DF007275CD1BE0046F30A /* UIImage+Utils.swift in Sources */,
@@ -1021,6 +1031,7 @@
 				EC218B4527593BE000744400 /* LoadingHelper.swift in Sources */,
 				EC218B7F2759459700744400 /* ComparableEx.swift in Sources */,
 				EC218B17275939DA00744400 /* AppSettings.swift in Sources */,
+				ECF685ED2774DF6A00BD68FB /* TestMNProgressEmitter.swift in Sources */,
 				EC218B3E27593BE000744400 /* CachesHelper.swift in Sources */,
 				ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */,
 				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
@@ -1070,6 +1081,7 @@
 				EC2F5EED27732D9A00201865 /* MNTree.swift in Sources */,
 				EC218B872759471100744400 /* BrickDoc.swift in Sources */,
 				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
+				ECF685F12774DFC900BD68FB /* MNProgressAction.swift in Sources */,
 				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,
 				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,

@@ -45,7 +45,6 @@ extension CALayer /* borders*/ {
         #endif
     }
     
-    // MARK: Needed for YPRingProgressView
     func disableActions(for keyPathes: [String]) {
         actions = Dictionary(uniqueKeysWithValues: keyPathes.map { ($0, NSNull()) })
     }
@@ -76,7 +75,8 @@ extension CAShapeLayer /* spin animation */ {
 }
 
 extension CALayer /* spin animation */ {
-    func centrizeAnchor(animated:Bool = false, preventMoving:Bool = true) {
+    
+    func centerizeAnchor(animated:Bool = false, preventMoving:Bool = true) {
         CATransaction.begin()
         CATransaction.setDisableActions(!animated)
         let newAnchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -134,4 +134,25 @@ extension CALayer /* spin animation */ {
         
         self.add(scaleAnimation, forKey: "scaleAnimation")
     }
+}
+
+extension CATransaction {
+    
+    static func noAnimation(_ block: ()->Void) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        block()
+        CATransaction.commit()
+    }
+    
+    static func animate(animated:Bool, duration:TimeInterval, _ block: ()->Void) {
+        CATransaction.begin()
+        CATransaction.setDisableActions(!animated)
+        if animated {
+            CATransaction.setAnimationDuration(duration)
+        }
+        block()
+        CATransaction.commit()
+    }
+    
 }

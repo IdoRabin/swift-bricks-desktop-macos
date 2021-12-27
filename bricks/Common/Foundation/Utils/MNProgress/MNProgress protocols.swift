@@ -9,10 +9,10 @@ import Foundation
 
 /// Observers get updates of progress of any emitter of MNProgress
 protocol MNProgressObserver {
-//    func mnProgress(emitter:Any, didProgress:MNProgress, fraction:Double, discretes:DiscreteMNProg?)
-//    func mnProgress(emitter:Any, didChange:MNProgress, action: MNProgressAction?, error:AppError?)
-//    func mnProgress(emitter:Any, didComplete:MNProgress, type: MNProgressCompletionType, error:AppError?)
-    
+    func mnProgress(sender:Any, isPendingProgress:MNProgress, fraction:Double, discretes:DiscreteMNProg?)
+    func mnProgress(sender:Any, didStartProgress:MNProgress, fraction:Double, discretes:DiscreteMNProg?)
+    func mnProgress(sender:Any, didProgress:MNProgress, fraction:Double, discretes:DiscreteMNProg?)
+    func mnProgress(sender:Any, didComplete:MNProgress, state:MNProgressState)
 }
 
 protocol FractionalMNProg {

@@ -254,9 +254,9 @@ extension String {
     ///
     /// - Parameters:
     ///   - toLength: the length up to which the string is to be padded from the left
-    ///   - character: the charachter to repeat as the filler padding in the left side of the string.
+    ///   - character: the pad element to repeat as the filler padding in the left side of the string.
     ///   - padIndex: the char index from the left to start padding at
-    /// - Returns: a string padded from its left side with the given charachter
+    /// - Returns: a string padded from its left side with the given pad element
     func paddingLeft(toLength: Int, withPad character: Character) -> String {
         if toLength <= 0 {return self}
         
@@ -268,12 +268,29 @@ extension String {
         }
     }
     
-    
+    /// Pad the string from its left side only with a charachter to add a given amount of the pad element.
+    ///
+    /// - Parameters:
+    ///   - padCount: amout of times to repeat the pad element
+    ///   - character: the charachter / element to repeat as the filler padding in the left side of the string.
+    /// - Returns: a string padded from its left side with the given pad element
     func paddingLeft(padCount: Int, withPad character: Character) -> String {
         if padCount <= 0 {return self}
         
         // let stringLength = self.count
         return String(repeatElement(character, count: padCount)) + self
+    }
+    
+    /// Pad the string from its righ side only with a charachter to add a given amount of the pad element.
+    ///
+    /// - Parameters:
+    ///   - padCount: amout of times to repeat the pad element
+    ///   - character: the charachter / element to repeat as the filler padding in the righ side of the string.
+    /// - Returns: a string padded from its righ side with the given pad element
+    func paddingRight(padCount: Int, withPad character: Character) -> String {
+        if padCount <= 0 {return self}
+        
+        return self + String(repeatElement(character, count: padCount))
     }
     
     /// Will create a string trimming only from its left side any charachter from the given set. When encountering the first charachter that is not part of the set, the trimming will stop.
@@ -800,6 +817,14 @@ extension String {
             return
         }
         self.init(String(describing: Unmanaged<AnyObject>.passUnretained(object as AnyObject).toOpaque()))
+    }
+    
+    
+    /// Returns a string describing the memory address of the struct. The struct must be in an mutable state, because this is an inout call
+    init<T>(memoryAddressOfStruct structPointer: UnsafePointer<T>) {
+        let intValue = Int(bitPattern: structPointer)
+        let length = 2 + 2 * MemoryLayout<UnsafeRawPointer>.size
+        self.init(format: "%0\(length)p", intValue)
     }
 }
 

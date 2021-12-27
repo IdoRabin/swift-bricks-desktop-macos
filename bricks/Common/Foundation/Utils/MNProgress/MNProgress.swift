@@ -55,6 +55,71 @@ enum MNProgressState : Int {
     case success
     case failed
     case userCanceled
+    
+    var isComplete : Bool {
+        switch self {
+        case .pending ,.inProgress:
+            return false
+        case .success, .failed, .userCanceled:
+            return true
+        }
+    }
+    
+    var isFailed : Bool {
+        return self == .failed || self == .userCanceled
+    }
+    
+    var isCanceled : Bool {
+        return self == .userCanceled
+    }
+    
+    var isSuccess : Bool {
+        return self == .success
+    }
+    
+    var imageSystemSymbolName : String {
+        switch self {
+        case .pending:       return "" // "pause.circle.fill" ? "hand.raised.square.on.square" ? "plus.square.fill.on.square.fill"
+        case .inProgress:    return "" // "gearshape.circle.fill" ? "ellipsis.circle.fill"
+        case .success:       return "checkmark.circle"
+        case .failed:        return "exclamationmark.circle" // .triangle
+        case .userCanceled:  return "x.circle"
+        }
+    }
+    
+    var iconImage : NSImage? {
+        let image = NSImage(systemSymbolName: self.imageSystemSymbolName, accessibilityDescription: nil)
+        return image
+    }
+    
+    var iconTintColor : NSColor {
+        switch self {
+        case .pending:       return NSColor.clear
+        case .inProgress:    return NSColor.clear
+        case .success:       return NSColor.appSuccessGreen
+        case .failed:        return NSColor.appFailureRed
+        case .userCanceled:  return NSColor.appFailureOrange
+        }
+    }
+    
+    var iconBkgColor : NSColor {
+        switch self {
+        case .pending:       return NSColor.clear
+        case .inProgress:    return NSColor.clear
+        case .success:       return NSColor.appSuccessGreen
+        case .failed:        return NSColor.appFailureRed
+        case .userCanceled:  return NSColor.appFailureOrange
+        }
+    }
+    var displayString : String {
+        switch self {
+        case .pending:       return AppStr.PENDING.localized()
+        case .inProgress:    return AppStr.PROGRESS.localized()
+        case .success:       return AppStr.SUCCESS.localized()
+        case .failed:        return AppStr.FAILED.localized()
+        case .userCanceled:  return AppStr.USER_CANCELED.localized()
+        }
+    }
 }
 
 enum MNProgressNum : Hashable, Equatable, FractionalMNProg {
@@ -68,9 +133,7 @@ enum MNProgressNum : Hashable, Equatable, FractionalMNProg {
         case fraction
         case discrete
     }
-    
-    
-    
+
     // MARK: Hashable
     func hash(into hasher: inout Hasher) {
         switch self {
@@ -92,7 +155,7 @@ enum MNProgressNum : Hashable, Equatable, FractionalMNProg {
         }
     }
     
-    var asDiscreteStruct : DiscreteMNProgStruct? {
+    var asDiscreteStructOrNil : DiscreteMNProgStruct? {
         switch self {
         case .discrete(let discreteMNProgStruct):
             return discreteMNProgStruct
@@ -107,7 +170,7 @@ enum MNProgressNum : Hashable, Equatable, FractionalMNProg {
         if result {
             switch lhs.simplified {
             case .discrete:
-                result = lhs.asDiscreteStruct == rhs.asDiscreteStruct
+                result = lhs.asDiscreteStructOrNil == rhs.asDiscreteStructOrNil
             case .fraction:
                 result = (lhs.fractionCompleted == rhs.fractionCompleted)
             case .unknown:
@@ -130,21 +193,69 @@ enum MNProgressNum : Hashable, Equatable, FractionalMNProg {
     }
 }
 
-struct MNProgress {
-    var _progressNum : MNProgressNum = .unknown
-    var _title : String?
-    var _subtitle : String?
-    var _info : Any?
-    var _isLongTimeAction : Bool
-    var _error : AppError?
-    var _completionOverride : MNProgressState? = nil
-    var completion : MNProgressState {
-        if let comp = _completionOverride {
-            return comp
+fileprivate struct MNProgressStateContextTuple : Equatable {
+    let state: MNProgressState
+    let context:String
+    static func ==(lhs:MNProgressStateContextTuple, rhs:MNProgressStateContextTuple)->Bool {
+        return lhs.state == rhs.state &&
+               lhs.context == rhs.context
+    }
+}
+
+struct MNProgressEmitSignature : Equatable, Hashable {
+    let msg : String
+    let fraction : CGFloat
+    let titlesHash : Int
+    let userInfoHash : Int
+    let errorHash : Int
+    let stateHash : Int
+    
+    init (messageName:String, progress:MNProgress) {
+        msg = messageName
+        fraction = progress.fractionCompleted
+        titlesHash = (progress.title?.hashValue ?? 0) ^ (progress.subtitle?.hashValue ?? 0)
+        userInfoHash = (progress.userInfo != nil ? 1 : 0)
+        errorHash = (progress.error?.code ?? 0) ^ (progress.error?.domain.hashValue ?? 0)
+        stateHash = progress.state.hashValue
+    }
+    
+    init() {
+        msg = ""
+        fraction = 0.0
+        titlesHash = 0
+        userInfoHash = 0
+        errorHash = 0
+        stateHash = 0
+    }
+    
+    static var empty : MNProgressEmitSignature {
+        return MNProgressEmitSignature()
+    }
+}
+
+struct MNProgress : FractionalMNProg {
+    private var _progressNum : MNProgressNum = .unknown
+    private var _title : String?
+    private var _subtitle : String?
+    private var _userInfo : Any?
+    private var _isLongTimeAction : Bool
+    private var _error : AppError?
+    private var _lastStateChange : (MNProgressState, MNProgressState) = (.pending, .pending)
+    private var _stateOverride : MNProgressState? = nil
+    public var onStateChanged : ((MNProgress, MNProgressState, MNProgressState)->Void)? = nil
+    public var onChanged : ((MNProgress, [String])->Void)? = nil
+    private var _lastEmittedSignature : MNProgressEmitSignature = .empty
+    
+    // MARK: Read-only properties
+    var state : MNProgressState {
+        if let stt = _stateOverride {
+            return stt
         }
+        let fraction = self.fractionCompleted
         if _progressNum == .unknown {
             return .pending
-        } else if self._progressNum.fractionCompleted < 1.0 {
+        } else if fraction >= 0.0 && fraction < 1.0 {
+            // fractionCompleted < 1.0
             return .inProgress
         } else {
             // fractionCompleted >= 1.0
@@ -159,11 +270,319 @@ struct MNProgress {
         }
     }
     
+    var title : String? {
+        return _title
+    }
+    
+    var subtitle : String? {
+        return _subtitle
+    }
+    
+    var userInfo : Any? {
+        return _userInfo
+    }
+    
+    var isLongTimeAction : Bool {
+        return _isLongTimeAction
+    }
+    
+    var error : AppError? {
+        return _error
+    }
+    
+    var discreteStructOrNil : DiscreteMNProgStruct? {
+        return _progressNum.asDiscreteStructOrNil
+    }
+    
+    // MARK: FractionalMNProg
+    var fractionCompleted: Double {
+        switch _progressNum {
+        case .unknown:
+            return 0.0
+        case .fraction(let double):
+            return double
+        case .discrete(let discreteMNProgStruct):
+            return discreteMNProgStruct.fractionCompleted
+        }
+    }
+    
+    var totalUnitsCnt : UInt64? {
+        return self.discreteStructOrNil?.totalUnitsCnt
+    }
+    
+    var completedUnitsCnt : UInt64? {
+        return self.discreteStructOrNil?.completedUnitsCnt
+    }
+    
+    // MARK: Mutations
+    private mutating func changed(context:String) {
+        let key = "MNProgress.\(String(memoryAddressOfStruct: &self))"
+        let cts = MNProgressStateContextTuple(state: self.state, context: context)
+        TimedEventFilter.shared.filterEvent(key: key, threshold: 0.1, accumulating: cts) {[self] contexts in
+            if let contexts = contexts, contexts.count > 0 {
+                let startState = contexts.first?.state ?? _lastStateChange.1
+                let endState = self.state
+                if startState != endState {
+                    dlog?.info("state changed from: \(startState) to: \(endState)")
+                    self.onStateChanged?(self, startState, endState)
+                }
+                
+                // dlog?.info("changed(context:) \(contexts.map { $0.context }.descriptionsJoined)")
+                self.onChanged?(self, contexts.map { $0.context })
+            }
+        }
+    }
+    
+    mutating func setProgress(fractionCompleted newFraction:Float, isStateInProgress : Bool = true) throws {
+        try self.setProgress(fractionCompleted: Double(newFraction), isStateInProgress:isStateInProgress)
+    }
+    
+    mutating func setProgress(fractionCompleted newFraction:Double, isStateInProgress : Bool = true, isCompletesWhenFull: Bool = true) throws {
+        guard fractionCompleted < 0 else {
+            throw AppError(AppErrorCode.misc_failed_creating, detail: "MNProgress.setProgress.Failed with a negative fractionCompleted : Double")
+        }
+        
+        if self.fractionCompleted != newFraction {
+            let prevNum = self._progressNum
+            let prevFraction = self.fractionCompleted
+
+            let fractionChangeed = prevFraction != newFraction
+            if fractionChangeed && isStateInProgress && newFraction < 1.0 {
+                self.setState(.inProgress, error: nil, fraction: nil)
+                changed(context: "state=.inProgress")
+            } else if prevFraction != newFraction && isCompletesWhenFull && newFraction == 1.0 && self.state.isComplete == false {
+                self.setState(.success, error: nil, fraction: nil)
+                changed(context: "state=.success")
+            }
+            if fractionChangeed {
+                self._progressNum = .fraction(newFraction)
+                dlog?.info("setProgress fraction: \(self.fractionCompletedDisplayString)")
+                changed(context: "progress fraction=\(newFraction)")
+            }
+            
+            if (prevNum == .unknown) || (prevFraction <= 0.0 && newFraction > 0.0) {
+                // out of bounds?
+            }
+        }
+    }
+    
+    mutating func setProgress(totalUnitsCnt:UInt64, completedUnitsCnt:UInt64, isStateInProgress : Bool = true, isCompletesWhenFull: Bool = true) {
+        let prevStruct = self.discreteStructOrNil
+        let newStruct = DiscreteMNProgStruct(total: totalUnitsCnt, completed: completedUnitsCnt)
+
+        self._progressNum = .discrete(newStruct)
+        // dlog?.info("setProgress discretes: \(newStruct.progressUnitsDisplayString) | \(self.fractionCompletedDisplayString)")
+        
+        var willChange = false
+        if let prevStruct = prevStruct, prevStruct != newStruct  {
+            willChange = true
+        } else if prevStruct == nil {
+            willChange = true
+        }
+        
+        // Order is important
+        if willChange && isStateInProgress && newStruct.fractionCompleted < 1.0 {
+            self.setState(.inProgress, error: nil, fraction: nil)
+            changed(context: "state=.inProgress")
+        } else if willChange && isCompletesWhenFull && newStruct.fractionCompleted == 1.0 && self.state.isComplete == false {
+            self.setState(.success, error: nil, fraction: nil)
+            changed(context: "state=.success")
+        }
+        
+        if willChange {
+            changed(context: "discretes=\(newStruct.completedUnitsCnt)/\(newStruct.totalUnitsCnt)")
+        }
+    }
+    
+    mutating func setProgress(totalUnitsCnt:Int, completedUnitsCnt:Int, isStateInProgress : Bool = true) throws {
+        guard totalUnitsCnt >= 0 && completedUnitsCnt >= 0 else {
+            throw AppError(AppErrorCode.misc_failed_creating, detail: "MNProgress.setProgress.Failed creating DiscreteMNProgStruct with a negative Int")
+        }
+        
+        self.setProgress(totalUnitsCnt: UInt64(totalUnitsCnt), completedUnitsCnt: UInt64(completedUnitsCnt))
+    }
+    
+    mutating func setState(_ newState: MNProgressState, error:AppError?, fraction:Double?) {
+        if self._stateOverride != newState ||
+            (newState == .inProgress && _lastStateChange.0 == .pending) {
+            // Set new state
+            let prev = self.state
+            self._stateOverride = newState
+            let new = self.state
+            if prev != new || (prev == new && prev == .inProgress) {
+                _lastStateChange = (prev, new)
+            }
+            changed(context: "state=.newState")
+        }
+        
+        if (self._error?.code ?? 0) != (error?.code ?? 0) {
+            self._error = error
+            changed(context: "error=\(error?.domainCodeDesc ?? "<nil>" )")
+        }
+        if let fraction = fraction {
+            switch self._progressNum {
+            case .unknown, .fraction:
+                if self.fractionCompleted != fraction {
+                    self._progressNum = .fraction(fraction)
+                    changed(context: "fraction=\(self.fractionCompletedDisplayString)")
+                }
+            case .discrete(let adisc):
+                let newCompleted = UInt64(ceil(Double(adisc.totalUnitsCnt) * fraction))
+                if self.fractionCompleted != fraction {
+                    self._progressNum = .discrete(DiscreteMNProgStruct(total: adisc.totalUnitsCnt, completed: newCompleted))
+                    changed(context: "discretes=\(self.fractionCompletedDisplayString)")
+                }
+            }
+        }
+    }
+    
+    mutating func setTitle(title:String, subtitle:String?) {
+
+        if self._title != title {
+            self._title = title
+            changed(context: "title=\(title)")
+        }
+        
+        if self._subtitle != subtitle {
+            self._subtitle = subtitle
+            changed(context: "subtitle = \(subtitle ?? "<nil>")")
+        }
+    }
+    
+    mutating func clearTitles() {
+        if self._title?.count ?? 0 != 0 || self.subtitle?.count ?? 0 != 0 {
+            self._title = nil
+            self._subtitle = nil
+            changed(context: "(title,subtitle)=(nil,nil)")
+        }
+    }
+    
+    mutating func setUserInfo(userInfo newInfo:Any?) {
+        if self.userInfo == nil && newInfo != nil ||
+            self.userInfo != nil && newInfo == nil {
+            self._userInfo = newInfo
+            changed(context: "userInfo")
+        } else if let userInfo = userInfo, let newInfo = newInfo {
+            // TODO: Find a mechanis for opaque equatabls, i.e checking two type erased infos if they are equal..
+            // For now we test pointer equality
+            if userInfo as AnyObject !== newInfo as AnyObject {
+                self._userInfo = newInfo
+                changed(context: "userInfo")
+            }
+        }
+    }
+    
+    mutating func incerementCompletedUnits(isCompletesOnLast:Bool = true) {
+        if let num = self.discreteStructOrNil {
+            if IS_DEBUG && num.completedUnitsCnt + 1 > num.totalUnitsCnt {
+                dlog?.note("incerementCompletedUnits made the progress above 100%! \(num.progressUnitsDisplayString) = \(num.fractionCompletedDisplayString)")
+            }
+            if num.totalUnitsCnt == num.completedUnitsCnt + 1 && !self.state.isComplete {
+                self.setState(.success, error: nil, fraction: nil)
+            }
+            self.setProgress(totalUnitsCnt: num.totalUnitsCnt, completedUnitsCnt: num.completedUnitsCnt + 1)
+        }
+    }
+    
+    mutating func clearUserInfo() {
+        if self.userInfo != nil {
+            self._userInfo = nil
+            changed(context: "userInfo")
+        }
+    }
+    
+    mutating func setIsLongTimeAction(_ newVal : Bool) {
+        if self.isLongTimeAction != newVal {
+            _isLongTimeAction = newVal
+            changed(context: "isLongTimeAction=\(newVal)")
+        }
+    }
+    
+    mutating func setError(_ newError : AppError?, isFailsProgress:Bool) {
+        
+        if isFailsProgress {
+            if newError == nil {
+                dlog?.note("setError set isStopsProgress:true while the error was set to nil!")
+            }
+            // Will trigger calling completed
+            // func mnProgress(sender:Any, didComplete:...
+            self.setState(.failed, error: newError, fraction: nil)
+        }
+        
+        if self.error != newError {
+            self._error = newError
+            changed(context: "error=\(newError?.localizedDescription ?? "<nil>")")
+        }
+    }
+    
+    @discardableResult
+    mutating func complete(successTitle:String?, subtitle:String?)->Bool {
+        guard !self.state.isComplete else {
+            dlog?.note("Cannot complete the MNProgress -> it has already completed: \(self.state)")
+            return false
+        }
+        
+        if let successTitle = successTitle {
+            self.setTitle(title: successTitle, subtitle: subtitle)
+        } else if let subtitle = subtitle {
+            self.setTitle(title: subtitle, subtitle: nil)
+        }
+        
+        if let discr = self.discreteStructOrNil {
+            self.setProgress(totalUnitsCnt: discr.totalUnitsCnt, completedUnitsCnt: discr.totalUnitsCnt)
+        } else {
+            do {
+                try self.setProgress(fractionCompleted: Double(1.0))
+            } catch let error {
+                dlog?.note("setProgress 1.0 failed! \(error.localizedDescription)")
+            }
+        }
+        
+        return true
+    }
+    
+    @discardableResult
+    mutating func complete(withError:AppError?, title:String?, subtitle:String?)->Bool {
+        guard !self.state.isComplete else {
+            dlog?.note("Cannot complete the MNProgress -> it has already completed: \(self.state)")
+            return false
+        }
+        
+        if error?.code == AppErrorCode.user_canceled.code {
+            return self.completeUserCanceled()
+        }
+        
+        self.setError(withError, isFailsProgress: true)
+        return true
+    }
+    
+    @discardableResult
+    mutating func completeUserCanceled()->Bool {
+        guard !self.state.isComplete else {
+            dlog?.note("Cannot complete the MNProgress -> it has already completed: \(self.state)")
+            return false
+        }
+        
+        self.setState(.userCanceled, error: nil, fraction: nil)
+        
+        return true
+    }
+    
+    // MARK: LifeCycle
+    init(fractionCompleted:Float, info : Any? = nil) {
+        _progressNum = .fraction(Double(fractionCompleted))
+        _title = nil
+        _subtitle = nil
+        _userInfo = info
+        _isLongTimeAction = false
+        _error = nil
+    }
+    
     init(fractionCompleted:Double, info : Any? = nil) {
         _progressNum = .fraction(fractionCompleted)
         _title = nil
         _subtitle = nil
-        _info = info
+        _userInfo = info
         _isLongTimeAction = false
         _error = nil
     }
@@ -172,7 +591,7 @@ struct MNProgress {
         _progressNum = .discrete(DiscreteMNProgStruct(total: totalUnitsCnt, completed: completedUnitsCnt))
         _title = nil
         _subtitle = nil
-        _info = info
+        _userInfo = info
         _isLongTimeAction = false
         _error = nil
     }
@@ -184,7 +603,7 @@ struct MNProgress {
         _progressNum = .discrete(DiscreteMNProgStruct(total: UInt64(totalUnitsCnt), completed: UInt64(completedUnitsCnt)))
         _title = nil
         _subtitle = nil
-        _info = info
+        _userInfo = info
         _isLongTimeAction = false
         _error = nil
     }
@@ -196,7 +615,7 @@ struct MNProgress {
         _progressNum = .discrete(DiscreteMNProgStruct(total: UInt64(totalUnitsCnt.rounded(rule)), completed: UInt64(completedUnitsCnt.rounded(rule))))
         _title = nil
         _subtitle = nil
-        _info = info
+        _userInfo = info
         _isLongTimeAction = false
         _error = nil
     }
@@ -208,7 +627,7 @@ struct MNProgress {
         _progressNum = .discrete(DiscreteMNProgStruct(total: UInt64(totalUnitsCnt.rounded(rule)), completed: UInt64(completedUnitsCnt.rounded(rule))))
         _title = nil
         _subtitle = nil
-        _info = info
+        _userInfo = info
         _isLongTimeAction = false
         _error = nil
     }
@@ -217,7 +636,7 @@ struct MNProgress {
         self._progressNum = .unknown
         self._title = title
         self._subtitle = subtitle
-        _info = info
+        _userInfo = info
         _isLongTimeAction = isLongTimeAction
         _error = error
     }
@@ -225,34 +644,34 @@ struct MNProgress {
     init(error : AppError, title : String, subtitle : String? = nil, info : Any? = nil, isStopsProgress:Bool = false) {
         self._progressNum = .unknown
         self._title = title
-        self._subtitle = subtitle ?? "\(error.domain)|\(error.code)"
-        _info = info
+        self._subtitle = subtitle ?? "\(error.domainCodeDesc)"
+        _userInfo = info
         _isLongTimeAction = false
         _error = error
         if isStopsProgress {
-            _completionOverride = (error.code == AppErrorCode.user_canceled.code) ? .userCanceled : .failed
+            _stateOverride = (error.code == AppErrorCode.user_canceled.code) ? .userCanceled : .failed
         }
     }
     
     init(userCanceledTitle title: String, subtitle : String? = nil, info : Any? = nil) {
         self._progressNum = .unknown
         self._title = title
-        self._subtitle = subtitle ?? "\(AppErrorCode.user_canceled.domain))|\(AppErrorCode.user_canceled)"
-        _info = nil
+        self._subtitle = subtitle ?? "\(AppErrorCode.user_canceled.domainCodeDesc)"
+        _userInfo = nil
         _isLongTimeAction = false
         _error = AppError(AppErrorCode.user_canceled)
-        _completionOverride = .userCanceled
+        _stateOverride = .userCanceled
     }
     
     init(error : AppError, info : Any? = nil, isStopsProgress:Bool = false) {
         self._progressNum = .unknown
         self._title = error.localizedDescription
-        self._subtitle = "\(error.domain)|\(error.code)"
-        _info = nil
+        self._subtitle = "\(error.domainCodeDesc)"
+        _userInfo = nil
         _isLongTimeAction = false
         _error = error
         if isStopsProgress {
-            _completionOverride = (error.code == AppErrorCode.user_canceled.code) ? .userCanceled : .failed
+            _stateOverride = (error.code == AppErrorCode.user_canceled.code) ? .userCanceled : .failed
         }
     }
     
@@ -260,9 +679,14 @@ struct MNProgress {
         self._progressNum = .unknown
         self._title = title
         self._subtitle = subtitle
-        _info = nil
+        _userInfo = nil
         _isLongTimeAction = false
-        _completionOverride = completed
+        
+        let prevState = self.state
+        if prevState != completed {
+            _lastStateChange = (prevState, completed)
+            _stateOverride = completed
+        }
         
         switch completed {
         case .success:
@@ -276,6 +700,16 @@ struct MNProgress {
     }
     
     // MARK: Static
+    var isEmpty: Bool {
+        return self.fractionCompleted == 0 && state == .pending
+    }
+    
+    static var empty : MNProgress {
+        var result = MNProgress(fractionCompleted: 0.0, info: nil)
+        result.setState(.pending, error: nil, fraction: nil)
+        return result
+    }
+    
     static fileprivate var discreteMNProgNrFormatters : [String:NumberFormatter] = [:]
 
     /// returns a formatted display string for progress units of completed items out of total items
@@ -320,324 +754,24 @@ struct MNProgress {
         }
         
         if decimalDigits == 0 {
-            return String(format: "%0", clamp(value: Int(fraction * 100), lowerlimit: 0, upperlimit: 100))
+            return String(format: "%d%%", clamp(value: Int(fraction * 100), lowerlimit: Int(0), upperlimit: Int(100)))
         } else {
-            return String(format: "%0.\(clamp(value: decimalDigits, lowerlimit: 1, upperlimit: 12))", clamp(value: Int(fraction * 100), lowerlimit: 0, upperlimit: 100))
-        }
-    }
-}
-
-extension MNProgress {
-    
-}
-
-
-/*
-// MNProgress is a bit like an OptionSet of MNProgressEnum where each option has an associated value.
-struct MNProgress {
-    
-    var items : Set<MNProgressType>
-    
-    private func item(ofType type : MNProgressType.Simplified)->MNProgressType? {
-        if let found = items.first(where: { item in
-            item.simplified == type
-        }) {
-            return found
-        }
-        return nil
-    }
-    
-    // MARK: lifecycle
-    init() {
-        items = Set<MNProgressType>()
-    }
-    
-    static var empty : MNProgress {
-        return MNProgress()
-    }
-    
-    var isEmpty : Bool {
-        return items.count == 0
-    }
-    
-    // MARK: Validataion
-    @discardableResult
-    func validate()->Bool {
-        
-        
-        guard self.items.count > 0 else {
-            dlog?.note("Invalid MNProgress - must contain at least one item")
-            return false
-        }
-        
-        let simplifiedItems = self.items.simplified
-        if let fractionCompleted : Double = self.item(ofType: .fraction), let discFraction = discrete?.fractionCompleted {
-            let delta = abs(fractionCompleted - discFraction)
-            if delta > 0.001 {
-                // the two data points do not match
-                dlog?.note("Invalid MNProgress - discrete counts mismatched the fraction completed.")
-                return false
-            }
-        }
-        
-        if let discrete = discrete, discrete.isOverflow {
-            dlog?.note("NOTE: MNProgress - discrete numbers did overflow (>100% progress)")
-        }
-        
-        if let fraction = fractionCompleted, fraction > 1.0 {
-            dlog?.note("NOTE: MNProgress - fraction did overflow (>100% progress)")
-        }
-        
-        if simplifiedItems.contains(.fraction) && simplifiedItems.contains(.discrete) {
-            var nativeFraction : Double? = nil
-            if let fraction : Double = self.item(ofType: .fraction) {
-                nativeFraction = fraction
-            } else if let fraction : FractionalMNProgStruct = self.item(ofType: .fraction) {
-                nativeFraction = fraction.fractionCompleted
-            }
-            if let fractionCompleted = nativeFraction, let discFraction = discrete?.fractionCompleted {
-                let delta = abs(fractionCompleted - discFraction)
-                if delta > 0.001 {
-                    // the two data points do not match
-                    if IS_DEBUG {
-                        let fractionStr = Self.progressFractionCompletedDisplayString(fractionCompleted: fractionCompleted)
-                        let discFractionStr = Self.progressFractionCompletedDisplayString(fractionCompleted: discFraction)
-                        dlog?.note("Invalid MNProgress - discrete counts mismatched the fraction completed. fraction: \(fractionStr) discrete items count:\(self.progressUnitsDisplayString.descOrNil) -> calced fraction: \(discFractionStr)")
-                    }
-                    return false
-                }
-            }
-        }
-        
-        return true
-    }
-    
-    // MARK: Update from source
-    mutating func update(fromFractional prog:FractionalMNProg & AnyObject) {
-        guard prog !== self.item(ofType: .fraction) else {
-            return
-        }
-        
-        if let disc = prog as? DiscreteMNProg & AnyObject {
-            self.update(fromDiscrete: disc)
-            return
-        }
-        
-        if let discrete = self.discrete {
-            if abs(discrete.fractionCompleted - prog.fractionCompleted) > 0.001 {
-                dlog?.note("Updating progress: dicrete counts do not match the fractional being added! \(self.progressUnitsDisplayString.descOrNil) = \(self.fractionCompletedDisplayString.descOrNil) != \(prog.fractionCompletedDisplayString)")
-            }
-        }
-        
-        self.fractionCompleted = prog.fractionCompleted
-    }
-    
-    mutating func update(fromDiscrete prog:DiscreteMNProg & AnyObject) {
-        if prog.isOverflow {
-            dlog?.note("Updating progress: adding dicrete numbers that are > 100%")
-        }
-        
-        if let frac : FractionalMNProg = self.item(ofType: .fraction)  {
-            if abs(prog.fractionCompleted - frac.fractionCompleted) > 0.001 {
-                dlog?.note("Updating progress: dicreets being added does not match the fraction elready in. adding: \(prog.progressUnitsDisplayString) = \(prog.fractionCompletedDisplayString) != \(self.fractionCompletedDisplayString.descOrNil)")
-            }
-        }
-        
-        self.discrete = DiscreteMNProgStruct(totalUnits: prog.totalUnitsCnt, completedUnits: prog.completedUnitsCnt)
-    }
-    
-    var onChanged : ((_ context:String, _ progress:MNProgress)->Void)? = nil
-    
-    // MARK: Display strings
-    var progressUnitsDisplayString : String? {
-        return self.progressUnitsDisplayString(thousandsSeparator: nil)
-    }
-    
-    var fractionCompletedDisplayString : String? {
-        return fractionCompletedDisplayString(decimalDigits: 0)
-    }
-    
-    func fractionCompletedDisplayString(decimalDigits:UInt = 0)->String? {
-        guard let fraction = self.fractionCompleted else {
-            return nil
-        }
-        
-        return MNProgress.progressFractionCompletedDisplayString(fractionCompleted: fraction, decimalDigits: decimalDigits)
-    }
-    
-    func progressUnitsDisplayString(thousandsSeparator separator:String? = ",")->String? {
-        guard let discrete = self.discrete else {
-            return nil
-        }
-        return MNProgress.progressUnitsDisplayString(completed: discrete.completedUnitsCnt, total: discrete.totalUnitsCnt, thousandsSeparator: separator)
-    }
-    
-    func didChange(context:String) {
-        dlog?.info("didChange \(context)")
-        onChanged?(context, self)
-    }
-    
-    // MARK: Properties
-    var completed: MNProgressCompletionType? {
-        get {
-            if let result : MNProgressCompletionType = self.item(ofType: .completed) {
-                return result
-            }
-            return nil
-        }
-        set {
-            var wasChanged = false
-            if let val = newValue {
-                wasChanged = (val != self.completed)
-                items.update(with: .completed(val))
-            } else {
-                wasChanged = (self.completed != nil)
-                items.remove(type: .completed)
-            }
-            if wasChanged {
-                didChange(context: "completed")
-            }
-            validate()
-        }
-    }
-    
-    var error: AppError? {
-        get {
-            if let result : AppError = self.item(ofType: .error) {
-                return result
-            }
-            return nil
-        }
-        set {
-            var wasChanged = false
-            if let val = newValue {
-                wasChanged = (val.domain != self.error?.domain || val.code != self.error?.code)
-                items.update(with: .error(val))
-            } else {
-                wasChanged = error != nil
-                items.remove(type: .error)
-            }
-            if wasChanged {
-                didChange(context: "error")
-            }
-            validate()
-        }
-    }
-    
-    var actionCompleted: MNProgressAction? {
-        get {
-            if let result : MNProgressAction = self.item(ofType: .actionCompleted) {
-                return result
-            }
-            return nil
-        }
-        set {
-            var wasChanged = false
-            if let val = newValue {
-                wasChanged = (val != self.actionCompleted)
-                items.update(with: .actionCompleted(val))
-            } else {
-                wasChanged = actionCompleted != nil
-                items.remove(type: .actionCompleted)
-            }
-            if wasChanged {
-                didChange(context: "actionCompleted")
-            }
-            validate()
-        }
-    }
-    
-    var discrete: DiscreteMNProg? {
-        get {
-            if let result : DiscreteMNProg = self.item(ofType: .discrete) {
-                return result
-            }
-            return nil
-        }
-        set {
-            var wasChanged = false
-            if let val = newValue {
-                wasChanged = (val.fractionCompleted != self.discrete?.fractionCompleted || val.totalUnitsCnt != self.discrete?.totalUnitsCnt || val.completedUnitsCnt != self.discrete?.completedUnitsCnt)
-                let newStruct = DiscreteMNProgStruct(totalUnits: val.totalUnitsCnt, completedUnits: val.completedUnitsCnt)
-                items.update(with: .discrete(newStruct))
-            } else {
-                wasChanged = (self.discrete != nil)
-                items.remove(type: .discrete)
-            }
-            if wasChanged {
-                didChange(context: "discrete")
-            }
-            validate()
-        }
-    }
-    
-    var totalUnitsCnt: UInt64? {
-        get {
-            return self.discrete?.totalUnitsCnt
-        }
-        set {
-            if let val = newValue {
-                let newDiscrete = DiscreteMNProgStruct(totalUnits: val, completedUnits: self.discrete?.completedUnitsCnt ?? 0)
-                self.discrete = newDiscrete
-            } else {
-                self.discrete = nil
-            }
-        }
-    }
-    
-    var completedUnitsCnt: UInt64? {
-        get {
-            return self.discrete?.completedUnitsCnt
-        }
-        set {
-            if let val = newValue {
-                let newDiscrete = DiscreteMNProgStruct(totalUnits: self.discrete?.totalUnitsCnt ?? 0, completedUnits: val)
-                self.discrete = newDiscrete
-            } else {
-                self.discrete = nil
-            }
-        }
-    }
-    
-    var fractionCompleted: Double? {
-        get {
-            if let discrete = self.discrete {
-                return discrete.fractionCompleted
-            } else if let fraction : Double = self.item(ofType: .fraction) {
-                return fraction
-            } else if let fraction : FractionalMNProgStruct = self.item(ofType: .fraction) {
-                return fraction.fractionCompleted
-            }
-            return nil
-        }
-        set {
-            var wasChanged = false
-            if let val = newValue {
-                wasChanged = (val != self.fractionCompleted)
-                items.update(with: .fraction(FractionalMNProgStruct(fractionCompleted: val)))
-            } else {
-                wasChanged = (self.fractionCompleted != nil)
-                items.remove(type: .fraction)
-            }
-            if wasChanged {
-                didChange(context: "fractionCompleted")
-            }
-            validate()
+            return String(format: "%0.\(clamp(value: decimalDigits, lowerlimit: 1, upperlimit: 12))f%%", clamp(value: Int(fraction * 100), lowerlimit: 0, upperlimit: 100))
         }
     }
 }
 
 extension MNProgress /* emit to an MNProgressObserver */ {
     
-    func emit(observers : ObserversArray<MNProgressObserver>) {
-        emit(observers: observers.array())
+    mutating func emit(observers : ObserversArray<MNProgressObserver>, sender:Any) {
+        emit(observers: observers.array(), sender: sender)
     }
     
-    func emit(observer : MNProgressObserver) {
-        self.emit(observers: [observer])
+    mutating func emit(observer : MNProgressObserver, sender:Any) {
+        self.emit(observers: [observer], sender: sender)
     }
     
-    func emit(observers : [MNProgressObserver]) {
+    mutating func emit(observers : [MNProgressObserver], sender:Any) {
         
         func execute(_ block:@escaping (MNProgressObserver)->Void) {
             DispatchQueue.mainIfNeeded {
@@ -647,29 +781,72 @@ extension MNProgress /* emit to an MNProgressObserver */ {
             }
         }
         
-        let simplified = self.items.simplified
-        if (simplified.contains(.discrete) || simplified.contains(.fraction)) &&
-            !simplified.contains(.completed) {
-            execute { observer in
-                observer.mnProgress(emitter: self, didProgress: self, fraction: self.fractionCompleted ?? 0.0, discretes: self.discrete)
+        let fraction = self.fractionCompleted
+        let discrete = self._progressNum.asDiscreteStructOrNil
+        let immutableCopy = self
+        switch _lastStateChange {
+        case (_, .pending):
+            let newSummary = MNProgressEmitSignature(messageName: "pending", progress: self)
+            if newSummary != self._lastEmittedSignature {
+                self._lastEmittedSignature = newSummary
+                execute { observer in
+                    observer.mnProgress(sender: sender, isPendingProgress: immutableCopy, fraction: fraction, discretes: discrete)
+                }
+            } else {
+                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
             }
-        } else if (simplified.contains(.error) || simplified.contains(.actionCompleted)) &&
-                    !simplified.contains(.completed) {
-            execute { observer in
-                observer.mnProgress(emitter: self, didChange: self, action: self.actionCompleted, error: self.error)
+        case (.pending, .inProgress):
+            let newSummary = MNProgressEmitSignature(messageName: "startProgress", progress: self)
+            if newSummary != self._lastEmittedSignature {
+                self._lastEmittedSignature = newSummary
+                
+                execute { observer in
+                    observer.mnProgress(sender: sender, didStartProgress: immutableCopy, fraction: fraction, discretes: discrete)
+                }
+                _lastStateChange = (.inProgress, .inProgress)
+            } else {
+                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
             }
-        } else if simplified.contains(.completed), let completed = self.completed {
-            
-            execute { observer in
-                observer.mnProgress(emitter: self, didComplete: self, type: completed, error: self.error)
+        case (_, .inProgress):
+            let newSummary = MNProgressEmitSignature(messageName: "progress", progress: self)
+            if newSummary != self._lastEmittedSignature {
+                self._lastEmittedSignature = newSummary
+                
+                execute { observer in
+                    observer.mnProgress(sender: sender, didProgress: immutableCopy, fraction: fraction, discretes: discrete)
+                }
+                // self.logAll(title:"")
+                
+            } else {
+                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
             }
-        } else {
-            dlog?.note("emit: TODO: Analyze this situation better")
-            execute { observer in
-                observer.mnProgress(emitter: self, didChange: self, action: self.actionCompleted, error: self.error)
+        case (_, .userCanceled), (_, .failed), (_, .success):
+            let newSummary = MNProgressEmitSignature(messageName: "complete", progress: self)
+            if newSummary != self._lastEmittedSignature {
+                self._lastEmittedSignature = newSummary
+                
+                execute { observer in
+                    observer.mnProgress(sender: sender, didComplete: immutableCopy, state: immutableCopy.state)
+                }
+            } else {
+                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
             }
         }
-        
+    }
+    
+}
+
+extension MNProgress : CustomStringConvertible {
+    var description: String {
+        let fractionStr = self.fractionCompletedDisplayString
+        return "\(type(of: self)) \(self.title ?? AppStr.UNTITLED.localized()) state: \(self.state) progress: \(fractionStr) discrete: \(self.discreteStructOrNil?.progressUnitsDisplayString ?? "<not discrete>")"
     }
 }
-*/
+
+extension MNProgress : Hashable {
+    
+    static func == (lhs: MNProgress, rhs: MNProgress) -> Bool {
+        return lhs.state == rhs.state && lhs.hashValue == rhs.hashValue
+    }
+    
+}

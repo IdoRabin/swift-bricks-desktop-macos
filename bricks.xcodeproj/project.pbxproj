@@ -75,7 +75,9 @@
 		EC46DB142764DAFF0070A2DC /* NSWindowEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */; };
 		EC46DB162764ECD70070A2DC /* NSApplicationEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */; };
 		EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */; };
+		EC6514AF2779581900F8063D /* CircleProgressBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6514AE2779581900F8063D /* CircleProgressBaseView.swift */; };
 		EC6741A8276B518100E9BB84 /* DocWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6741A7276B518100E9BB84 /* DocWC.swift */; };
+		EC6B8CFE27775FFA009B8469 /* NSTextFieldVCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6B8CFD27775FFA009B8469 /* NSTextFieldVCenterCell.swift */; };
 		EC71CE1F2764CDFE00947423 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71CE1E2764CDFE00947423 /* AboutVC.swift */; };
 		EC71CE222764CF5700947423 /* AppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71CE212764CF5700947423 /* AppCommands.swift */; };
 		EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */; };
@@ -115,6 +117,8 @@
 		EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */; };
 		ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA1B0CD2760101100B3D36A /* MainMenu.xib */; };
 		ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA1B0D02760114700B3D36A /* MainMenu.swift */; };
+		ECA2680A27787A3B004B5125 /* MNProgressBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA2680927787A3B004B5125 /* MNProgressBoxView.swift */; };
+		ECA2680C27787A50004B5125 /* MNProgressBoxView.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA2680B27787A50004B5125 /* MNProgressBoxView.xib */; };
 		ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */; };
 		ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */; };
 		ECA67B90276A013A00BC0D7D /* MainPanelToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */; };
@@ -141,7 +145,6 @@
 		ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B802762299C00DD602D /* MNToolbarItem.swift */; };
 		ECF685ED2774DF6A00BD68FB /* TestMNProgressEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */; };
 		ECF685EF2774DF9F00BD68FB /* MNProgress protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */; };
-		ECF685F12774DFC900BD68FB /* MNProgressAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685F02774DFC900BD68FB /* MNProgressAction.swift */; };
 		ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */; };
 		ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */; };
 /* End PBXBuildFile section */
@@ -265,7 +268,9 @@
 		EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWindowEx.swift; sourceTree = "<group>"; };
 		EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationEx.swift; sourceTree = "<group>"; };
 		EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageVC.swift; sourceTree = "<group>"; };
+		EC6514AE2779581900F8063D /* CircleProgressBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBaseView.swift; sourceTree = "<group>"; };
 		EC6741A7276B518100E9BB84 /* DocWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocWC.swift; sourceTree = "<group>"; };
+		EC6B8CFD27775FFA009B8469 /* NSTextFieldVCenterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextFieldVCenterCell.swift; sourceTree = "<group>"; };
 		EC71CE1E2764CDFE00947423 /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
 		EC71CE212764CF5700947423 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewcontroller+XIB.swift"; sourceTree = "<group>"; };
@@ -304,6 +309,8 @@
 		EC9DF01C275CE6DE0046F30A /* MVPRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MVPRouter.swift; sourceTree = "<group>"; };
 		ECA1B0CD2760101100B3D36A /* MainMenu.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
 		ECA1B0D02760114700B3D36A /* MainMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMenu.swift; sourceTree = "<group>"; };
+		ECA2680927787A3B004B5125 /* MNProgressBoxView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNProgressBoxView.swift; sourceTree = "<group>"; };
+		ECA2680B27787A50004B5125 /* MNProgressBoxView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MNProgressBoxView.xib; sourceTree = "<group>"; };
 		ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMenuEx.swift; sourceTree = "<group>"; };
 		ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocNameToolbarView.swift; sourceTree = "<group>"; };
 		ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPanelToolbarView.swift; sourceTree = "<group>"; };
@@ -330,7 +337,6 @@
 		ECEA1B802762299C00DD602D /* MNToolbarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNToolbarItem.swift; sourceTree = "<group>"; };
 		ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMNProgressEmitter.swift; sourceTree = "<group>"; };
 		ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MNProgress protocols.swift"; sourceTree = "<group>"; };
-		ECF685F02774DFC900BD68FB /* MNProgressAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNProgressAction.swift; sourceTree = "<group>"; };
 		ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImages.swift.swift; sourceTree = "<group>"; };
 		ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSSplitviewEx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -642,7 +648,6 @@
 			isa = PBXGroup;
 			children = (
 				ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */,
-				ECF685F02774DFC900BD68FB /* MNProgressAction.swift */,
 				EC2F5EE927726DCC00201865 /* MNProgress.swift */,
 				ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */,
 			);
@@ -692,9 +697,9 @@
 		EC9DEFE9275CD0D80046F30A /* UI Components */ = {
 			isa = PBXGroup;
 			children = (
+				ECA69C4827789BF40040E775 /* Progress */,
 				EC9DF013275CD29A0046F30A /* Gridview */,
 				EC9DEFEA275CD0E70046F30A /* NSTitleDetailTableCellView.swift */,
-				EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */,
 			);
 			path = "UI Components";
 			sourceTree = "<group>";
@@ -709,6 +714,7 @@
 				ECEA1B782762297000DD602D /* MNBaseView.swift */,
 				EC332CB6275EB65B00546767 /* MNButton.swift */,
 				ECEA1B722761FB7700DD602D /* MNMenuItem.swift.swift */,
+				EC6B8CFD27775FFA009B8469 /* NSTextFieldVCenterCell.swift */,
 			);
 			path = Subclasses;
 			sourceTree = "<group>";
@@ -761,6 +767,17 @@
 				EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */,
 			);
 			path = Toolbar;
+			sourceTree = "<group>";
+		};
+		ECA69C4827789BF40040E775 /* Progress */ = {
+			isa = PBXGroup;
+			children = (
+				ECA2680927787A3B004B5125 /* MNProgressBoxView.swift */,
+				ECA2680B27787A50004B5125 /* MNProgressBoxView.xib */,
+				EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */,
+				EC6514AE2779581900F8063D /* CircleProgressBaseView.swift */,
+			);
+			path = Progress;
 			sourceTree = "<group>";
 		};
 		ECAA83A627635C310016578C /* Preferences */ = {
@@ -951,6 +968,7 @@
 				EC069207276E46F700D9DD43 /* MainPanelToolbarView.xib in Resources */,
 				EC218ABF275931E800744400 /* Assets.xcassets in Resources */,
 				ECA1B0CE2760101100B3D36A /* MainMenu.xib in Resources */,
+				ECA2680C27787A50004B5125 /* MNProgressBoxView.xib in Resources */,
 				EC332CC9275ECAC600546767 /* Localizable.strings in Resources */,
 				EC332CCD275ECCA300546767 /* Doc.storyboard in Resources */,
 				EC069209276E4AC900D9DD43 /* DocNameToolbarView.xib in Resources */,
@@ -1012,6 +1030,7 @@
 				EC218B5827593CBF00744400 /* Array+Identifiable.swift in Sources */,
 				EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */,
 				EC9DEFE6275CD0B40046F30A /* SplashVC.swift in Sources */,
+				EC6514AF2779581900F8063D /* CircleProgressBaseView.swift in Sources */,
 				EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */,
 				ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */,
 				EC218B5927593CBF00744400 /* CustomStringConvertibleEx.swift in Sources */,
@@ -1081,7 +1100,6 @@
 				EC2F5EED27732D9A00201865 /* MNTree.swift in Sources */,
 				EC218B872759471100744400 /* BrickDoc.swift in Sources */,
 				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
-				ECF685F12774DFC900BD68FB /* MNProgressAction.swift in Sources */,
 				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,
 				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
@@ -1090,7 +1108,9 @@
 				EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */,
 				EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */,
 				EC218B4227593BE000744400 /* Selectable.swift in Sources */,
+				ECA2680A27787A3B004B5125 /* MNProgressBoxView.swift in Sources */,
 				EC9DEFFE275CD1BE0046F30A /* NSColorEx.swift in Sources */,
+				EC6B8CFE27775FFA009B8469 /* NSTextFieldVCenterCell.swift in Sources */,
 				EC218B6E27593DE100744400 /* AppStr.swift in Sources */,
 				EC218B7D2759448000744400 /* BrickBasicInfo.swift in Sources */,
 				EC218B13275939CC00744400 /* AppConstants.swift in Sources */,

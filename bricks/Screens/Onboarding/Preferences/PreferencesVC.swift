@@ -178,8 +178,7 @@ extension PreferencesVC : NSPageControllerDelegate {
                 vc.isViewLoaded
             }, completion: { waitResult in
                 DispatchQueue.mainIfNeeded {
-                    vc.view.wantsLayer = true
-                    vc.view.layer?.border(color: .cyan, width: 1)
+                    vc.view.debugBorder(color: .cyan, width: 1)
                 }
             }, counter: 1)
         }

@@ -166,6 +166,17 @@ extension NSView /* Layers*/ {
     }
 }
 
+fileprivate let debugBordersColors : [NSColor] = [
+    .systemBlue,
+    .systemTeal,
+    .systemCyan,
+    .systemPink,
+    .systemRed,
+    .systemOrange,
+    .systemYellow.blended(withFraction: 0.3, of: .systemGreen)!.darker(part: 0.1),
+    .systemGreen
+]
+
 extension NSView /* search subviews */ {
     
     
@@ -206,5 +217,53 @@ extension NSView /* search subviews */ {
             }
         }
         return nil
+    }
+    
+    private func internal_debugBorders(downtree:Bool = true, depth:Int = 0, alpha:CGFloat = 1.0) {
+        guard IS_DEBUG && depth < 126 else {
+            return
+        }
+        
+        if downtree {
+            if depth == 0 {
+                self.debugBorder(color: .systemGreen.withAlphaComponent(alpha), width: 1)
+            }
+            let colorIndex = depth % debugBordersColors.count
+            let color = debugBordersColors[colorIndex].withAlphaComponent(alpha)
+            for subview in subviews {
+                subview.debugBorder(color: color, width: 1)
+                subview.internal_debugBorders(downtree: true, depth: depth + 1, alpha:alpha)
+            }
+        } else {
+            self.layer?.border(color: .systemBlue, width: 1)
+        }
+        
+    }
+    
+    func debugBorders(downtree:Bool = true, alpha:CGFloat = 0.7) {
+        guard IS_DEBUG else {
+            return
+        }
+        self.internal_debugBorders(downtree: downtree, depth: 0, alpha:alpha)
+    }
+    
+    func debugBorder(color:NSColor = NSColor.cyan, width:CGFloat = 1.0) {
+        guard IS_DEBUG else {
+            return
+        }
+        self.border(color: color, width: width)
+    }
+    
+    func border(color:NSColor = NSColor.cyan, width:CGFloat = 1.0) {
+        self.wantsLayer = true
+        self.layer?.border(color: color, width: width)
+    }
+    
+    func corner(radius:CGFloat = 1.0) {
+        guard IS_DEBUG else {
+            return
+        }
+        self.wantsLayer = true
+        self.layer?.corner(radius: radius)
     }
 }

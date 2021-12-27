@@ -38,7 +38,6 @@ class DocWC : NSWindowController {
         self.windowIfLoaded?.toolbar?.items.forEachIndex({ index, item in
             item.tag = index
             if DEBUG_DRAWING, let view = item.view {
-                view.wantsLayer = true
                 view.layer?.debugBorder(color: .cyan.withAlphaComponent(0.5), width: 1)
             }
         })

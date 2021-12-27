@@ -69,6 +69,10 @@
 "LOADING" = "Loading"; // "Loading"
 "LOADING_DOT_DOT" = "Loading.."; // "Loading.."
 "LOADING_X_DOT_DOT_FORMAT" = "Loading %@.."; // "Loading X.."
+"PENDING" = "Pending"; // "Pending"
+"SUCCESS" = "Success"; // "Success"
+"FAILED" = "Failed"; // "Failed"
+"USER_CANCELED" = "User canceled"; // "User canceled"
 
 // Errors
 "OOPS_EXCL_POINT" = "Oops!"; // "Oops!"

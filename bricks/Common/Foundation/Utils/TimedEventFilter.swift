@@ -12,7 +12,8 @@ final class TimedEventFilter {
     
     public static let DEFAULT_INTERVAL_FOR_TEXTFIELD : TimeInterval = 0.188
     
-    private var _lock = DispatchQueue(label: "TimedEventFilter")
+    private var _lock = NSRecursiveLock()
+    private var _queue = DispatchQueue(label: "TimedEventFilter")
     private var _eventByKey : [String:EventValues] = [:]
     private var _accumValuesByKey : [String:[Any]] = [:]
     
@@ -30,18 +31,31 @@ final class TimedEventFilter {
     /// - Returns: event values for the given event key/
     private func safeEventByKey(_ key:String)->EventValues? {
         var result : EventValues? = nil
-        _lock.safeSync {
-            result = self._eventByKey[key]
+        _queue.safeSync {
+            self._lock.lock {
+                result = self._eventByKey[key]
+            }
+            
         }
         return result
     }
     
     private func safeAccumValsByKey(_ key:String)->[Any]? {
         var result : [Any]? = nil
-        _lock.safeSync {
-            result = self._accumValuesByKey[key]
+        _queue.safeSync {
+            self._lock.lock {
+                result = self._accumValuesByKey[key]
+            }
         }
         return result
+    }
+    
+    private func safeLock(_ block : @escaping (_ aself: TimedEventFilter)->Void) {
+        _queue.safeSync {[self] in
+            self._lock.lock {[self] in
+                block(self)
+            }
+        }
     }
     
     // Will filter events for the public methods by time -
@@ -74,15 +88,17 @@ final class TimedEventFilter {
                 
                 // Save last event time, but not the completion, which was called
                 let time:Date = Date()
-                self._lock.safeSync {
-                    self._eventByKey[key] = EventValues(time:time, contents:nil)
+                self.safeLock { aself in
+                    aself._eventByKey[key] = EventValues(time:time, contents:nil)
                 }
                 
-                self._lock.asyncAfter(delayFromNow: threshold) {
+                self._queue.asyncAfter(delayFromNow: threshold) {
                     
                     // After timeout, remove last event
                     if let evt = self.safeEventByKey(key), evt.time == time {
-                        self._eventByKey[key] = nil
+                        self.safeLock { aself in
+                            aself._eventByKey[key] = nil
+                        }
                     }
                 }
             } else {
@@ -93,18 +109,18 @@ final class TimedEventFilter {
                 
                 // Save event completion for later
                 let time : Date = Date()
-                self._lock.safeSync {
-                    self._eventByKey[key] = EventValues(time:time, contents:completion)
+                self.safeLock { aself in
+                    aself._eventByKey[key] = EventValues(time:time, contents:completion)
                 }
                 
                 // Dispatch after threshold time
-                self._lock.asyncAfter(delayFromNow: threshold) {
+                self._queue.asyncAfter(delayFromNow: threshold) {
                     // dlog?.info("asyncAfter done for : [\(key)] interval: \(abs(time.timeIntervalSinceNow))")
                     
                     if let evt = self.safeEventByKey(key), evt.time.timeIntervalSince1970Int64 == time.timeIntervalSince1970Int64 {
                         
-                        self._lock.safeSync {
-                            self._eventByKey[key] = EventValues(time:Date(), contents:nil)
+                        self.safeLock { aself in
+                            aself._eventByKey[key] = EventValues(time:Date(), contents:nil)
                         }
                         
                         // last event was the event we are talking about, was not overrriden by newerr event
@@ -149,10 +165,10 @@ final class TimedEventFilter {
         @discardableResult func accum(t:[T])->[T] {
             var result : [T] = t
             
-            self._lock.safeSync {[key] in
-                let vals = (self.safeAccumValsByKey(key) as? [T]) ?? [] // get existing array or create a new empty one
+            self.safeLock { [key] aself in
+                let vals = (aself.safeAccumValsByKey(key) as? [T]) ?? [] // get existing array or create a new empty one
                 result = vals.union(with: t) // union old with new array - uniqueElements kept..
-                self._accumValuesByKey[key] = result
+                aself._accumValuesByKey[key] = result
             }
             
             return result
@@ -174,8 +190,10 @@ final class TimedEventFilter {
             }
             
             // Aftr we call
-            self._lock.asyncAfter(delayFromNow: threshold * 1.1) {[self, key] in
-                self._accumValuesByKey[key] = nil
+            self._queue.asyncAfter(delayFromNow: threshold * 1.1) {[self, key] in
+                self.safeLock { [key] aself in
+                    self._accumValuesByKey[key] = nil
+                }
             }
         }
 

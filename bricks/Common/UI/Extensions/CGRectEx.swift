@@ -52,13 +52,18 @@ extension CGRect {
     func boundedSquare() -> CGRect {
         let minSze = min(self.width, self.height)
         if self.width > self.height {
-            return CGRect(x: self.origin.x + (self.width - minSze) / 2.0, y: self.origin.y, width: minSze, height: minSze)
+            return CGRect(x: self.origin.x + (self.width - minSze) / 2.0,
+                          y: self.origin.y,
+                          width: minSze,
+                          height: minSze)
         } else if self.width < self.height {
-            return CGRect(x: self.origin.x, y: self.origin.y + (self.height - minSze) / 2.0, width: minSze, height: minSze)
+            return CGRect(x: self.origin.x,
+                          y: self.origin.y + (self.height - minSze) / 2.0,
+                          width: minSze,
+                          height: minSze)
         }
         return self
     }
-    
     
     /// Returns the smallest bounding square (equal sided rectanle) that can fit (bounds) the self rectangle. The returned square ahs the same center as teh bound rect's center;
     /// - Returns: smaller bounding square, centerd

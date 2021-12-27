@@ -27,9 +27,36 @@ extension NSColor {
         self.init(calibratedHue: hsb.hue, saturation: hsb.saturation, brightness: hsb.brightness, alpha: hsb.alpha)
     }
     
+    func darker(part:CGFloat)->NSColor {
+        guard var hsb = self.CGFloatHSB else {
+            return self
+        }
+        hsb.brightness *= clamp(value: part, lowerlimit: 0.0, upperlimit: 1.0, outOfBounds: { part in
+            NSLog("NSColor.darker(part:CGFloat) part shoud be between 0.0 and 1.0")
+        })
+        return NSColor(withHSB: hsb)
+    }
+    
+    func lighter(part:CGFloat)->NSColor {
+        guard var hsb = self.CGFloatHSB else {
+            return self
+        }
+        hsb.brightness *= (1.0 + clamp(value: part, lowerlimit: 0.0, upperlimit: 1.0, outOfBounds: { part in
+            NSLog("NSColor.darker(part:CGFloat) part shoud be between 0.0 and 1.0")
+        }))
+        
+        return NSColor(withHSB: hsb)
+    }
 }
 
 extension NSColor { // }: Codable {
+    
+    convenience init?(hexString:String) {
+        if let col = hexString.colorFromHex() {
+            self.init(red: col.redComponent, green: col.greenComponent, blue: col.blueComponent, alpha: col.alphaComponent)
+        }
+        return nil
+    }
     
     static func colorFrom(hex: String)->NSColor? {
         guard hex.hasPrefix("#") || hex.hasPrefix("0x") else {
@@ -71,6 +98,7 @@ extension NSColor { // }: Codable {
 }
 
 extension String {
+    
     func colorFromHex()->NSColor? {
         guard self.hasPrefix("#") || self.hasPrefix("0x") else {
             return nil

@@ -25,20 +25,26 @@ func AppPlayAlertSound() {
     AudioServicesPlaySystemSound(systemSoundId)
 }
 
+extension NSColor {
+    static var appFailureOrange =  NSColor(named: "failure_orange_color")!
+    static var appFailureRed    =  NSColor(named: "failure_red_color")!
+    static var appSuccessGreen  =  NSColor(named: "success_green_color")!
+}
+
 struct AppConstants {
     static let SETTINGS_FILENAME = "bricks_app_settings"
     static let DOCUMENT_HISTORY_FILENAME = "brickFileHistory"
     static let BRICK_FILE_EXTENSION = "bricks"
     static let RULE_SET_FILE_EXTENSTION = "bricksruleset"
-    
 }
 
 // Constants
 extension String {
     public static let NBSP = "\u{00A0}"
+    public static let THIN_SPACE = "\u{2009}" // “thin space”, less than a full space
     public static let FIGURE_SPACE = "\u{2007}" // “Tabular width”, the width of digits
     public static let IDEOGRAPHIC_SPACE = "\u{3000}" // The width of ideographic (CJK) characters.
-    public static let NBHypen = "\u{2011}"
+    public static let NBHypen = "\u{2011}" // non-breaking hyphen
     public static let ZWSP = "\u{200B}" // Use with great care! ZERO WIDTH SPACE (HTML &#8203)
 }
 

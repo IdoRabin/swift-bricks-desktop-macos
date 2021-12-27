@@ -534,11 +534,11 @@ extension UIImage {
         return nil
     }
     
-    func applyCIFilter(_ named : String?, setup:(_ filter : CIFilter)->Void)->UIImage {
+    func applyCIFilter(_ named : String?, setupIfPossible:(_ filter : CIFilter)->Void)->UIImage {
         if let fname = named, let filter = CIFilter(name: fname) {
             let ciContext = CIContext()
             filter.setValue(CIImage(image: self), forKey: kCIInputImageKey)
-            setup(filter)
+            setupIfPossible(filter)
             let output = filter.outputImage
             let cgimg = ciContext.createCGImage(output!,from: output!.extent)
             let processedImage = UIImage(cgImage: cgimg!, scale:UIScreen.main.scale, orientation: self.imageOrientation)

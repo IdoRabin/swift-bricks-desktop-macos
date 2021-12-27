@@ -53,6 +53,16 @@ class DSLogger {
     private static let dateFormatter = DateFormatter()
     private let keys:DLogKeys
     
+    private var _indentLevel : Int = 0
+    private var indentLevel : Int {
+        get {
+            return _indentLevel
+        }
+        set {
+            _indentLevel = min(max(newValue, 0), 16)
+        }
+    }
+    
     // MARK: Testing
     init(keys:DLogKeys) {
         DSLogger.dateFormatter.dateFormat = "HH:mm:ss.SSS"
@@ -222,10 +232,12 @@ class DSLogger {
     // MARK: Private
     
     private func logLineHeader()->String {
-        return DSLogger.dateFormatter.string(from: Date()) + " | [" + self.keys.joined(separator: ".") + "] "
+        let indentStr = String(repeating: "  ", count: indentLevel)
+        return DSLogger.dateFormatter.string(from: Date()) + " | [" + self.keys.joined(separator: ".") + "] " + indentStr
     }
     
     private func println(_ str: String) {
+        
         let arr : [String] = str.split(separator: "\n").map(String.init)
         for s in arr {
             //NSLog(s)
@@ -330,6 +342,19 @@ class DSLogger {
             println("❌ \(items)")
             assertionFailure("DLog.fatal: \(items)")
         }
+    }
+    
+    // MARK: Indents
+    func indentedBlock(_ block:()->Void) {
+        self.indentLevel += 1
+        block()
+        self.indentLevel -= 1
+    }
+    func indentStart() {
+        self.indentLevel += 1
+    }
+    func indentEnd() {
+        self.indentLevel -= 1
     }
 }
 

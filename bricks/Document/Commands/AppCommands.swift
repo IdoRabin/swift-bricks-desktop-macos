@@ -50,6 +50,7 @@ class CmdSplashWindow : AppCommand {
                     
                     wc.window?.forceWindowCornerRadius(12, setup: { window in
                         window?.isMovableByWindowBackground = true
+                        window?.contentView?.wantsLayer = true
                         window?.contentView?.layer?.border(color: NSColor.underPageBackgroundColor, width: 1)
                     })
                     vc.setHistoryTableHidden(self.showsRecents == false)

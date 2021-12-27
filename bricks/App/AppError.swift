@@ -14,6 +14,14 @@ protocol AppErrorCodable {
     var desc : String { get }
     var domain : String { get }
     var code : AppErrorInt { get }
+    
+    var domainCodeDesc : String { get }
+}
+
+extension AppErrorCodable /* default implementation */ {
+    var domainCodeDesc : String {
+        return "\(self.domain).\(self.code)"
+    }
 }
 
 /// Main app class of error, is derived from Error, but can be initialized by AppError codes and also in concurrance with NSErrors and other Errors and underlying errors / filtered before determining eventual error code
@@ -43,10 +51,14 @@ public class AppError: Error, Codable, AppErrorCodable , CustomDebugStringConver
         }
     }
     
+    var hasUnderlyingError : Bool {
+        return underlyingError != nil
+    }
+    
     /// CustomStringConvertible
     /// We have the same description and debugDescription to avoid confusion
     public var description: String { // CustomStringConvertible
-        var result = "<\(self.domain)|\(self.code)> desc: \"\(desc)\"."
+        var result = "<\(self.domainCodeDesc)> desc: \"\(desc)\"."
         if let details = details, details.count > 0 {
             result += " details:\(details.description)"
         }
@@ -294,5 +306,19 @@ extension AppError /*appErrors*/ {
         } else {
             self.init(defaultErrorCode, details: detailsArray, underlyingError: underError)
         }
+    }
+}
+
+extension AppError : Equatable {
+    public static func == (lhs: AppError, rhs: AppError) -> Bool {
+        var result = lhs.domain == rhs.domain && lhs.code == rhs.code
+        if result {
+            if lhs.hasUnderlyingError != rhs.hasUnderlyingError {
+                result = false
+            } else if let lhsu = lhs.underlyingError, let rhsu = rhs.underlyingError {
+                result = lhsu == rhsu
+            }
+        }
+        return result
     }
 }

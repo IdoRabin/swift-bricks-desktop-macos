@@ -83,6 +83,10 @@ enum AppStr : Localizable {
     case LOADING // "Loading"
     case LOADING_DOT_DOT // "Loading.."
     case LOADING_X_DOT_DOT_FORMAT // "Loading X.."
+    case PENDING // "Pending"
+    case SUCCESS // "Success"
+    case FAILED // "Failed"
+    case USER_CANCELED // "User canceled"
     
     // Date / time
     case YEAR    // "Year" // Word for one single year

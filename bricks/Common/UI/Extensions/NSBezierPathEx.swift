@@ -27,7 +27,6 @@ public extension NSBezierPath {
     }
 
     // MARK: - NSBezierPath + ringPath
-    // MARK: Needed for YPRingProgressView
     class func ringPath(from rect: NSRect, with ringWidth: CGFloat) -> NSBezierPath {
         let inset = ringWidth / 2
         let rectWithInset = rect.insetBy(dx: inset, dy: inset)

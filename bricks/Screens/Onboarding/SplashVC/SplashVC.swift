@@ -124,16 +124,11 @@ class SplashVC : NSViewController {
         self.layoutMainActionButtons()
         
         if DEBUG_DRAWING {
-            // self.historyTableviewContainer.layer?.border(color: .red, width: 1)
-            // self.mainItemsConstainer.layer?.border(color: .green, width: 1)
-            self.startNewProjectButton.wantsLayer = true
-            self.startNewProjectButton.layer?.border(color: .cyan, width: 1)
-            
-            self.openExistinProjectButton.wantsLayer = true
-            self.openExistinProjectButton.layer?.border(color: .cyan, width: 1)
-            
-            self.startNewProjectButton.superview?.wantsLayer = true
-            self.startNewProjectButton.superview?.layer?.border(color: .magenta, width: 1)
+            // self.historyTableviewContainer.debugBorder(color: .red, width: 1)
+            // self.mainItemsConstainer.debugBorder(color: .green, width: 1)
+            self.startNewProjectButton.debugBorder(color: .cyan, width: 1)
+            self.openExistinProjectButton.debugBorder(color: .cyan, width: 1)
+            self.startNewProjectButton.superview?.debugBorder(color: .magenta, width: 1)
         }
     }
     
@@ -143,7 +138,7 @@ class SplashVC : NSViewController {
             view is MNColoredView
         } as? MNColoredView
         if DEBUG_DRAWING {
-            box?.layer?.border(color: .blue, width: 1)
+            box?.debugBorder(color: .blue, width: 1)
         }
         box?.frame = self.view.frame
         dlog?.info("viewDidLayout")

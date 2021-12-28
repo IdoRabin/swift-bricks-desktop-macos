@@ -323,8 +323,7 @@ final public class CircleProgressView: NSView {
     
     private var baseviewConstraints : [ConstraintName: Weak<NSLayoutConstraint>] = [:]
     
-    private func transformForShrinking()->CATransform3D {
-        
+    private func scaleForShrinking()->CGFloat {
         if baseviewLastUnshrunkRect.isEmpty &&
             baseView.frame.width  >= baseView.MIN_WIDTH &&
             baseView.frame.height >= baseView.MIN_HEIGHT
@@ -332,15 +331,21 @@ final public class CircleProgressView: NSView {
             // Save fallback
             baseviewLastUnshrunkRect = baseView.frame
         }
-
-        var transform = CATransform3DIdentity
+        
         // Scale
         // We caluclate the size of a few pixels out of the while frame, this is the minimum scale that we anyway can present.
         var scale = min(3 / max(baseviewLastUnshrunkRect.width, 2), 0.2)
         if DEBUG_DRAWING {
             scale = 0.36
         }
+        return scale
+    }
+    
+    private func transformForShrinking()->CATransform3D {
 
+        var transform = CATransform3DIdentity
+        
+        let scale = self.scaleForShrinking()
         transform = CATransform3DScale(transform, scale, scale, 1)
         
         return transform
@@ -354,7 +359,7 @@ final public class CircleProgressView: NSView {
             dlog?.info("setIsShrunk to:[\(operName)] animated:\(animated) isForced:\(isForced) isDelay:\(isDelay) cur progress:\(progress)")
             
             // Get info required before operation starts:
-            let newTransform = isShrink ? self.transformForShrinking() :  CATransform3DIdentity
+            let newScale = isShrink ? self.scaleForShrinking() :  1.0
             let xuprview = getSufficientSuperview(inView: self, depth: 0)
             let animationMultiplier = DEBUG_SLOW_ANIMATIONS ?  4.0 : 1.0
             let duration : TimeInterval = animationMultiplier * (isShrink ? SHRINK_ANIM_DURATION : UNSHRINK_ANIM_DURATION)
@@ -380,10 +385,16 @@ final public class CircleProgressView: NSView {
                 func executeChanges(context:NSAnimationContext?) {
                     dlog?.info("2 baseview: \(self.baseView.frame)")
                      baseviewConstraints[.centerX]?.value?.constant = 1
-                     self.baseView.ringsLayer.transform = newTransform
-//                    self.baseView.layer?.centerizeAnchor()
-                     self.baseviewConstraints[.centerX]?.value?.constant = 2
-//                    self.baseviewConstraints[.centerY]?.value?.constant = 0.1
+                     self.baseView.scale = newScale
+                    switch shrinkAnimationType {
+                    case .none, .shrinkToCenter:
+                        self.baseviewConstraints[.centerX]?.value?.constant = 0
+                    case .shrinkToLeading:
+                        self.baseviewConstraints[.centerX]?.value?.constant = -self.bounds.width*0.5
+                    case .shrinkToTrailing:
+                        self.baseviewConstraints[.centerX]?.value?.constant =  self.bounds.width*0.5
+                    }
+                     
                     DispatchQueue.main.async {
                         dlog?.info("2 baseview: \(self.baseView.frame)")
                     }

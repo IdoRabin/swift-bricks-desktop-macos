@@ -98,7 +98,7 @@ class CircleProgressBaseView : NSView {
     //private var lastUsedRect : CGRect = .zero
     
     private let rootLayer = CALayer()
-    public let ringsLayer = CALayer()
+    private let ringsLayer = CALayer()
     private let backgroundLayer = CALayer()
     private var bkgRingLayer = CAShapeLayer()
     private var progressRingLayer = CAShapeLayer()
@@ -181,6 +181,22 @@ class CircleProgressBaseView : NSView {
         return result
     }
     
+    private var _lastScale : CGFloat? = nil
+    public var scale : CGFloat {
+        get {
+            return _lastScale ?? 1.0
+        }
+        set {
+            if _lastScale != newValue {
+                _lastScale = newValue
+                var transform = CATransform3DIdentity
+                if newValue != 1.0 {
+                    transform = CATransform3DScale(transform, newValue, newValue, 1)
+                }
+                self.ringsLayer.transform = transform
+            }
+        }
+    }
     // MARK: Spinner animations
     private func startSpinAnimations() {
         
@@ -363,7 +379,7 @@ class CircleProgressBaseView : NSView {
         }
     }
     
-    func updateLayers(rectForLayers:CGRect? = nil) {
+    private func updateLayers(rectForLayers:CGRect? = nil) {
         
         var rect = CGRect.zero
         if let rectForLayers = rectForLayers {

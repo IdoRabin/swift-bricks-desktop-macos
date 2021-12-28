@@ -5,6 +5,7 @@
 //  Created by Ido on 27/12/2021.
 //
 
+import Accelerate
 import AppKit
 
 fileprivate let dlog : DSLogger? = DLog.forClass("CircleProgressBaseView")
@@ -97,7 +98,7 @@ class CircleProgressBaseView : NSView {
     //private var lastUsedRect : CGRect = .zero
     
     private let rootLayer = CALayer()
-    private let ringsLayer = CALayer()
+    public let ringsLayer = CALayer()
     private let backgroundLayer = CALayer()
     private var bkgRingLayer = CAShapeLayer()
     private var progressRingLayer = CAShapeLayer()
@@ -494,22 +495,6 @@ class CircleProgressBaseView : NSView {
     
     // MARK: - Lifecycle
     
-    // @discardableResult
-    // private func forceUpdateCurProgressOnInit()->CGFloat {
-    //     var prog : CGFloat = 0.0
-    //     switch progressType {
-    //     case .determinate:
-    //         prog = _progress
-    //     case .determinateSpin:
-    //         prog = _spinningProgress
-    //     case .indeterminateSpin:
-    //         prog = 0.5
-    //     }
-    // 
-    //     setNewProgress(prog, animated: false, forced: true)
-    //     return prog
-    // }
-    
     private func layoutLayers() {
         guard self.superview != nil, self.window != nil else {
             return
@@ -583,7 +568,7 @@ class CircleProgressBaseView : NSView {
         var sze = super.intrinsicContentSize
         sze.width = max(sze.width, _lastUsedLayersRect.width)
         sze.height = max(sze.width, _lastUsedLayersRect.height)
-        // dlog?.info("intrinsicContentSize \(sze)")
+        dlog?.info("intrinsicContentSize \(sze)")
         return sze
     }
     

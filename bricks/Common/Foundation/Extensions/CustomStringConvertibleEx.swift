@@ -86,3 +86,24 @@ extension Array where Element : CustomStringConvertible {
         }
     }
 }
+
+extension Dictionary where Value : CustomStringConvertible {
+    
+    var descriptionLines : String {
+        get {
+            var result : String = ""
+            if self.count > 0 {
+                self.forEachIndex { (index, element) in
+                    result.append("\n  ")
+                    result.append("\(element.key) = \(element.value)")
+                    if (index != self.count - 1) {
+                        result.append(",")
+                    }
+                }
+            }
+            
+            return "[\(result)\n]"
+        }
+    }
+}
+

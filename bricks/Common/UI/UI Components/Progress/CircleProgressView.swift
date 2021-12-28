@@ -120,8 +120,16 @@ final public class CircleProgressView: NSView {
         }
     }
     
-    @IBInspectable var isAutoShrinksOn100 : Bool = false
-    @IBInspectable var isAutoUnshrinksOnGt0 : Bool = true // when progress changes to greater than 0.0
+    struct AutoShrinkConfig: OptionSet {
+        let rawValue: Int
+        
+        static let isAutoShrinksOn100 = AutoShrinkConfig(rawValue: 1 << 0)
+        static let isAutoUnshrinksOnGt0 = AutoShrinkConfig(rawValue: 1 << 1)
+        static let isAutoUnshrinksChangesWConstraint = AutoShrinkConfig(rawValue: 1 << 2)
+        
+        static let all : AutoShrinkConfig = [.isAutoShrinksOn100, .isAutoUnshrinksOnGt0, .isAutoUnshrinksChangesWConstraint]
+    }
+    var autoShrinkConfig = AutoShrinkConfig.all
     
     // MARK: Outlets
     @IBOutlet weak var widthConstraint : NSLayoutConstraint? = nil
@@ -158,17 +166,53 @@ final public class CircleProgressView: NSView {
             baseview.translatesAutoresizingMaskIntoConstraints = false
             self.addSubview(baseview)
             _baseView = baseview
+
+            if baseviewConstraints.count == 0 {
+                
+                widthBeforeLastHideOrShrinkAnimation = self.bounds.width
+                
+                dlog?.info("layout setting up constraints:")
+                baseView.removeConstraints(baseView.constraints)
+                baseView.frame = self.bounds.boundedSquare()
+                
+                // Constraints
+                // let minSze = min(baseView.frame.width, baseView.frame.height)
+                baseviewConstraints = NSLayoutConstraint.activateAndReturn(constraints:[
+                    .centerY : baseView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+                    .centerX : baseView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+                    .aspectRatio :  baseView.addAspectRatioConstraint(isActive: true, multiplier: 1, constant: 0),
+                    .width : baseView.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 1.0, constant: -1),
+                    .height : baseView.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, multiplier: 1.0, constant: -1)
+                ])
+            }
+            
         }
+    }
+    
+    private enum ConstraintName : String, Hashable {
+        case centerX = "centerX"
+        case centerY = "centerY"
+        case aspectRatio = "aspectRatio"
+        case width = "width"
+        case height = "height"
     }
     
     private func setup() {
         DispatchQueue.main.performOncePerInstance(self) {
+            
+            self.autoresizesSubviews = true
             
             self.createBaseviewIfNeeded()
             
             if DEBUG_DRAWING {
                 self.debugBorder(color: .systemBlue.withAlphaComponent(0.4), width: 1)
                 baseView.debugBorder(color: .systemTeal.withAlphaComponent(0.5), width: 1)
+            }
+            
+            if DEBUG_DEV_TIMED_TEST {
+                DispatchQueue.main.asyncAfter(delayFromNow: 0.2) {
+                    self.devTestIfNeeded()
+                }
             }
         }
     }
@@ -184,13 +228,13 @@ final public class CircleProgressView: NSView {
             dlog?.indentedBlock {
                 if self.isContentsShrunk {
                     shrinkDir = .shrink
-                    if isAutoUnshrinksOnGt0 && self.progress > 0.0 {
+                    if autoShrinkConfig.contains(.isAutoUnshrinksOnGt0) && self.progress > 0.0 {
                         shrinkDir = .unshrink
                         dlog?.note("Ambigious init - started with self.isContentsShrunk == true, but with isAutoUnshrinksOnGt0 and self.progress > 0.0")
                     }
                 } else {
                     shrinkDir = .unshrink
-                    if isAutoShrinksOn100 && self.progress > 1.0 {
+                    if autoShrinkConfig.contains(.isAutoShrinksOn100) && self.progress > 1.0 {
                         dlog?.note("Ambigious init - started with self.isContentsShrunk == false, but with isAutoUnshrinksOn100 and self.progress > 1.0")
                         shrinkDir = .shrink
                     }
@@ -220,30 +264,7 @@ final public class CircleProgressView: NSView {
     // MARK: - Lifecycle
     public override func layout() {
         super.layout()
-        
-        if baseView.constraints.count <= 2 {
-            widthBeforeLastHideOrShrinkAnimation = self.bounds.width
-            
-            dlog?.info("layout setting up constraints:")
-            baseView.removeConstraints(baseView.constraints)
-            baseView.frame = self.bounds.boundedSquare()
-            
-            baseView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-            baseView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
-            
-            // Aspect ratio of 1.0
-            baseView.addConstraint(NSLayoutConstraint(item: baseView,
-                                                      attribute: .height,
-                                                      relatedBy: .equal,
-                                                      toItem: baseView,
-                                                      attribute: .width,
-                                                      multiplier: 1.0,
-                                                      constant: 0))
-            baseView.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 1.0, constant: -1).isActive = true
-            baseView.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, multiplier: 1.0, constant: -1).isActive = true
-            
-            self.afterFirstLayoutIfNeeded()
-        }
+        self.afterFirstLayoutIfNeeded()
     }
     
     public override func awakeFromNib() {
@@ -261,6 +282,7 @@ final public class CircleProgressView: NSView {
     }
     
     deinit {
+        baseviewConstraints.removeAll()
         clearAllClosureProperties()
         _baseView?.removeFromSuperview()
     }
@@ -299,6 +321,8 @@ final public class CircleProgressView: NSView {
         return getSufficientSuperview(inView: suprV, depth: depth + 1)
     }
     
+    private var baseviewConstraints : [ConstraintName: Weak<NSLayoutConstraint>] = [:]
+    
     private func transformForShrinking()->CATransform3D {
         
         if baseviewLastUnshrunkRect.isEmpty &&
@@ -308,40 +332,20 @@ final public class CircleProgressView: NSView {
             // Save fallback
             baseviewLastUnshrunkRect = baseView.frame
         }
-        
+
+        var transform = CATransform3DIdentity
+        // Scale
         // We caluclate the size of a few pixels out of the while frame, this is the minimum scale that we anyway can present.
         var scale = min(3 / max(baseviewLastUnshrunkRect.width, 2), 0.2)
         if DEBUG_DRAWING {
-            scale = 0.5
+            scale = 0.36
         }
-        let invScale = (1 - scale)
-        let newRect = self.baseView.layer!.frame.scaledAroundCenter(scale, scale)
-        
-        let w : CGFloat = self.bounds.width  - 1.4*newRect.width
-        let h : CGFloat = 0.0 // self.bounds.height - 1.4*newRect.height
-        
-        var transform = CATransform3DIdentity
-        
-        // Translate
-        switch self.shrinkAnimationType {
-        case .shrinkToCenter, .none:
-            transform = CATransform3DTranslate(transform, 0, -h, 0)
-        case .shrinkToLeading:
-            transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? w : -w, -h, 0)
-        case .shrinkToTrailing:
-            transform = CATransform3DTranslate(transform, IS_RTL_LAYOUT ? -w : w, -h, 0)
-        }
-        
-        // Scale
+
         transform = CATransform3DScale(transform, scale, scale, 1)
-        
-        DispatchQueue.main.asyncAfter(delayFromNow: 0.3) {
-            dlog?.info("ha!:\n  \(newRect)\n  \(self.baseView.layer!.frame)")
-        }
         
         return transform
     }
-    
+
     func setIsShrunk(_ isShrink:Bool, animated:Bool = true, isForced:Bool, isDelay:Bool = true, completion:(()->Void)? = nil) {
         if self._isContentsShrunk != isShrink || isForced {
             
@@ -370,11 +374,20 @@ final public class CircleProgressView: NSView {
                     
                     // Change flag:
                     self._isContentsShrunk = isShrink
+                    self.baseView.layer?.centerizeAnchor()
                 }
                 
                 func executeChanges(context:NSAnimationContext?) {
-                    self.baseView.layer?.centerizeAnchor()
-                    self.baseView.layer?.transform = newTransform
+                    dlog?.info("2 baseview: \(self.baseView.frame)")
+                     baseviewConstraints[.centerX]?.value?.constant = 1
+                     self.baseView.ringsLayer.transform = newTransform
+//                    self.baseView.layer?.centerizeAnchor()
+                     self.baseviewConstraints[.centerX]?.value?.constant = 2
+//                    self.baseviewConstraints[.centerY]?.value?.constant = 0.1
+                    DispatchQueue.main.async {
+                        dlog?.info("2 baseview: \(self.baseView.frame)")
+                    }
+                    
                 }
                 
                 func finalize() {
@@ -447,6 +460,36 @@ final public class CircleProgressView: NSView {
     }
 }
 
+extension CircleProgressView {
+    // MARK: Dev / Debug
+    func devTestIfNeeded() {
+        guard DEBUG_DEV_TIMED_TEST else {
+            return
+        }
+        
+        let delay : TimeInterval = 1.0
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.0) {
+            self.widthConstraint?.animator().constant = 59
+        }
+        //        DispatchQueue.main.asyncAfter(delayFromNow: delay + 1.5) {
+        //            self.progress = 1.0
+        //        }
+        //        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.0) {
+        //            self.progress = 0.5
+        //        }
+        //
+        //        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.5) {
+        //            self.progressType = .determinateSpin
+        //        }
+        //        DispatchQueue.main.asyncAfter(delayFromNow: delay + 4.5) {
+        //            self.progress = 1.0
+        //        }
+        //        DispatchQueue.main.asyncAfter(delayFromNow: delay + 4.5) {
+        //            self.progressType = .indeterminateSpin
+        //        }
+    }
+}
 //
 //    public override var frame: NSRect { didSet { if frame != oldValue { layout() }  } }
 //
@@ -648,36 +691,7 @@ final public class CircleProgressView: NSView {
 ////            completion?()
 ////        }
 //    }
-//
-//    // MARK: Dev / Debug
-//    func devTestIfNeeded() {
-//        guard DEBUG_DEV_TIMED_TEST else {
-//            return
-//        }
-//
 
-//
-//        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.0) {
-//            self.widthConstraint?.animator().constant = 59
-//        }
-////        DispatchQueue.main.asyncAfter(delayFromNow: delay + 1.5) {
-////            self.progress = 1.0
-////        }
-////        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.0) {
-////            self.progress = 0.5
-////        }
-////
-////        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.5) {
-////            self.progressType = .determinateSpin
-////        }
-////        DispatchQueue.main.asyncAfter(delayFromNow: delay + 4.5) {
-////            self.progress = 1.0
-////        }
-////        DispatchQueue.main.asyncAfter(delayFromNow: delay + 4.5) {
-////            self.progressType = .indeterminateSpin
-////        }
-//    }
-//}
 
 /*
 class X {

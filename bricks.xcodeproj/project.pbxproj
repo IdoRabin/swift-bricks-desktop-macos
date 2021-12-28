@@ -72,6 +72,7 @@
 		EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC332CB6275EB65B00546767 /* MNButton.swift */; };
 		EC332CC9275ECAC600546767 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = EC332CC6275ECAC500546767 /* Localizable.strings */; };
 		EC332CCD275ECCA300546767 /* Doc.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC332CCC275ECCA200546767 /* Doc.storyboard */; };
+		EC40D116277A03BF00741428 /* NSView+Search Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC40D115277A03BF00741428 /* NSView+Search Constraints.swift */; };
 		EC46DB142764DAFF0070A2DC /* NSWindowEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */; };
 		EC46DB162764ECD70070A2DC /* NSApplicationEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */; };
 		EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */; };
@@ -265,6 +266,7 @@
 		EC332CB6275EB65B00546767 /* MNButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNButton.swift; sourceTree = "<group>"; };
 		EC332CCC275ECCA200546767 /* Doc.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Doc.storyboard; sourceTree = "<group>"; };
 		EC332CCF275ED29E00546767 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		EC40D115277A03BF00741428 /* NSView+Search Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Search Constraints.swift"; sourceTree = "<group>"; };
 		EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWindowEx.swift; sourceTree = "<group>"; };
 		EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationEx.swift; sourceTree = "<group>"; };
 		EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageVC.swift; sourceTree = "<group>"; };
@@ -583,6 +585,7 @@
 				EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */,
 				EC9DEFF8275CD1BE0046F30A /* NSViewEx.swift */,
 				ECEA1B7427621AC900DD602D /* NSView+SearchSubviews.swift */,
+				EC40D115277A03BF00741428 /* NSView+Search Constraints.swift */,
 				EC9DEFF6275CD1BE0046F30A /* UIImage+Utils.swift */,
 				ECEA1B762762255500DD602D /* NSButtonEx.swift */,
 				EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */,
@@ -1061,6 +1064,7 @@
 				ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */,
 				EC218B4027593BE000744400 /* HashableObject.swift in Sources */,
 				ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */,
+				EC40D116277A03BF00741428 /* NSView+Search Constraints.swift in Sources */,
 				ECA67B90276A013A00BC0D7D /* MainPanelToolbarView.swift in Sources */,
 				EC218B7627593EE300744400 /* FileFinder.swift in Sources */,
 				EC218B5427593CBF00744400 /* SetEx.swift in Sources */,

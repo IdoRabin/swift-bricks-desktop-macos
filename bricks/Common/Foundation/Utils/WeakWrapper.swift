@@ -9,6 +9,40 @@
 import Foundation
 
 
+class Weak<T: AnyObject> {
+  weak var value : T?
+  init (value: T) {
+    self.value = value
+  }
+}
+
+extension Dictionary where Key : Weak<AnyObject> {
+    
+    /// Reaps and removes all wrapped references that were released and now point at null
+    /// NOTE: Do not call this during iterations, since the indexes and amount of items change -
+    mutating func invalidate() {
+        self = self.filter { nil != $0.key.value }
+    }
+}
+
+extension Dictionary where Value : Weak<AnyObject> {
+    
+    /// Reaps and removes all wrapped references that were released and now point at null
+    /// NOTE: Do not call this during iterations, since the indexes and amount of items change -
+    mutating func invalidate() {
+        self = self.filter { nil != $0.value.value }
+    }
+}
+
+extension Array where Element : Weak<AnyObject> {
+    
+    /// Reaps and removes all wrapped references that were released and now point at null
+    /// NOTE: Do not call this during iterations, since the indexes and amount of items change -
+    mutating func invalidate() {
+        self = self.filter { nil != $0.value }
+    }
+}
+
 /// A wrapper for weakly referenced objects, for use in observers arrays and other lists that require pointers to objects without retaining them
 public class WeakWrapper {
     weak var value: AnyObject?

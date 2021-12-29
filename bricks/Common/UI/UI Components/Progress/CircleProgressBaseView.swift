@@ -19,8 +19,6 @@ class CircleProgressBaseView : NSView {
     
     let MAX_WIDTH : CGFloat = 1200.0
     let MAX_HEIGHT : CGFloat = 1200.0
-    let MIN_WIDTH : CGFloat = 14.0
-    let MIN_HEIGHT : CGFloat = 14.0
     
     enum ProgressType  : String, Equatable {
         case determinate        // Progress in a circle, animating a filling arc
@@ -40,12 +38,12 @@ class CircleProgressBaseView : NSView {
     @IBInspectable var bkgRingIsFull : Bool = false { didSet { if bkgRingIsFull != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingWidth : CGFloat = 2.5 { didSet { if bkgRingWidth != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingColor : NSColor = .tertiaryLabelColor.blended(withFraction: 0.2, of: .secondaryLabelColor)! { didSet { if bkgRingColor != oldValue { updateLayers() } } }
-    @IBInspectable var bkgRingInset : CGFloat =  1.5 { didSet { if bkgRingInset != oldValue { updateLayers() } } }
+    @IBInspectable var bkgRingInset : CGFloat =  2.5 { didSet { if bkgRingInset != oldValue { updateLayers() } } }
     @IBInspectable var bkgRingOpacity : Float =  0.5 { didSet { if bkgRingOpacity != oldValue { updateLayers() } } }
     
     @IBInspectable var progressRingWidth : CGFloat = 2.5 { didSet { if progressRingWidth != oldValue { updateLayers() } } }
     @IBInspectable var progressRingColor : NSColor = .controlAccentColor { didSet { if progressRingColor != oldValue { updateLayers() } } }
-    @IBInspectable var progressRingInset : CGFloat = 1.5 { didSet { if progressRingInset != oldValue { updateLayers() } } }
+    @IBInspectable var progressRingInset : CGFloat = 2.5 { didSet { if progressRingInset != oldValue { updateLayers() } } }
     @IBInspectable var centerOffset : CGPoint = .zero { didSet { if centerOffset != oldValue { updateLayers() } } }
     
     // MARK: Private vars
@@ -105,7 +103,7 @@ class CircleProgressBaseView : NSView {
     private var progressRingLayerMask = CAShapeLayer()
     
     // keypathes
-    private let basicDisabledKeypathes : [String] = ["position", "frame", "bounds", "zPosition", "anchorPointZ", "contentsScale", "anchorPoint"]
+    private let basicDisabledKeypathes : [String] = [] // ["position", "frame", "bounds", "zPosition", "anchorPointZ", "contentsScale", "anchorPoint"]
     
     // MARK: Private funcs
     private func setNewProgressStrokeEnd(part:CGFloat, animated:Bool) {
@@ -150,22 +148,7 @@ class CircleProgressBaseView : NSView {
     }
     
     private func calcRectForLayers()->CGRect {
-        let rect = self.frame.boundsRect().boundedSquare().insetBy(dx: 0, dy: 0).offset(by: self.centerOffset).rounded()
-        
-        if !rect.isEmpty && !rect.isInfinite &&
-            rect.width >= MIN_WIDTH && rect.width < MAX_WIDTH &&
-            rect.height >= MIN_HEIGHT && rect.height < MAX_HEIGHT {
-            return rect
-        }
-        
-        if (self.bounds.width < MIN_WIDTH || self.bounds.height < MIN_HEIGHT) &&
-            _lastUsedLayersRect.isEmpty == false &&
-            _lastUsedLayersRect.width >= MIN_WIDTH &&
-            _lastUsedLayersRect.height >= MIN_HEIGHT {
-            return _lastUsedLayersRect
-        }
-        
-        return self.bounds
+        return self.frame.boundsRect().boundedSquare().offset(by: self.centerOffset).rounded()
     }
     
     // MARK: Hashable
@@ -180,23 +163,7 @@ class CircleProgressBaseView : NSView {
         
         return result
     }
-    
-    private var _lastScale : CGFloat? = nil
-    public var scale : CGFloat {
-        get {
-            return _lastScale ?? 1.0
-        }
-        set {
-            if _lastScale != newValue {
-                _lastScale = newValue
-                var transform = CATransform3DIdentity
-                if newValue != 1.0 {
-                    transform = CATransform3DScale(transform, newValue, newValue, 1)
-                }
-                self.ringsLayer.transform = transform
-            }
-        }
-    }
+
     // MARK: Spinner animations
     private func startSpinAnimations() {
         
@@ -387,25 +354,21 @@ class CircleProgressBaseView : NSView {
         } else {
             rect = self.calcRectForLayers()
         }
-        
-        if rect.width < MIN_WIDTH || rect.height < MIN_HEIGHT {
-            return
-        }
+
         
         let newTotalHash = self.hash
         if (lastTotalHash != newTotalHash) || (rect != _lastUsedLayersRect) {
             lastTotalHash = newTotalHash
-            if rect.width < MIN_WIDTH || rect.height < MIN_HEIGHT {
-                rect = CGRect(origin: .zero, size: CGSize(width: MIN_WIDTH, height: MIN_HEIGHT))
-            }
+//            if rect.width < MIN_WIDTH || rect.height < MIN_HEIGHT {
+//                rect = CGRect(origin: .zero, size: CGSize(width: MIN_WIDTH, height: MIN_HEIGHT))
+//            }
             if self.layer != rootLayer {
                 self.layer = rootLayer
             }
             
-            ringsLayer.frame = rect
             _lastUsedLayersRect = rect
             
-            CATransaction.noAnimation {
+            //CATransaction.noAnimation {
                 dlog?.info("updateLayers START bounds: \(rect) isHidden: \(self.isHidden)")
                 dlog?.indentedBlock {
                     updateBackgroundLayer(rect: rect)
@@ -413,7 +376,7 @@ class CircleProgressBaseView : NSView {
                     updateProgressRingLayer(rect: rect)
                     updateProgressRingLayerMask(rect:rect)
                 }
-            }
+            //}
             
             dlog?.info("updateLayers END")
         }
@@ -479,8 +442,7 @@ class CircleProgressBaseView : NSView {
                     layer.centerizeAnchor()
                     ringsLayer.addSublayer(layer)
                 }
-                // ringsLayer.centerizeAnchor()
-                
+
                 if DEBUG_DRAW_MASK_AS_LAYER == false {
                     progressRingLayer.mask = progressRingLayerMask
                 } else {
@@ -520,7 +482,7 @@ class CircleProgressBaseView : NSView {
         let rect = self.calcRectForLayers()
         
         // On every layout call:
-        CATransaction.noAnimation {
+        //CATransaction.noAnimation {
             ringsLayer.frame = rect
             let layers = [backgroundLayer, bkgRingLayer, progressRingLayer]
             
@@ -535,7 +497,7 @@ class CircleProgressBaseView : NSView {
             }
             
             if changes > 0 {
-                dlog?.info("layout START")
+                dlog?.info("layout START RectForLayers: \(rect)")
                 dlog?.indentedBlock {
                     self.updateLayers(rectForLayers: rect)
                     dlog?.indentEnd()
@@ -543,6 +505,18 @@ class CircleProgressBaseView : NSView {
                 dlog?.info("layout END")
             } else {
                 dlog?.indentEnd()
+            }
+        //}
+    }
+    
+    public override var frame : CGRect {
+        get {
+            return super.frame
+        }
+        set {
+            if super.frame != newValue {
+                super.frame = newValue
+                self.updateLayers()
             }
         }
     }

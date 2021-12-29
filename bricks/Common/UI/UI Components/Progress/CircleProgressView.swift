@@ -12,9 +12,9 @@ fileprivate let dlog : DSLogger? = DLog.forClass("CircleProgressView")
 
 // @IBDesignable
 final public class CircleProgressView: NSView {
-    let DEBUG_DRAWING = IS_DEBUG && true
+    let DEBUG_DRAWING = IS_DEBUG && false
     let DEBUG_DEV_TIMED_TEST = IS_DEBUG && true
-    let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && true
+    let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && false
     
     let SHRINK_ANIM_DURATION : TimeInterval = 0.4
     let SHRINK_ANIM_DELAY : TimeInterval = 0.2
@@ -22,16 +22,11 @@ final public class CircleProgressView: NSView {
     let UNSHRINK_ANIM_DELAY : TimeInterval = 0.1
     
     /// Determines type of animation to perform when hiding/showing the view. All values except .none will mean that as progress value changes, we will-auto hide/show the circle with the appropriate animation.
-    /// *case none*: will not animate shrink/unshrink while hiding / unhiding
-    /// *case shrinkToLeading*: will animate the progress rings to shrink / unshrink to the leading verical center.
-    /// *case shrinkToCenter*: will animate the progress rings to shrink / unshrink to the horitontal and verical center.
-    /// *case shrinkToTrailing*: will animate the progress rings to shrink / unshrink to the trailing verical center.
+
     enum ShrinkAnimationType {
         case none
-        case shrinkToLeading
         case shrinkToCenter
-        case shrinkToTrailing
-        
+
         var isNone : Bool {
             return self == .none
         }
@@ -95,10 +90,6 @@ final public class CircleProgressView: NSView {
     }
     
     // Direct pass of property
-    @IBInspectable var progress : CGFloat {
-        get { return baseView.progress}
-        set { baseView.progress = newValue }
-    }
     
     var  progressType : CircleProgressBaseView.ProgressType {
         get { return baseView.progressType}
@@ -126,10 +117,30 @@ final public class CircleProgressView: NSView {
         static let isAutoShrinksOn100 = AutoShrinkConfig(rawValue: 1 << 0)
         static let isAutoUnshrinksOnGt0 = AutoShrinkConfig(rawValue: 1 << 1)
         static let isAutoUnshrinksChangesWConstraint = AutoShrinkConfig(rawValue: 1 << 2)
+        static let isAutoShrinkUnshrinkChangesAlpha = AutoShrinkConfig(rawValue: 1 << 3)
         
-        static let all : AutoShrinkConfig = [.isAutoShrinksOn100, .isAutoUnshrinksOnGt0, .isAutoUnshrinksChangesWConstraint]
+        static let all : AutoShrinkConfig = [.isAutoShrinksOn100, .isAutoUnshrinksOnGt0, .isAutoUnshrinksChangesWConstraint, .isAutoShrinkUnshrinkChangesAlpha]
     }
     var autoShrinkConfig = AutoShrinkConfig.all
+    
+    // NOTE: Also triggers some autoshrnk events:
+    @IBInspectable var progress : CGFloat {
+        get { return baseView.progress}
+        set {
+            let oldValue = baseView.progress
+            if oldValue != newValue {
+                if (oldValue == 0 && newValue > 0 && autoShrinkConfig.contains(.isAutoUnshrinksOnGt0) && self.isContentsShrunk) ||
+                   (oldValue >= 1.0 && newValue < 1.0 && autoShrinkConfig.contains(.isAutoShrinksOn100) && self.isContentsShrunk) {
+                    self.setIsShrunk(false, animated: true, isForced: false, isDelay: false) {
+                        self.baseView.progress = newValue
+                    }
+                } else if (oldValue < 1.0 && newValue >= 1.0 && autoShrinkConfig.contains(.isAutoShrinksOn100) && self.isContentsShrunk) {
+                    self.baseView.progress = newValue
+                    self.setIsShrunk(true, animated: true, isForced: false, isDelay: false)
+                }
+            }
+        }
+    }
     
     // MARK: Outlets
     @IBOutlet weak var widthConstraint : NSLayoutConstraint? = nil
@@ -142,7 +153,7 @@ final public class CircleProgressView: NSView {
     
     // MARK: Public properties
     /// Determines type of animation to perform when hiding/showing the view. All values except .none will mean that as progress value changes, we will-auto hide/show the circle with the appropriate animation.
-    var shrinkAnimationType : ShrinkAnimationType = .shrinkToLeading
+    var shrinkAnimationType : ShrinkAnimationType = .shrinkToCenter
     weak var _baseView : CircleProgressBaseView? = nil
     var baseView : CircleProgressBaseView {
         get {
@@ -175,14 +186,16 @@ final public class CircleProgressView: NSView {
                 baseView.removeConstraints(baseView.constraints)
                 baseView.frame = self.bounds.boundedSquare()
                 
+                let sze = baseView.frame.width
+                
                 // Constraints
                 // let minSze = min(baseView.frame.width, baseView.frame.height)
                 baseviewConstraints = NSLayoutConstraint.activateAndReturn(constraints:[
                     .centerY : baseView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
                     .centerX : baseView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
                     .aspectRatio :  baseView.addAspectRatioConstraint(isActive: true, multiplier: 1, constant: 0),
-                    .width : baseView.widthAnchor.constraint(lessThanOrEqualTo: self.widthAnchor, multiplier: 1.0, constant: -1),
-                    .height : baseView.heightAnchor.constraint(lessThanOrEqualTo: self.heightAnchor, multiplier: 1.0, constant: -1)
+                    .width : baseView.widthAnchor.constraint(equalToConstant: sze - 3),
+                    .height : baseView.heightAnchor.constraint(equalToConstant: sze - 3)
                 ])
             }
             
@@ -302,9 +315,9 @@ final public class CircleProgressView: NSView {
     // MARK: Shrink / Unshrink
     private func saveWidthBeforeHideOrShrink(forced:Bool = false) {
         if !isAnimatingShrink && (self.isContentsShrunk == false || forced) {
-            widthBeforeLastHideOrShrinkAnimation = baseView.MIN_WIDTH
+            widthBeforeLastHideOrShrinkAnimation = max(min(self.bounds.width, self.bounds.height), 12) // baseView.MIN_WIDTH
             baseviewLastUnshrunkRect = baseView.frame
-            if let constr = self.widthConstraint?.constant, constr >= baseView.MIN_WIDTH {
+            if let constr = self.widthConstraint?.constant, constr >= 12 { //baseView.MIN_WIDTH {
                 widthBeforeLastHideOrShrinkAnimation = constr
             }
         } else {
@@ -322,34 +335,6 @@ final public class CircleProgressView: NSView {
     }
     
     private var baseviewConstraints : [ConstraintName: Weak<NSLayoutConstraint>] = [:]
-    
-    private func scaleForShrinking()->CGFloat {
-        if baseviewLastUnshrunkRect.isEmpty &&
-            baseView.frame.width  >= baseView.MIN_WIDTH &&
-            baseView.frame.height >= baseView.MIN_HEIGHT
-        {
-            // Save fallback
-            baseviewLastUnshrunkRect = baseView.frame
-        }
-        
-        // Scale
-        // We caluclate the size of a few pixels out of the while frame, this is the minimum scale that we anyway can present.
-        var scale = min(3 / max(baseviewLastUnshrunkRect.width, 2), 0.2)
-        if DEBUG_DRAWING {
-            scale = 0.36
-        }
-        return scale
-    }
-    
-    private func transformForShrinking()->CATransform3D {
-
-        var transform = CATransform3DIdentity
-        
-        let scale = self.scaleForShrinking()
-        transform = CATransform3DScale(transform, scale, scale, 1)
-        
-        return transform
-    }
 
     func setIsShrunk(_ isShrink:Bool, animated:Bool = true, isForced:Bool, isDelay:Bool = true, completion:(()->Void)? = nil) {
         if self._isContentsShrunk != isShrink || isForced {
@@ -359,7 +344,6 @@ final public class CircleProgressView: NSView {
             dlog?.info("setIsShrunk to:[\(operName)] animated:\(animated) isForced:\(isForced) isDelay:\(isDelay) cur progress:\(progress)")
             
             // Get info required before operation starts:
-            let newScale = isShrink ? self.scaleForShrinking() :  1.0
             let xuprview = getSufficientSuperview(inView: self, depth: 0)
             let animationMultiplier = DEBUG_SLOW_ANIMATIONS ?  4.0 : 1.0
             let duration : TimeInterval = animationMultiplier * (isShrink ? SHRINK_ANIM_DURATION : UNSHRINK_ANIM_DURATION)
@@ -383,22 +367,16 @@ final public class CircleProgressView: NSView {
                 }
                 
                 func executeChanges(context:NSAnimationContext?) {
-                    dlog?.info("2 baseview: \(self.baseView.frame)")
-                     baseviewConstraints[.centerX]?.value?.constant = 1
-                     self.baseView.scale = newScale
-                    switch shrinkAnimationType {
-                    case .none, .shrinkToCenter:
-                        self.baseviewConstraints[.centerX]?.value?.constant = 0
-                    case .shrinkToLeading:
-                        self.baseviewConstraints[.centerX]?.value?.constant = -self.bounds.width*0.5
-                    case .shrinkToTrailing:
-                        self.baseviewConstraints[.centerX]?.value?.constant =  self.bounds.width*0.5
-                    }
-                     
-                    DispatchQueue.main.async {
-                        dlog?.info("2 baseview: \(self.baseView.frame)")
-                    }
+                    baseviewConstraints[.centerX]?.value?.constant = 1
                     
+                    dlog?.info("setIsShrunk executeChanges to:[\(operName)] animated:\(animated)")
+                    // Shrink first
+                    if autoShrinkConfig.contains(.isAutoUnshrinksChangesWConstraint) {
+                        self.widthConstraint?.constant = isShrink ? 1 : self.widthBeforeLastHideOrShrinkAnimation
+                    }
+                    if autoShrinkConfig.contains(.isAutoShrinkUnshrinkChangesAlpha) {
+                        self.baseView.alphaValue = isShrink ? 0.0 : 1.0
+                    }
                 }
                 
                 func finalize() {
@@ -463,11 +441,11 @@ final public class CircleProgressView: NSView {
     }
     
     public func shrink(animated:Bool = true, completion:(()->Void)? = nil) {
-        self.setIsShrunk(true, animated: true, isForced: false, isDelay: false)
+        self.setIsShrunk(true, animated: true, isForced: false, isDelay: false, completion:completion)
     }
     
     public func unshrink(animated:Bool = true, completion:(()->Void)? = nil) {
-        self.setIsShrunk(false, animated: true, isForced: false, isDelay: false)
+        self.setIsShrunk(false, animated: true, isForced: false, isDelay: false, completion:completion)
     }
 }
 
@@ -481,7 +459,17 @@ extension CircleProgressView {
         let delay : TimeInterval = 1.0
         
         DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.0) {
-            self.widthConstraint?.animator().constant = 59
+             // self.setIsShrunk(false, isForced: false)
+            self.progress = 0.5
+        }
+        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.3) {
+             // self.setIsShrunk(false, isForced: false)
+            self.progress = 0.75
+        }
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: delay + 3.45) {
+             // self.setIsShrunk(false, isForced: false)
+            self.progress = 1.0
         }
         //        DispatchQueue.main.asyncAfter(delayFromNow: delay + 1.5) {
         //            self.progress = 1.0
@@ -599,7 +587,7 @@ extension CircleProgressView {
 ////                dlog?.info("unhideAnimation START")
 ////                dlog?.indentStart()
 ////                context.allowsImplicitAnimation = true
-////                ringsLayer.transform = CATransform3DIdentity
+////                ringsLay   er.transform = CATransform3DIdentity
 ////                widthConstraint?.constant = widthBeforeLastHideOrShrinkAnimation
 ////                ringsLayer.frame = self.rectForLayers()
 ////                ringsLayer.centerizeAnchor()

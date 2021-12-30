@@ -12,15 +12,15 @@ extension NSColor {
      calibrated in the RGB color space. Each tuple value is a CGFloat between 0 and 1.
      */
     var CGFloatHSB: (hue:CGFloat, saturation:CGFloat, brightness:CGFloat, alpha:CGFloat)? {
-        if let calibratedColor = NSColor.white.usingColorSpace(NSColorSpace.extendedSRGB) {  // genericRGB // NSColorSpace corresponding to Cocoa color space name NSCalibratedRGBColorSpace // NSColorSpaceName.calibratedRGB
-        var hueComponent:        CGFloat = 0
-        var saturationComponent: CGFloat = 0
-        var brightnessComponent: CGFloat = 0
-        var alphaFloatValue:     CGFloat = 0
-        calibratedColor.getHue(&hueComponent, saturation: &saturationComponent, brightness: &brightnessComponent, alpha: &alphaFloatValue)
-        return (hueComponent, saturationComponent, brightnessComponent, alphaFloatValue)
-      }
-      return nil
+        if let calibratedColor = self.usingColorSpace(NSColorSpace.extendedSRGB) {  // genericRGB // NSColorSpace corresponding to Cocoa color space name NSCalibratedRGBColorSpace // NSColorSpaceName.calibratedRGB
+            var hueComponent:        CGFloat = 0
+            var saturationComponent: CGFloat = 0
+            var brightnessComponent: CGFloat = 0
+            var alphaFloatValue:     CGFloat = 0
+            calibratedColor.getHue(&hueComponent, saturation: &saturationComponent, brightness: &brightnessComponent, alpha: &alphaFloatValue)
+            return (hueComponent, saturationComponent, brightnessComponent, alphaFloatValue)
+        }
+        return nil
     }
     
     public convenience init(withHSB hsb:(hue:CGFloat, saturation:CGFloat, brightness:CGFloat, alpha:CGFloat)) {
@@ -31,8 +31,8 @@ extension NSColor {
         guard var hsb = self.CGFloatHSB else {
             return self
         }
-        hsb.brightness *= clamp(value: part, lowerlimit: 0.0, upperlimit: 1.0, outOfBounds: { part in
-            NSLog("NSColor.darker(part:CGFloat) part shoud be between 0.0 and 1.0")
+        hsb.brightness *= clamp(value: (1 - part), lowerlimit: 0.0, upperlimit: 1.0, outOfBounds: { part in
+            NSLog("NSColor.darker(part:CGFloat) part should be between 0.0 and 1.0")
         })
         return NSColor(withHSB: hsb)
     }
@@ -42,9 +42,29 @@ extension NSColor {
             return self
         }
         hsb.brightness *= (1.0 + clamp(value: part, lowerlimit: 0.0, upperlimit: 1.0, outOfBounds: { part in
-            NSLog("NSColor.darker(part:CGFloat) part shoud be between 0.0 and 1.0")
+            NSLog("NSColor.darker(part:CGFloat) part should be between 0.0 and 1.0")
         }))
         
+        return NSColor(withHSB: hsb)
+    }
+    
+    func desaturate(part0to1:CGFloat)->NSColor {
+        guard var hsb = self.CGFloatHSB else {
+            return self
+        }
+        hsb.saturation *= clamp(value: part0to1, lowerlimit: 0.0, upperlimit: 1.0, outOfBounds: { part in
+            NSLog("NSColor.desaturate(part:CGFloat) part should be between 0.0 and 1.0")
+        })
+        return NSColor(withHSB: hsb)
+    }
+    
+    func saturate(part0to1:CGFloat)->NSColor {
+        guard var hsb = self.CGFloatHSB else {
+            return self
+        }
+        hsb.saturation *= clamp(value: 1.0 + part0to1, lowerlimit: 1.0, upperlimit: 2.0, outOfBounds: { part in
+            NSLog("NSColor.saturate(part:CGFloat) part should be between 0.0 and 1.0")
+        })
         return NSColor(withHSB: hsb)
     }
 }

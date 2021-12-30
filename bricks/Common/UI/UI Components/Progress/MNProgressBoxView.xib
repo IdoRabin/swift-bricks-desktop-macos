@@ -17,15 +17,12 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="32" id="jiJ-RP-j3m"/>
                     </constraints>
-                    <connections>
-                        <outlet property="widthConstraint" destination="jiJ-RP-j3m" id="kSZ-0v-daJ"/>
-                    </connections>
                 </customView>
                 <customView translatesAutoresizingMaskIntoConstraints="NO" id="xkf-nU-hfY" userLabel="labelsContainer">
                     <rect key="frame" x="18" y="0.0" width="238" height="34"/>
                     <subviews>
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SKd-wR-3Se" userLabel="unitsLabel">
-                            <rect key="frame" x="72" y="9" width="168" height="16"/>
+                            <rect key="frame" x="74" y="9" width="166" height="16"/>
                             <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" allowsUndo="NO" focusRingType="none" title="1/100" usesSingleLineMode="YES" id="zRU-1t-3R2">
                                 <font key="font" usesAppearanceFont="YES"/>
                                 <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
@@ -56,7 +53,7 @@
                         <constraint firstItem="SKd-wR-3Se" firstAttribute="centerY" secondItem="aa6-fZ-8l7" secondAttribute="centerY" id="G7E-0M-mMG"/>
                         <constraint firstItem="Tfk-26-3hv" firstAttribute="trailing" secondItem="aa6-fZ-8l7" secondAttribute="trailing" id="KSf-Tf-WCr"/>
                         <constraint firstItem="aa6-fZ-8l7" firstAttribute="centerY" secondItem="xkf-nU-hfY" secondAttribute="centerY" id="PFz-a5-K8t"/>
-                        <constraint firstItem="SKd-wR-3Se" firstAttribute="leading" secondItem="aa6-fZ-8l7" secondAttribute="trailing" constant="2" id="VCY-pL-C8X"/>
+                        <constraint firstItem="SKd-wR-3Se" firstAttribute="leading" secondItem="aa6-fZ-8l7" secondAttribute="trailing" constant="4" id="VCY-pL-C8X"/>
                         <constraint firstAttribute="bottom" secondItem="Tfk-26-3hv" secondAttribute="bottom" constant="-2" id="caS-fK-PZS"/>
                         <constraint firstItem="aa6-fZ-8l7" firstAttribute="leading" secondItem="xkf-nU-hfY" secondAttribute="leading" constant="2" id="sVV-gM-DbR"/>
                     </constraints>
@@ -74,7 +71,7 @@
             <connections>
                 <outlet property="leadingPadConstraint" destination="KZd-de-SRt" id="5Se-Vh-TuX"/>
                 <outlet property="progressCircle" destination="EDJ-iG-COl" id="BWE-CR-cDx"/>
-                <outlet property="progressWidthConstraint" destination="jiJ-RP-j3m" id="nGj-ZB-c8P"/>
+                <outlet property="progressWidthConstraint" destination="jiJ-RP-j3m" id="csw-qy-hny"/>
                 <outlet property="subtitleLabel" destination="Tfk-26-3hv" id="XQ8-WV-U6x"/>
                 <outlet property="subtitleLabelBottomConstraint" destination="caS-fK-PZS" id="rh3-H7-dz6"/>
                 <outlet property="titleLabel" destination="aa6-fZ-8l7" id="h7f-y9-eks"/>

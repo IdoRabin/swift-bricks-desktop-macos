@@ -54,7 +54,7 @@ class DSLogger {
     private let keys:DLogKeys
     
     private var _indentLevel : Int = 0
-    private var indentLevel : Int {
+    fileprivate var indentLevel : Int {
         get {
             return _indentLevel
         }
@@ -343,19 +343,6 @@ class DSLogger {
             assertionFailure("DLog.fatal: \(items)")
         }
     }
-    
-    // MARK: Indents
-    func indentedBlock(_ block:()->Void) {
-        self.indentLevel += 1
-        block()
-        self.indentLevel -= 1
-    }
-    func indentStart() {
-        self.indentLevel += 1
-    }
-    func indentEnd() {
-        self.indentLevel -= 1
-    }
 }
 
 /// Logger utility for swift
@@ -446,6 +433,22 @@ enum DLog : String {
         }
     }
     
+    // MARK: Indents
+    static func indentedBlock(logger:DSLogger?, _ block:()->Void) {
+        logger?.indentLevel += 1
+        block()
+        logger?.indentLevel -= 1
+    }
+    
+    static func indentStart(logger:DSLogger?) {
+        logger?.indentLevel += 1
+    }
+    
+    static func indentEnd(logger:DSLogger?) {
+        logger?.indentLevel -= 1
+    }
+    
+    // MARK: types of log
     public func info(_ items: String, indent: Int = 0) {
         self[self.rawValue]?.info(items, indent: indent)
     }

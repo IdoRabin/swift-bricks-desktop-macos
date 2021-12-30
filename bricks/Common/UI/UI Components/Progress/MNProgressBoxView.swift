@@ -9,19 +9,23 @@ import AppKit
 
 fileprivate typealias ProgressTexts = (title:String?, subtitle:String?)
 
-fileprivate let dlog : DSLogger? = DLog.forClass("MNProgressBV")
+fileprivate let dlog : DSLogger? = nil // DLog.forClass("MNProgressBV")
 
 class MNProgressBoxView : NSView {
     
     // MARK: static and enum
     private let DEBUG_DRAWING = IS_DEBUG && false
-    private let DEBUG_TEST_PROGRESS_OBSERVATION = IS_DEBUG && false
+    private let DEBUG_TEST_PROGRESS_OBSERVATION = IS_DEBUG && true
+    private let DEBUG_INIT_WITH_CIRCLE_SHOWN = IS_DEBUG && false
     private let DEBUG_ALWAYS_HAVE_TITLE = IS_DEBUG && false
     private let DEBUG_ALWAYS_HAVE_SUBTITLE = IS_DEBUG && false
+    private let DEFAULT_LEADING_PAD : CGFloat = 18
+    private let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && false
     
     private enum ProgressCircleState {
         case visible
         case hidden
+        var isVisible : Bool { return self == .visible }
     }
     
     // MARK: UI outlets
@@ -38,6 +42,8 @@ class MNProgressBoxView : NSView {
     // MARK: Properties
     fileprivate var lastRecievedProgressTexts : ProgressTexts? = nil
     fileprivate var lastLabelsPresentedCount : Int = 0
+    fileprivate var progressCircleUnshrunkWidth : CGFloat = 32
+    fileprivate var progressCircleShrunkWidth : CGFloat = 1
     
     @IBInspectable var title : String {
         get {
@@ -137,6 +143,26 @@ class MNProgressBoxView : NSView {
     }
 
     // MARK: Private
+    
+    override func layout() {
+        super.layout()
+        DispatchQueue.main.performOncePerInstance(self) {
+            dlog?.info("first layout - circle progressWidthConstraint will be \(self.bounds.height)")
+            let newH = self.bounds.height
+            progressCircleUnshrunkWidth = newH
+            
+            // Hide progress circle on init
+            if DEBUG_INIT_WITH_CIRCLE_SHOWN {
+                progressWidthConstraint.constant = progressCircleUnshrunkWidth
+            } else {
+                self.leadingPadConstraint.constant = DEFAULT_LEADING_PAD + newH
+                self.leadingPadConstraint.priority = .defaultHigh
+                progressWidthConstraint.constant = progress > 0.0 ? newH : 0.0
+            }
+            
+        }
+    }
+    
     override func viewDidMoveToSuperview() {
         super.viewDidMoveToSuperview()
         self.setup()
@@ -148,6 +174,7 @@ class MNProgressBoxView : NSView {
         
         if DEBUG_DRAWING {
             self.debugBorders(downtree: true, alpha: 0.5)
+            self.progressCircle.debugBorder(color: .red, width: 1)
         }
     }
     
@@ -156,24 +183,7 @@ class MNProgressBoxView : NSView {
             return
         }
         DispatchQueue.main.performOncePerInstance(self) {
-            dlog?.info("setup height: \(self.bounds.height) circleWidth: \(progressWidthConstraint.constant) sze: \(progressCircle.frame.size)")
-
-            // Init using the awoken up hidden state:
-            if progressWidthConstraint != nil && progressCircle.widthConstraint == nil {
-                progressCircle.widthConstraint = progressWidthConstraint
-            }
-//            progressWidthConstraint.constant = progressCircle.isHidden ? 0.0 : 32.0
-//            progressCircle.setIsHidden(progressCircle.isHidden, animated: false, isForced: true)
-            let targetW : CGFloat = 2
-            progressCircle.onShrinking = {[weak self] (context) in
-                // let existingW = self?.progressCircle.bounds.width ?? 28
-                //self?.progressWidthConstraint.animator().constant = targetW
-//                self?.leadingPadConstraint.constant = 18 + existingW - targetW
-            }
-            progressCircle.onUnshrinking = {[weak self] (context) in
-                //self?.progressWidthConstraint.animator().constant = 28
-//                self?.leadingPadConstraint.constant = 18
-            }
+            dlog?.info("setup height: \(self.bounds.height) circle progressWidthConstraint: \(progressWidthConstraint.constant) sze: \(progressCircle.frame.size)")
         }
     }
     
@@ -187,7 +197,7 @@ class MNProgressBoxView : NSView {
     }
     
     deinit {
-        progressCircle?.clearAllClosureProperties() // will deinit nicely even if we have a cyclic reference in the blocks..
+//        progressCircle?.clearAllClosureProperties() // will deinit nicely even if we have a cyclic reference in the blocks..
         TestMNProgressEmitter.shared.observers.remove(observer: self)
         dlog?.info("deinit")
     }
@@ -236,38 +246,98 @@ class MNProgressBoxView : NSView {
         return ProgressTexts(title:title, subtitle:subtitle)
     }
     
+    private var currentCircleState : ProgressCircleState {
+        return (progressCircle.isHidden || progressCircle.alphaValue == 0.0 || progressWidthConstraint.constant < 2) ? .hidden : .visible
+    }
+    
+    private func updateCircleProgress(withProgress newProgress:CGFloat,
+                                      animated:Bool,
+                                      iconPresentation:CircleProgressView.IconPresentationInfo?,
+                                      forcedProgressCircleState:ProgressCircleState? = nil) {
+        let prevCircleState : ProgressCircleState = self.currentCircleState
+        var newCircleState : ProgressCircleState = .visible
+        let prevProgress = progressCircle.progress
+        let curCircleState = self.currentCircleState
+        
+        // Determine required state:
+        if (prevProgress <= 0.0 || curCircleState == .hidden) && newProgress > 0.0 {
+            newCircleState = .visible
+        } else if (prevProgress <= 1.0 || curCircleState == .visible) && newProgress > 1.0 {
+            newCircleState = .hidden
+        } else {
+            newCircleState = forcedProgressCircleState ?? .visible
+        }
+        
+        let isShouldShowIcon = ((iconPresentation != nil) != progressCircle.isIconPresented)
+        
+        // Update progress regardless of state:
+        progressCircle.progress = newProgress
+        
+        if (newCircleState != prevCircleState || isShouldShowIcon) {
+
+            let duration : TimeInterval = DEBUG_SLOW_ANIMATIONS ? 1.5 : 0.25
+            NSView.animate(duration: duration, delay: 0.0) { context in
+                context.allowsImplicitAnimation = true
+                self.progressWidthConstraint.animator().constant = newCircleState.isVisible ? self.progressCircleUnshrunkWidth : self.progressCircleShrunkWidth
+                if (newCircleState != prevCircleState) {
+                    switch newCircleState {
+                    case .visible:
+                        self.progressCircle.alphaValue = 1.0
+                    case .hidden:
+                        self.progressCircle.alphaValue = 0.0
+                    }
+                }
+            } completionHandler: {
+                if isShouldShowIcon, let iconPresentation = iconPresentation {
+                    self.progressCircle.presentIcon(info: iconPresentation, completion:{
+                        dlog?.info("iconPresentationInfo presented")
+                        self.updateCircleProgress(withProgress: newProgress,
+                                                  animated: animated,
+                                                  iconPresentation: nil,
+                                                  forcedProgressCircleState: .hidden)
+                    })
+                }
+            }
+
+        }
+    }
+    
     private func update(with mnProgress:MNProgress) {
         
         // Calc title and subtitle:
         var texts = self.calcProgressTexts(with: mnProgress)
         
-        // Update progress percentages:
-        self.progressCircle?.progressType = mnProgress.isLongTimeAction ? .determinateSpin : .determinate
-        self.progressCircle?.progress = mnProgress.fractionCompleted
-        
         // Update misc. using the state:
+        var forceCircleState : ProgressCircleState? = nil
+        var iconPresentation : CircleProgressView.IconPresentationInfo? = nil
+        
+        // Complete icon presentation:
+        var unitsLabelColor : NSColor = NSColor.secondaryLabelColor.blended(withFraction: 0.4, of: NSColor.tertiaryLabelColor) ?? NSColor.tertiaryLabelColor
         switch mnProgress.state {
         case .pending:
-            self.progressCircle?.isHidden = true
-            
+            forceCircleState = .hidden
         case .inProgress:
-            if self.progressCircle?.isHidden == true {
-                self.progressCircle?.isHidden = false
-            }
+            break
         case .success, .failed, .userCanceled:
             dlog?.info("Will present Icon for state: \(mnProgress.state)")
             
-            if self.progressCircle?.isHidden == false, let img = mnProgress.state.iconImage {
+            if let img = mnProgress.state.iconImage { //}, self.progressCircle?.isContentsShrunk == false {
                 let color = mnProgress.state.iconTintColor
                 let bkgColor = mnProgress.state.iconBkgColor
-                self.progressCircle?.presentIcon(image: img, tint: color, bkgColor: bkgColor, completion: {
-                    self.progressCircle?.setIsShrunk(true, animated: true, isForced: false, isDelay: false)
-                })
+                iconPresentation = CircleProgressView.IconPresentationInfo(image: img, tint: color, bkgColor: bkgColor, duration: 1.5)
+                unitsLabelColor = color.darker(part: 0.25).desaturate(part0to1: 0.85)
             } else {
                 dlog?.note("failed presenting icon for state: \(mnProgress.state) iconName: [\(mnProgress.state.imageSystemSymbolName)]")
-                self.progressCircle?.isHidden = true
             }
         }
+        
+        // Update progress percentages:
+        self.progressCircle?.progressType = mnProgress.isLongTimeAction ? .determinateSpin : .determinate
+        self.updateCircleProgress(withProgress: mnProgress.fractionCompleted,
+                                  animated: self.window != nil,
+                                  iconPresentation: iconPresentation,
+                                  forcedProgressCircleState:forceCircleState)
+        
         
         // Update label
         if texts.title == nil && texts.subtitle == nil, let lastRecv = self.lastRecievedProgressTexts {
@@ -275,12 +345,15 @@ class MNProgressBoxView : NSView {
         } else {
             self.lastRecievedProgressTexts = texts
         }
-        
-        // self.setTitles(texts: texts, mnProgress:mnProgress)
+        self.titleLabel.stringValue = texts.title ?? ""
+        self.subtitleLabel.stringValue = texts.subtitle ?? ""
+        self.unitsLabel.textColor = unitsLabelColor
+        self.unitsLabel.stringValue = "|\(String.NBSP)" + (mnProgress.discreteStructOrNil?.progressUnitsDisplayString ?? mnProgress.fractionCompletedDisplayString)
     }
 }
 
 extension MNProgressBoxView : MNProgressObserver {
+    
     func mnProgress(sender: Any, isPendingProgress mnProgress: MNProgress, fraction: Double, discretes: DiscreteMNProg?) {
         dlog?.info("xMNProgress     isPendingProgress \(mnProgress)")
     }

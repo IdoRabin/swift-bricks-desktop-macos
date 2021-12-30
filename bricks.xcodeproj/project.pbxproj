@@ -12,7 +12,6 @@
 		EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920A276E545700D9DD43 /* NSScreenEx.swift */; };
 		EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920E276F65BB00D9DD43 /* DocToolbar.swift */; };
 		EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */; };
-		EC1BFD16276FB3CB009DC45A /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */; };
 		EC1BFD18276FB4AB009DC45A /* NSBezierPathEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */; };
 		EC218AB9275931E700744400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AB8275931E700744400 /* AppDelegate.swift */; };
 		EC218ABF275931E800744400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC218ABE275931E800744400 /* Assets.xcassets */; };
@@ -76,7 +75,7 @@
 		EC46DB142764DAFF0070A2DC /* NSWindowEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */; };
 		EC46DB162764ECD70070A2DC /* NSApplicationEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */; };
 		EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */; };
-		EC6514AF2779581900F8063D /* CircleProgressBaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6514AE2779581900F8063D /* CircleProgressBaseView.swift */; };
+		EC6514AF2779581900F8063D /* CircleProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6514AE2779581900F8063D /* CircleProgressView.swift */; };
 		EC6741A8276B518100E9BB84 /* DocWC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6741A7276B518100E9BB84 /* DocWC.swift */; };
 		EC6B8CFE27775FFA009B8469 /* NSTextFieldVCenterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6B8CFD27775FFA009B8469 /* NSTextFieldVCenterCell.swift */; };
 		EC71CE1F2764CDFE00947423 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71CE1E2764CDFE00947423 /* AboutVC.swift */; };
@@ -195,7 +194,6 @@
 		EC06920E276F65BB00D9DD43 /* DocToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocToolbar.swift; sourceTree = "<group>"; };
 		EC1A28BA275F9203008446A8 /* bump_build_nr.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bump_build_nr.sh; sourceTree = "<group>"; };
 		EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocWC+Toolbar.swift"; sourceTree = "<group>"; };
-		EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBezierPathEx.swift; sourceTree = "<group>"; };
 		EC218AB5275931E700744400 /* Bricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC218AB8275931E700744400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -270,7 +268,7 @@
 		EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWindowEx.swift; sourceTree = "<group>"; };
 		EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationEx.swift; sourceTree = "<group>"; };
 		EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageVC.swift; sourceTree = "<group>"; };
-		EC6514AE2779581900F8063D /* CircleProgressBaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBaseView.swift; sourceTree = "<group>"; };
+		EC6514AE2779581900F8063D /* CircleProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressView.swift; sourceTree = "<group>"; };
 		EC6741A7276B518100E9BB84 /* DocWC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocWC.swift; sourceTree = "<group>"; };
 		EC6B8CFD27775FFA009B8469 /* NSTextFieldVCenterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTextFieldVCenterCell.swift; sourceTree = "<group>"; };
 		EC71CE1E2764CDFE00947423 /* AboutVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
@@ -777,8 +775,7 @@
 			children = (
 				ECA2680927787A3B004B5125 /* MNProgressBoxView.swift */,
 				ECA2680B27787A50004B5125 /* MNProgressBoxView.xib */,
-				EC1BFD15276FB3CB009DC45A /* CircleProgressView.swift */,
-				EC6514AE2779581900F8063D /* CircleProgressBaseView.swift */,
+				EC6514AE2779581900F8063D /* CircleProgressView.swift */,
 			);
 			path = Progress;
 			sourceTree = "<group>";
@@ -1028,12 +1025,11 @@
 				EC218B7827593EED00744400 /* KeyboardKeys.swift in Sources */,
 				EC9DF020275CE6DE0046F30A /* MVPRouter.swift in Sources */,
 				EC218B3B27593BE000744400 /* TimedEventFilter.swift in Sources */,
-				EC1BFD16276FB3CB009DC45A /* CircleProgressView.swift in Sources */,
 				EC9DF00B275CD1BE0046F30A /* Lerpable.swift in Sources */,
 				EC218B5827593CBF00744400 /* Array+Identifiable.swift in Sources */,
 				EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */,
 				EC9DEFE6275CD0B40046F30A /* SplashVC.swift in Sources */,
-				EC6514AF2779581900F8063D /* CircleProgressBaseView.swift in Sources */,
+				EC6514AF2779581900F8063D /* CircleProgressView.swift in Sources */,
 				EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */,
 				ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */,
 				EC218B5927593CBF00744400 /* CustomStringConvertibleEx.swift in Sources */,

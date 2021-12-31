@@ -84,8 +84,12 @@
 		EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18BF275D100B00BC23DA /* Clearable.swift */; };
 		EC802152277F7DDC00F6F015 /* DesignerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802151277F7DDC00F6F015 /* DesignerVC.swift */; };
 		EC802154277F7DE600F6F015 /* ProjectTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802153277F7DE600F6F015 /* ProjectTabsVC.swift */; };
-		EC802156277F7DEF00F6F015 /* PropertiesTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802155277F7DEF00F6F015 /* PropertiesTabsVC.swift */; };
+		EC802156277F7DEF00F6F015 /* PropertiesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802155277F7DEF00F6F015 /* PropertiesVC.swift */; };
 		EC802158277F899700F6F015 /* MNSegmentedTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802157277F899600F6F015 /* MNSegmentedTabs.swift */; };
+		EC80215A277F9D6200F6F015 /* LayersVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802159277F9D6200F6F015 /* LayersVC.swift */; };
+		EC80215C277F9D6E00F6F015 /* PropertiesTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80215B277F9D6E00F6F015 /* PropertiesTabsVC.swift */; };
+		EC80215E277F9EC900F6F015 /* NSTabViewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */; };
+		EC802160277F9F6200F6F015 /* MNTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80215F277F9F6200F6F015 /* MNTabViewController.swift */; };
 		EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB3276583E900C58645 /* PrefsGeneralVC.swift */; };
 		EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB52765840D00C58645 /* PrefsAccountsVC.swift */; };
 		EC880DB82765844200C58645 /* PrefsKeybindingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB72765844200C58645 /* PrefsKeybindingsVC.swift */; };
@@ -281,8 +285,12 @@
 		EC7F18BF275D100B00BC23DA /* Clearable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clearable.swift; sourceTree = "<group>"; };
 		EC802151277F7DDC00F6F015 /* DesignerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignerVC.swift; sourceTree = "<group>"; };
 		EC802153277F7DE600F6F015 /* ProjectTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTabsVC.swift; sourceTree = "<group>"; };
-		EC802155277F7DEF00F6F015 /* PropertiesTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertiesTabsVC.swift; sourceTree = "<group>"; };
+		EC802155277F7DEF00F6F015 /* PropertiesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertiesVC.swift; sourceTree = "<group>"; };
 		EC802157277F899600F6F015 /* MNSegmentedTabs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNSegmentedTabs.swift; sourceTree = "<group>"; };
+		EC802159277F9D6200F6F015 /* LayersVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersVC.swift; sourceTree = "<group>"; };
+		EC80215B277F9D6E00F6F015 /* PropertiesTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertiesTabsVC.swift; sourceTree = "<group>"; };
+		EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTabViewEx.swift; sourceTree = "<group>"; };
+		EC80215F277F9F6200F6F015 /* MNTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNTabViewController.swift; sourceTree = "<group>"; };
 		EC880DB3276583E900C58645 /* PrefsGeneralVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsGeneralVC.swift; sourceTree = "<group>"; };
 		EC880DB52765840D00C58645 /* PrefsAccountsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsAccountsVC.swift; sourceTree = "<group>"; };
 		EC880DB72765844200C58645 /* PrefsKeybindingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsKeybindingsVC.swift; sourceTree = "<group>"; };
@@ -386,7 +394,7 @@
 			children = (
 				EC802150277F7DC100F6F015 /* Designer screens */,
 				EC80214F277F7DAE00F6F015 /* ProjectTabs Screens */,
-				EC80214E277F7DA400F6F015 /* PropertiesTabs Screens */,
+				EC80214E277F7DA400F6F015 /* PropertiesVC Screens */,
 				ECA67B8C2769FEAD00BC0D7D /* Toolbar */,
 				ECCE07912764EF67007F2A65 /* DocVC.swift */,
 				EC6741A7276B518100E9BB84 /* DocWC.swift */,
@@ -600,6 +608,7 @@
 				EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */,
 				ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */,
 				EC06920A276E545700D9DD43 /* NSScreenEx.swift */,
+				EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -684,12 +693,14 @@
 			path = AboutVC;
 			sourceTree = "<group>";
 		};
-		EC80214E277F7DA400F6F015 /* PropertiesTabs Screens */ = {
+		EC80214E277F7DA400F6F015 /* PropertiesVC Screens */ = {
 			isa = PBXGroup;
 			children = (
-				EC802155277F7DEF00F6F015 /* PropertiesTabsVC.swift */,
+				EC802155277F7DEF00F6F015 /* PropertiesVC.swift */,
+				EC802159277F9D6200F6F015 /* LayersVC.swift */,
+				EC80215B277F9D6E00F6F015 /* PropertiesTabsVC.swift */,
 			);
-			path = "PropertiesTabs Screens";
+			path = "PropertiesVC Screens";
 			sourceTree = "<group>";
 		};
 		EC80214F277F7DAE00F6F015 /* ProjectTabs Screens */ = {
@@ -743,6 +754,7 @@
 		EC9DF012275CD1DC0046F30A /* Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				EC80215F277F9F6200F6F015 /* MNTabViewController.swift */,
 				EC802157277F899600F6F015 /* MNSegmentedTabs.swift */,
 				ECEA1B802762299C00DD602D /* MNToolbarItem.swift */,
 				ECEA1B7E2762299800DD602D /* MNSplitView.swift */,
@@ -1045,6 +1057,7 @@
 				EC218B4127593BE000744400 /* Logger.swift in Sources */,
 				EC218B4727593C3C00744400 /* NSBundle+Versions.swift in Sources */,
 				EC9DF00D275CD1BE0046F30A /* NSWindowController+XIB.swift in Sources */,
+				EC802160277F9F6200F6F015 /* MNTabViewController.swift in Sources */,
 				EC9DF004275CD1BE0046F30A /* NSView+Animation.swift in Sources */,
 				EC9DF00A275CD1BE0046F30A /* CGSizeEx.swift in Sources */,
 				EC218B7127593E7900744400 /* AppError.swift in Sources */,
@@ -1077,6 +1090,7 @@
 				ECEA1B7B2762297600DD602D /* MNColoredStackView.swift in Sources */,
 				ECAA83B12764A6730016578C /* OnboardingVC.swift in Sources */,
 				EC2F5EEA27726DCC00201865 /* MNProgress.swift in Sources */,
+				EC80215C277F9D6E00F6F015 /* PropertiesTabsVC.swift in Sources */,
 				EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */,
 				EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */,
 				EC9DF009275CD1BE0046F30A /* NSViewEx.swift in Sources */,
@@ -1086,6 +1100,7 @@
 				EC218B7F2759459700744400 /* ComparableEx.swift in Sources */,
 				EC218B17275939DA00744400 /* AppSettings.swift in Sources */,
 				ECF685ED2774DF6A00BD68FB /* TestMNProgressEmitter.swift in Sources */,
+				EC80215A277F9D6200F6F015 /* LayersVC.swift in Sources */,
 				EC218B3E27593BE000744400 /* CachesHelper.swift in Sources */,
 				ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */,
 				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
@@ -1140,7 +1155,7 @@
 				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
 				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,
 				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
-				EC802156277F7DEF00F6F015 /* PropertiesTabsVC.swift in Sources */,
+				EC802156277F7DEF00F6F015 /* PropertiesVC.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
 				ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */,
@@ -1167,6 +1182,7 @@
 				ECEA1B7527621AC900DD602D /* NSView+SearchSubviews.swift in Sources */,
 				EC218B4427593BE000744400 /* ThreadWaitLock.swift in Sources */,
 				EC9DF002275CD1BE0046F30A /* CGRectEx.swift in Sources */,
+				EC80215E277F9EC900F6F015 /* NSTabViewEx.swift in Sources */,
 				EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */,
 				EC880DB82765844200C58645 /* PrefsKeybindingsVC.swift in Sources */,
 				EC218B5327593CBF00744400 /* OptionSetEx.swift in Sources */,

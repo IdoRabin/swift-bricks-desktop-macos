@@ -27,6 +27,17 @@ class DocVC : NSSplitViewController {
     // MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        // This is a hack that allows placing the splitView as a child of the root view of the VC, yet maintaining all NSSplitViewController functionality. We gain the ability to place the splitv in a smaller area than the whole VC.
+        // This was done because safeAreaInsets, and additionalSafeAreaInsets did not acheive the wanted result... :(
+        let splitview = self.splitView
+        let newView = NSView(frame: self.view.frame)
+        self.view = newView
+        splitview.frame = newView.frame.adding(heightAdd: -(self.docWC?.TOOLBAR_HEIGHT ?? 38.0))
+        newView.addSubview(splitview)
+        
+        // Setup
         setup()
 
         DispatchQueue.main.async {

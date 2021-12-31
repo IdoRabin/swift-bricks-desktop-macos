@@ -1,5 +1,5 @@
 //
-//  PropertiesTabsVC.swift
+//  PropertiesVC.swift
 //  Bricks
 //
 //  Created by Ido on 31/12/2021.
@@ -7,7 +7,7 @@
 
 import AppKit
 
-class PropertiesTabsVC : NSTabViewController {
+class PropertiesVC : NSSplitViewController {
     // MARK: Constants
     // MARK: Enums
     // MARK: Properties

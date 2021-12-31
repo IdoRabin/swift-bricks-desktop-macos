@@ -43,16 +43,16 @@
                     <splitViewItems>
                         <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="47R-zK-RJG" userLabel="Project Tabs item"/>
                         <splitViewItem holdingPriority="240" id="3zg-cI-Iqa" userLabel="Designer Item"/>
-                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="YGh-mV-i1h" userLabel="Properties tabs Item"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="M1Z-fo-uv5"/>
                     </splitViewItems>
-                    <splitView key="splitView" dividerStyle="thin" vertical="YES" id="wo6-t0-en1" customClass="MNSplitview" customModule="Bricks" customModuleProvider="target">
+                    <splitView key="splitView" focusRingType="none" dividerStyle="thin" vertical="YES" id="wo6-t0-en1" customClass="MNSplitview" customModule="Bricks" customModuleProvider="target">
                         <rect key="frame" x="-105" y="0.0" width="560" height="461"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
                     <connections>
                         <segue destination="6yr-dX-8AE" kind="relationship" relationship="splitItems" id="Q7r-96-jez"/>
                         <segue destination="oPC-Gu-2li" kind="relationship" relationship="splitItems" id="MIe-Zb-Wgh"/>
-                        <segue destination="tWp-ly-NPo" kind="relationship" relationship="splitItems" id="VSE-dl-pWM"/>
+                        <segue destination="FoN-Rl-Shi" kind="relationship" relationship="splitItems" id="iYJ-iT-bCm"/>
                     </connections>
                 </splitViewController>
                 <customObject id="Inw-qn-92a" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -73,33 +73,6 @@
                 <customObject id="Wqb-tJ-qxF" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="505" y="806"/>
-        </scene>
-        <!--PropertiesTabsVC-->
-        <scene sceneID="gZU-n6-id2">
-            <objects>
-                <viewController id="tWp-ly-NPo" userLabel="PropertiesTabsVC" customClass="PropertiesTabsVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" id="hPb-yC-U8Z">
-                        <rect key="frame" x="0.0" y="0.0" width="257" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <subviews>
-                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="e4V-yW-zVI">
-                                <rect key="frame" x="10" y="222" width="74" height="16"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="Properties?" id="yTa-1H-NgB">
-                                    <font key="font" usesAppearanceFont="YES"/>
-                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </textFieldCell>
-                            </textField>
-                        </subviews>
-                        <constraints>
-                            <constraint firstItem="e4V-yW-zVI" firstAttribute="leading" secondItem="hPb-yC-U8Z" secondAttribute="leading" constant="12" id="QME-c1-lDs"/>
-                            <constraint firstItem="e4V-yW-zVI" firstAttribute="top" secondItem="hPb-yC-U8Z" secondAttribute="top" constant="62" id="l6J-7g-B84"/>
-                        </constraints>
-                    </view>
-                </viewController>
-                <customObject id="0O2-Q8-GrE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="284" y="1256"/>
         </scene>
         <!--ProjectTabsVC-->
         <scene sceneID="6nl-BM-Bps">
@@ -182,6 +155,124 @@
                 <customObject id="OoR-5y-Xk4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-802" y="1755"/>
+        </scene>
+        <!--properties vc-->
+        <scene sceneID="Vsv-61-ImK">
+            <objects>
+                <splitViewController id="FoN-Rl-Shi" userLabel="properties vc" customClass="PropertiesVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                    <splitViewItems>
+                        <splitViewItem id="Xuj-s9-Pem" userLabel="Properties Item"/>
+                        <splitViewItem canCollapse="YES" id="6vT-QY-oxM" userLabel="Layers Item"/>
+                    </splitViewItems>
+                    <splitView key="splitView" focusRingType="none" dividerStyle="thin" id="HUO-5i-Rze">
+                        <rect key="frame" x="0.0" y="0.0" width="290" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <connections>
+                            <outlet property="delegate" destination="FoN-Rl-Shi" id="xOy-LY-bwa"/>
+                        </connections>
+                    </splitView>
+                    <connections>
+                        <outlet property="splitView" destination="HUO-5i-Rze" id="VdT-vx-szY"/>
+                        <segue destination="Eam-Hb-UMN" kind="relationship" relationship="splitItems" id="nM5-cz-LHz"/>
+                        <segue destination="ROU-WU-Zps" kind="relationship" relationship="splitItems" id="O1d-S9-VG1"/>
+                    </connections>
+                </splitViewController>
+                <customObject id="YFF-Fu-F32" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="258" y="1256"/>
+        </scene>
+        <!--Properties TabsVC-->
+        <scene sceneID="Lmp-y5-ddJ">
+            <objects>
+                <tabViewController selectedTabViewItemIndex="0" id="Eam-Hb-UMN" customClass="PropertiesTabsVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem identifier="" id="WB3-a1-1DI"/>
+                        <tabViewItem identifier="" id="lfX-Hp-A1x"/>
+                    </tabViewItems>
+                    <tabView key="tabView" type="noTabsNoBorder" id="saV-Op-i1P">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="217"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="Eam-Hb-UMN" id="7oY-Yq-dic"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="saV-Op-i1P" id="iiY-1h-HdR"/>
+                        <segue destination="BEK-eL-7Wd" kind="relationship" relationship="tabItems" id="Qbg-0V-3UA"/>
+                        <segue destination="WYs-De-5eI" kind="relationship" relationship="tabItems" id="jIB-Zl-8Ym"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="92R-G6-9yu" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="870" y="1159"/>
+        </scene>
+        <!--VC1-->
+        <scene sceneID="NgF-9W-kGn">
+            <objects>
+                <viewController title="VC1" id="BEK-eL-7Wd" sceneMemberID="viewController">
+                    <view key="view" id="K5j-Eb-P9M">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q6T-MT-Cgb">
+                                <rect key="frame" x="10" y="272" width="24" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="vc1" id="sts-d8-mqe">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Q6T-MT-Cgb" firstAttribute="top" secondItem="K5j-Eb-P9M" secondAttribute="top" constant="12" id="b4b-2W-xVs"/>
+                            <constraint firstItem="Q6T-MT-Cgb" firstAttribute="leading" secondItem="K5j-Eb-P9M" secondAttribute="leading" constant="12" id="mBK-0x-3X2"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="BMV-2i-KQ9" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1540" y="934"/>
+        </scene>
+        <!--VC2-->
+        <scene sceneID="L4e-ee-zhd">
+            <objects>
+                <viewController title="VC2" id="WYs-De-5eI" sceneMemberID="viewController">
+                    <view key="view" id="L71-SA-6gW">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QBU-dI-GVa">
+                                <rect key="frame" x="10" y="272" width="26" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="vc2" id="Uyd-WR-kTu">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="QBU-dI-GVa" firstAttribute="leading" secondItem="L71-SA-6gW" secondAttribute="leading" constant="12" id="JLO-jV-wWC"/>
+                            <constraint firstItem="QBU-dI-GVa" firstAttribute="top" secondItem="L71-SA-6gW" secondAttribute="top" constant="12" id="yc5-hz-JIX"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="Hto-Dz-O6H" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1540" y="1306"/>
+        </scene>
+        <!--LayersVC-->
+        <scene sceneID="Ml3-61-YbK">
+            <objects>
+                <viewController id="ROU-WU-Zps" userLabel="LayersVC" customClass="LayersVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="Ejv-Tp-Zzp">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="180"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="ApJ-57-99Q" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="870" y="1426"/>
         </scene>
         <!--checklist-->
         <scene sceneID="nQ5-YR-tXn">

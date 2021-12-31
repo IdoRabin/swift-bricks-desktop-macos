@@ -191,4 +191,10 @@ extension NSView /* separator layer */ {
         self.addSubview(view)
         return view
     }
+    
+    var firstSeperatorView : SeparatorView? {
+        return self.firstSubview(which: { view in
+            view is SeparatorView
+        }, downtree: false) as? SeparatorView
+    }
 }

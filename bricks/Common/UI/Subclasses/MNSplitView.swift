@@ -52,9 +52,9 @@ class MNSplitview : NSSplitView {
             wasChanged = true
         }
         
-        let isTrailingC = self.isLeadingPanelCollapsed
-        if self.lastIsLeadingPanelCollapsed != isTrailingC {
-            self.lastIsLeadingPanelCollapsed = isTrailingC
+        let isTrailingC = self.isTrailingPanelCollapsed
+        if self.lastIsTrailingPanelCollapsed != isTrailingC {
+            self.lastIsTrailingPanelCollapsed = isTrailingC
             wasChanged = true
         }
         

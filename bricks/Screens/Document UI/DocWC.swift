@@ -56,26 +56,12 @@ class DocWC : NSWindowController {
         })
     }
     
-    private func updateToolbarPaddingIfNeeded() {
-        DispatchQueue.main.performOncePerInstance(self) {
-            waitFor("document", interval: 0.05, timeout: 0.2, testOnMainThread: {
-                self.docVC != nil && self.docVC?.isViewLoaded == true
-            }, completion: { waitResult in
-                dlog?.info("updateToolbarPaddingIfNeeded")
-                // we need to force safe area the top of the VC, even when toolbar is "transparent"
-                //self.docVC?.view.additionalSafeAreaInsets = NSEdgeInsets(top: self.TOOLBAR_HEIGHT, left: 0, bottom: 0, right: 0)
-                //self.docVC?.view.needsLayout = true
-            })
-        }
-    }
-    
     // MARK: Lifecycle
     override func windowDidLoad() {
         super.windowDidLoad()
         self.windowIfLoaded?.delegate = BrickDocController.shared
         BrickDocController.shared.observers.add(observer: self)
         self.updateToolbarVisible()
-        self.updateToolbarPaddingIfNeeded()
         
         dlog?.info("windowDidLoad \(basicDesc) window:\(window?.basicDesc ?? "<nil>" )")
         

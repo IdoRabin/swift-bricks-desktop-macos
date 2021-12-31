@@ -82,6 +82,10 @@
 		EC71CE222764CF5700947423 /* AppCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC71CE212764CF5700947423 /* AppCommands.swift */; };
 		EC7F18B8275CF29E00BC23DA /* NSViewcontroller+XIB.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */; };
 		EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7F18BF275D100B00BC23DA /* Clearable.swift */; };
+		EC802152277F7DDC00F6F015 /* DesignerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802151277F7DDC00F6F015 /* DesignerVC.swift */; };
+		EC802154277F7DE600F6F015 /* ProjectTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802153277F7DE600F6F015 /* ProjectTabsVC.swift */; };
+		EC802156277F7DEF00F6F015 /* PropertiesTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802155277F7DEF00F6F015 /* PropertiesTabsVC.swift */; };
+		EC802158277F899700F6F015 /* MNSegmentedTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802157277F899600F6F015 /* MNSegmentedTabs.swift */; };
 		EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB3276583E900C58645 /* PrefsGeneralVC.swift */; };
 		EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB52765840D00C58645 /* PrefsAccountsVC.swift */; };
 		EC880DB82765844200C58645 /* PrefsKeybindingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB72765844200C58645 /* PrefsKeybindingsVC.swift */; };
@@ -275,6 +279,10 @@
 		EC71CE212764CF5700947423 /* AppCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommands.swift; sourceTree = "<group>"; };
 		EC7F18B7275CF29E00BC23DA /* NSViewcontroller+XIB.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewcontroller+XIB.swift"; sourceTree = "<group>"; };
 		EC7F18BF275D100B00BC23DA /* Clearable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Clearable.swift; sourceTree = "<group>"; };
+		EC802151277F7DDC00F6F015 /* DesignerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignerVC.swift; sourceTree = "<group>"; };
+		EC802153277F7DE600F6F015 /* ProjectTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTabsVC.swift; sourceTree = "<group>"; };
+		EC802155277F7DEF00F6F015 /* PropertiesTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertiesTabsVC.swift; sourceTree = "<group>"; };
+		EC802157277F899600F6F015 /* MNSegmentedTabs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNSegmentedTabs.swift; sourceTree = "<group>"; };
 		EC880DB3276583E900C58645 /* PrefsGeneralVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsGeneralVC.swift; sourceTree = "<group>"; };
 		EC880DB52765840D00C58645 /* PrefsAccountsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsAccountsVC.swift; sourceTree = "<group>"; };
 		EC880DB72765844200C58645 /* PrefsKeybindingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsKeybindingsVC.swift; sourceTree = "<group>"; };
@@ -376,6 +384,9 @@
 		EC18395F275FFFCF0001AB6D /* Document UI */ = {
 			isa = PBXGroup;
 			children = (
+				EC802150277F7DC100F6F015 /* Designer screens */,
+				EC80214F277F7DAE00F6F015 /* ProjectTabs Screens */,
+				EC80214E277F7DA400F6F015 /* PropertiesTabs Screens */,
 				ECA67B8C2769FEAD00BC0D7D /* Toolbar */,
 				ECCE07912764EF67007F2A65 /* DocVC.swift */,
 				EC6741A7276B518100E9BB84 /* DocWC.swift */,
@@ -673,6 +684,30 @@
 			path = AboutVC;
 			sourceTree = "<group>";
 		};
+		EC80214E277F7DA400F6F015 /* PropertiesTabs Screens */ = {
+			isa = PBXGroup;
+			children = (
+				EC802155277F7DEF00F6F015 /* PropertiesTabsVC.swift */,
+			);
+			path = "PropertiesTabs Screens";
+			sourceTree = "<group>";
+		};
+		EC80214F277F7DAE00F6F015 /* ProjectTabs Screens */ = {
+			isa = PBXGroup;
+			children = (
+				EC802153277F7DE600F6F015 /* ProjectTabsVC.swift */,
+			);
+			path = "ProjectTabs Screens";
+			sourceTree = "<group>";
+		};
+		EC802150277F7DC100F6F015 /* Designer screens */ = {
+			isa = PBXGroup;
+			children = (
+				EC802151277F7DDC00F6F015 /* DesignerVC.swift */,
+			);
+			path = "Designer screens";
+			sourceTree = "<group>";
+		};
 		EC880DB92765849900C58645 /* Tabs */ = {
 			isa = PBXGroup;
 			children = (
@@ -708,6 +743,7 @@
 		EC9DF012275CD1DC0046F30A /* Subclasses */ = {
 			isa = PBXGroup;
 			children = (
+				EC802157277F899600F6F015 /* MNSegmentedTabs.swift */,
 				ECEA1B802762299C00DD602D /* MNToolbarItem.swift */,
 				ECEA1B7E2762299800DD602D /* MNSplitView.swift */,
 				ECEA1B7C2762297C00DD602D /* MNColoredView.swift */,
@@ -1055,6 +1091,7 @@
 				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
 				EC218B5627593CBF00744400 /* ArrayEx.swift in Sources */,
 				ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */,
+				EC802158277F899700F6F015 /* MNSegmentedTabs.swift in Sources */,
 				EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */,
 				EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */,
 				ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */,
@@ -1094,6 +1131,7 @@
 				ECCE07982764F5C5007F2A65 /* PreferencesVC.swift in Sources */,
 				EC218B3A27593BE000744400 /* SkipEncoding.swift in Sources */,
 				EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */,
+				EC802154277F7DE600F6F015 /* ProjectTabsVC.swift in Sources */,
 				EC9DEFFF275CD1BE0046F30A /* NSTextFIeldEx.swift in Sources */,
 				EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */,
 				EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */,
@@ -1102,6 +1140,7 @@
 				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
 				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,
 				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
+				EC802156277F7DEF00F6F015 /* PropertiesTabsVC.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
 				ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */,
@@ -1123,6 +1162,7 @@
 				ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */,
 				EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */,
 				ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */,
+				EC802152277F7DDC00F6F015 /* DesignerVC.swift in Sources */,
 				ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */,
 				ECEA1B7527621AC900DD602D /* NSView+SearchSubviews.swift in Sources */,
 				EC218B4427593BE000744400 /* ThreadWaitLock.swift in Sources */,

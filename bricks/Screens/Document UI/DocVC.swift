@@ -34,6 +34,7 @@ class DocVC : NSSplitViewController {
             self.wc?.updateToolbarDocNameView()
             self.wc?.updateToolbarMainPanelView()
             
+            
             dlog?.info("viewDidLoad [\(self.title.descOrNil)]")
             if abs(AppSettings.shared.stats.lastLaunchDate.timeIntervalSinceNow) < 4 {
                 TimedEventFilter.shared.filterEvent(key: "DocVC.viewDidLoad", threshold: 0.2, accumulating: self.title.descOrNil) { titles in

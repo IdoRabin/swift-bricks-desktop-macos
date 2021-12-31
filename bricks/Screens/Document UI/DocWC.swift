@@ -17,8 +17,17 @@ extension NSObject {
 
 class DocWC : NSWindowController {
     let DEBUG_DRAWING = IS_DEBUG && false
+        
+    let TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_Pixel : CGFloat = 400
+    let TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_fraction : CGFloat = 0.2
+    let TOOLBAR_MAIN_PANEL_VIEW_PREFERRED_WIDTH_fraction : CGFloat = 0.35
+    let TOOLBAR_MAIN_PANEL_VIEW_MAX_WIDTH_fraction : CGFloat = 0.5
+    
     let TOOLBAR_MIN_SPACER_WIDTH : CGFloat = 1.0
+    let TOOLBAR_HEIGHT : CGFloat = 38.0 // total external height
     let TOOLBAR_ITEMS_HEIGHT : CGFloat = 32
+    
+    internal var _lastMainPanelScreenW : CGFloat = 0.0
     private var _lastToolbarVisible : Bool = true {
         didSet {
             if _lastToolbarVisible != oldValue {
@@ -28,6 +37,10 @@ class DocWC : NSWindowController {
                 }
             }
         }
+    }
+    
+    var docVC : DocVC? {
+        return self.contentViewController as? DocVC
     }
     
     var docNameOrNil : String {
@@ -43,12 +56,27 @@ class DocWC : NSWindowController {
         })
     }
     
+    private func updateToolbarPaddingIfNeeded() {
+        DispatchQueue.main.performOncePerInstance(self) {
+            waitFor("document", interval: 0.05, timeout: 0.2, testOnMainThread: {
+                self.docVC != nil && self.docVC?.isViewLoaded == true
+            }, completion: { waitResult in
+                dlog?.info("updateToolbarPaddingIfNeeded")
+                // we need to force safe area the top of the VC, even when toolbar is "transparent"
+                //self.docVC?.view.additionalSafeAreaInsets = NSEdgeInsets(top: self.TOOLBAR_HEIGHT, left: 0, bottom: 0, right: 0)
+                //self.docVC?.view.needsLayout = true
+            })
+        }
+    }
+    
     // MARK: Lifecycle
     override func windowDidLoad() {
         super.windowDidLoad()
         self.windowIfLoaded?.delegate = BrickDocController.shared
         BrickDocController.shared.observers.add(observer: self)
         self.updateToolbarVisible()
+        self.updateToolbarPaddingIfNeeded()
+        
         dlog?.info("windowDidLoad \(basicDesc) window:\(window?.basicDesc ?? "<nil>" )")
         
         waitFor("document", interval: 0.05, timeout: 0.2, testOnMainThread: {

@@ -107,7 +107,7 @@ extension DocWC : NSToolbarDelegate {
         return result
     }
     
-    private func createToggleSidebarToolbarItemg(id:NSToolbarItem.Identifier, isLeading:Bool)->MNToggleToolbarItem {
+    private func createToggleSidebarToolbarItem(id:NSToolbarItem.Identifier, isLeading:Bool)->MNToggleToolbarItem {
         let result = MNToggleToolbarItem(itemIdentifier: id)
         if (IS_RTL_LAYOUT ? !isLeading : isLeading) {
             result.onImage = AppImages.sideMenuLeftCollapsed.image
@@ -116,7 +116,7 @@ extension DocWC : NSToolbarDelegate {
             result.onImage = AppImages.sideMenuRightCollapsed.image
             result.offImage = AppImages.sideMenuRightUncollapsed.image
         }
-        result.imagesScale = 0.55
+        result.imagesScale = 0.43
         result.onTint = NSColor.secondaryLabelColor
         result.offTint = NSColor.secondaryLabelColor
         return result
@@ -151,7 +151,7 @@ extension DocWC : NSToolbarDelegate {
         let itemType = ToolbarItemType(rawValue: id.rawValue)!
         switch itemType {
         case .leadingSidebarToggle:
-            result = self.createToggleSidebarToolbarItemg(id: id, isLeading: true)
+            result = self.createToggleSidebarToolbarItem(id: id, isLeading: true)
             result?.target = self.contentViewController
             result?.action = #selector(DocVC.toggleSidebarAction(_:))
             result?.visibilityPriority = .high
@@ -227,7 +227,7 @@ extension DocWC : NSToolbarDelegate {
             result = createToolbarItem(id: id, systemSymbolName: "circle.empty", accessDesc: AppStr.ADD_NEW.localized())
 
         case .trailingSidebarToggle:
-            result = self.createToggleSidebarToolbarItemg(id: itemIdentifier, isLeading: false)
+            result = self.createToggleSidebarToolbarItem(id: itemIdentifier, isLeading: false)
             result?.target = self.contentViewController
             result?.action = #selector(DocVC.toggleSidebarAction(_:))
         }
@@ -270,11 +270,29 @@ extension DocWC : NSToolbarDelegate {
         }
         docNameView.updateWithDoc(self.document as? BrickDoc)
     }
-    
+     
     func updateToolbarMainPanelView() {
         guard let item = self.toolbarItem(type: .centerPaneCenteredMainPanel), let mainPanelView = item.view as? MainPanelToolbarView else {
             return
         }
+        
+        // Update sizes if needed
+        if let screenW = self.window?.screen?.frame.width, _lastMainPanelScreenW != screenW {
+            // Disable prev:
+            let conts = mainPanelView.constraintsAffectingLayout(for: .horizontal)
+            mainPanelView.removeConstraints(conts)
+            
+            // Activate new:
+            let minWPx = clamp(value: TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_fraction * screenW, lowerlimit: TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_Pixel, upperlimit: screenW - 100)
+            let maxWPx = clamp(value: TOOLBAR_MAIN_PANEL_VIEW_MAX_WIDTH_fraction * screenW, lowerlimit: minWPx + 100, upperlimit: screenW - 100)
+            
+            mainPanelView.widthAnchor.constraint(greaterThanOrEqualToConstant: minWPx).isActive = true
+            mainPanelView.widthAnchor.constraint(lessThanOrEqualToConstant: maxWPx).isActive = true
+            
+        }
+//        let TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_fraction : CGFloat = 0.2
+//        let TOOLBAR_MAIN_PANEL_VIEW_PREFERRED_WIDTH_fraction : CGFloat = 0.35
+//        let TOOLBAR_MAIN_PANEL_VIEW_MAX_WIDTH_fraction : CGFloat = 0.5
         
         mainPanelView.updateWithDoc(self.document as? BrickDoc)
     }

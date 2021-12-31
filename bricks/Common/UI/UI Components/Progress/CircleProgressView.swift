@@ -72,6 +72,18 @@ class CircleProgressView : NSView {
     @IBInspectable var progressRingInset : CGFloat = 3.5 { didSet { if progressRingInset != oldValue { updateLayers() } } }
     @IBInspectable var centerOffset : CGPoint = .zero { didSet { if centerOffset != oldValue { updateLayers() } } }
     
+    @IBInspectable var centerText : String? = nil {
+        didSet {
+            if centerText != oldValue {
+                self.autoAdjustCenterFontIfNeeded(rect:self.ringsLayer.frame)
+                self.updateTextLayer(rect: self.calcRectForLayers(), forced: true)
+            }
+        }
+    }
+    @IBInspectable var centerTextColor : NSColor = NSColor.secondaryLabelColor.blended(withFraction: 0.4, of: .labelColor)!
+    @IBInspectable var centerFont : NSFont = NSFont.systemFont(ofSize: 11, weight: .medium)
+    @IBInspectable var isAdjustsCenterFontSizeFor2Digits : Bool = true
+    
     // MARK: Private vars
     private var lastTotalHash : Int = 0
     private var _lastUsedLayersRect : CGRect = .zero
@@ -124,6 +136,7 @@ class CircleProgressView : NSView {
     private var bkgRingLayer = CAShapeLayer()
     private var progressRingLayer = CAShapeLayer()
     private var progressRingLayerMask = CAShapeLayer()
+    private var textLayer = CATextLayer()
     
     public var isIconPresented : Bool {
         return isAnimatingIcon
@@ -382,10 +395,34 @@ class CircleProgressView : NSView {
                 mask.strokeEnd = self.progress
             }
             
-            //if IS_DEBUG {
-            //    dlog?.info("updateProgressRingLayerMask \(rct) \(logAddedInfo)")
-            //}
+            if IS_DEBUG {
+                dlog?.info("updateProgressRingLayerMask \(rct) \(logAddedInfo)")
+            }
             
+        }
+    }
+    
+    private var lastTextLayerHash : Int = 0
+    func updateTextLayer(rect:CGRect, forced : Bool = false) {
+        guard !rect.isNull && !rect.isInfinite else {
+            return
+        }
+        let newTextLayerHash = rect.hashValue ^ centerFont.pointSize.hashValue ^ centerText.hashValue ^ centerTextColor.hashValue ^ _scale.hashValue ^ isAdjustsCenterFontSizeFor2Digits.hashValue
+        
+        if lastTextLayerHash != newTextLayerHash || forced {
+            lastTextLayerHash = newTextLayerHash
+            textLayer.opacity = (rect.width > 6 && rect.height > 6) ? 1.0 : 0.0
+            if let centerText = centerText, centerText.count > 0 {
+                textLayer.font = centerFont
+                textLayer.fontSize = centerFont.pointSize
+                textLayer.alignmentMode = .center
+                textLayer.foregroundColor = centerTextColor.cgColor
+                 
+                let frm = centerText.boundingRect(with: rect.size, options: .usesLineFragmentOrigin, attributes: [.font:centerFont], context: nil)
+                textLayer.frame = frm.settingNewCenter(rect.center).insetBy(dx: -0.1, dy: -0.1)
+                textLayer.string = centerText
+                
+            }
         }
     }
     
@@ -422,20 +459,22 @@ class CircleProgressView : NSView {
             self.ringsLayer.frame = rct
             ringsLayer.centerizeAnchor()
             
+            self.autoAdjustCenterFontIfNeeded(rect:rct)
             
-            //dlog?.info("updateLayers START rect: \(rect.size) isHidden: \(self.isHidden) ")
+            dlog?.info("updateLayers START rect: \(rect.size) isHidden: \(self.isHidden) ")
             
             DLog.indentedBlock(logger:dlog) {
                 updateBackgroundLayer(rect: rect)
                 updateBkgRingLayer(rect: rect)
                 updateProgressRingLayer(rect: rect)
                 updateProgressRingLayerMask(rect:rect)
+                updateTextLayer(rect: rect)
             }
             
             for layer in [backgroundLayer, bkgRingLayer, progressRingLayer, progressRingLayerMask] {
                 layer.frame = rct
             }
-            //dlog?.info("updateLayers END")
+            dlog?.info("updateLayers END")
         }
     }
     
@@ -492,7 +531,7 @@ class CircleProgressView : NSView {
                 rootLayer.addSublayer(ringsLayer)
                 
                 // setuplayers
-                let layers = [backgroundLayer, bkgRingLayer, progressRingLayer]
+                let layers = [backgroundLayer, bkgRingLayer, progressRingLayer, textLayer]
                 layers.forEachIndex { index, layer in
                     layer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
                     layer.frame = rect.boundsRect()
@@ -525,6 +564,33 @@ class CircleProgressView : NSView {
         
         DispatchQueue.main.performOncePerInstance(self) {
             setupLayersIfNeeded()
+        }
+    }
+    
+    private var _lastAdjustedFontHash = 0
+    private func autoAdjustCenterFontIfNeeded(rect:CGRect) {
+        guard isAdjustsCenterFontSizeFor2Digits else {
+            return
+        }
+        
+        let newHash = rect.scaledAroundCenter(0.5, 0.5).rounded().scaledAroundCenter(2.0, 2.0).hashValue ^ self.centerFont.fontName.hashValue
+        if  newHash != _lastAdjustedFontHash && !self.isAnimatingIcon {
+            _lastAdjustedFontHash = newHash
+            let strVal = (self.centerText ?? "99").paddingLeft(toLength: 2, withPad: "9")
+            
+            // We want to inset to fit in a circle, not its bounding box:
+            // ((diameter)*√2) / 2
+            //    let boundingSqrSide = rect.boundedSquare().width
+            //    let boundedSqrSide : CGFloat = (boundingSqrSide * 1.41421) / 2.0
+            //    let inset = abs(boundingSqrSide - boundedSqrSide)
+            //    DLog.ui.info("ratio: \(boundedSqrSide) / \(boundingSqrSide) = \(boundedSqrSide / boundingSqrSide )")
+            // NOTE: The ratio between the side of a binding square for a circle and the side of the square bound by the circle is ALWAYS 0.707105
+            // - which is 1/1.41421 .. i.e. 1/sqrt(2)
+            // regardless of size of circle etc..
+            let rect = rect.boundedSquare().scaledAroundCenter(0.707105, 0.707105).rounded().insetBy(dx: 3, dy: 3)
+            let newFont = strVal.getBestFittingFont(forBoundingSize: rect.size, baseFont: self.centerFont, forceInitialSize: self.centerFont.pointSize)
+            centerFont = newFont
+            // DLog.ui.info("autoAdjustCenterFontIfNeeded    best fit font size: \(centerFont.pointSize)")
         }
     }
     

@@ -750,8 +750,8 @@ Gw
         <image name="AppIcon" width="128" height="128"/>
         <image name="BrickDocumentIcon" width="512" height="512"/>
         <image name="at" catalog="system" width="20" height="21"/>
-        <image name="brick.file.icon" width="171" height="171"/>
-        <image name="brick.new.file.icon" width="171" height="171"/>
+        <image name="brick.file.icon" width="170.5" height="170.5"/>
+        <image name="brick.new.file.icon" width="170.5" height="170.5"/>
         <image name="gearshape" catalog="system" width="21" height="21"/>
         <image name="keyboard" catalog="system" width="25" height="16"/>
         <image name="xmark" catalog="system" width="14" height="13"/>

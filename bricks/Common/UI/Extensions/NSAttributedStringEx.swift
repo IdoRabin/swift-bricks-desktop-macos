@@ -159,6 +159,58 @@ extension String {
         // return true when the text bounding rect fits into the size
         return rect.width <= sze.width && rect.height <= sze.height
     }
+    
+    func getBestFittingFont(forBoundingSize size: CGSize, baseFont:NSFont, forceInitialSize:CGFloat? = nil) -> NSFont {
+        var isFit = false
+        func roundz(_ sze:CGFloat)->CGFloat {
+            return round(sze * 10.0) / 10.0
+        }
+        var pointSze : CGFloat = forceInitialSize ?? 16.0
+        var prevSze : CGFloat = 0.0
+        var jumpSze : CGFloat = pointSze * 0.5
+        var font = baseFont
+        var iterations : Int = 0
+        //DLog.ui.info("best fit font: [\(baseFont.fontName)] init pointSze: [\(pointSze)] into size:\(size)")
+        while isFit == false && iterations < 20 && abs(prevSze - pointSze) > 0.5 {
+            font = font.withSize(round(pointSze * 100)/100)
+            prevSze = pointSze
+            // DLog.ui.info("  best fit pointSze: \(String(format:"%0.2f", pointSze))")
+            let rect = (self as NSString).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font:font], context: nil).rounded()
+            if rect.height > size.height || rect.width > size.width {
+                isFit = false
+                if pointSze > 1 {
+                    // font is too big:
+                    pointSze -= jumpSze
+                    if jumpSze > 0.5 {
+                        jumpSze *= 0.75
+                    }
+                }
+            } else if rect.height < size.height || rect.width < size.width {
+                isFit = rect.height > size.height - 1 && rect.width > size.width - 1
+                if !isFit && pointSze > 1 {
+                    // font is too big:
+                    pointSze += jumpSze
+                    if jumpSze > 0.5 {
+                        jumpSze *= 0.75
+                    }
+                }
+            } else {
+                isFit = true
+            }
+            
+            iterations += 1
+        }
+        
+        // Clamp point size
+        pointSze = clamp(value: pointSze, lowerlimit: 6, upperlimit: 72 )
+        font = baseFont.withSize(pointSze)
+        
+        return isFit || abs(pointSze - prevSze) < 1.5 ? font : baseFont
+    }
+    
+    func boundingRect(with size: NSSize, options: NSString.DrawingOptions =  [], attributes: [NSAttributedString.Key : Any]? = nil, context: NSStringDrawingContext?)->CGRect {
+        return (self as NSString).boundingRect(with: size, options: options, attributes: attributes, context: context)
+    }
 }
 
 extension NSMutableAttributedString {

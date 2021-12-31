@@ -41,43 +41,28 @@
             <objects>
                 <splitViewController identifier="DocVCID" storyboardIdentifier="DocVCID" id="CmF-ng-hYs" customClass="DocVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <splitViewItems>
-                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="BX1-p6-cIx"/>
-                        <splitViewItem id="tJl-hh-Jnq"/>
-                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="5ik-Wn-kDK"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="47R-zK-RJG" userLabel="Project Tabs item"/>
+                        <splitViewItem holdingPriority="240" id="3zg-cI-Iqa" userLabel="Designer Item"/>
+                        <splitViewItem canCollapse="YES" holdingPriority="260" behavior="sidebar" id="YGh-mV-i1h" userLabel="Properties tabs Item"/>
                     </splitViewItems>
                     <splitView key="splitView" dividerStyle="thin" vertical="YES" id="wo6-t0-en1" customClass="MNSplitview" customModule="Bricks" customModuleProvider="target">
-                        <rect key="frame" x="-105" y="0.0" width="563" height="461"/>
+                        <rect key="frame" x="-105" y="0.0" width="560" height="461"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </splitView>
                     <connections>
-                        <segue destination="OaR-gJ-dlr" kind="relationship" relationship="splitItems" id="aP5-kC-Zgw"/>
-                        <segue destination="oPC-Gu-2li" kind="relationship" relationship="splitItems" id="pOp-Rk-UZH"/>
-                        <segue destination="tWp-ly-NPo" kind="relationship" relationship="splitItems" id="F99-4G-iHK"/>
+                        <segue destination="6yr-dX-8AE" kind="relationship" relationship="splitItems" id="Q7r-96-jez"/>
+                        <segue destination="oPC-Gu-2li" kind="relationship" relationship="splitItems" id="MIe-Zb-Wgh"/>
+                        <segue destination="tWp-ly-NPo" kind="relationship" relationship="splitItems" id="VSE-dl-pWM"/>
                     </connections>
                 </splitViewController>
                 <customObject id="Inw-qn-92a" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-187.5" y="700.5"/>
+            <point key="canvasLocation" x="-189" y="700.5"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="2Ly-LW-srj">
-            <objects>
-                <viewController id="OaR-gJ-dlr" sceneMemberID="viewController">
-                    <view key="view" id="j5l-d9-00Y">
-                        <rect key="frame" x="0.0" y="0.0" width="149" height="300"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <viewLayoutGuide key="safeArea" id="rbt-ID-UTk"/>
-                        <viewLayoutGuide key="layoutMargins" id="Sbg-BO-aUa"/>
-                    </view>
-                </viewController>
-                <customObject id="H4w-xY-IpE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="429" y="434"/>
-        </scene>
-        <!--View Controller-->
+        <!--DesignerVC-->
         <scene sceneID="rwt-Ji-NjG">
             <objects>
-                <viewController id="oPC-Gu-2li" sceneMemberID="viewController">
+                <viewController id="oPC-Gu-2li" customClass="DesignerVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="jnn-TX-fIf">
                         <rect key="frame" x="0.0" y="0.0" width="302" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -89,18 +74,146 @@
             </objects>
             <point key="canvasLocation" x="505" y="806"/>
         </scene>
-        <!--View Controller-->
+        <!--PropertiesTabsVC-->
         <scene sceneID="gZU-n6-id2">
             <objects>
-                <viewController id="tWp-ly-NPo" sceneMemberID="viewController">
+                <viewController id="tWp-ly-NPo" userLabel="PropertiesTabsVC" customClass="PropertiesTabsVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="hPb-yC-U8Z">
-                        <rect key="frame" x="0.0" y="0.0" width="161" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="257" height="300"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="e4V-yW-zVI">
+                                <rect key="frame" x="10" y="222" width="74" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Properties?" id="yTa-1H-NgB">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="e4V-yW-zVI" firstAttribute="leading" secondItem="hPb-yC-U8Z" secondAttribute="leading" constant="12" id="QME-c1-lDs"/>
+                            <constraint firstItem="e4V-yW-zVI" firstAttribute="top" secondItem="hPb-yC-U8Z" secondAttribute="top" constant="62" id="l6J-7g-B84"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <customObject id="0O2-Q8-GrE" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="435" y="1254"/>
+            <point key="canvasLocation" x="284" y="1256"/>
+        </scene>
+        <!--ProjectTabsVC-->
+        <scene sceneID="6nl-BM-Bps">
+            <objects>
+                <tabViewController title="Project" selectedTabViewItemIndex="0" id="6yr-dX-8AE" userLabel="ProjectTabsVC" customClass="ProjectTabsVC" customModule="Bricks" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabViewItems>
+                        <tabViewItem identifier="" image="folder" catalog="system" id="SIO-b0-HwZ" userLabel="Project tree item"/>
+                        <tabViewItem identifier="" image="percent" catalog="system" id="vF8-j8-3nM" userLabel="Progress item"/>
+                        <tabViewItem identifier="" image="checkmark.square" catalog="system" id="GaL-oC-XbG" userLabel="Checklist item"/>
+                    </tabViewItems>
+                    <tabView key="tabView" focusRingType="none" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="ZBO-eb-sEZ">
+                        <rect key="frame" x="-63" y="35" width="513" height="300"/>
+                        <autoresizingMask key="autoresizingMask" heightSizable="YES"/>
+                        <font key="font" metaFont="message"/>
+                        <connections>
+                            <outlet property="delegate" destination="6yr-dX-8AE" id="6Lr-nk-KbG"/>
+                        </connections>
+                    </tabView>
+                    <connections>
+                        <outlet property="tabView" destination="ZBO-eb-sEZ" id="eqL-p4-DQo"/>
+                        <segue destination="4sx-51-UCE" kind="relationship" relationship="tabItems" id="6Tb-zD-OIQ"/>
+                        <segue destination="DHM-PE-Neb" kind="relationship" relationship="tabItems" id="iWq-un-lih"/>
+                        <segue destination="fyi-fQ-oS7" kind="relationship" relationship="tabItems" id="vQ3-Et-D8s"/>
+                    </connections>
+                </tabViewController>
+                <customObject id="p18-ly-vK7" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-492" y="1256"/>
+        </scene>
+        <!--Progress-->
+        <scene sceneID="svc-uy-VTy">
+            <objects>
+                <viewController id="DHM-PE-Neb" userLabel="Progress" sceneMemberID="viewController">
+                    <view key="view" focusRingType="none" id="6A6-s7-gOe">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Iaq-xH-T8R">
+                                <rect key="frame" x="18" y="264" width="58" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Progress" id="XuI-mL-wfx">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="Iaq-xH-T8R" firstAttribute="top" secondItem="6A6-s7-gOe" secondAttribute="top" constant="20" id="aJ2-Zb-kkG"/>
+                            <constraint firstItem="Iaq-xH-T8R" firstAttribute="leading" secondItem="6A6-s7-gOe" secondAttribute="leading" constant="20" id="gai-Jt-z1z"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="iXe-Th-Osr" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-343" y="1755"/>
+        </scene>
+        <!--Project tree-->
+        <scene sceneID="sj8-Ji-w85">
+            <objects>
+                <viewController id="4sx-51-UCE" userLabel="Project tree" sceneMemberID="viewController">
+                    <view key="view" focusRingType="none" id="kdN-PX-4rg">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="KzK-gu-gKm">
+                                <rect key="frame" x="18" y="264" width="47" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Project" id="ZY2-ZA-zmG">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="KzK-gu-gKm" firstAttribute="leading" secondItem="kdN-PX-4rg" secondAttribute="leading" constant="20" id="aYr-ul-OlS"/>
+                            <constraint firstItem="KzK-gu-gKm" firstAttribute="top" secondItem="kdN-PX-4rg" secondAttribute="top" constant="20" id="vcB-6M-ERQ"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="OoR-5y-Xk4" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-802" y="1755"/>
+        </scene>
+        <!--checklist-->
+        <scene sceneID="nQ5-YR-tXn">
+            <objects>
+                <viewController title="Checklist" id="fyi-fQ-oS7" userLabel="checklist" sceneMemberID="viewController">
+                    <view key="view" focusRingType="none" id="jme-Bz-9P0">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gzZ-Sj-gk6">
+                                <rect key="frame" x="18" y="264" width="39" height="16"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Other" id="ASP-eZ-VA0">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="gzZ-Sj-gk6" firstAttribute="leading" secondItem="jme-Bz-9P0" secondAttribute="leading" constant="20" id="EX9-Ab-akh"/>
+                            <constraint firstItem="gzZ-Sj-gk6" firstAttribute="top" secondItem="jme-Bz-9P0" secondAttribute="top" constant="20" id="kaE-oI-gFI"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <customObject id="fkB-fN-hBc" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117" y="1755"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="checkmark.square" catalog="system" width="15" height="14"/>
+        <image name="folder" catalog="system" width="18" height="14"/>
+        <image name="percent" catalog="system" width="15" height="15"/>
+    </resources>
 </document>

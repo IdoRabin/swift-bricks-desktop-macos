@@ -15,7 +15,7 @@ class MNProgressBoxView : NSView {
     
     // MARK: static and enum
     private let DEBUG_DRAWING = IS_DEBUG && false
-    private let DEBUG_TEST_PROGRESS_OBSERVATION = IS_DEBUG && true
+    private let DEBUG_TEST_PROGRESS_OBSERVATION = IS_DEBUG && false
     private let DEBUG_INIT_WITH_CIRCLE_SHOWN = IS_DEBUG && false
     private let DEBUG_ALWAYS_HAVE_TITLE = IS_DEBUG && false
     private let DEBUG_ALWAYS_HAVE_SUBTITLE = IS_DEBUG && false
@@ -42,6 +42,7 @@ class MNProgressBoxView : NSView {
     // MARK: Properties
     fileprivate var lastRecievedProgressTexts : ProgressTexts? = nil
     fileprivate var lastLabelsPresentedCount : Int = 0
+    fileprivate var _animatingPresentedLabels : Bool = false
     fileprivate var progressCircleUnshrunkWidth : CGFloat = 32
     fileprivate var progressCircleShrunkWidth : CGFloat = 1
     
@@ -106,14 +107,27 @@ class MNProgressBoxView : NSView {
     // MARK: Vars
     var leadingPad : CGFloat = 18.0 {
         didSet {
-            // leadingPadConstraint.animator().constant = leadingPad
+            self.needsLayout = true
         }
     }
     
+    private var _latSubtitleWhileAnimating : String? = nil
     private func setLabels(title:String, subtitle:String, units:String, animated:Bool) {
         titleLabel.stringValue = title
-        subtitleLabel.stringValue = subtitle
         unitsLabel.stringValue = units
+        
+        if animated && subtitleLabel.stringValue.count > 0 && subtitle.count == 0 && _latSubtitleWhileAnimating == nil {
+            _latSubtitleWhileAnimating = ""
+            DispatchQueue.main.asyncAfter(delayFromNow: 0.24) {
+                self.subtitleLabel.stringValue = self._latSubtitleWhileAnimating ?? ""
+                self._latSubtitleWhileAnimating = nil
+            }
+        } else if !_animatingPresentedLabels {
+            subtitleLabel.stringValue = subtitle
+            _latSubtitleWhileAnimating = nil
+        } else {
+            _latSubtitleWhileAnimating = subtitle
+        }
         
         self.updateLabelsConstraints(animated: animated)
     }
@@ -121,20 +135,39 @@ class MNProgressBoxView : NSView {
     private func updateLabelsConstraints(animated:Bool) {
         
         func exec() {
-            dlog?.info("updateLabelsConstraints labels: \(lastLabelsPresentedCount)")
-            titleLabelCenterYConstraint.constant = isShowsTwoLabels ? 0.0 : 0.0
+             // dlog?.info("updateLabelsConstraints labels: \(lastLabelsPresentedCount) animated: \(animated)")
+            
+            // TODO: See why this is doesn't trigger implicit animations
+            titleLabelCenterYConstraint.constant = isShowsTwoLabels ?    /* top half */   -6.0 : 0.0 /* center y */
+            subtitleLabelBottomConstraint.constant = isShowsTwoLabels ?  /* bottom half */ -1.0 : -18.0 /* hidden below bottom */
             subtitleLabel.alphaValue = isShowsTwoLabels ? 1.0 : 0.0
-            subtitleLabelBottomConstraint.constant = isShowsTwoLabels ? -2.0 : -18.0
         }
         
-        let isShowsTwoLabels = titleLabel.stringValue.count > 0 && subtitleLabel.stringValue.count > 0
+        let duration : TimeInterval = DEBUG_SLOW_ANIMATIONS ? 0.34 :  0.22
+        var isShowsTwoLabels = titleLabel.stringValue.count > 0 && subtitleLabel.stringValue.count > 0
+        if let sut = _latSubtitleWhileAnimating, sut.count == 0 {
+            isShowsTwoLabels = false
+        }
         let newLabelsPresentedCount = isShowsTwoLabels ? 2 : 1
         if lastLabelsPresentedCount != newLabelsPresentedCount {
             lastLabelsPresentedCount = newLabelsPresentedCount
             if animated {
-                NSView.animate(duration: 0.2) { context in
+                if _animatingPresentedLabels && newLabelsPresentedCount == 1 {
+                    // This can wait
+                    dlog?.info("updateLabelsConstraints will wait: already animating")
+                    DispatchQueue.main.asyncAfter(delayFromNow: duration + 0.01) {
+                        self.updateLabelsConstraints(animated: true)
+                    }
+                    return
+                }
+                
+                _animatingPresentedLabels = true
+                NSView.animate(duration: duration, delay: 0.04) { context in
                     context.allowsImplicitAnimation = true
                     exec()
+                    self.superview?.superview?.layoutSubtreeIfNeeded()
+                } completionHandler: {
+                    self._animatingPresentedLabels = false
                 }
             } else {
                 exec()
@@ -150,13 +183,18 @@ class MNProgressBoxView : NSView {
             dlog?.info("first layout - circle progressWidthConstraint will be \(self.bounds.height)")
             let newH = self.bounds.height
             progressCircleUnshrunkWidth = newH
+            updateLabelsConstraints(animated: false)
             
             // Hide progress circle on init
             if DEBUG_INIT_WITH_CIRCLE_SHOWN {
                 progressWidthConstraint.constant = progressCircleUnshrunkWidth
+                progressCircle.progress = 0.0
+                progressCircle.alphaValue = 1.0
             } else {
-                self.leadingPadConstraint.constant = DEFAULT_LEADING_PAD + newH
+                self.leadingPadConstraint.constant = leadingPad + newH
                 self.leadingPadConstraint.priority = .defaultHigh
+                progressCircle.progress = 0.0
+                progressCircle.alphaValue = 0.0
                 progressWidthConstraint.constant = progress > 0.0 ? newH : 0.0
             }
             
@@ -276,9 +314,11 @@ class MNProgressBoxView : NSView {
         if (newCircleState != prevCircleState || isShouldShowIcon) {
 
             let duration : TimeInterval = DEBUG_SLOW_ANIMATIONS ? 1.5 : 0.25
-            NSView.animate(duration: duration, delay: 0.0) { context in
+            NSView.animate(duration: duration, delay: 0.0) {[self] context in
                 context.allowsImplicitAnimation = true
-                self.progressWidthConstraint.animator().constant = newCircleState.isVisible ? self.progressCircleUnshrunkWidth : self.progressCircleShrunkWidth
+                self.progressWidthConstraint.animator().constant = newCircleState.isVisible ? progressCircleUnshrunkWidth : progressCircleShrunkWidth
+                self.leadingPadConstraint.animator().constant = newCircleState.isVisible ? leadingPad : leadingPad + (progressCircleUnshrunkWidth - progressCircleShrunkWidth)
+                
                 if (newCircleState != prevCircleState) {
                     switch newCircleState {
                     case .visible:
@@ -337,7 +377,8 @@ class MNProgressBoxView : NSView {
                                   animated: self.window != nil,
                                   iconPresentation: iconPresentation,
                                   forcedProgressCircleState:forceCircleState)
-        
+        // Update center text?
+        // self.progressCircle.centerText = "\(Int(floor(mnProgress.fractionCompleted * 35)))"
         
         // Update label
         if texts.title == nil && texts.subtitle == nil, let lastRecv = self.lastRecievedProgressTexts {
@@ -345,10 +386,13 @@ class MNProgressBoxView : NSView {
         } else {
             self.lastRecievedProgressTexts = texts
         }
-        self.titleLabel.stringValue = texts.title ?? ""
-        self.subtitleLabel.stringValue = texts.subtitle ?? ""
+        
+        let unitsTitle = "|\(String.NBSP)" + (mnProgress.discreteStructOrNil?.progressUnitsDisplayString ?? mnProgress.fractionCompletedDisplayString)
         self.unitsLabel.textColor = unitsLabelColor
-        self.unitsLabel.stringValue = "|\(String.NBSP)" + (mnProgress.discreteStructOrNil?.progressUnitsDisplayString ?? mnProgress.fractionCompletedDisplayString)
+        self.setLabels(title: texts.title ?? "",
+                       subtitle: texts.subtitle ?? "",
+                       units: unitsTitle,
+                       animated: self.window != nil)
     }
 }
 
@@ -383,7 +427,7 @@ extension MNProgressBoxView  /* debugging */ {
         TestMNProgressEmitter.shared.observers.add(observer: self)
         TestMNProgressEmitter.shared.timedTest(delay: 0.5,
                                                interval: 0.1,
-                                               changesCount: 50,
+                                               changesCount: 70,
                                                finishWith: .failure(AppError(AppErrorCode.misc_unknown, detail: "Final call of test")),
                                                observerToAdd: self)
     }

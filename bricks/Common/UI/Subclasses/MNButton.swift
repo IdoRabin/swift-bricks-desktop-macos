@@ -14,10 +14,14 @@ class MNButton: NSButton {
         didSet {
             if let cmd = self.associatedCommand {
                 self.toolTip = cmd.tooltipTitleFull
-                self.title = cmd.buttonTitle
-                if let tttile = cmd.tooltipTitle, !tttile.isEmpty && tttile.willFitBoundingSize(self.bounds.size, attributes: self.attributesForWholeTitle) {
-                    // Longer title?
-                    self.title = tttile
+                if self.imagePosition == .imageOnly {
+                    self.title = ""
+                } else {
+                    self.title = cmd.buttonTitle
+                    if let tttile = cmd.tooltipTitle, !tttile.isEmpty && tttile.willFitBoundingSize(self.bounds.size, attributes: self.attributesForWholeTitle) {
+                        // Longer title?
+                        self.title = tttile
+                    }
                 }
                 self.keyEquivalent = cmd.keyboardShortcut.chars
                 self.keyEquivalentModifierMask = cmd.keyboardShortcut.modifiers
@@ -59,6 +63,14 @@ class MNButton: NSButton {
             self.addTrackingArea(hoverTrackingArea!)
         } else if isDetectHover == false && self.trackingAreas.count > 0, let area = self.hoverTrackingArea {
             self.removeTrackingArea(area)
+        }
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        super.mouseDown(with: event)
+        //dlog?.info("mouseDown")
+        if self.action == nil, let cmd = self.associatedCommand {
+            dlog?.note("associatedCommand: [\(cmd.typeName)] needs to be instantiated and added to an invoker.")
         }
     }
     

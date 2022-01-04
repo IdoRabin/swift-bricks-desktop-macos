@@ -31,6 +31,10 @@ class PropertiesVC : NSSplitViewController {
         setup()
     }
     
+    override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+        return BrickDocController.shared.validateUserInterfaceItem(doc: self.doc, item: item)
+    }
+    
     // MARK: Public funcs
 }
 

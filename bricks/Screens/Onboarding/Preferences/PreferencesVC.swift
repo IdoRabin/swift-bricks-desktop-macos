@@ -233,3 +233,7 @@ extension PreferencesVC : NSToolbarDelegate {
     
     
 }
+
+extension PreferencesVC : SinglyInstanced {
+    static var isRequiresSingeInstance: Bool { return true }
+}

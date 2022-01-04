@@ -245,10 +245,21 @@ extension DispatchQueue {
         if DispatchQueue.currentLabel == self.label {
             block()
         } else if Thread.current.isMainThread {
+            // dlog?.note("safeSync tried to sync the mainThread to another thread! will call it async!")
             block()
+            //callers depend on this being Synced.  so we cannot call self.async(execute: block)
         } else {
             // TODO:
             self.sync(execute: block)
+        }
+    }
+    
+    /// If we are already on this queue, will run this synchroneously. If we are on another thread, will runc the block on the queu asynchronenously
+    public func asyncIfNeeded(_ block:@escaping ()->Void) {
+        if DispatchQueue.currentLabel == self.label {
+            block()
+        } else {
+            self.async(execute: block)
         }
     }
     

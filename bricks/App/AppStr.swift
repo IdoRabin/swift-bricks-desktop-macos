@@ -183,6 +183,7 @@ enum AppStr : Localizable {
     case OPEN_AN_EXISTING_PROJECT_DOT_DOT
     case COPYRIGHT_COMPANY_W_YEAR_FORMAT // "Copyright © %@ Bricks Biz Ltd." should be year string
     case COPYRIGHT_COMPANY_W_YEAR_FORMAT_LONG // "Copyright © %@ Bricks Biz Ltd. All rights reserved. Logo and other icons are trademarks of Bricks Biz Ltd." should be year string
+    case SHOW_THIS_WINDOW_ON_STARTUP // "" for checkboxes
     
     // TOOLBAR
     case PROJECT

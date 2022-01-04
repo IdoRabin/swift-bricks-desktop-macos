@@ -59,7 +59,7 @@ extension NSWindow {
         })
     }
     
-    func shake(with intensity : CGFloat = 0.05, duration : Double = 0.5, completion:(()->Void)? = nil){
+    func shake(with intensity : CGFloat = 0.3, duration : Double = 0.5, completion:(()->Void)? = nil){
         let numberOfShakes = 3
         let frame : CGRect = self.frame
         let shakeAnimation :CAKeyframeAnimation  = CAKeyframeAnimation()
@@ -67,10 +67,15 @@ extension NSWindow {
         let shakePath = CGMutablePath()
         shakePath.move(to: CGPoint(x:NSMinX(frame),y:NSMinY(frame)))
 
-        let szeW : CGFloat = frame.size.width * intensity * 0.5
-        let szeH : CGFloat = frame.size.height * intensity * 0.5
+        let clampedIntensity = clamp(value: intensity, lowerlimit: 0.01, upperlimit: 100.0) { intensity in
+            DLog.ui["NSWindowEx"]?.note("shake(with intensity:\(intensity)) out of bounds: was clamped to the range: 0.01...100.0")
+        }
+        let szeW : CGFloat = frame.size.width * clampedIntensity * 0.05
+        let szeH : CGFloat = frame.size.height * clampedIntensity * 0.05
         for index in 0...numberOfShakes-1 {
-            let mul = 1.0 / CGFloat(index)
+            
+            // Mu;ltiplier for the shake - should become smaller for each repeat:
+            let mul = 1.0 - (CGFloat(index) / CGFloat(numberOfShakes))
             shakePath.addLine(to: CGPoint(x:NSMinX(frame) - szeW * mul, y:NSMinY(frame)))
             shakePath.addLine(to: CGPoint(x:NSMinX(frame) - szeW * mul, y:NSMinY(frame) - szeH * mul))
             shakePath.addLine(to: CGPoint(x:NSMinX(frame) + szeW * mul, y:NSMinY(frame)))
@@ -107,5 +112,12 @@ extension NSWindowController {
             return
         }
         self.window?.bringToFront()
+    }
+}
+
+class NSUtilWindow : NSWindow {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.isExcludedFromWindowsMenu = true
     }
 }

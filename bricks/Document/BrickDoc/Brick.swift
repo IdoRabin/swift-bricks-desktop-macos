@@ -13,14 +13,15 @@ protocol Changable : AnyObject {
     func didChange(sender:Any, propsAndVals:[String:String])
 }
 
-class Brick : Codable, CustomDebugStringConvertible, Identifiable {
+class Brick : Codable, CustomDebugStringConvertible, BUIDable {
     
     var info : BrickBasicInfo
     var settings : BrickSettings
     var stats : BrickStats
+    var layers : BrickLayers
     
-    // MARK: Identifiable
-    var id : BrickDocUUID {
+    // MARK: Identifiable / BUIDable
+    var id : BrickDocUID {
         return info.id
     }
     
@@ -29,6 +30,7 @@ class Brick : Codable, CustomDebugStringConvertible, Identifiable {
         info = BrickBasicInfo()
         settings = BrickSettings()
         stats = BrickStats()
+        layers = BrickLayers()
     }
     
     // MARK: CustomDebugStringConvertible

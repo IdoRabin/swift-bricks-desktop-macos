@@ -9,6 +9,7 @@
 import Cocoa
 fileprivate let dlog : DSLogger? = DLog.forClass("AppStoryboard")
 
+
 enum AppStoryboard : String {
     
     case document = "Doc"
@@ -22,6 +23,47 @@ enum AppStoryboard : String {
         }
     }
     
+    private func isShouldBeSinglyInstanced(id:String)->Bool {
+        
+        // View Controllers that require only a single instance.
+        let singlyInstancedIds : [String] = [
+            "About", "Preferences", "Splash"
+        ]
+        let clearID = id.trimmingSuffix("VCID").trimmingSuffix("WCID")
+        return singlyInstancedIds.contains(clearID)
+    }
+    
+    private func handleSinglyInstanceIfNeeded(id:String)->Bool {
+        guard isShouldBeSinglyInstanced(id: id) else {
+            return false
+        }
+        
+        var window : NSWindow? = nil
+        
+        // Test view controllers - Already exists?
+        if let vc = BricksApplication.shared.findPresentedVC(identifier: id) {
+            // Found Existing vc of this type
+            window = vc.view.window
+        } else {
+            // Test window controller  - Already exists?
+            // TBE window with the id ending with WCID
+            window = BricksApplication.shared.findPresentedWindow(identifier: id)
+        }
+        
+        if let window = window {
+            window.bringToFront()
+            window.makeKey()
+            window.makeMain()
+            DispatchQueue.main.async {
+                window.shake()
+            }
+            dlog?.fail("instantiateWindowController - VC/WC for id: [\(id)] already exists - bring to front and shake!")
+            return true
+        }
+        
+        return false
+    }
+    
     static func storyboard(named name:String)->NSStoryboard {
         return NSStoryboard.init(name: NSStoryboard.Name(name), bundle: nil)
     }
@@ -30,6 +72,11 @@ enum AppStoryboard : String {
         guard Thread.current.isMainThread else {
             dlog?.warning("instantiateViewController should only be called on main thread!")
             return nil
+        }
+        
+        guard !self.handleSinglyInstanceIfNeeded(id: id) else {
+            // Single instance already exist
+            return nil //
         }
         
         if let viewController = self.storyBoard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(id)) as? NSViewController {
@@ -45,6 +92,12 @@ enum AppStoryboard : String {
             return nil
         }
         
+        // Already exists?
+        guard !self.handleSinglyInstanceIfNeeded(id: id) else {
+            // Single instance already exist
+            return nil //
+        }
+        
         if let windowController = self.storyBoard.instantiateController(withIdentifier: NSStoryboard.SceneIdentifier(id)) as? NSWindowController {
             return windowController
         }
@@ -57,7 +110,13 @@ enum AppStoryboard : String {
             dlog?.warning("instantiateWCAndPresent should only be called on main thread!")
             return
         }
-
+        
+        // Already exists?
+        guard !self.handleSinglyInstanceIfNeeded(id: id) else {
+            // Single instance already exist
+            return //
+        }
+        
         let presWC = presentingWC ?? BricksApplication.shared.orderedWindows.first
         if let wc = self.instantiateWindowController(id: id) {
 
@@ -93,6 +152,12 @@ enum AppStoryboard : String {
             return
         }
 
+        // Already exists?
+        guard !self.handleSinglyInstanceIfNeeded(id: id) else {
+            // Single instance already exist
+            return //
+        }
+        
         let presWC = presentingWC ?? BricksApplication.shared.orderedWindows.first
         if let vc = self.instantiateViewController(id: id) {
 
@@ -123,4 +188,8 @@ enum AppStoryboard : String {
             dlog?.note("\(self) failed finding WC with the id: \"\(id)\"")
         }
     }
+}
+
+protocol SinglyInstanced {
+    static var isRequiresSingeInstance : Bool { get }
 }

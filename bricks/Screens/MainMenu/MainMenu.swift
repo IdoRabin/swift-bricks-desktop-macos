@@ -10,6 +10,16 @@ import AppKit
 class MainMenu : NSMenu {
     fileprivate let dlog : DSLogger? = DLog.forClass("MainMenu")
     
+    enum Category {
+        case app
+        case file
+        case edit
+        case view
+        case layer
+        case window
+        case help
+    }
+    
     // Bricks menu
     @IBOutlet weak var bricksTopMnuItem: NSMenuItem!
     @IBOutlet weak var   bricksAboutMnuItem: NSMenuItem!
@@ -90,15 +100,15 @@ class MainMenu : NSMenu {
     @IBOutlet weak var   helpMnuItem: NSMenuItem!
     @IBOutlet weak var   helpTooltipsShowKeyboardShortcutsMnuItem: NSMenuItem!
     
-    var topMnuItems    : [NSMenuItem] = []
-    var bricksMnuItems : [NSMenuItem] = []
-    var fileMnuItems   : [NSMenuItem] = []
-    var editMnuItems   : [NSMenuItem] = []
-    var viewMnuItems   : [NSMenuItem] = []
-    var windowMnuItems   : [NSMenuItem] = []
-    var layerMnuItems   : [NSMenuItem] = []
-    var helpMnuItems   : [NSMenuItem] = []
-    var allLeafItems    : [NSMenuItem] = []
+    private(set) var topMnuItems    : [NSMenuItem] = []
+    private(set) var bricksMnuItems : [NSMenuItem] = []
+    private(set) var fileMnuItems   : [NSMenuItem] = []
+    private(set) var editMnuItems   : [NSMenuItem] = []
+    private(set) var viewMnuItems   : [NSMenuItem] = []
+    private(set) var windowMnuItems   : [NSMenuItem] = []
+    private(set) var layerMnuItems   : [NSMenuItem] = []
+    private(set) var helpMnuItems   : [NSMenuItem] = []
+    private(set) var allLeafItems    : [NSMenuItem] = []
     
     var unhookedSystemItems : [NSMenuItem]? = IS_DEBUG ? [] : nil
     
@@ -124,32 +134,34 @@ class MainMenu : NSMenu {
         }
     }
     
-    var state : State = .disabled {
+    // MARK: Privarte properties
+    private(set) var state : State = .disabled {
         didSet {
             if state.simplified != oldValue.simplified {
                 dlog?.info("state didSet \(state)")
             }
-
-            switch state {
-            case .disabled:
-                self.disableAll(except: [bricksQuitMnuItem, bricksAboutMnuItem])
-
-            case .splashScreen:
-                let enabledItems : [NSMenuItem]  = [bricksAboutMnuItem, bricksPreferencesMnuItem, bricksHideMnuItem,
-                                                    helpTooltipsShowKeyboardShortcutsMnuItem]
-                self.disableAll(except:enabledItems)
-            case .document:
-                self.disableAll(except: [])
-            case .documentWithModal(let string):
-                switch string {
-                default:
-                    self.disableAll(except: [])
-                }
-            }
         }
     }
+
+    /// All menu items that represent the doc windows (expected to be in the window submenu's bottom)
+    private var docWindowsItems : [NSMenuItem] {
+        guard let submenu = windowTopMnuItem.submenu else {
+            return []
+        }
+        
+        var result : [NSMenuItem] = submenu.items.filter({ menuItem in
+            return "\(type(of: menuItem))" == "NSWindowRepresentingMenuItem"
+        })
+        
+        if result.count == 0, let index = submenu.items.firstIndex(of: windowBringAllToFrontMnuItem) {
+            result = Array(submenu.items.suffix(from: index))
+        }
+        return result
+    }
     
-    func hookupMenuSystemItem(_ item:NSMenuItem)->Bool {
+    // MARK: Private funcs
+    
+    private func hookupMenuSystemItem(_ item:NSMenuItem)->Bool {
         guard item.action != nil || self.allLeafItems.contains(item) else {
             return false
         }
@@ -179,7 +191,7 @@ class MainMenu : NSMenu {
         return false
     }
     
-    func setup(menu:NSMenu, depth:Int = 0) {
+    private func setup(menu:NSMenu, depth:Int = 0) {
 
         guard depth < 10 else {
             dlog?.warning("localize recursion is > 10 depth. @ menu : \(menu.title)")
@@ -207,7 +219,7 @@ class MainMenu : NSMenu {
                 switch item {
                 case bricksTopMnuItem: title = AppStr.PRODUCT_NAME.localized()
                 case   bricksAboutMnuItem: cmd = CmdAboutPanel.self  //  AppStr.ABOUT_APP_FORMAT.formatLocalized(productName)
-                case   bricksPreferencesMnuItem: title = AppStr.PREFERENCES.localized()
+                case   bricksPreferencesMnuItem: cmd = CmdPreferencesPanel.self // AppStr.PREFERENCES.localized()
                 case   bricksServicesMnuItem: title = AppStr.SERVICES.localized()
                 case   bricksHideMnuItem: title = AppStr.HIDE_APP_FORMAT.formatLocalized(productName)
                 case   bricksHideOthersMnuItem: title = AppStr.HIDE_OTHERS.localized()
@@ -294,7 +306,8 @@ class MainMenu : NSMenu {
 
                 if let cmd = cmd, let item = item as? MNMenuItem {
                     item.associatedCommand = cmd
-                    cmd.menuRepresentation = item
+                    // TODO: Should we link the menu item with the command?
+                    // cmd.menuRepresentation = item
                 } else if title.count > 0 {
                     if note.count != 0 {
                         let attributes = item.attributedTitle?.attributes(at: 0, effectiveRange: nil)
@@ -321,21 +334,33 @@ class MainMenu : NSMenu {
             unhookedSystemItems = unhookedSystemItems?.uniqueElements()
         }
     }
+    
+    private func setEnabled(_ enabled:Bool, items:[NSMenuItem] = [], except:[NSMenuItem]) {
 
-    var docWindowsItems : [NSMenuItem] {
-        guard let submenu = windowTopMnuItem.submenu else {
-            return []
+        for item in items {
+            var isEnable = (except.contains(item)) ? !enabled : enabled
+            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand {
+                isEnable = BrickDocController.shared.isAllowed(commandType: cmd, context: "MainMenu.setEnabledforMenuItems")
+            }
+            item.isEnabled = isEnable
         }
-        
-        var result : [NSMenuItem] = submenu.items.filter({ menuItem in
-            return "\(type(of: menuItem))" == "NSWindowRepresentingMenuItem"
-        })
-        
-        if result.count == 0, let index = submenu.items.firstIndex(of: windowBringAllToFrontMnuItem) {
-            result = Array(submenu.items.suffix(from: index))
-        }
-        return result
     }
+    
+    private func setAllEnabled(_ enabled:Bool, except:[NSMenuItem] = []) {
+
+        self.setEnabled(enabled, items: allLeafItems, except: except)
+    }
+    
+    private func disableAll(except:[NSMenuItem] = []) {
+        self.setAllEnabled(false, except: except)
+    }
+    
+    private func enableAll(except:[NSMenuItem] = []) {
+
+        self.setAllEnabled(true, except: except)
+    }
+    
+    // MARK: Public
     
     func updateWindowsMenuItems() {
         
@@ -346,6 +371,25 @@ class MainMenu : NSMenu {
                 item.image = doc.docSaveState.iconImage.scaledToFit(boundingSizes: 22)
             }
         }
+    }
+    
+    func recalcLeafItems() {
+
+        allLeafItems.removeAll()
+        func addLeafItems(_ xitems:[NSMenuItem], depth:Int = 0) {
+            guard depth < 127 else {
+                return
+            }
+            
+            for item in xitems {
+                if item.hasSubmenu == false {
+                    allLeafItems.append(item)
+                } else {
+                    addLeafItems(item.submenu?.items ?? [], depth: depth + 1)
+                }
+            }
+        }
+        addLeafItems(topMnuItems, depth: 0)
     }
     
     // MARK: Update menu using the current Doc:
@@ -381,6 +425,20 @@ class MainMenu : NSMenu {
                 break
             }
         }
+        
+        
+//        for command in commands {
+//
+//            // Menu items for this command:
+//            let menuItems = menuLeafItems.filter(commands: [command])
+//            for menuItem in menuItems {
+//                if let doc = self.curDoc {
+//                    menuItem.isEnabled = self.validateMenuItem(doc:doc, menuItem: menuItem)
+//                } else {
+//                    menuItem.isEnabled = self.validateMenuItem(menuItem)
+//                }
+//            }
+//        }
     }
                          
     // MARK: Lifecycle
@@ -422,75 +480,6 @@ class MainMenu : NSMenu {
             self.setup(menu: self)
             self.recalcLeafItems()
         }
-    }
-    
-    func recalcLeafItems() {
-
-        allLeafItems.removeAll()
-        func addLeafItems(_ xitems:[NSMenuItem], depth:Int = 0) {
-            guard depth < 127 else {
-                return
-            }
-            
-            for item in xitems {
-                if item.hasSubmenu == false {
-                    allLeafItems.append(item)
-                } else {
-                    addLeafItems(item.submenu?.items ?? [], depth: depth + 1)
-                }
-            }
-        }
-        addLeafItems(topMnuItems, depth: 0)
-    }
-    
-    // MARK: state changes
-    func determineState() {
-
-        let hasSplash = BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self)
-        let hasDocument = BrickDocController.shared.documents.count == 0 || BricksApplication.shared.isViewControllerExistsOfClass(DocVC.self)
-        
-        var result : State = .splashScreen
-        if hasSplash {
-            if hasDocument {
-                // Hide splash
-                result = .document
-            } else {
-                result = .splashScreen
-            }
-        } else if hasDocument {
-            result = .document
-        } else {
-            result = .disabled
-        }
-        
-        // Change state
-        self.state = result
-    }
-    
-    private func setEnabled(_ enabled:Bool, items:[NSMenuItem] = [], except:[NSMenuItem]) {
-
-        for item in items {
-            var isEnable = (except.contains(item)) ? !enabled : enabled
-            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand {
-                isEnable = BrickDocController.shared.isAllowed(commandType: cmd)
-            }
-            item.isEnabled = isEnable
-        }
-    }
-    
-    private func setAllEnabled(_ enabled:Bool, except:[NSMenuItem] = []) {
-
-        self.setEnabled(enabled, items: allLeafItems, except: except)
-    }
-    
-    func disableAll(except:[NSMenuItem] = []) {
-
-        self.setAllEnabled(false, except: except)
-    }
-    
-    func enableAll(except:[NSMenuItem] = []) {
-
-        self.setAllEnabled(true, except: except)
     }
 }
 

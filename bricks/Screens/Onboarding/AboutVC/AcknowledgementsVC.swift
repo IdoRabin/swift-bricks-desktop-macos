@@ -19,3 +19,7 @@ class AcknowledgementsVC: NSViewController {
         dlog?.info("deinit \(self.basicDesc)")
     }
 }
+
+extension AcknowledgementsVC : SinglyInstanced {
+    static var isRequiresSingeInstance: Bool { return true }
+}

@@ -40,3 +40,7 @@ class AboutVC: NSViewController {
     }
     
 }
+
+extension AboutVC : SinglyInstanced {
+    static var isRequiresSingeInstance: Bool { return true }
+}

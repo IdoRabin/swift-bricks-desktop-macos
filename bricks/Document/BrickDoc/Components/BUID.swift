@@ -40,7 +40,6 @@ public struct TUID : BUID {
     
     enum Types : String {
         case doc = "DOC"
-        case info = "INF"
         case layer = "LYR"
     }
     
@@ -68,4 +67,8 @@ public struct TUID : BUID {
         
         type = newType
     }
+}
+
+protocol BUIDable : Identifiable where ID: BUID {
+    
 }

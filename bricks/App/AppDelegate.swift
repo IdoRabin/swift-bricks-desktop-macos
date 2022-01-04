@@ -47,11 +47,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @discardableResult
-    private func presentSplashWindow(showsRecents:Bool)->Bool {
+    private func presentSplashWindow(showsRecents:Bool, context:CommandContext)->Bool {
         if BrickDocController.shared.documents.count == 0 {
-            let cmd = CmdSplashWindow(showsRecents: showsRecents)
-            BrickDocController.shared.sendToInvoker(command: cmd)
-            return true
+            return BrickDocController.shared.createCommand(CmdSplashWindow.self, context: context, isEnqueue:true) != nil
         }
         return false
     }
@@ -84,7 +82,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         AppDocumentHistory.shared.whenLoaded({ updated in
             let hasRecents = (AppDocumentHistory.shared.history.count > 0)
             if self.isShouldShowSplashWindowOnInit() {
-                self.presentSplashWindow(showsRecents: hasRecents)
+                self.presentSplashWindow(showsRecents: hasRecents, context: "presentFirstWindow_1")
                 // Splash screen was presented
             } else {
                 if let docInfo = AppDocumentHistory.shared.history.first {
@@ -96,7 +94,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                             dlog?.note("No file loaded and no splash screen in settings")
                             
                             // Splash screen will be presented
-                            self.presentSplashWindow(showsRecents: false)
+                            self.presentSplashWindow(showsRecents: false, context: "presentFirstWindow_2")
                         }
                     }
                 }
@@ -112,7 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 let hasRecents = (AppDocumentHistory.shared.history.count > 0)
                 
                 // Splash screen will be presented
-                self.presentSplashWindow(showsRecents: hasRecents)
+                self.presentSplashWindow(showsRecents: hasRecents, context: "applicationShouldHandleReopen")
             }
         } else {
             // Bring all to front
@@ -162,4 +160,3 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return true
     }
 }
-

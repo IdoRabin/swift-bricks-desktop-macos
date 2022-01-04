@@ -29,8 +29,9 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case web_unexpected_response = 1100
     
     // Command
-    case cmd_failed_execute
-    case cmd_failed_undo
+    case cmd_not_available_now = 1500
+    case cmd_failed_execute = 1501
+    case cmd_failed_undo = 1502
     
     // Doc
     case doc_unknown = 2000

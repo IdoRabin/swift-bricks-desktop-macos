@@ -107,6 +107,8 @@ class SplashVC : NSViewController {
         let yearStr = DateFormatter.localeYearFormatter.string(from: Date())
         titleLabel.stringValue = AppStr.PRODUCT_NAME.localized()
         subtitleLabel.stringValue = AppStr.COPYRIGHT_COMPANY_W_YEAR_FORMAT.formatLocalized(yearStr) + "\n" + AppStr.VERSION.localized() + Bundle.main.fullVersionAsDisplayString
+        
+        showWindowCheckBox.title = AppStr.SHOW_THIS_WINDOW_ON_STARTUP.localized()
         showWindowCheckBox.state = AppSettings.shared.general.showsSplashScreenOnInit ? .on : .off
         
         closeButton.onMouseEnter = {btn in
@@ -232,4 +234,6 @@ extension SplashVC : NSTableViewDelegate, NSTableViewDataSource {
     
 }
 
-
+extension SplashVC : SinglyInstanced {
+    static var isRequiresSingeInstance: Bool { return true }
+}

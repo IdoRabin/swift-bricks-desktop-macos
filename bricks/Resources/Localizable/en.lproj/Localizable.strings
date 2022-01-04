@@ -169,6 +169,7 @@
 "OPEN_AN_EXISTING_PROJECT_DOT_DOT" = "Open an existing project..";
 "COPYRIGHT_COMPANY_W_YEAR_FORMAT" = "Copyright © %@ Bricks Biz Ltd."; // "Copyright © 2001 Bricks Biz Ltd."
 "COPYRIGHT_COMPANY_W_YEAR_FORMAT_LONG" = "Copyright © %@ Bricks Biz Ltd. All rights reserved. Logo and other icons are trademarks of Bricks Biz Ltd.";
+"SHOW_THIS_WINDOW_ON_STARTUP" = "Show this window on startup"; // for checkboxes
 
 // TOOLBAR
 "PROJECT" = "Project";

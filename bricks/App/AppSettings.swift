@@ -236,7 +236,10 @@ struct AppSettable<T:Equatable & Codable> : Codable {
                 self._value = loadedVal
                 dlog?.success("found and set for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
             } else {
-                dlog?.warning("failed cast \(AppSettings.shared.other[newName].descOrNil) as \(T.self)")
+                if IS_DEBUG && AppSettings.shared.other[newName] != nil {
+                    dlog?.warning("failed cast \(AppSettings.shared.other[newName].descOrNil) as \(T.self)")
+                }
+                
                 self._value = wrappedValue
             }
         } else {

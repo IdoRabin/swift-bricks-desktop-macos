@@ -9,120 +9,187 @@ import Foundation
 import AppKit
 
 class CmdSplashWindow : AppCommand {
-    static let category: AppCommandCategory = .app
     
-    static var keyboardShortcut = KeyboardShortcut.empty
-    static let buttonTitle: String = AppStr.PRESENT_SPLASH_SCREEN.localized()
-    static let buttonImageName: String? = nil
-    static let menuTitle: String? = AppStr.PRESENT_SPLASH_SCREEN.localized()
-    static let tooltipTitle: String? = AppStr.PRESENT_SPLASH_SCREEN.localized()
-    static weak var menuRepresentation: MNMenuItem? = nil
-    let showsRecents : Bool!
+    // MARK: AppCommand required properties
+    static var category : AppCommandCategory = .app
+    static var keyboardShortcut : KeyboardShortcut = .empty
+    static var buttonTitle: String = AppStr.PRESENT_SPLASH_SCREEN.localized()
+    static var buttonImageName: String? = nil
+    static var menuTitle: String? = AppStr.PRESENT_SPLASH_SCREEN.localized()
+    static var tooltipTitle : String? = AppStr.PRESENT_SPLASH_SCREEN.localized()
     
+    // MARK: Command properties
+    weak var receiver: CommandReciever?
+    var context: CommandContext
+    var showsRecents : Bool = false
     
-    init(showsRecents newShowsRecents:Bool) {
-        showsRecents = newShowsRecents
+    // MARK: Command funcs
+    static func isAllowed(_ method: CommandExecutionMethod = .execute, context: CommandContext, reciever: CommandReciever?) -> Bool {
+        let result = [.execute, .redo].contains(method)
+        return result // undo not allowed
     }
     
-    func execute(compeltion: @escaping CommandResultBlock) {
-        //BricksApplication.
-        dlog?.info("execute")
+    func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
         
-        func saveFlags() {
-            BrickDocController.shared.lastClosedWasOnSplashScreen = BrickDocController.shared.brickDocWindows.count == 0
+        guard Self.isAllowed(method, context: context, reciever: receiver) else {
+            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
+            return
         }
         
-        if SplashVC.sharedWindowController != nil, let vc = SplashVC.sharedWindowController?.contentViewController {
-            dlog?.note("Splash vc was already presented")
-            compeltion(.success("existed: \(vc.basicDesc)"))
-            SplashVC.sharedWindowController?.becomeFirstResponder()
-            SplashVC.sharedWindowController?.window?.becomeKey()
-            if BrickDocController.shared.documents.count == 0 || BrickDocController.shared.brickDocWindows.count == 0 {
-                SplashVC.sharedWindowController?.window?.becomeMain()
+        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
+            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
+            return
+        }
+        
+        DispatchQueue.mainIfNeeded {[self] in
+            func saveFlags() {
+                BrickDocController.shared.lastClosedWasOnSplashScreen = BrickDocController.shared.brickDocWindows.count == 0
             }
-            SplashVC.sharedWindowController?.bringWindowToFront()
-            saveFlags()
             
-        } else {
-            AppStoryboard.onboarding.instantiateWCAndPresent(from: nil, id: "SplashWCID", asMain: false, asKey: true) { wc in
+            if SplashVC.sharedWindowController != nil, let vc = SplashVC.sharedWindowController?.contentViewController {
+                dlog?.note("Splash vc was already presented")
+                completion(.success("existed: \(vc.basicDesc)"))
+                SplashVC.sharedWindowController?.becomeFirstResponder()
+                SplashVC.sharedWindowController?.window?.becomeKey()
+                if BrickDocController.shared.documents.count == 0 || BrickDocController.shared.brickDocWindows.count == 0 {
+                    SplashVC.sharedWindowController?.window?.becomeMain()
+                }
+                SplashVC.sharedWindowController?.bringWindowToFront()
+                saveFlags()
                 
-                if let vc = wc.contentViewController as? SplashVC {
+            } else {
+                AppStoryboard.onboarding.instantiateWCAndPresent(from: nil, id: "SplashWCID", asMain: false, asKey: true) { wc in
                     
-                    wc.window?.forceWindowCornerRadius(12, setup: { window in
-                        window?.isMovableByWindowBackground = true
-                        window?.contentView?.wantsLayer = true
-                        window?.contentView?.layer?.border(color: NSColor.underPageBackgroundColor, width: 1)
-                    })
-                    vc.setHistoryTableHidden(self.showsRecents == false)
-                    saveFlags()
-                    
-                    // call completion
-                    compeltion(.success("created \(vc.basicDesc)>"))
-                } else {
-                    compeltion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading splash screen.")))
+                    if let vc = wc.contentViewController as? SplashVC {
+                        
+                        wc.window?.forceWindowCornerRadius(12, setup: { window in
+                            window?.isMovableByWindowBackground = true
+                            window?.contentView?.wantsLayer = true
+                            window?.contentView?.layer?.border(color: NSColor.underPageBackgroundColor, width: 1)
+                        })
+                        vc.setHistoryTableHidden(self.showsRecents == false)
+                        saveFlags()
+                        
+                        // call completion
+                        completion(.success("created \(vc.basicDesc)>"))
+                    } else {
+                        completion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading splash screen.")))
+                    }
                 }
             }
         }
     }
     
-    func undo(compeltion: @escaping CommandResultBlock) {
-        dlog?.info("undo")
+    // MARK: Lifecycle
+    init(context: CommandContext, receiver: CommandReciever?, showsRecents:Bool) {
+        self.receiver = receiver
+        self.context = context
+        self.showsRecents = showsRecents
     }
 }
 
 class CmdAboutPanel : AppCommand {
-    static let category: AppCommandCategory = .app
+
+    // MARK: AppCommand required properties
+    static var category : AppCommandCategory = .app
+    static var keyboardShortcut : KeyboardShortcut = .empty
+    static var buttonTitle: String = AppStr.ABOUT_APP_FORMAT.formatLocalized(AppStr.PRODUCT_NAME.localized())
+    static var buttonImageName: String? = nil
+    static var menuTitle: String? = AppStr.ABOUT_APP_FORMAT.formatLocalized(AppStr.PRODUCT_NAME.localized())
+    static var tooltipTitle : String? = AppStr.ABOUT.localized()
     
-    static var keyboardShortcut = KeyboardShortcut.empty
-    static let buttonTitle: String = AppStr.ABOUT_APP_FORMAT.formatLocalized(AppStr.PRODUCT_NAME.localized())
-    static let buttonImageName: String? = nil
-    static let menuTitle: String? = AppStr.ABOUT_APP_FORMAT.formatLocalized(AppStr.PRODUCT_NAME.localized())
-    static let tooltipTitle: String? = AppStr.ABOUT.localized()
-    static weak var menuRepresentation: MNMenuItem? = nil
+    // MARK: Command properties
+    weak var receiver: CommandReciever?
+    var context: CommandContext
     
-    func execute(compeltion: @escaping CommandResultBlock) {
+    // MARK: Command funcs
+    static func isAllowed(_ method: CommandExecutionMethod = .execute, context: CommandContext, reciever: CommandReciever?) -> Bool {
+        let result = [.execute, .redo].contains(method)
+        return result // undo not allowed
+    }
+    
+    func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
+        guard Self.isAllowed(method, context: context, reciever: receiver) else {
+            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
+            return
+        }
+        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
+            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
+            return
+        }
         
-        dlog?.info("execute")
-        AppStoryboard.onboarding.instantiateWCAndPresent(from: nil, id: "AboutWCID", asMain: true, asKey: true) { wc in
-            if let vc = wc.contentViewController as? AboutVC {
-                
-                // call completion
-                compeltion(.success("created \(vc.basicDesc)"))
-            } else {
-                compeltion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading about screen.")))
+        // Execute command:
+        DispatchQueue.mainIfNeeded {
+            AppStoryboard.onboarding.instantiateWCAndPresent(from: nil, id: "AboutWCID", asMain: true, asKey: true) { wc in
+                if let vc = wc.contentViewController as? AboutVC {
+                    
+                    // call completion
+                    completion(.success("created \(vc.basicDesc)"))
+                } else {
+                    completion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading about screen.")))
+                }
             }
         }
     }
     
-    func undo(compeltion: @escaping CommandResultBlock) {
-        dlog?.info("undo")
+    // MARK: Lifecycle
+    required init(context: CommandContext, receiver: CommandReciever?) {
+        self.receiver = receiver
+        self.context = context
     }
 }
 
 class CmdPreferencesPanel : AppCommand {
-    static let category: AppCommandCategory = .app
     
-    static var keyboardShortcut = KeyboardShortcut(modifiers: .command, chars: ",")
-    static let buttonTitle: String = AppStr.PREFERENCES_DOT_DOT.localized()
-    static let buttonImageName: String? = nil
-    static let menuTitle: String? = AppStr.PREFERENCES_DOT_DOT.localized()
-    static let tooltipTitle: String? = AppStr.PREFERENCES_DOT_DOT.localized()
-    static weak var menuRepresentation: MNMenuItem? = nil
+    // MARK: AppCommand required properties
+    static var category : AppCommandCategory = .app
+    static var keyboardShortcut : KeyboardShortcut = KeyboardShortcut(modifiers: .command, chars: ",")
+    static var buttonTitle: String = AppStr.PREFERENCES_DOT_DOT.localized()
+    static var buttonImageName: String? = nil
+    static var menuTitle: String? = AppStr.PREFERENCES_DOT_DOT.localized()
+    static var tooltipTitle : String? = AppStr.PREFERENCES_DOT_DOT.localized()
     
-    func execute(compeltion: @escaping CommandResultBlock) {
-        dlog?.info("execute")
-        AppStoryboard.onboarding.instantiateWCAndPresent(from: nil, id: "PreferencesWCID", asMain: false, asKey: true) { wc in
-            if let vc = wc.contentViewController as? PreferencesVC {
-                
-                // call completion
-                compeltion(.success("created \(vc.basicDesc)>"))
-            } else {
-                compeltion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading about screen.")))
+    // MARK: Command properties
+    weak var receiver: CommandReciever?
+    var context: CommandContext
+    
+    // MARK: Command funcs
+    static func isAllowed(_ method: CommandExecutionMethod = .execute, context: CommandContext, reciever: CommandReciever?) -> Bool {
+        let result = [.execute, .redo].contains(method)
+        return result // undo not allowed
+    }
+    
+    func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
+        
+        // Test self allows command:
+        guard Self.isAllowed(method, context: context, reciever: receiver) else {
+            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
+            return
+        }
+        
+        // Test receiver allows command:
+        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
+            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
+            return
+        }
+        
+        // Execute command:
+        DispatchQueue.mainIfNeeded {
+            AppStoryboard.onboarding.instantiateWCAndPresent(from: nil, id: "PreferencesWCID", asMain: false, asKey: true) { wc in
+                if let vc = wc.contentViewController as? PreferencesVC {
+                    
+                    // call completion
+                    completion(.success("created \(vc.basicDesc)>"))
+                } else {
+                    completion(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading about screen.")))
+                }
             }
         }
     }
     
-    func undo(compeltion: @escaping CommandResultBlock) {
-        dlog?.info("undo")
+    // MARK: Lifecycle
+    required init(context: CommandContext, receiver: CommandReciever?) {
+        self.receiver = receiver
+        self.context = context
     }
 }

@@ -211,10 +211,7 @@ class MNSegmentedTabs : NSView {
     }
     
     private func updateTabs(selectedIndex selIndex:Int) {
-        let key = "\(type(of: self)).updateTabs.\(String(memoryAddressOf: self))"
-        TimedEventFilter.shared.filterEvent(key: key, threshold: 0.2, accumulating: "\(self.tabCount)") { accum in
-            dlog?.info("updateTabs \(accum?.descriptionsJoined) selected: \(selIndex) ")
-        }
+        // let key = "\(type(of: self)).updateTabs.\(String(memoryAddressOf: self))"
         
         DispatchQueue.mainIfNeeded {
             self.updateStackView()

@@ -48,8 +48,8 @@ class MainPanelToolbarView : NSView {
     
     // MARK: Lifecycle
     private func setupIfPossible() {
-        dlog?.info("setup")
         DispatchQueue.main.performOncePerInstance(self) {
+            dlog?.info("setup")
             updateWithDoc(self.window?.windowController?.document as? BrickDoc)
             // setupProgressIndicator()
             centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)

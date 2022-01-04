@@ -23,18 +23,19 @@ enum AppCommandCategory {
 
 protocol AppCommand : Command, AnyObject {
     
+    // MARK: AppCommand requires:
     static var category : AppCommandCategory { get }
     static var keyboardShortcut : KeyboardShortcut { get }
-    
     static var buttonTitle : String { get }
     static var buttonImageName : String? { get }
     static var menuTitle : String? { get }
-    /* weak */ static var menuRepresentation : MNMenuItem? { get set}
+    // TODO: In the future /* weak */ static var menuRepresentation : MNMenuItem? { get set}
     static var tooltipTitle : String? { get }
     
+    // MARK: Has default implementaions
     static var tooltipTitleFull : String { get }
-    
     var dlog : DSLogger? { get }
+    
 }
 
 extension AppCommand /* default implementation */ {
@@ -64,7 +65,21 @@ extension Array where Element == AppCommand.Type {
 }
 
 protocol DocCommand : AppCommand {
-    
+    var docID : BrickDocUID { get }
+    var doc: BrickDoc? { get }
+    override /* weak */ var receiver : CommandReciever? { get set }
+}
+
+extension DocCommand {
+    var doc: BrickDoc? {
+        if let receiver = receiver as? BrickDoc {
+            return receiver
+        } else {
+            let doc = BrickDocController.shared.document(for: docID)
+            receiver = doc
+            return doc
+        }
+    }
 }
 
 // TODO: If keyboardShortcut become customizable, MacOS allows to save a .dict plist with the custom key bindings

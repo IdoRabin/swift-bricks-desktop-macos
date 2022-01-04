@@ -19,3 +19,7 @@ class LicenseAgreementVC: NSViewController {
         dlog?.info("deinit \(self.basicDesc)")
     }
 }
+
+extension LicenseAgreementVC : SinglyInstanced {
+    static var isRequiresSingeInstance: Bool { return true }
+}

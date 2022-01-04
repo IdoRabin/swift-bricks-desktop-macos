@@ -16,7 +16,7 @@ protocol AppDocumentHistoryObserver {
 
 // TODO: Maybe write a generic NSDocumentHistory class <DocumentType:NSDocument, DocumentIDType:Hashable, BasicInfo:???>
 
-fileprivate typealias AppDocHistory = [BrickDocUUID:BrickBasicInfo]
+fileprivate typealias AppDocHistory = [BrickDocUID:BrickBasicInfo]
 class AppDocumentHistory : WhenLoadedable {
     static let FILENAME = AppConstants.DOCUMENT_HISTORY_FILENAME
     
@@ -39,6 +39,14 @@ class AppDocumentHistory : WhenLoadedable {
             }
             return result
         }
+    }
+    
+    var isEmpty : Bool  {
+        return self.history.isEmpty
+    }
+    
+    var hasRecents : Bool  {
+        return !self.history.isEmpty
     }
     
     // MARK: Lifecycle

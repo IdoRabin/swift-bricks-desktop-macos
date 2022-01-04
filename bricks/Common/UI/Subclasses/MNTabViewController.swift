@@ -7,7 +7,7 @@
 
 import AppKit
 
-fileprivate let dlog : DSLogger? = DLog.forClass("MNTabViewController")
+// fileprivate let dlog : DSLogger? = DLog.forClass("MNTabViewController")
 
 // Better create a private Enum called "Tabs" in the subclass : Int
 //
@@ -37,8 +37,12 @@ extension MNTabViewControllerEnumable {
 // This is supposed to be an "abstract" parent to be subclassed. Will raise exceptions in places requiring overrides.
 class MNTabViewController : NSTabViewController {
     // MARK: Constants
-    private let DEBUG_DRAWING = IS_DEBUG && true
+    private let DEBUG_DRAWING = IS_DEBUG && false
     private let DEBUG_DRAW_ORIG_TABS = IS_DEBUG && false
+    
+    lazy var dlog : DSLogger? = {
+        return DLog.forClass("\(type(of: self))")
+    }()
     
     // MARK: Properties
     weak var segmentedTabs : MNSegmentedTabs? = nil
@@ -86,13 +90,16 @@ class MNTabViewController : NSTabViewController {
                     mnSegmentedTabs.observers.add(observer: self)
                     mnSegmentedTabs.orientation = .horizontal
                     mnSegmentedTabs.alignment = .centerY
+                    mnSegmentedTabs.distribution = .equalCentering
                     mnSegmentedTabs.focusRingType = .none
                     mnSegmentedTabs.edgeInsets = NSEdgeInsets(top: 0, left: 4, bottom: 0, right: 4)
                     // -- mnSegmentedTabs.autoresizingMask = [.minYMargin, .height]
                     mnSegmentedTabs.translatesAutoresizingMaskIntoConstraints = false
                     self.view.addSeparatorView(side: .top, addDelta: 0)
                     self.view.addSeparatorView(side: .top, addDelta: toolbarHeight - 4, clearingPrevious: false)
-                    mnSegmentedTabs.border(color: .red.withAlphaComponent(0.2), width: 1)
+                    if self.DEBUG_DRAWING {
+                        mnSegmentedTabs.border(color: .red.withAlphaComponent(0.2), width: 1)
+                    }
                     
                     self.view.addSubview(mnSegmentedTabs)
                     self.segmentedTabs = mnSegmentedTabs
@@ -104,7 +111,7 @@ class MNTabViewController : NSTabViewController {
                     
                     // Create a button for each tab:
                     if segmented.segmentCount != self.tabsType.all.count {
-                        dlog?.raisePreconditionFailure("\(type(of: self)).\(self.tabsType).all MUST have the same amount of elements \(self.tabsType.all.count) as the segmented control \(segmented.segmentCount) (the NSTabViewController tabs count..) required by MNTabViewController.")
+                        self.dlog?.raisePreconditionFailure("\(type(of: self)).\(self.tabsType).all MUST have the same amount of elements \(self.tabsType.all.count) as the segmented control \(segmented.segmentCount) (the NSTabViewController tabs count..) required by MNTabViewController.")
                         preconditionFailure()
                     }
                         
@@ -117,11 +124,13 @@ class MNTabViewController : NSTabViewController {
                     }
                     
                     // Set selected index
-                    mnSegmentedTabs.needsLayout = true
-                    mnSegmentedTabs.needsDisplay = true
+                    let selectedIndex = self.selectedTabViewItemIndex
+                    let oppositeIndex = (selectedIndex == 0) ? 1 : 0
+                    self.segmentedTabs?.selectedIndex = oppositeIndex
                     DispatchQueue.main.async {
-                        mnSegmentedTabs.distribution = .equalCentering
-                        self.segmentedTabs?.selectedIndex = self.selectedTabViewItemIndex
+                        self.segmentedTabs?.selectedIndex = selectedIndex
+                        mnSegmentedTabs.needsLayout = true
+                        mnSegmentedTabs.needsDisplay = true
                     }
                 }
             }, counter: 0)
@@ -175,7 +184,7 @@ class MNTabViewController : NSTabViewController {
 extension MNTabViewController : MNSegmentedTabObserver {
     func mnSegmentedTabs(_ self: MNSegmentedTabs, selctedTabDidChange index: Int) {
         // Selected tab changed
-        dlog?.info("MNSegmentedTabs selctedTabDidChange: \(index)")
+        dlog?.info("main tab changed: \(index)")
         
         self.selectedIndex = index
         tabView.selectTabViewItem(at: index)

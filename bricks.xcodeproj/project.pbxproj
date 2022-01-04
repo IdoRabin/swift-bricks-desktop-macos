@@ -13,6 +13,9 @@
 		EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920E276F65BB00D9DD43 /* DocToolbar.swift */; };
 		EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */; };
 		EC1BFD18276FB4AB009DC45A /* NSBezierPathEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */; };
+		EC1C3C382783279B004DC9F1 /* BrickDoc+CmdReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1C3C372783279B004DC9F1 /* BrickDoc+CmdReceiver.swift */; };
+		EC1C3C3B27833238004DC9F1 /* BrickLayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1C3C3A27833238004DC9F1 /* BrickLayers.swift */; };
+		EC1C3C3E27833278004DC9F1 /* BrickLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1C3C3D27833278004DC9F1 /* BrickLayer.swift */; };
 		EC218AB9275931E700744400 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218AB8275931E700744400 /* AppDelegate.swift */; };
 		EC218ABF275931E800744400 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC218ABE275931E800744400 /* Assets.xcassets */; };
 		EC218ACE275931E800744400 /* bricksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218ACD275931E800744400 /* bricksTests.swift */; };
@@ -90,9 +93,13 @@
 		EC80215C277F9D6E00F6F015 /* PropertiesTabsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80215B277F9D6E00F6F015 /* PropertiesTabsVC.swift */; };
 		EC80215E277F9EC900F6F015 /* NSTabViewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */; };
 		EC802160277F9F6200F6F015 /* MNTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC80215F277F9F6200F6F015 /* MNTabViewController.swift */; };
+		EC802162277FD0C400F6F015 /* DocVC+Actions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802161277FD0C400F6F015 /* DocVC+Actions.swift */; };
+		EC802164277FDB7900F6F015 /* NSViewController+Validations.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC802163277FDB7900F6F015 /* NSViewController+Validations.swift */; };
 		EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB3276583E900C58645 /* PrefsGeneralVC.swift */; };
 		EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB52765840D00C58645 /* PrefsAccountsVC.swift */; };
 		EC880DB82765844200C58645 /* PrefsKeybindingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC880DB72765844200C58645 /* PrefsKeybindingsVC.swift */; };
+		EC96C747278489F6003BD2F6 /* DocWC+TabGroups.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC96C746278489F6003BD2F6 /* DocWC+TabGroups.swift */; };
+		EC96C74927849555003BD2F6 /* BrickDocController+Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC96C74827849555003BD2F6 /* BrickDocController+Menu.swift */; };
 		EC9928A12762A97D00DD4C90 /* BricksApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9928A02762A97D00DD4C90 /* BricksApplication.swift */; };
 		EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFD9275CCA810046F30A /* Brick.swift */; };
 		EC9DEFDC275CCACA0046F30A /* BrickDocObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */; };
@@ -130,14 +137,14 @@
 		ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */; };
 		ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */; };
 		ECA67B90276A013A00BC0D7D /* MainPanelToolbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */; };
-		ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */; };
+		ECAA83A5276358F80016578C /* BrickDocController+CmdReciever.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83A4276358F80016578C /* BrickDocController+CmdReciever.swift */; };
 		ECAA83B12764A6730016578C /* OnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECAA83AF2764A6730016578C /* OnboardingVC.swift */; };
 		ECCE07922764EF67007F2A65 /* DocVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07912764EF67007F2A65 /* DocVC.swift */; };
 		ECCE07942764F238007F2A65 /* AcknowledgementsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07932764F238007F2A65 /* AcknowledgementsVC.swift */; };
 		ECCE07962764F259007F2A65 /* LicenseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */; };
 		ECCE07982764F5C5007F2A65 /* PreferencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */; };
 		ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */; };
-		ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B622760F9DE00DD602D /* Invoker.swift */; };
+		ECEA1B632760F9DE00DD602D /* CommandInvoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B622760F9DE00DD602D /* CommandInvoker.swift */; };
 		ECEA1B652760F9FB00DD602D /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B642760F9FB00DD602D /* Command.swift */; };
 		ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B662760FAA800DD602D /* AppCommand.swift */; };
 		ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B6C2761144F00DD602D /* FileCommands.swift */; };
@@ -203,6 +210,9 @@
 		EC1A28BA275F9203008446A8 /* bump_build_nr.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = bump_build_nr.sh; sourceTree = "<group>"; };
 		EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocWC+Toolbar.swift"; sourceTree = "<group>"; };
 		EC1BFD17276FB4AB009DC45A /* NSBezierPathEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSBezierPathEx.swift; sourceTree = "<group>"; };
+		EC1C3C372783279B004DC9F1 /* BrickDoc+CmdReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDoc+CmdReceiver.swift"; sourceTree = "<group>"; };
+		EC1C3C3A27833238004DC9F1 /* BrickLayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickLayers.swift; sourceTree = "<group>"; };
+		EC1C3C3D27833278004DC9F1 /* BrickLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickLayer.swift; sourceTree = "<group>"; };
 		EC218AB5275931E700744400 /* Bricks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bricks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC218AB8275931E700744400 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EC218ABE275931E800744400 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -291,9 +301,13 @@
 		EC80215B277F9D6E00F6F015 /* PropertiesTabsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PropertiesTabsVC.swift; sourceTree = "<group>"; };
 		EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTabViewEx.swift; sourceTree = "<group>"; };
 		EC80215F277F9F6200F6F015 /* MNTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNTabViewController.swift; sourceTree = "<group>"; };
+		EC802161277FD0C400F6F015 /* DocVC+Actions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocVC+Actions.swift"; sourceTree = "<group>"; };
+		EC802163277FDB7900F6F015 /* NSViewController+Validations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSViewController+Validations.swift"; sourceTree = "<group>"; };
 		EC880DB3276583E900C58645 /* PrefsGeneralVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsGeneralVC.swift; sourceTree = "<group>"; };
 		EC880DB52765840D00C58645 /* PrefsAccountsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsAccountsVC.swift; sourceTree = "<group>"; };
 		EC880DB72765844200C58645 /* PrefsKeybindingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrefsKeybindingsVC.swift; sourceTree = "<group>"; };
+		EC96C746278489F6003BD2F6 /* DocWC+TabGroups.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DocWC+TabGroups.swift"; sourceTree = "<group>"; };
+		EC96C74827849555003BD2F6 /* BrickDocController+Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+Menu.swift"; sourceTree = "<group>"; };
 		EC9928A02762A97D00DD4C90 /* BricksApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BricksApplication.swift; sourceTree = "<group>"; };
 		EC9DEFD9275CCA810046F30A /* Brick.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Brick.swift; sourceTree = "<group>"; };
 		EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocObserver.swift; sourceTree = "<group>"; };
@@ -330,14 +344,14 @@
 		ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMenuEx.swift; sourceTree = "<group>"; };
 		ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocNameToolbarView.swift; sourceTree = "<group>"; };
 		ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPanelToolbarView.swift; sourceTree = "<group>"; };
-		ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+Commandable.swift"; sourceTree = "<group>"; };
+		ECAA83A4276358F80016578C /* BrickDocController+CmdReciever.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+CmdReciever.swift"; sourceTree = "<group>"; };
 		ECAA83AF2764A6730016578C /* OnboardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingVC.swift; sourceTree = "<group>"; };
 		ECCE07912764EF67007F2A65 /* DocVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocVC.swift; sourceTree = "<group>"; };
 		ECCE07932764F238007F2A65 /* AcknowledgementsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcknowledgementsVC.swift; sourceTree = "<group>"; };
 		ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAgreementVC.swift; sourceTree = "<group>"; };
 		ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnkeyedEncodingContainerEx.swift; sourceTree = "<group>"; };
-		ECEA1B622760F9DE00DD602D /* Invoker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Invoker.swift; sourceTree = "<group>"; };
+		ECEA1B622760F9DE00DD602D /* CommandInvoker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandInvoker.swift; sourceTree = "<group>"; };
 		ECEA1B642760F9FB00DD602D /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		ECEA1B662760FAA800DD602D /* AppCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommand.swift; sourceTree = "<group>"; };
 		ECEA1B6C2761144F00DD602D /* FileCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCommands.swift; sourceTree = "<group>"; };
@@ -396,11 +410,46 @@
 				EC80214F277F7DAE00F6F015 /* ProjectTabs Screens */,
 				EC80214E277F7DA400F6F015 /* PropertiesVC Screens */,
 				ECA67B8C2769FEAD00BC0D7D /* Toolbar */,
+				EC802161277FD0C400F6F015 /* DocVC+Actions.swift */,
 				ECCE07912764EF67007F2A65 /* DocVC.swift */,
 				EC6741A7276B518100E9BB84 /* DocWC.swift */,
+				EC96C746278489F6003BD2F6 /* DocWC+TabGroups.swift */,
 				EC332CCC275ECCA200546767 /* Doc.storyboard */,
 			);
 			path = "Document UI";
+			sourceTree = "<group>";
+		};
+		EC1C3C362783275C004DC9F1 /* BrickDoc */ = {
+			isa = PBXGroup;
+			children = (
+				EC1C3C3C27833255004DC9F1 /* Basic Info */,
+				EC1C3C392783322E004DC9F1 /* Layers */,
+				EC218B2627593B7100744400 /* Components */,
+				EC9DEFD9275CCA810046F30A /* Brick.swift */,
+				EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */,
+				EC218B862759471100744400 /* BrickDoc.swift */,
+				EC1C3C372783279B004DC9F1 /* BrickDoc+CmdReceiver.swift */,
+			);
+			path = BrickDoc;
+			sourceTree = "<group>";
+		};
+		EC1C3C392783322E004DC9F1 /* Layers */ = {
+			isa = PBXGroup;
+			children = (
+				EC1C3C3D27833278004DC9F1 /* BrickLayer.swift */,
+				EC1C3C3A27833238004DC9F1 /* BrickLayers.swift */,
+			);
+			path = Layers;
+			sourceTree = "<group>";
+		};
+		EC1C3C3C27833255004DC9F1 /* Basic Info */ = {
+			isa = PBXGroup;
+			children = (
+				EC218B842759468E00744400 /* BrickVersionControlType.swift */,
+				EC218B822759466C00744400 /* BrickTemplateType.swift */,
+				EC218B2927593B7100744400 /* BrickBasicInfo.swift */,
+			);
+			path = "Basic Info";
 			sourceTree = "<group>";
 		};
 		EC218AAC275931E700744400 = {
@@ -609,6 +658,7 @@
 				ECA67B8A2769DEBB00BC0D7D /* NSMenuEx.swift */,
 				EC06920A276E545700D9DD43 /* NSScreenEx.swift */,
 				EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */,
+				EC802163277FDB7900F6F015 /* NSViewController+Validations.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -642,12 +692,8 @@
 			isa = PBXGroup;
 			children = (
 				ECEA1B6B2761143F00DD602D /* Commands */,
-				ECEA1B6827610A4700DD602D /* DocController */,
-				EC218B802759463500744400 /* BrickDocController.swift */,
-				EC218B862759471100744400 /* BrickDoc.swift */,
-				EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */,
-				EC9DEFD9275CCA810046F30A /* Brick.swift */,
-				EC218B2627593B7100744400 /* Components */,
+				ECEA1B6827610A4700DD602D /* BrickDocController */,
+				EC1C3C362783275C004DC9F1 /* BrickDoc */,
 			);
 			path = Document;
 			sourceTree = "<group>";
@@ -655,12 +701,9 @@
 		EC218B2627593B7100744400 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				EC218B822759466C00744400 /* BrickTemplateType.swift */,
-				EC218B842759468E00744400 /* BrickVersionControlType.swift */,
 				EC218B7B275940E800744400 /* BUID.swift */,
 				EC218B2727593B7100744400 /* BrickSettings.swift */,
 				EC218B2827593B7100744400 /* BrickStats.swift */,
-				EC218B2927593B7100744400 /* BrickBasicInfo.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -858,17 +901,19 @@
 			isa = PBXGroup;
 			children = (
 				ECEA1B642760F9FB00DD602D /* Command.swift */,
-				ECEA1B622760F9DE00DD602D /* Invoker.swift */,
+				ECEA1B622760F9DE00DD602D /* CommandInvoker.swift */,
 			);
 			path = Command;
 			sourceTree = "<group>";
 		};
-		ECEA1B6827610A4700DD602D /* DocController */ = {
+		ECEA1B6827610A4700DD602D /* BrickDocController */ = {
 			isa = PBXGroup;
 			children = (
-				ECAA83A4276358F80016578C /* BrickDocController+Commandable.swift */,
+				EC218B802759463500744400 /* BrickDocController.swift */,
+				EC96C74827849555003BD2F6 /* BrickDocController+Menu.swift */,
+				ECAA83A4276358F80016578C /* BrickDocController+CmdReciever.swift */,
 			);
-			path = DocController;
+			path = BrickDocController;
 			sourceTree = "<group>";
 		};
 		ECEA1B6B2761143F00DD602D /* Commands */ = {
@@ -1054,6 +1099,7 @@
 			files = (
 				EC46DB142764DAFF0070A2DC /* NSWindowEx.swift in Sources */,
 				EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */,
+				EC96C747278489F6003BD2F6 /* DocWC+TabGroups.swift in Sources */,
 				EC218B4127593BE000744400 /* Logger.swift in Sources */,
 				EC218B4727593C3C00744400 /* NSBundle+Versions.swift in Sources */,
 				EC9DF00D275CD1BE0046F30A /* NSWindowController+XIB.swift in Sources */,
@@ -1066,6 +1112,7 @@
 				ECEA1B792762297000DD602D /* MNBaseView.swift in Sources */,
 				EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */,
 				EC9DF003275CD1BE0046F30A /* CALayerEx.swift in Sources */,
+				EC1C3C3E27833278004DC9F1 /* BrickLayer.swift in Sources */,
 				ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */,
 				EC218B7527593EE300744400 /* AppSandboxer.swift in Sources */,
 				EC218B5D27593CBF00744400 /* StringEx.swift in Sources */,
@@ -1094,6 +1141,7 @@
 				EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */,
 				EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */,
 				EC9DF009275CD1BE0046F30A /* NSViewEx.swift in Sources */,
+				EC1C3C382783279B004DC9F1 /* BrickDoc+CmdReceiver.swift in Sources */,
 				ECEA1B6F2761147800DD602D /* EditCommands.swift in Sources */,
 				EC9DF01F275CE6DE0046F30A /* MVPVCBinder.swift in Sources */,
 				EC218B4527593BE000744400 /* LoadingHelper.swift in Sources */,
@@ -1114,6 +1162,7 @@
 				ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */,
 				EC40D116277A03BF00741428 /* NSView+Search Constraints.swift in Sources */,
 				ECA67B90276A013A00BC0D7D /* MainPanelToolbarView.swift in Sources */,
+				EC802164277FDB7900F6F015 /* NSViewController+Validations.swift in Sources */,
 				EC218B7627593EE300744400 /* FileFinder.swift in Sources */,
 				EC218B5427593CBF00744400 /* SetEx.swift in Sources */,
 				EC9DEFFD275CD1BE0046F30A /* CGRect+Corners.swift in Sources */,
@@ -1124,6 +1173,7 @@
 				EC71CE222764CF5700947423 /* AppCommands.swift in Sources */,
 				EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */,
 				EC218B2427593B1D00744400 /* NSLock+Blocks.swift in Sources */,
+				EC96C74927849555003BD2F6 /* BrickDocController+Menu.swift in Sources */,
 				EC218B3927593BE000744400 /* Box.swift in Sources */,
 				EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */,
 				EC9928A12762A97D00DD4C90 /* BricksApplication.swift in Sources */,
@@ -1154,7 +1204,8 @@
 				EC218B872759471100744400 /* BrickDoc.swift in Sources */,
 				EC1BFD11276F9E56009DC45A /* DocWC+Toolbar.swift in Sources */,
 				EC06920F276F65BB00D9DD43 /* DocToolbar.swift in Sources */,
-				ECEA1B632760F9DE00DD602D /* Invoker.swift in Sources */,
+				ECEA1B632760F9DE00DD602D /* CommandInvoker.swift in Sources */,
+				EC1C3C3B27833238004DC9F1 /* BrickLayers.swift in Sources */,
 				EC802156277F7DEF00F6F015 /* PropertiesVC.swift in Sources */,
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
@@ -1177,8 +1228,9 @@
 				ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */,
 				EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */,
 				ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */,
+				EC802162277FD0C400F6F015 /* DocVC+Actions.swift in Sources */,
 				EC802152277F7DDC00F6F015 /* DesignerVC.swift in Sources */,
-				ECAA83A5276358F80016578C /* BrickDocController+Commandable.swift in Sources */,
+				ECAA83A5276358F80016578C /* BrickDocController+CmdReciever.swift in Sources */,
 				ECEA1B7527621AC900DD602D /* NSView+SearchSubviews.swift in Sources */,
 				EC218B4427593BE000744400 /* ThreadWaitLock.swift in Sources */,
 				EC9DF002275CD1BE0046F30A /* CGRectEx.swift in Sources */,

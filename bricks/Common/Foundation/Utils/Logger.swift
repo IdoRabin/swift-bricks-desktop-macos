@@ -363,6 +363,7 @@ enum DLog : String {
     case util = "util"
     case analyzer = "analyzer"
     case vcs = "vcs"
+    case command = "command"
     
     // Testing
     case testing = "testing"

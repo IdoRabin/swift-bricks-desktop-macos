@@ -7,15 +7,19 @@
 
 import AppKit
 
-
 fileprivate let dlog : DSLogger? = DLog.forClass("BrickDoc")
 
-struct BrickDocUUID : BUID {
+struct BrickDocUID : BUID {
     var uid : UUID!
     var type : String { return TUID.Types.doc.rawValue }
 }
 
-class BrickDoc: NSDocument, Identifiable  {
+struct LayerUID : BUID {
+    var uid : UUID!
+    var type : String { return TUID.Types.layer.rawValue }
+}
+
+class BrickDoc: NSDocument, BUIDable  {
 
     enum DocActivityState {
         case idle
@@ -45,9 +49,10 @@ class BrickDoc: NSDocument, Identifiable  {
     // MARK: properties
     var observers = ObserversArray<BrickDocObserver>()
     let brick : Brick
+    let commandInvoker = QueuedInvoker(name: "BrickDocInvoker")
     
     // MARK: Identifiable
-    var id : BrickDocUUID {
+    var id : BrickDocUID {
         return brick.info.id
     }
     

@@ -53,4 +53,5 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
     func didLoadViewControllersAfterInit() {
         self.updateWindowsMenuItems()
     }
+    
 }

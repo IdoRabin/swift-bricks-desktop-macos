@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, Identifiable {
+struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, BUIDable {
     
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
@@ -26,8 +26,8 @@ struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, Identif
     var lastModifiedDate:Date? = nil
     var shouldRestoreOnInit:Bool = false
     
-    // MARK: Identifiable
-    var id : BrickDocUUID
+    // MARK: Identifiable / BUIDable
+    var id : BrickDocUID
     
     private var _displayName : String? = nil
     var filePath : URL? = nil
@@ -49,7 +49,7 @@ struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, Identif
     
     
     init() {
-        self.id = BrickDocUUID(uid: UUID()) // UUID.init()
+        self.id = BrickDocUID(uid: UUID()) // UUID.init()
         self.creationDate = Date()
         self.lastModifiedDate = nil
         self.lastOpenedDate = nil

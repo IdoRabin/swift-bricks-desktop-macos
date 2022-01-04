@@ -8,6 +8,7 @@
 import AppKit
 
 fileprivate let dlog : DSLogger? = DLog.forClass("DocWC")
+typealias BrickDocIDsTriplet = (BrickDocUID, /* display name */ String, NSWindow.TabbingIdentifier?)
 
 extension NSObject {
     var basicDesc : String {
@@ -27,17 +28,24 @@ class DocWC : NSWindowController {
     let TOOLBAR_HEIGHT : CGFloat = 38.0 // total external height
     let TOOLBAR_ITEMS_HEIGHT : CGFloat = 32
     
+    internal var _tabObservation: NSKeyValueObservation? = nil
+    internal var _selectedTabObservation: NSKeyValueObservation? = nil
+    
     internal var _lastMainPanelScreenW : CGFloat = 0.0
     private var _lastToolbarVisible : Bool = true {
         didSet {
             if _lastToolbarVisible != oldValue {
                 // dlog?.info("_lastToolbarVisible changed \(self._lastToolbarVisible)")
                 if let menu = self.mainMenu,  BrickDocController.shared.curDocWC == self {
-                    menu.updateMenuItems([menu.viewShowToolbarMnuItem], inVC: BrickDocController.shared.curDocVC)
+                    menu.updateMenuItems([menu.viewShowToolbarMnuItem], inVC:BrickDocController.shared.curDocVC)
                 }
             }
         }
     }
+    
+    // MARK: TabGroups (see extension)
+    static var appTabGroups : [NSWindow.TabbingIdentifier:[BrickDocUID : String]] = [:]
+    static var appTabGroupSelections : [NSWindow.TabbingIdentifier:(BrickDocUID , String)] = [:]
     
     var docVC : DocVC? {
         return self.contentViewController as? DocVC
@@ -63,7 +71,9 @@ class DocWC : NSWindowController {
         BrickDocController.shared.observers.add(observer: self)
         self.updateToolbarVisible()
         
-        dlog?.info("windowDidLoad \(basicDesc) window:\(window?.basicDesc ?? "<nil>" )")
+        // dlog?.info("windowDidLoad \(basicDesc) window:\(window?.basicDesc ?? "<nil>" )")
+        
+        self.setupTabGroupObserving()
         
         waitFor("document", interval: 0.05, timeout: 0.2, testOnMainThread: {
             self.document != nil
@@ -73,7 +83,7 @@ class DocWC : NSWindowController {
                 
                 switch waitResult {
                 case .success:
-                    //dlog?.success("windowDidLoad document: [\(self.docNameOrNil)]")
+                    dlog?.success("windowDidLoad with document: [\(self.docNameOrNil)]")
                     break
                 case .timeout:
                     dlog?.fail("windowDidLoad has no document after loading (waitFor(\"document\") timed out)")
@@ -117,6 +127,7 @@ class DocWC : NSWindowController {
     func updateToolbarVisible() {
         self._lastToolbarVisible = self.windowIfLoaded?.toolbar?.isVisible ?? false
     }
+    
 }
 
 extension DocWC : BrickDocControllerObserver {

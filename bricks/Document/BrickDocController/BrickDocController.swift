@@ -154,7 +154,7 @@ class BrickDocController: NSDocumentController {
     
     func didLoadViewControllersAfterInit() {
         if let curWC = self.curDocWC, let menu = curWC.mainMenu {
-            menu.updateMenuItems([menu.viewShowToolbarMnuItem], inVC: BrickDocController.shared.curDocVC)
+            menu.updateMenuItems([menu.viewShowToolbarMnuItem])
         }
     }
     
@@ -351,7 +351,7 @@ extension BrickDocController  /* Responder */ {
         // Calc all menu items
         menu?.recalcLeafItems()
         let menuLeafItems = menu?.allLeafItems.filter(commands: commands) ?? []
-        menu?.updateMenuItems(menuLeafItems, inVC: self.curDocVC)
+        menu?.updateMenuItems(menuLeafItems)
     }
     
 }

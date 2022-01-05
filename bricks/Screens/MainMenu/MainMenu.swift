@@ -10,7 +10,12 @@ import AppKit
 class MainMenu : NSMenu {
     fileprivate let dlog : DSLogger? = DLog.forClass("MainMenu")
     
-    enum Category {
+    enum Category : Int, Hashable {
+        // Groups
+        case allTopItems
+        case allLeafItems
+        
+        // Main Menu items
         case app
         case file
         case edit
@@ -100,15 +105,14 @@ class MainMenu : NSMenu {
     @IBOutlet weak var   helpMnuItem: NSMenuItem!
     @IBOutlet weak var   helpTooltipsShowKeyboardShortcutsMnuItem: NSMenuItem!
     
-    private(set) var topMnuItems    : [NSMenuItem] = []
-    private(set) var bricksMnuItems : [NSMenuItem] = []
-    private(set) var fileMnuItems   : [NSMenuItem] = []
-    private(set) var editMnuItems   : [NSMenuItem] = []
-    private(set) var viewMnuItems   : [NSMenuItem] = []
-    private(set) var windowMnuItems   : [NSMenuItem] = []
-    private(set) var layerMnuItems   : [NSMenuItem] = []
-    private(set) var helpMnuItems   : [NSMenuItem] = []
-    private(set) var allLeafItems    : [NSMenuItem] = []
+    private(set) var menuItems : [Category:[NSMenuItem]] = [:]
+    
+    var allLeafItems : [NSMenuItem] {
+        if menuItems[.allLeafItems]?.count ?? 0 == 0 {
+            self.recalcLeafItems()
+        }
+        return menuItems[.allLeafItems] ?? []
+    }
     
     var unhookedSystemItems : [NSMenuItem]? = IS_DEBUG ? [] : nil
     
@@ -160,6 +164,9 @@ class MainMenu : NSMenu {
     }
     
     // MARK: Private funcs
+    private func menuItems(forCategoty category:Category) {
+        
+    }
     
     private func hookupMenuSystemItem(_ item:NSMenuItem)->Bool {
         guard item.action != nil || self.allLeafItems.contains(item) else {
@@ -360,6 +367,11 @@ class MainMenu : NSMenu {
         self.setAllEnabled(true, except: except)
     }
     
+    private func calcMenuState()->MainMenu.State {
+        var newState : MainMenu.State = .disabled
+        return newState
+    }
+    
     // MARK: Public
     
     func updateWindowsMenuItems() {
@@ -375,7 +387,7 @@ class MainMenu : NSMenu {
     
     func recalcLeafItems() {
 
-        allLeafItems.removeAll()
+        var newItems : [NSMenuItem] = []
         func addLeafItems(_ xitems:[NSMenuItem], depth:Int = 0) {
             guard depth < 127 else {
                 return
@@ -383,55 +395,58 @@ class MainMenu : NSMenu {
             
             for item in xitems {
                 if item.hasSubmenu == false {
-                    allLeafItems.append(item)
+                    newItems.append(item)
                 } else {
                     addLeafItems(item.submenu?.items ?? [], depth: depth + 1)
                 }
             }
         }
-        addLeafItems(topMnuItems, depth: 0)
+        addLeafItems(menuItems[.allTopItems] ?? [], depth: 0)
+        menuItems[.allLeafItems] = newItems
     }
     
     // MARK: Update menu using the current Doc:
-    func updateMenuItems(_ items:[NSMenuItem], inVC vc:DocVC?) {
+    func updateMenuItems(_ items:[NSMenuItem]) {
 
         guard items.count > 0 else {
             dlog?.note("updateMenuItems with 0 items as input!")
             return
         }
         
+        self.state = calcMenuState()
         self.recalcLeafItems()
         
         // Get cur doc:
         //let curWC = BrickDocController.shared.curDocWC
-        let curVC = BrickDocController.shared.curDocVC
+//        let curVC = BrickDocController.shared.curDocVC
         //let curDoc = BrickDocController.shared.curDoc
 
-        for item in items {
-            switch item {
-            case viewShowToolbarMnuItem:
-                item.title = (curVC?.toolbar?.isVisible ?? false) ? AppStr.HIDE_TOOLBAR.localized() : AppStr.SHOW_TOOLBAR.localized()
-                item.isHidden = true
-                
-            case viewShowProjectSidebarMnuItem:
-                // dlog?.info("Update leading sidebar menu item")
-                item.title = (vc?.mnSplitView.isLeadingPanelCollapsed ?? false) ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
-                
-            case viewShowUtilitySidebarMnuItem:
-                // dlog?.info("Update trailing sidebar menu item")
-                item.title = (vc?.mnSplitView.isTrailingPanelCollapsed ?? false) ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
-                
-            default:
-                break
-            }
-        }
+        
+//        for item in items {
+//            switch item {
+//            case viewShowToolbarMnuItem:
+//                item.title = (curVC?.toolbar?.isVisible ?? false) ? AppStr.HIDE_TOOLBAR.localized() : AppStr.SHOW_TOOLBAR.localized()
+//                item.isHidden = true
+//
+//            case viewShowProjectSidebarMnuItem:
+//                // dlog?.info("Update leading sidebar menu item")
+//                item.title = (vc?.mnSplitView.isLeadingPanelCollapsed ?? false) ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
+//
+//            case viewShowUtilitySidebarMnuItem:
+//                // dlog?.info("Update trailing sidebar menu item")
+//                item.title = (vc?.mnSplitView.isTrailingPanelCollapsed ?? false) ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
+//
+//            default:
+//                break
+//            }
+//        }
         
         
 //        for command in commands {
 //
 //            // Menu items for this command:
 //            let menuItems = menuLeafItems.filter(commands: [command])
-//            for menuItem in menuItems {
+//            for menuItem in menurItems {
 //                if let doc = self.curDoc {
 //                    menuItem.isEnabled = self.validateMenuItem(doc:doc, menuItem: menuItem)
 //                } else {
@@ -440,7 +455,11 @@ class MainMenu : NSMenu {
 //            }
 //        }
     }
-                         
+                        
+    func updateMenuItems(categoris:Set<MainMenu.Category>) {
+        
+    }
+    
     // MARK: Lifecycle
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -449,28 +468,31 @@ class MainMenu : NSMenu {
              AppDelegate.shared.mainMenu = self
         }
         
-        topMnuItems = [
-            bricksTopMnuItem, fileTopMnuItem, editTopMnuItem, viewTopMnuItem, windowTopMnuItem, helpTopMnuItem]
-        
-        bricksMnuItems = [bricksAboutMnuItem, bricksPreferencesMnuItem, bricksServicesMnuItem, bricksHideMnuItem, bricksHideOthersMnuItem, bricksShowAllMnuItem, bricksQuitMnuItem
+        menuItems[.allTopItems] = [
+            bricksTopMnuItem, fileTopMnuItem, editTopMnuItem, viewTopMnuItem, windowTopMnuItem, helpTopMnuItem
         ]
-        fileMnuItems = [
+
+        menuItems[.app] = [
+            bricksAboutMnuItem, bricksPreferencesMnuItem, bricksServicesMnuItem, bricksHideMnuItem, bricksHideOthersMnuItem, bricksShowAllMnuItem, bricksQuitMnuItem
+        ]
+        menuItems[.file] = [
             fileNewMnuItem, fileOpenMnuItem, fileClearRecentsMenuItem, fileCloseMnuItem, fileSaveMnuItem, fileSaveAsMnuItem, fileRevertToSavedMnuItem, filePageSetupMnuItem, filePrintMnuItem
         ]
-        editMnuItems = [
+        menuItems[.edit] = [
             editUndoMnuItem, editRedoMnuItem, editCutMnuItem, editCopyMnuItem, editPasteMnuItem, editDeleteMnuItem, editSelectAllMnuItem, editFindFindMnuItem, editFindNextMnuItem, editFindPreviousMnuItem
         ]
-        viewMnuItems = [
+
+        menuItems[.view] = [
             viewShowToolbarMnuItem, viewCustomizeToolbarMnuItem, viewShowProjectSidebarMnuItem, viewShowUtilitySidebarMnuItem, viewZoomMnuItem, viewZoomInMnuItem, viewZoomTo100MnuItem, viewZoomOutMnuItem, viewZoomToFitMnuItem, viewEnterFullScreenMnuItem
         ]
-        layerMnuItems = [
+        menuItems[.layer] = [
             layerAddMenuItem, layerDeleteMenuItem, layerEditMenuItem, layerLockMenuItem, layerShowHideMenuItem, layerHideOthersMenuItem, layerShowAllMenuItem
         ]
-        windowMnuItems = [
+        menuItems[.window] = [
             windowMinimizeMnuitem, windowZoomMnuItem, windowBringAllToFrontMnuItem,
         ]
         
-        helpMnuItems = [
+        menuItems[.help] = [
             helpMnuItem, helpTooltipsShowKeyboardShortcutsMnuItem
         ]
         

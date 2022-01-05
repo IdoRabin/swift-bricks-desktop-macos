@@ -37,7 +37,7 @@ class DocWC : NSWindowController {
             if _lastToolbarVisible != oldValue {
                 // dlog?.info("_lastToolbarVisible changed \(self._lastToolbarVisible)")
                 if let menu = self.mainMenu,  BrickDocController.shared.curDocWC == self {
-                    menu.updateMenuItems([menu.viewShowToolbarMnuItem], inVC:BrickDocController.shared.curDocVC)
+                    menu.updateMenuItems([menu.viewShowToolbarMnuItem])
                 }
             }
         }

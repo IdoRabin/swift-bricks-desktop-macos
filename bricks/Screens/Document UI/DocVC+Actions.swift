@@ -23,8 +23,7 @@ extension DocVC : NSUserInterfacePluralValidations /* Actions */ {
     func updateSidebarMenuItems() {
         if let menu = self.mainMenu, self.docWC == BrickDocController.shared.curDocWC {
             menu.updateMenuItems([menu.viewShowProjectSidebarMnuItem,
-                                  menu.viewShowUtilitySidebarMnuItem],
-                                 inVC: self)
+                                  menu.viewShowUtilitySidebarMnuItem])
         }
     }
     

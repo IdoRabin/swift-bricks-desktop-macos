@@ -11,6 +11,9 @@ fileprivate let dlog : DSLogger? = nil // DLog.forClass("DocWC+Toolbar")
 // MARK: NSToolbarDelegate
 extension DocWC : NSToolbarDelegate {
     
+    var toolbar : DocToolbar? {
+        return self.windowIfLoaded?.toolbar as? DocToolbar
+    }
     
     var mainMenu : MainMenu? {
         return BrickDocController.shared.menu
@@ -30,6 +33,24 @@ extension DocWC : NSToolbarDelegate {
         return self.windowIfLoaded?.toolbar?.items.first(where: { item in
             item.itemIdentifier == ToolbarItemType.trailingSidebarToggle.asNSToolbarItemID
         }) as? MNToggleToolbarItem
+    }
+    
+    var docNameToolbarView : DocNameToolbarView? {
+        return self.toolbarItem(type: .centerPaneLeadingDocName)?.view as? DocNameToolbarView
+    }
+    
+    var mainPanelToolbarView : MainPanelToolbarView? {
+        return self.toolbarItem(type: .centerPaneCenteredMainPanel)?.view as? MainPanelToolbarView
+    }
+    
+    var mainPanelBoxView : MNProgressBoxView? {
+        var result : MNProgressBoxView? = nil
+        if let item = self.toolbarItem(type: .centerPaneCenteredMainPanel) {
+            if let mainPanelView = item.view as? MainPanelToolbarView {
+                result = mainPanelView.centerProgressBoxView
+            }
+        }
+        return result
     }
     
     // MARK: Private
@@ -119,6 +140,8 @@ extension DocWC : NSToolbarDelegate {
         result.imagesScale = 0.43
         result.onTint = NSColor.secondaryLabelColor
         result.offTint = NSColor.secondaryLabelColor
+        result.tag = isLeading ? 0 : (self.docVC?.splitView.trailingDividerIndex ?? 1) // used to test which toggle button was clicked
+        (result.view as? NSButton)?.tag = result.tag
         return result
     }
     
@@ -142,7 +165,7 @@ extension DocWC : NSToolbarDelegate {
         return nil
     }
     
-    // MARK: Delegate implementation
+    // MARK: NSToolbarDelegate Delegate implementation
     
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         let id = itemIdentifier
@@ -227,7 +250,7 @@ extension DocWC : NSToolbarDelegate {
             result = createToolbarItem(id: id, systemSymbolName: "circle.empty", accessDesc: AppStr.ADD_NEW.localized())
 
         case .trailingSidebarToggle:
-            result = self.createToggleSidebarToolbarItem(id: itemIdentifier, isLeading: false)
+            result = self.createToggleSidebarToolbarItem(id: id, isLeading: false)
             result?.target = self.contentViewController
             result?.action = #selector(DocVC.toggleSidebarAction(_:))
         }
@@ -269,8 +292,20 @@ extension DocWC : NSToolbarDelegate {
             return
         }
         docNameView.updateWithDoc(self.document as? BrickDoc)
+        updateToolbarDocNameViewChevron()
     }
      
+    func updateToolbarDocNameViewChevron() {
+        guard let item = self.toolbarItem(type: .centerPaneLeadingDocName), let docNameView = item.view as? DocNameToolbarView else {
+            return
+        }
+        
+        let isPopupPresented = self.docVC?.presentedViewControllers?.contains(where: { vc in
+            vc is ToolbarDocNamePopupVC
+        }) ?? false
+        docNameView.isChevronPointsDown = (isPopupPresented == false)
+    }
+    
     func updateToolbarMainPanelView() {
         guard let item = self.toolbarItem(type: .centerPaneCenteredMainPanel), let mainPanelView = item.view as? MainPanelToolbarView else {
             return
@@ -296,6 +331,53 @@ extension DocWC : NSToolbarDelegate {
         
         mainPanelView.updateWithDoc(self.document as? BrickDoc)
     }
+    
+    private func internal_updateToolbarAction(state:MNProgressState, title:String?, subtitle:String?, progress:CGFloat? = nil, completion:(()->Void)?, depth:Int) {
+        guard depth < 10 else {
+            return
+        }
+        
+        guard let item = self.toolbarItem(type: .centerPaneCenteredMainPanel), let mainPanelView = item.view as? MainPanelToolbarView, mainPanelView.centerProgressBoxView != nil else {
+            DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
+                self.internal_updateToolbarAction(state: state, title: title, subtitle: subtitle, progress: progress, completion:completion, depth: depth + 1)
+            }
+            return
+        }
+        
+        guard title != nil || progress != nil else {
+            dlog?.note("Simple update must have either title or progress to update")
+            return
+        }
+        if subtitle != nil && title == nil {
+            dlog?.note("Simple update must have title when sending a subtitle")
+            return
+        }
+        
+        mainPanelView.basicUpdate(state:state, title: title, subtitle: subtitle, progress: progress)
+        
+        // Call completion
+        let delay : TimeInterval = (self.windowIfLoaded != nil || BrickDocController.shared.curDocWC == self) ? 0.35 : 0.03
+        DispatchQueue.main.asyncAfter(delayFromNow: delay) {
+            completion?()
+        }
+    }
+    
+    func updateToolbarAction(state:MNProgressState, title:String?, subtitle:String?, progress:CGFloat? = nil, completion:(()->Void)? = nil) {
+        self.internal_updateToolbarAction(state: state, title: title, subtitle: subtitle, progress: progress, completion:completion, depth:0)
+    }
+    
+    func updateWindowState() {
+        guard let item1 = self.toolbarItem(type: .centerPaneCenteredMainPanel), let mainPanelView = item1.view as? MainPanelToolbarView else {
+            return
+        }
+        guard let item2 = self.toolbarItem(type: .centerPaneLeadingDocName), let docNameView = item2.view as? DocNameToolbarView else {
+            return
+        }
+        
+        mainPanelView.updateWindowState()
+        docNameView.updateWindowState()
+    }
+
 }
 
 // Helper util

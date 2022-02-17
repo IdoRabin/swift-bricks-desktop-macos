@@ -249,6 +249,17 @@ extension String {
         return self
     }
     
+    /// Return the last X path components for a given url
+    ///
+    /// - Parameter count: amount of suffixing components to return, delimited by "/"
+    /// - Returns: String of last components, by order of appearance in the URL, joined by "/"
+    func lastPathComponents(count:Int)->String {
+        if let url = URL(string:self) {
+            return url.lastPathComponents(count: count)
+        }
+        return self
+    }
+    
     
     /// Pad the string from its left side only with a charachter to fill up to a given total length of the string. If the string is already that length or bigger, no change will take place
     ///

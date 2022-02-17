@@ -28,6 +28,9 @@ protocol CacheObserver {
     func cachItemUpdated(uniqueCacheName:String, key:Any, value:Any)
     
     
+    /// Updated a dictionary of items in one go
+    func cachItemsUpdated(uniqueCacheName:String, updatedItems:[AnyHashable:Any])
+    
     /// Notification when the whole cache was cleared
     /// - Parameter uniqueCacheName: unique name of the cache
     func cachWasCleared(uniqueCacheName:String)
@@ -306,10 +309,15 @@ class Cache<Key : Hashable, Value : Hashable> {
         }
     }
     
-    func values(forKeys keys:[Key])->[Key:Value] {
+    func values(forKeys keys:[Key]? = nil)->[Key:Value] {
+        return asDictionary(forKeys: keys)
+    }
+    
+    func asDictionary(forKeys keys:[Key]? = nil)->[Key:Value] {
         var result : [Key:Value] = [:]
         self._lock.lock {
-            for key in keys {
+            let keyz = keys ?? self._items.keysArray
+            for key in keyz {
                 if let val = self._items[key]?.value {
                     result[key] = val
                 }
@@ -320,7 +328,7 @@ class Cache<Key : Hashable, Value : Hashable> {
     }
     
     func value(forKey key:Key)->Value? {
-        return self.values(forKeys: [key]).values.first
+        return self.asDictionary(forKeys: [key]).values.first
     }
     
     func hasValue(forKey key:Key)->Bool {
@@ -348,6 +356,21 @@ class Cache<Key : Hashable, Value : Hashable> {
             observers.enumerateOnMainThread { (observer) in
                 observer.cachItemsWereRemoved(uniqueCacheName:self.name, keys: [key])
             }
+        }
+    }
+    
+    func add(dictionary:[Key:Value]) {
+        self._lock.lock {
+            self.flushIfNeeded()
+            let date = self.isSavesDates ? Date() : nil
+            for (key, value) in dictionary {
+                self._items[key] = ValueInfo(value:value, date:date)
+            }
+        }
+        
+        // Notify observers
+        observers.enumerateOnMainThread { (observer) in
+            observer.cachItemsUpdated(uniqueCacheName: self.name, updatedItems: dictionary)
         }
     }
     
@@ -507,7 +530,7 @@ extension Cache where Key : CodableHashable /* saving of keys only*/ {
                 FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
                 self._lastSaveTime = Date()
                 self.isNeedsSave = false
-                dlog?.info("saveKeys Cache [\(self.name)] size:\(data.count) filename:\(url.path)")
+                dlog?.info("saveKeys Cache [\(self.name)] size:  \(data.count) filename: \(url.path)")
                 
                 return true
             } catch {
@@ -629,17 +652,22 @@ extension Cache where Key : CodableHashable, Value : Codable {
         }
         
         if let url = self.filePath(forKeys: false) {
+            
+            do {
+                if FileManager.default.fileExists(atPath: url.path) {
+                    try FileManager.default.removeItem(at: url)
+                }
+            } catch let err {
+                dlog?.note("Save() - failed removing file: \(err.localizedDescription) path:\(url.path)")
+            }
+            
             do {
                 let saveItem = self.createSavableStruct()
                 
                 let encoder = JSONEncoder()
                 let data = try encoder.encode(saveItem)
-                    
-                if FileManager.default.fileExists(atPath: url.path) {
-                    try FileManager.default.removeItem(at: url)
-                }
                 FileManager.default.createFile(atPath: url.path, contents: data, attributes: nil)
-                dlog?.info("save [\(self.name)] size:\(data.count) filename:\(url.lastPathComponents(count: 3))")
+                dlog?.info("save [\(self.name)] size: \(data.count) filename: \(url.lastPathComponents(count: 3))")
                 self._lastSaveTime = Date()
                 self.isNeedsSave = false
                 return true

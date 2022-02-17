@@ -9,9 +9,16 @@ import AppKit
 
 fileprivate typealias ProgressTexts = (title:String?, subtitle:String?)
 
-fileprivate let dlog : DSLogger? = nil // DLog.forClass("MNProgressBV")
+fileprivate let dlog : DSLogger? = DLog.forClass("MNProgressBV")
+
+protocol MNProgressBoxViewObserver {
+    func mnProgressBoxView(_ view:MNProgressBoxView, didLeftMouseDown:NSEvent)
+    func mnProgressBoxView(_ view:MNProgressBoxView, didRightMouseDown:NSEvent)
+}
 
 class MNProgressBoxView : NSView {
+    static let dateFormatter = DateFormatter(dateFormat: "yyyy-MM-dd HH:mm:ss.SSS")
+    var observers = ObserversArray<MNProgressBoxViewObserver>()
     
     // MARK: static and enum
     private let DEBUG_DRAWING = IS_DEBUG && false
@@ -21,6 +28,9 @@ class MNProgressBoxView : NSView {
     private let DEBUG_ALWAYS_HAVE_SUBTITLE = IS_DEBUG && false
     private let DEFAULT_LEADING_PAD : CGFloat = 18
     private let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && false
+    
+    private let COPY_MENU_ITEM_ID = "mnProgressBoxViewCopyMenuItemID"
+    private let VIEW_LOG_MENU_ITEM_ID = "mnProgressBoxViewLogMenuItemID"
     
     private enum ProgressCircleState {
         case visible
@@ -42,9 +52,14 @@ class MNProgressBoxView : NSView {
     // MARK: Properties
     fileprivate var lastRecievedProgressTexts : ProgressTexts? = nil
     fileprivate var lastLabelsPresentedCount : Int = 0
+    fileprivate(set) var lastLogEntry : String = ""
     fileprivate var _animatingPresentedLabels : Bool = false
     fileprivate var progressCircleUnshrunkWidth : CGFloat = 32
     fileprivate var progressCircleShrunkWidth : CGFloat = 1
+    fileprivate var lastMouseDownLoc : CGPoint? = nil
+    
+    private(set) var isPopupMenuPresented : Bool = false
+    private(set) var isPopupMenuClosing : Bool = false
     
     @IBInspectable var title : String {
         get {
@@ -104,6 +119,14 @@ class MNProgressBoxView : NSView {
         }
     }
     
+    var copyMenuItem : NSMenuItem? {
+        return menu?.items.filter(ids: [COPY_MENU_ITEM_ID]).first
+    }
+    
+    var viewLogMenuItem : NSMenuItem? {
+        return menu?.items.filter(ids: [VIEW_LOG_MENU_ITEM_ID]).first
+    }
+    
     // MARK: Vars
     var leadingPad : CGFloat = 18.0 {
         didSet {
@@ -111,41 +134,78 @@ class MNProgressBoxView : NSView {
         }
     }
     
-    private var _latSubtitleWhileAnimating : String? = nil
+    private var _lastSubtitleWhileAnimating : String? = nil
     private func setLabels(title:String, subtitle:String, units:String, animated:Bool) {
-        titleLabel.stringValue = title
-        unitsLabel.stringValue = units
-        
-        if animated && subtitleLabel.stringValue.count > 0 && subtitle.count == 0 && _latSubtitleWhileAnimating == nil {
-            _latSubtitleWhileAnimating = ""
-            DispatchQueue.main.asyncAfter(delayFromNow: 0.24) {
-                self.subtitleLabel.stringValue = self._latSubtitleWhileAnimating ?? ""
-                self._latSubtitleWhileAnimating = nil
-            }
-        } else if !_animatingPresentedLabels {
-            subtitleLabel.stringValue = subtitle
-            _latSubtitleWhileAnimating = nil
-        } else {
-            _latSubtitleWhileAnimating = subtitle
+        guard titleLabel.stringValue != title ||
+              subtitleLabel.stringValue != subtitle ||
+              unitsLabel.stringValue != units else {
+            return
         }
         
+        self.selectsAllText = false
+        if titleLabel.stringValue != title {
+            titleLabel.stringValue = title
+        }
+        if unitsLabel.stringValue != units {
+            unitsLabel.stringValue = units
+        }
+        
+        if subtitleLabel.stringValue != subtitle {
+            if animated && subtitleLabel.stringValue.count > 0 && subtitle.count == 0 && _lastSubtitleWhileAnimating == nil {
+                _lastSubtitleWhileAnimating = ""
+                DispatchQueue.main.asyncAfter(delayFromNow: 0.24) {
+                    self.subtitleLabel.stringValue = self._lastSubtitleWhileAnimating ?? ""
+                    self._lastSubtitleWhileAnimating = nil
+                }
+            } else if !_animatingPresentedLabels {
+                subtitleLabel.stringValue = subtitle
+                _lastSubtitleWhileAnimating = nil
+            } else {
+                _lastSubtitleWhileAnimating = subtitle
+            }
+        }
+        
+        // Log entry:
+        updateLastLogEntry()
+        
         self.updateLabelsConstraints(animated: animated)
+    }
+    
+    private func updateLastLogEntry() {
+        var unts = units
+        if unts.count == 0 && (self.progress > 0.0 || self.progressIsHidden == false) {
+            unts = (self.progress * 100).toString(dec: 0) + "%"
+        }
+        unts = unts.trimmingCharacters(in: .whitespacesAndNewlines).trimming(string: "|").trimmingCharacters(in: .whitespacesAndNewlines).paddingLeft(toLength: 4, withPad: " ").replacingOccurrences(ofFromTo: [" " : String.FIGURE_SPACE])
+        let dateStr = Self.dateFormatter.string(from: Date())
+        
+        // Compose all values:
+        var newLogEntry = "\(dateStr) | \(unts) | \(title)"
+        if subtitle.count > 0 && _lastSubtitleWhileAnimating != "" {
+            newLogEntry += " | \(subtitle)"
+        }
+        if lastLogEntry != newLogEntry {
+            lastLogEntry = newLogEntry
+            // dlog?.info("LOGE: \(newLogEntry)")
+            // Push into log file...
+        }
     }
     
     private func updateLabelsConstraints(animated:Bool) {
         
         func exec() {
-             // dlog?.info("updateLabelsConstraints labels: \(lastLabelsPresentedCount) animated: \(animated)")
+            let labs = lastLabelsPresentedCount == 2
+             dlog?.info("updateLabelsConstraints labels: \(lastLabelsPresentedCount) animated: \(animated)")
             
             // TODO: See why this is doesn't trigger implicit animations
-            titleLabelCenterYConstraint.constant = isShowsTwoLabels ?    /* top half */   -6.0 : 0.0 /* center y */
-            subtitleLabelBottomConstraint.constant = isShowsTwoLabels ?  /* bottom half */ -1.0 : -18.0 /* hidden below bottom */
-            subtitleLabel.alphaValue = isShowsTwoLabels ? 1.0 : 0.0
+            titleLabelCenterYConstraint.constant = labs ?    /* top half */   -6.0 : 0.0 /* center y */
+            subtitleLabelBottomConstraint.constant = labs ?  /* bottom half */ -1.0 : -18.0 /* hidden below bottom */
+            subtitleLabel.alphaValue = labs ? 1.0 : 0.0
         }
         
         let duration : TimeInterval = DEBUG_SLOW_ANIMATIONS ? 0.34 :  0.22
         var isShowsTwoLabels = titleLabel.stringValue.count > 0 && subtitleLabel.stringValue.count > 0
-        if let sut = _latSubtitleWhileAnimating, sut.count == 0 {
+        if let sut = _lastSubtitleWhileAnimating, sut.count == 0 {
             isShowsTwoLabels = false
         }
         let newLabelsPresentedCount = isShowsTwoLabels ? 2 : 1
@@ -156,6 +216,7 @@ class MNProgressBoxView : NSView {
                     // This can wait
                     dlog?.info("updateLabelsConstraints will wait: already animating")
                     DispatchQueue.main.asyncAfter(delayFromNow: duration + 0.01) {
+                        self.lastLabelsPresentedCount = 0 // "Force" change
                         self.updateLabelsConstraints(animated: true)
                     }
                     return
@@ -222,6 +283,7 @@ class MNProgressBoxView : NSView {
         }
         DispatchQueue.main.performOncePerInstance(self) {
             dlog?.info("setup height: \(self.bounds.height) circle progressWidthConstraint: \(progressWidthConstraint.constant) sze: \(progressCircle.frame.size)")
+            self.menu?.delegate = self
         }
     }
     
@@ -240,7 +302,127 @@ class MNProgressBoxView : NSView {
         dlog?.info("deinit")
     }
     
+    override func menu(for event: NSEvent) -> NSMenu? {
+        super.menu(for: event)
+    }
+    
+    override func mouseDown(with event: NSEvent) {
+        super.mouseDown(with: event)
+        lastMouseDownLoc = event.locationInWindow
+        // dlog?.info("mouseDown \(isPopupMenuPresented)")
+        if self.isPopupMenuPresented {
+            // Hide menu
+            
+        } else {
+            self.observers.enumerateOnMainThread { observer in
+                observer.mnProgressBoxView(self, didLeftMouseDown: event)
+            } completed: {
+                
+            }
+        }
+    }
+    
+    override func rightMouseDown(with event: NSEvent) {
+        if self.isPopupMenuPresented {
+            if !self.isPopupMenuClosing {
+                
+            }
+        } else {
+            super.rightMouseDown(with: event)
+            lastMouseDownLoc = event.locationInWindow
+        }
+    }
+    
+    override var acceptsFirstResponder: Bool {
+        return true
+    }
+    
+    override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+        return false
+    }
+    
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        let result = super.hitTest(point)
+        if NSEvent.pressedMouseButtons == 2, let window = self.window, self.isPopupMenuPresented == false { // right mouse button
+            let loc = self.convert(point, to: window.contentView)
+            self.lastMouseDownLoc = loc
+            self.presentPopUpContextMenu(event: nil)
+        }
+        return result
+    }
+    
+    // MARK: Text Selection
+    fileprivate func isSel(label:NSTextField)->Bool {
+        return label.textColor == .selectedTextColor
+    }
+    
+    fileprivate func setSel(seleted sel: Bool, label:NSTextField, col:NSColor) {
+        label.wantsLayer = true
+        if label.stringValue.count > 0 {
+            var alayer : CAShapeLayer? = label.layer?.sublayers?.first(where: { blayer in
+                blayer is CAShapeLayer
+            }) as? CAShapeLayer
+            if sel {
+                let rect = label.stringValue.boundingRect(with: label.bounds.size, options: .usesLineFragmentOrigin, attributes: label.attributedStringValue.attributes(at: 0, effectiveRange: nil), context: nil).rounded().insetBy(dx: -1, dy: -1)
+                if alayer == nil {
+                    alayer = CAShapeLayer()
+                    alayer?.frame = rect
+                    //alayer?.filters = []
+                    alayer?.compositingFilter = "screenBlendMode" // multiplyBlendMode"
+                    // alayer?.path = CGPath(rect: rect.boundsRect(), transform: nil)
+                    label.layer?.insertSublayer(alayer!, below: nil)
+                }
+            } else {
+                alayer?.removeFromSuperlayer()
+            }
+            
+            alayer?.backgroundColor =  sel ? NSColor.controlAccentColor.withAlphaComponent(0.8).cgColor : NSColor.clear.cgColor
+            label.textColor = sel ? .selectedTextColor : col
+        }
+    }
+    
+    var isAllTextSeleted : Bool {
+        return isSel(label: self.titleLabel) && isSel(label: subtitleLabel) && isSel(label: unitsLabel)
+    }
+    
+    @IBInspectable var selectsAllText : Bool = true {
+        didSet {
+            self.setSel(seleted: selectsAllText, label: self.titleLabel, col: .secondaryLabelColor)
+            self.setSel(seleted: selectsAllText, label: self.subtitleLabel, col: .tertiaryLabelColor)
+            self.setSel(seleted: selectsAllText, label: self.unitsLabel, col: .tertiaryLabelColor)
+        }
+    }
+    
+    func presentPopUpContextMenu(event:NSEvent?) {
+        guard let menu = self.menu, let window = window, isPopupMenuPresented == false else {
+            return
+        }
+        
+        let evt : NSEvent = event ?? {
+            let loc = lastMouseDownLoc ?? self.convert(self.bounds.center, to: window.contentView)
+            let newEvent = NSEvent.mouseEvent(with: .rightMouseDown,
+                                            location: loc,
+                                            modifierFlags: [], timestamp: Date().timeIntervalSince1970, windowNumber: window.windowNumber, context: nil, eventNumber: 1, clickCount: 0, pressure: 1)!
+            return newEvent
+        }()
+        
+        isPopupMenuPresented = true
+        menu.update()
+        NSMenu.popUpContextMenu(menu, with: evt, for: self)
+    }
+    
     // MARK: Public
+    func clearUnitsTitle(animated:Bool = true) {
+        func exec() {
+            self._lastSubtitleWhileAnimating = nil
+            self.updateLabelsConstraints(animated: animated)
+            self.superview?.superview?.layoutSubtreeIfNeeded()
+        }
+        self.unitsLabel.animatedClearCharsLIFO(duration: 0.17) {
+            exec()
+        }
+    }
+    
     func updateWithDoc(_ doc:BrickDoc?) {
         dlog?.info("updateWithDoc \((doc?.displayName).descOrNil) updating progress hidden: \(doc != nil)")
         
@@ -342,7 +524,25 @@ class MNProgressBoxView : NSView {
         }
     }
     
+    func basicUpdate(state:MNProgressState, title:String?, subtitle:String?, progress:CGFloat? = nil) {
+        var mnProgress = MNProgress(completed: state, title: title ?? "", subtitle: subtitle, info: nil)
+        if let progress = progress {
+            do {
+                try mnProgress.setProgress(fractionCompleted: progress)
+            } catch let error {
+                dlog?.warning("mnProgress.setProgress failed with error:\(error.localizedDescription)")
+            }
+        }
+        
+        dlog?.info("basicUpdate \(title.descOrNil) | \(subtitle.descOrNil) progress:\(progress.descOrNil)")
+        
+        self.update(with: mnProgress)
+    }
+    
     private func update(with mnProgress:MNProgress) {
+        
+        // Clear previous selection
+        self.selectsAllText = false
         
         // Calc title and subtitle:
         var texts = self.calcProgressTexts(with: mnProgress)
@@ -365,7 +565,7 @@ class MNProgressBoxView : NSView {
                 let color = mnProgress.state.iconTintColor
                 let bkgColor = mnProgress.state.iconBkgColor
                 iconPresentation = CircleProgressView.IconPresentationInfo(image: img, tint: color, bkgColor: bkgColor, duration: 1.5)
-                unitsLabelColor = color.darker(part: 0.25).desaturate(part0to1: 0.85)
+                unitsLabelColor = color.darker(part: self.isDarkThemeActive ? -0.15 :  0.15).desaturate(part0to1: 0.85)
             } else {
                 dlog?.note("failed presenting icon for state: \(mnProgress.state) iconName: [\(mnProgress.state.imageSystemSymbolName)]")
             }
@@ -394,6 +594,7 @@ class MNProgressBoxView : NSView {
                        units: unitsTitle,
                        animated: self.window != nil)
     }
+    
 }
 
 extension MNProgressBoxView : MNProgressObserver {
@@ -418,7 +619,32 @@ extension MNProgressBoxView : MNProgressObserver {
     }
 }
 
+extension MNProgressBoxView : NSMenuDelegate {
+    
+    func menuWillOpen(_ menu: NSMenu) {
+        //dlog?.info("menuWillOpen..")
+        self.selectsAllText = true
+        DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
+            // dlog?.info("menuWillOpen.. DONE")
+            self.isPopupMenuPresented = true
+        }
+    }
+    
+    func menuDidClose(_ menu: NSMenu) {
+        // dlog?.info("menuDidClose.. ")
+        self.isPopupMenuClosing = true
+        self.selectsAllText = false
+        
+        DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
+            self.isPopupMenuPresented = false
+            self.isPopupMenuClosing = false
+            // dlog?.info("menuDidClose.. DONE")
+        }
+    }
+}
+
 extension MNProgressBoxView  /* debugging */ {
+    
     func debugTestProgressObservations() {
         guard DEBUG_TEST_PROGRESS_OBSERVATION else {
             return
@@ -431,4 +657,5 @@ extension MNProgressBoxView  /* debugging */ {
                                                finishWith: .failure(AppError(AppErrorCode.misc_unknown, detail: "Final call of test")),
                                                observerToAdd: self)
     }
+    
 }

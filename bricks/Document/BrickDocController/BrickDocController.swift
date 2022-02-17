@@ -41,7 +41,11 @@ class BrickDocController: NSDocumentController {
     var curDocWC: DocWC? = nil {
         didSet {
             if curDocWC != oldValue {
+                self.curDoc = curDocWC?.document as? BrickDoc
+                self.curDocVC = curDocWC?.contentViewController as? DocVC
+                
                 dlog?.info("Current DocWC window is: \(curDocWC?.docVC?.docNameOrNil ?? "<nil>" )")
+                
                 self.invalidateMenu(context:"DocWC")
                 
                 observers.enumerateOnMainThread { observer in
@@ -58,13 +62,8 @@ class BrickDocController: NSDocumentController {
         }
     }
     
-    var curDocVC: DocVC? {
-        return curDocWC?.contentViewController as? DocVC
-    }
-    
-    var curDoc: BrickDoc? {
-        return curDocWC?.document as? BrickDoc
-    }
+    private (set) var curDocVC: DocVC? = nil
+    private (set) var curDoc: BrickDoc? = nil
     
     private var _recentDocURL:URL? = nil
     @AppSettable(true,   name:"BrickDocController.lastClosedWasOnSplashScreen") var lastClosedWasOnSplashScreen : Bool {
@@ -102,6 +101,7 @@ class BrickDocController: NSDocumentController {
         self.lastClosedWasOnSplashScreen = (SplashVC.sharedWindowController != nil)
         dlog?.info("applicationWillTerminate lastClosedWasOnSplashScreen: \(self.lastClosedWasOnSplashScreen)")
         _appIsTerminating = true
+        BrickDocController.shared.notidyDocWillDeactivate(immediate: true)
     }
     
     deinit {
@@ -121,7 +121,7 @@ class BrickDocController: NSDocumentController {
                     SplashVC.sharedWindowController = nil // dealloc sharedWindowController
                     if !wasLastWindow {
                         self.lastClosedWasOnSplashScreen = false
-                        self.menu?.updateWindowsMenuItems()
+                        self.menu?.updateWindowsDynamicMenuItems()
                     }
                 }
             }
@@ -154,7 +154,7 @@ class BrickDocController: NSDocumentController {
     
     func didLoadViewControllersAfterInit() {
         if let curWC = self.curDocWC, let menu = curWC.mainMenu {
-            menu.updateMenuItems([menu.viewShowToolbarMnuItem])
+            menu.updateMenuItems([menu.viewShowToolbarMnuItem], context: "didLoadVCAfterInit")
         }
     }
     
@@ -170,14 +170,14 @@ class BrickDocController: NSDocumentController {
         self.closeSplashWindow(wasLastWindow:false)
         DispatchQueue.main.asyncAfter(delayFromNow: 0.5) {
             self.updateSplashWindowIfNeeded()
-            self.menu?.updateWindowsMenuItems()
+            self.menu?.updateWindowsDynamicMenuItems()
         }
     }
 
     override func removeDocument(_ document: NSDocument) {
         super.removeDocument(document)
         self.updateSplashWindowIfNeeded()
-        self.menu?.updateWindowsMenuItems()
+        self.menu?.updateWindowsDynamicMenuItems()
     }
     
     override func openUntitledDocumentAndDisplay(_ displayDocument: Bool) throws -> NSDocument {
@@ -203,6 +203,7 @@ class BrickDocController: NSDocumentController {
             dlog?.note("closeAllDocuments : is killing app with no dialogs!")
             
             for doc in self.documents {
+                (doc as? BrickDoc)?.prepareToClose()
                 doc.updateChangeCount(.changeDiscardable)
             }
         }
@@ -226,14 +227,14 @@ class BrickDocController: NSDocumentController {
             }
             
             self._recentDocURL = nil
-            self.menu?.updateWindowsMenuItems()
+            self.menu?.updateWindowsDynamicMenuItems()
         }
     }
     
     override func noteNewRecentDocumentURL(_ url: URL) {
         super.noteNewRecentDocumentURL(url)
         _recentDocURL = url
-        self.menu?.updateWindowsMenuItems()
+        self.menu?.updateWindowsDynamicMenuItems()
     }
 }
 
@@ -251,24 +252,6 @@ extension BrickDocController  /* Responder */ {
         }
 
         return super.responds(to: aSelector)
-    }
-    
-    func validateMenuItem(doc:BrickDoc, menuItem: NSMenuItem) -> Bool {
-        // dlog?.info("validateMenuItem \(menuItem)")
-        if let menuItem = menuItem as? MNMenuItem, let cmd = menuItem.associatedCommand {
-            
-            return self.isAllowed(commandType: cmd, context: "validateMenuItem(doc)")
-            
-        } else if menuItem.title.count > 0 && menuItem.action != nil {
-            
-            // Override native menu actions availability:
-            if let res = self.isAllowedNativeAction(menuItem.action, context: "validateMenuItem(doc)") {
-                return res
-            }
-        }
-        
-        // Native / Automatic menu ations..
-        return super.validateMenuItem(menuItem)
     }
     
     private func associatedCommand(item:NSValidatedUserInterfaceItem?)->AppCommand.Type? {
@@ -316,8 +299,8 @@ extension BrickDocController  /* Responder */ {
         if let _ /*menuItem*/ = item as? NSMenuItem {
             // dlog?.info("validateUserInterfaceItem MENU: [\(menuItem.title)] action: \(menuItem.action.descOrNil)")
             //
-        } else if let cmd = self.associatedCommand(item: item) {
-            return receiver.isAllowed(commandType: cmd, method: .execute, context:context)
+        } else if let cmd = self.associatedCommand(item: item), let result = receiver.isAllowed(commandType: cmd, method: .execute, context:context) {
+            return result
         } else if let selector = self.action(for: item), let result =  receiver.isAllowedNativeAction(selector, context: context) {
             return result
         } else if let identifyingStr = self.identifyingStr(item: item) {
@@ -340,6 +323,7 @@ extension BrickDocController  /* Responder */ {
         return self.validateUserInterfaceItem(doc: self.curDoc, item: item)
     }
     
+    // MARK: Public
     func invalidateWindows() {
         dlog?.info("invalidateWindows")
         BricksApplication.shared.windows.forEach({ window in
@@ -351,7 +335,20 @@ extension BrickDocController  /* Responder */ {
         // Calc all menu items
         menu?.recalcLeafItems()
         let menuLeafItems = menu?.allLeafItems.filter(commands: commands) ?? []
-        menu?.updateMenuItems(menuLeafItems)
+        menu?.updateMenuItems(menuLeafItems, context: "invalidateItemsForCommands")
+    }
+    
+    func validateMenuItem(doc:BrickDoc, menuItem: NSMenuItem) -> Bool {
+        // dlog?.info("validateMenuItem \(menuItem)")
+        if let menuItem = menuItem as? MNMenuItem, let cmd = menuItem.associatedCommand, let result = self.isAllowed(commandType: cmd, context: "validateMenuItem(doc)") {
+            return result
+        } else if menuItem.title.count > 0 && menuItem.action != nil, let result = self.isAllowedNativeAction(menuItem.action, context: "validateMenuItem(doc)") {
+            // Override native menu actions availability:
+            return result
+        }
+        
+        // Native / Automatic menu ations..
+        return super.validateMenuItem(menuItem)
     }
     
 }
@@ -530,6 +527,7 @@ extension BrickDocController : NSWindowDelegate {
 }
 
 @objc extension BrickDocController /* NSWorkspace observation */ {
+    // MARK: Private:
     private func checkForOtherAppInstancesRunning() {
         // Prevent another instance from loading?
         for app in NSWorkspace.shared.runningApplications {
@@ -557,6 +555,23 @@ extension BrickDocController : NSWindowDelegate {
         }
     }
     
+    private func notidyDocWillDeactivate(immediate:Bool) {
+        func exec() {
+            for doc in self.documents {
+                (doc as? BrickDoc)?.prepareToClose()
+            }
+        }
+        
+        if immediate {
+            exec()
+        } else {
+            TimedEventFilter.shared.filterEvent(key: "BrickDocController.saveAllTempThingsForAllDocs", threshold: 0.1) {
+                exec()
+            }
+        }
+    }
+    
+    // MARK: NSWorkspace // Application notificatins
     func observeWorkspaceNotifications() {
         let pairs : [(selector:Selector, name:NSNotification.Name)] = [
             (#selector(willLaunchApplicationNotification(_:)), NSWorkspace.willLaunchApplicationNotification),
@@ -565,6 +580,7 @@ extension BrickDocController : NSWindowDelegate {
             (#selector(didUnhideApplicationNotification(_:)), NSWorkspace.didUnhideApplicationNotification),
             (#selector(didActivateApplicationNotification(_:)), NSWorkspace.didActivateApplicationNotification),
             (#selector(didDeactivateApplicationNotification(_:)), NSWorkspace.didDeactivateApplicationNotification),
+            (#selector(didTerminateApplicationNotification(_:)), NSWorkspace.didTerminateApplicationNotification),
         ]
         for pair in pairs {
             NSWorkspace.shared.notificationCenter.addObserver(self, selector: pair.selector, name: pair.name, object:  nil)
@@ -645,10 +661,23 @@ extension BrickDocController : NSWindowDelegate {
             return
         }
         
-        dlog?.info("didDeactivateApplicationNotification \(app.debugName)")
+        dlog?.info("didDeactivateApplicationNotification app: \(app.debugName)")
+        self.notidyDocWillDeactivate(immediate: false)
+        
         DispatchQueue.main.asyncAfter(delayFromNow: 0.03) {
             self.invalidateMenu(context: "didDeactivateApplicationNotification")
         }
+    }
+    
+    func didTerminateApplicationNotification(_ notification:NSNotification) {
+        let app = notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication
+        guard let app = app, app == NSRunningApplication.current else {
+            return
+        }
+        
+        self.notidyDocWillDeactivate(immediate: true)
+        
+        dlog?.info("didTerminateApplicationNotification \(app.debugName)")
     }
 }
 

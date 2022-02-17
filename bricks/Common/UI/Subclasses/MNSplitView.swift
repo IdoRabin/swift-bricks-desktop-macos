@@ -154,6 +154,18 @@ class MNSplitview : NSSplitView {
         return _isAnyAnimating
     }
     
+    var stringDesc : String {
+        var result = ""
+        
+        // Calc vals:
+        let first = self.isLeadingPanelCollapsed ? 0.0 : (self.lastPositivePosition[0] ?? self.lastPosition[0] ?? 0.0)
+        let last  = self.isTrailingPanelCollapsed ? 0.0 : (self.lastPositivePosition[self.trailingDividerIndex + 1] ?? self.lastPosition[self.trailingDividerIndex + 1] ?? 0.0)
+        result += "|\(first.stringValue(dec: 0))|"
+        result += "..."
+        result += "|\(last.stringValue(dec: 0))|"
+        return result
+    }
+    
     fileprivate func togglePanelUsingSplitVC(vc:NSSplitViewController, dividerIndex: Int, wantedPosition: CGFloat, animated: Bool, duration: TimeInterval, completion: (() -> Void)?) {
         
         let isLeading = (dividerIndex == 0)

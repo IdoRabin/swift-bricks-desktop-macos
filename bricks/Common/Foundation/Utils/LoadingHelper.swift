@@ -57,6 +57,10 @@ class LoadingHelper {
         self.init(label: "LoadingWaiter of \(anyType)")
     }
 
+    deinit {
+        callCompletionsAndClear()
+    }
+    
     var isLoadingNow : Bool {
         get {
             var result = false
@@ -92,12 +96,19 @@ class LoadingHelper {
         return result
     }
     
-    private func callCompletionsAndClear() {
+    func callCompletionsAndClear() {
+        
+        // Save info
+        let lock = self._loadingLock // will be retined for the main queue if needed:
+        let loadResult = _loadResult ?? .success(.noChanges)
+        let comps = self._loadingCompletions ?? []
+        
         // Call completions
-        DispatchQueue.mainIfNeeded {
-            self._loadingLock.lock {
-                for completion in self._loadingCompletions ?? [] {
-                    completion(self._loadResult!)
+        // Note: by the time we get to the main thread, self instance may be dealloced.
+        DispatchQueue.mainIfNeeded { [self] in
+            lock.lock {
+                for completion in comps {
+                    completion(loadResult)
                 }
                 
                 // Done
@@ -151,6 +162,37 @@ class LoadingHelper {
             } else {
                 self._loadingCompletions?.append(completion)
             }
+        }
+    }
+    
+    
+    /// Starts the loading process, accepting that the load proccess occurs externally, and completes the load when the test condition is true
+    func startedLoading(waitForCondition test:@escaping ()->Bool, onMainThread:Bool = true, context:String, interval:TimeInterval = 0.02, timeout:TimeInterval = 1.0,
+                        userInfo: Any?,
+                        completed:@escaping (_ info : Any?, _ result:AppResultUpdated)->Void) {
+        func finalize(waitResult:WaitResult) {
+            var result : AppResultUpdated = .success(.noChanges)
+            switch waitResult {
+            case .success:
+                result = .success(.newData)
+            case .timeout:
+                result = .failure(AppError(AppErrorCode.misc_failed_loading, detail: "LoadingHelper.startedLoading:waitForCondition failed on timeout after \(timeout) sec."))
+            }
+            self._loadResult = result
+            completed(userInfo, result)
+            self.callCompletionsAndClear()
+        }
+        
+        if onMainThread {
+            waitFor(context, interval: interval, timeout: timeout, testOnMainThread: test, completion: { waitResult in
+                DispatchQueue.mainIfNeeded {
+                    finalize(waitResult: waitResult)
+                }
+            }, counter: 1)
+        } else {
+            waitFor(context, interval: interval, timeout: timeout, test: test, completion: { waitResult in
+                finalize(waitResult: waitResult)
+            }, counter: 1)
         }
     }
 }

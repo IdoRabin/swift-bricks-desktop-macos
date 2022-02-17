@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="ToolbarDocNamePopupVC" customModule="Bricks" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="234" height="571"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <searchField wantsLayer="YES" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Tl-4Q-Q5C">
+                    <rect key="frame" x="20" y="543" width="194" height="22"/>
+                    <constraints>
+                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="194" id="OqQ-Yb-Qrm"/>
+                    </constraints>
+                    <searchFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" borderStyle="bezel" usesSingleLineMode="YES" bezelStyle="round" id="JfW-o8-ABd">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </searchFieldCell>
+                </searchField>
+                <box title="DoName props" translatesAutoresizingMaskIntoConstraints="NO" id="opE-yD-OKO">
+                    <rect key="frame" x="3" y="2" width="228" height="535"/>
+                    <view key="contentView" id="xqW-im-Ivy">
+                        <rect key="frame" x="3" y="3" width="222" height="517"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </view>
+                    <constraints>
+                        <constraint firstAttribute="height" relation="lessThanOrEqual" constant="531" id="0E7-W8-oV6"/>
+                    </constraints>
+                </box>
+            </subviews>
+            <constraints>
+                <constraint firstItem="4Tl-4Q-Q5C" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" symbolic="YES" id="AoW-S4-jDX"/>
+                <constraint firstAttribute="trailing" secondItem="opE-yD-OKO" secondAttribute="trailing" constant="6" id="FfP-IE-3eB"/>
+                <constraint firstAttribute="trailing" secondItem="4Tl-4Q-Q5C" secondAttribute="trailing" constant="20" symbolic="YES" id="IA1-wK-WGL"/>
+                <constraint firstItem="opE-yD-OKO" firstAttribute="top" secondItem="4Tl-4Q-Q5C" secondAttribute="bottom" constant="6" id="INm-LL-Fpo"/>
+                <constraint firstAttribute="bottom" secondItem="opE-yD-OKO" secondAttribute="bottom" constant="6" id="eMJ-9p-2cI"/>
+                <constraint firstItem="opE-yD-OKO" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="6" id="q9P-hK-2LX"/>
+                <constraint firstItem="4Tl-4Q-Q5C" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" constant="6" id="wtt-WF-BxA"/>
+            </constraints>
+            <point key="canvasLocation" x="16" y="299.5"/>
+        </customView>
+    </objects>
+</document>

@@ -52,6 +52,10 @@ protocol CachesEventObserver {
 //}
 
 extension CachesHelper : CacheObserver {
+    func cachItemsUpdated(uniqueCacheName: String, updatedItems: [AnyHashable : Any]) {
+        // ?
+    }
+    
     
     func cachItemUpdated(uniqueCacheName: String, key: Any, value: Any) {
         // ?

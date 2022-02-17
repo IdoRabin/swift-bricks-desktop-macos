@@ -338,7 +338,7 @@ struct MNProgress : FractionalMNProg {
     }
     
     mutating func setProgress(fractionCompleted newFraction:Double, isStateInProgress : Bool = true, isCompletesWhenFull: Bool = true) throws {
-        guard fractionCompleted < 0 else {
+        guard fractionCompleted >= 0 else {
             throw AppError(AppErrorCode.misc_failed_creating, detail: "MNProgress.setProgress.Failed with a negative fractionCompleted : Double")
         }
         
@@ -356,7 +356,7 @@ struct MNProgress : FractionalMNProg {
             }
             if fractionChangeed {
                 self._progressNum = .fraction(newFraction)
-                dlog?.info("setProgress fraction: \(self.fractionCompletedDisplayString)")
+                // dlog?.info("setProgress fraction: \(self.fractionCompletedDisplayString)")
                 changed(context: "progress fraction=\(newFraction)")
             }
             

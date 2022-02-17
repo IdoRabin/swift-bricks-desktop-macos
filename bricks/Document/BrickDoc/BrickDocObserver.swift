@@ -11,7 +11,7 @@ protocol BrickDocObserver : AnyObject {
     
     func brickDocumentError(_ brick:BrickDoc, error:AppError?)
     func brickDocumentWillClose(_ brick:BrickDoc)
-    func brickDocumentDidClose(_ brick:BrickDoc)
+    func brickDocumentDidClose(_ brickUID:BrickDocUID)
     
     func brickDocumentWillOpen(_ brick:BrickDoc)
     func brickDocumentDidOpen(_ brick:BrickDoc)

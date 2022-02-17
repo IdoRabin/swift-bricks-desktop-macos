@@ -19,8 +19,10 @@ extension BrickDocController : CommandReciever {
         self.commandInvoker.addCommands(commands)
     }
     
-    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> Bool {
-        var result = false
+    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> Bool? {
+        var result : Bool? = nil
+        let doc = self.curDoc
+        let hasDoc = doc != nil
         
         DispatchQueue.main.safeSync {
             switch commandType.typeName {
@@ -35,6 +37,16 @@ extension BrickDocController : CommandReciever {
             // File menu
             case CmdNewProject.typeName:        result = true
             case CmdOpenProject.typeName:       result = true
+            //case CmdSaveProjet.typeName:        result = hasDoc && (!doc!.isDraft && (doc!.isDocumentEdited || doc!.hasUnautosavedChanges))
+            //case CmdSaveProjectAs.typeName:     result = hasDoc && (doc!.isDraft || doc!.isDocumentEdited || doc!.hasUnautosavedChanges)
+                
+            // Layer menu:
+            case CmdLayerAdd.typeName:          result = hasDoc
+            case CmdLayerEdit.typeName:         result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
+            case CmdLayerRemove.typeName:       result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
+            case CmdLayerSetAccess.typeName:    result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
+            case CmdLayerSetVisiblity.typeName: result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
+            case CmdLayerSetVisiblity.typeName: result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
                 
             default:
                 dlog?.note("did not handle command of type [\(commandType.typeName)]")
@@ -92,7 +104,7 @@ extension BrickDocController /* command factory */ {
 //        case is CmdLayerRemove.Type:
             
         default:
-            dlog?.note("createCommand for [\(cmdType)] was not implemented!")
+            dlog?.note("Controller createCommand for [\(cmdType)] was not implemented!")
         }
         
         if let result = result {

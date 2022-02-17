@@ -8,7 +8,7 @@
 import AppKit
 
 class MainMenu : NSMenu {
-    fileprivate let dlog : DSLogger? = DLog.forClass("MainMenu")
+    fileprivate let dlog : DSLogger? = nil // DLog.forClass("MainMenu")
     
     enum Category : Int, Hashable {
         // Groups
@@ -50,8 +50,9 @@ class MainMenu : NSMenu {
     @IBOutlet weak var   fileDuplicateMnuItem: NSMenuItem!
     @IBOutlet weak var   fileRenameMnuItem: NSMenuItem!
     @IBOutlet weak var   fileMoveToMnuItem: NSMenuItem!
-    @IBOutlet weak var   fileRevertToToMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileRevertToToMnuItem: NSMenuItem?
     @IBOutlet weak var   fileRevertToSavedMnuItem: NSMenuItem!
+    @IBOutlet weak var   fileShareMnuItem: NSMenuItem!
     @IBOutlet weak var   filePageSetupMnuItem: NSMenuItem!
     @IBOutlet weak var   filePrintMnuItem: NSMenuItem!
     
@@ -122,6 +123,10 @@ class MainMenu : NSMenu {
             case splashScreen
             case document
             case documentWithModal
+            
+            var isEnabled : Bool {
+                return self != .disabled
+            }
         }
         
         case disabled
@@ -135,6 +140,10 @@ class MainMenu : NSMenu {
             case .document: return .document
             case .documentWithModal: return .documentWithModal
             }
+        }
+        
+        var isEnabled : Bool {
+            return self.simplified != .disabled
         }
     }
     
@@ -164,9 +173,6 @@ class MainMenu : NSMenu {
     }
     
     // MARK: Private funcs
-    private func menuItems(forCategoty category:Category) {
-        
-    }
     
     private func hookupMenuSystemItem(_ item:NSMenuItem)->Bool {
         guard item.action != nil || self.allLeafItems.contains(item) else {
@@ -175,21 +181,34 @@ class MainMenu : NSMenu {
         
         let actionDesc = item.action.descOrNil
         switch actionDesc {
-            // File
-            case "closeAll:": fileCloseAllMnuItem = item
-            case "duplicateDocument:": fileDuplicateMnuItem = item
-            case "renameDocument:": fileRenameMnuItem = item
-            case "moveDocument:": fileMoveToMnuItem = item
-            
-            // "Duplicate" is unknown. action: duplicateDocument:
+        // File
+        case "closeAll:": fileCloseAllMnuItem = item
+        case "duplicateDocument:": fileDuplicateMnuItem = item
+        case "renameDocument:": fileRenameMnuItem = item
+        case "moveDocument:": fileMoveToMnuItem = item
+        case "revertDocumentToSaved:": fileRevertToSavedMnuItem = item
+        case "showAboutPanel:": bricksAboutMnuItem = item
+        case "showPreferencesMenuAction:": bricksPreferencesMnuItem = item
+        case "clearRecentDocuments:": fileOpenRecentMnuItem = item
+        case "newDocument:": fileNewMnuItem = item
+        case "openDocument:": fileOpenMnuItem = item
+        case "performClose:": fileCloseMnuItem = item
+        case "saveDocument:": fileSaveMnuItem = item
+        case "saveDocumentAs:": fileSaveAsMnuItem = item
             // Revert To" is unknown. action: submenuAction:
             // "Move To…" is unknown. action: moveDocument:
+            // "Duplicate" is unknown. action: duplicateDocument:
             // "Rename…" is unknown. action: renameDocument:
             // case "submenuAction:": break // ??
             // case "startDictation:": break
             // case "orderFrontCharacterPalette:": break
-            // case "toggleFullScreen:": break
+        // case "toggleFullScreen:": viewEnterFullScreenMnuItem = item
             // case "makeKeyAndOrderFront:": break
+        case "submenuAction:":
+            if item.hasSubmenu && menuItems[.allTopItems]?.contains(item) ?? false == false, let parent = item.menu {
+                
+                dlog?.info("CHECKING menu [\(parent.title)]:[\(item.title)]) items: \(item.submenu?.items.count ?? 0)")
+            }
         default:
             // dlog?.note("unknown SystemItem:\(actionDesc)")
             unhookedSystemItems?.append(item)
@@ -204,6 +223,7 @@ class MainMenu : NSMenu {
             dlog?.warning("localize recursion is > 10 depth. @ menu : \(menu.title)")
             return
         }
+        
         // TODO: Associate AppCommands to all menu items
         for item in menu.items {
             let skip = item.isSeparatorItem
@@ -277,12 +297,13 @@ class MainMenu : NSMenu {
                 case      viewZoomTo100MnuItem: title = AppStr.ZOOM_TO_100_PRC.localized()
                 case      viewZoomOutMnuItem:   title = AppStr.ZOOM_OUT.localized()
                 case      viewZoomToFitMnuItem: title = AppStr.ZOOM_TO_FIT.localized()
-                case   viewEnterFullScreenMnuItem:  title = AppStr.ENTER_FULL_SCREEN.localized() //+ AppStr.EXIT_FULL_SCREEN.localized()
+                // DO NOT! case   viewEnterFullScreenMnuItem:  title = AppStr.ENTER_FULL_SCREEN.localized() //+ AppStr.EXIT_FULL_SCREEN.localized()
                     
                 case layerTopMnuItem: title = AppStr.LAYER.localized()
-                case layerAddMenuItem: title = AppStr.ADD.localized()
-                case layerDeleteMenuItem: title = AppStr.DELETE_FORMAT_DOT_DOT.formatLocalized(curLayerName)
-                case layerEditMenuItem: title = AppStr.EDIT_FORMAT_DOT_DOT.formatLocalized(curLayerName)
+                case layerAddMenuItem:
+                    cmd = CmdLayerAdd.self // AppStr.ADD.localized()
+                case layerDeleteMenuItem: cmd = CmdLayerRemove.self // title = AppStr.DELETE_FORMAT_DOT_DOT.formatLocalized(curLayerName)
+                case layerEditMenuItem: cmd = CmdLayerEdit.self // AppStr.EDIT_FORMAT_DOT_DOT.formatLocalized(curLayerName)
                 case layerLockMenuItem: title = AppStr.LOCK.localized() //+ AppStr.UNLOCK.localized()
                 case layerShowHideMenuItem: title = AppStr.SHOW.localized() //+ AppStr.HIDE.localized()
                 case layerHideOthersMenuItem: title = AppStr.HIDE_OTHERS.localized()
@@ -346,8 +367,8 @@ class MainMenu : NSMenu {
 
         for item in items {
             var isEnable = (except.contains(item)) ? !enabled : enabled
-            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand {
-                isEnable = BrickDocController.shared.isAllowed(commandType: cmd, context: "MainMenu.setEnabledforMenuItems")
+            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand, let result = BrickDocController.shared.isAllowed(commandType: cmd, context: "MainMenu.setEnabledforMenuItems") {
+                isEnable = result
             }
             item.isEnabled = isEnable
         }
@@ -367,14 +388,9 @@ class MainMenu : NSMenu {
         self.setAllEnabled(true, except: except)
     }
     
-    private func calcMenuState()->MainMenu.State {
-        var newState : MainMenu.State = .disabled
-        return newState
-    }
-    
     // MARK: Public
     
-    func updateWindowsMenuItems() {
+    func updateWindowsDynamicMenuItems() {
         
         // Updates the menu items correlated with the document windows (NSWindowRepresentingMenuItem)
         let items = self.docWindowsItems
@@ -406,58 +422,13 @@ class MainMenu : NSMenu {
     }
     
     // MARK: Update menu using the current Doc:
-    func updateMenuItems(_ items:[NSMenuItem]) {
-
-        guard items.count > 0 else {
-            dlog?.note("updateMenuItems with 0 items as input!")
-            return
-        }
-        
-        self.state = calcMenuState()
-        self.recalcLeafItems()
-        
-        // Get cur doc:
-        //let curWC = BrickDocController.shared.curDocWC
-//        let curVC = BrickDocController.shared.curDocVC
-        //let curDoc = BrickDocController.shared.curDoc
-
-        
-//        for item in items {
-//            switch item {
-//            case viewShowToolbarMnuItem:
-//                item.title = (curVC?.toolbar?.isVisible ?? false) ? AppStr.HIDE_TOOLBAR.localized() : AppStr.SHOW_TOOLBAR.localized()
-//                item.isHidden = true
-//
-//            case viewShowProjectSidebarMnuItem:
-//                // dlog?.info("Update leading sidebar menu item")
-//                item.title = (vc?.mnSplitView.isLeadingPanelCollapsed ?? false) ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
-//
-//            case viewShowUtilitySidebarMnuItem:
-//                // dlog?.info("Update trailing sidebar menu item")
-//                item.title = (vc?.mnSplitView.isTrailingPanelCollapsed ?? false) ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
-//
-//            default:
-//                break
-//            }
-//        }
-        
-        
-//        for command in commands {
-//
-//            // Menu items for this command:
-//            let menuItems = menuLeafItems.filter(commands: [command])
-//            for menuItem in menurItems {
-//                if let doc = self.curDoc {
-//                    menuItem.isEnabled = self.validateMenuItem(doc:doc, menuItem: menuItem)
-//                } else {
-//                    menuItem.isEnabled = self.validateMenuItem(menuItem)
-//                }
-//            }
-//        }
-    }
                         
-    func updateMenuItems(categoris:Set<MainMenu.Category>) {
-        
+    func updateMenuItems(categories:Set<MainMenu.Category>, context:String) {
+        var items : [NSMenuItem] = []
+        for category in categories {
+            items.append(contentsOf: self.menuItems[category] ?? [])
+        }
+        self.updateMenuItems(items, context: context)
     }
     
     // MARK: Lifecycle
@@ -469,7 +440,7 @@ class MainMenu : NSMenu {
         }
         
         menuItems[.allTopItems] = [
-            bricksTopMnuItem, fileTopMnuItem, editTopMnuItem, viewTopMnuItem, windowTopMnuItem, helpTopMnuItem
+            bricksTopMnuItem, fileTopMnuItem, editTopMnuItem, layerTopMnuItem, viewTopMnuItem, windowTopMnuItem, helpTopMnuItem
         ]
 
         menuItems[.app] = [
@@ -532,4 +503,168 @@ extension Array where Element : NSMenuItem {
             return false
         }, recursive: true)
     }
+}
+
+extension MainMenu /* updtes most important funcs */ {
+    
+    fileprivate func calcMenuState()->MainMenu.State {
+        var newState : MainMenu.State = .disabled
+        if BrickDocController.shared.documents.count > 0 && BrickDocController.shared.curDoc != nil {
+            newState = .document
+            if let curwc = BrickDocController.shared.curDocWC {
+                if let sheets = curwc.windowIfLoaded?.sheetTitles, sheets.count > 0 {
+                    newState = .documentWithModal(sheets.joined(separator: ", "))
+                }
+            }
+            
+        } else if BrickDocController.shared.curDoc == nil &&
+            BrickDocController.shared.documents.count == 0 &&
+            BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self) {
+                newState = .splashScreen
+        }
+        return newState
+    }
+    
+    
+    /// Update and set the menu item's enabled state. Also returns the determined enabled state (if handled)
+    /// - Parameters:
+    ///   - item: menu item to update
+    ///   - doc: currect document the menu item is relating to
+    ///   - docWC: cur document window controller the document is relating to
+    /// - Returns: true or false is the menu item was set to enabled or disabled, nil if the menu item was not handled
+    @discardableResult
+    func updateMenuItem(_ item:NSMenuItem, doc:BrickDoc?, docWC:DocWC?, context:String)->Bool? {
+        let docVC = docWC?.docVC
+        let hasDoc = doc != nil && docWC != nil
+        let hasSelectedLayer = doc?.brick.layers.selectedLayers.count ?? 0 > 0
+        var isEnabled = state.isEnabled
+        var wasFound = true
+        var titleChange : String? = nil
+        
+        switch item {
+        // App / bricks menu
+        case bricksAboutMnuItem:       isEnabled = true // Always enabled
+        case bricksPreferencesMnuItem: isEnabled = true // Always enabled
+        case bricksServicesMnuItem: isEnabled = true // Always enabled
+        case bricksServicesSubmenu: isEnabled = true // Always enabled
+        case bricksHideMnuItem: isEnabled = true // Always enabled
+        case bricksHideOthersMnuItem: isEnabled = true // Always enabled
+        case bricksShowAllMnuItem: isEnabled = true // Always enabled
+        case bricksQuitMnuItem: isEnabled = true // Always enabled
+        
+        // File menu
+        case fileOpenRecentMnuItem, fileClearRecentsMenuItem: isEnabled = isEnabled && AppDocumentHistory.shared.hasRecents
+        case fileRevertToToMnuItem, fileRevertToSavedMnuItem: isEnabled = isEnabled && hasDoc
+        case fileCloseMnuItem: isEnabled = isEnabled && hasDoc
+        case fileCloseAllMnuItem: isEnabled = isEnabled && BrickDocController.shared.documents.count > 0
+        //case fileSaveMnuItem: // Has command
+        //case fileSaveAsMnuItem: // Has command
+        case fileDuplicateMnuItem: isEnabled = isEnabled && (doc?.hasUnautosavedChanges == true || doc?.isDocumentEdited == true)
+        case fileRenameMnuItem: isEnabled = isEnabled && (doc?.fileURL?.lastPathComponent != nil || doc?.brick.info.filePath?.lastPathComponent != nil || doc?.brick.info.displayName != nil)
+        case fileMoveToMnuItem:isEnabled = isEnabled && doc?.brick.info.lastSavedDate != nil
+        case fileRevertToToMnuItem: isEnabled = isEnabled && doc?.brick.info.lastSavedDate != nil
+        case fileRevertToSavedMnuItem: isEnabled = isEnabled && doc?.brick.info.lastSavedDate != nil
+        case fileShareMnuItem: return doc?.isDraft == false // ? Allows sharing an empty doc?! && doc?.docSaveState != .emptyAndUnsaved
+        // case filePageSetupMnuItem: NSMenuItem!
+        // case filePrintMnuItem: NSMenuItem!
+            
+            // View menu
+        case viewTopMnuItem: isEnabled = isEnabled && hasDoc
+        case   viewShowToolbarMnuItem: isEnabled = isEnabled && hasDoc
+        case   viewCustomizeToolbarMnuItem: isEnabled = isEnabled && hasDoc && false // NOT Customizale
+        case   viewShowProjectSidebarMnuItem:
+            isEnabled = isEnabled && hasDoc
+            titleChange = (docVC?.mnSplitView.isLeadingPanelCollapsed ?? true) ? AppStr.SHOW_PROJECTS_SIDEBAR.localized() : AppStr.HIDE_PROJECTS_SIDEBAR.localized()
+            
+        case   viewShowUtilitySidebarMnuItem:
+            isEnabled = isEnabled && hasDoc
+            titleChange = (docVC?.mnSplitView.isTrailingPanelCollapsed ?? true) ? AppStr.SHOW_UTILITY_SIDEBAR.localized() : AppStr.HIDE_UTILITY_SIDEBAR.localized()
+            
+        case   viewZoomMnuItem:
+            isEnabled = isEnabled && hasDoc
+            
+//        case   viewZoomSubmenu: isEnabled = isEnabled && hasDoc
+//        case      viewZoomInMnuItem: isEnabled = isEnabled && hasDoc
+//        case      viewZoomTo100MnuItem: isEnabled = isEnabled && hasDoc
+//        case      viewZoomOutMnuItem: isEnabled = isEnabled && hasDoc
+//        case      viewZoomToFitMnuItem: isEnabled = isEnabled && hasDoc
+        case   viewEnterFullScreenMnuItem:
+            isEnabled = isEnabled && hasDoc
+            titleChange = (docVC?.docWC?.window?.isFullScreen ?? false) ? AppStr.EXIT_FULL_SCREEN.localized() : AppStr.ENTER_FULL_SCREEN.localized()
+            
+            // Layer menu
+        case layerTopMnuItem: isEnabled = isEnabled && hasDoc
+        case   layerAddMenuItem:
+            isEnabled = isEnabled && hasDoc
+        case   layerDeleteMenuItem: isEnabled = isEnabled && hasDoc && hasSelectedLayer
+        case   layerEditMenuItem: isEnabled = isEnabled && hasDoc && hasSelectedLayer
+        case   layerLockMenuItem: isEnabled = isEnabled && hasDoc && hasSelectedLayer
+        case   layerShowHideMenuItem: isEnabled = isEnabled && hasDoc && hasSelectedLayer
+        case   layerHideOthersMenuItem:
+            // Check if any non-selected layer
+            isEnabled = isEnabled && hasDoc && hasSelectedLayer
+        case   layerShowAllMenuItem: isEnabled = isEnabled && hasDoc && doc?.brick.layers.count ?? 0 > 0
+//
+//            // Window menu
+//            @IBOutlet weak var windowTopMnuItem: NSMenuItem!
+//            @IBOutlet weak var   windowMinimizeMnuitem: NSMenuItem!
+//            @IBOutlet weak var   windowZoomMnuItem: NSMenuItem!
+//            @IBOutlet weak var   windowBringAllToFrontMnuItem: NSMenuItem!
+        
+        // Help menu
+        case helpTooltipsShowKeyboardShortcutsMnuItem: isEnabled = true // Alqyas enabled
+            
+        default:
+            wasFound = false
+            // dlog?.note("UpdateMenuItem - item not implemented:\(item.basicDesc) \(item.title) - \(item.toolTip.descOrNil)")
+        }
+        
+        // Change title if needed
+        if let titleChange = titleChange {
+            item.title = titleChange
+            item.view?.needsDisplay = true
+        }
+        
+        // Change enabled using the associatedCommand or native action for the menu item:
+        if isEnabled && wasFound {
+            if let item = item as? MNMenuItem, let command = item.associatedCommand, let result = BrickDocController.shared.isAllowed(commandType: command, method: .execute, context: "updateMenuItem") {
+                isEnabled = isEnabled && result
+            } else if item.action != nil, let isAllowed = BrickDocController.shared.isAllowedNativeAction(item.action, context: "updateMenuItem") {
+                isEnabled = isEnabled && isAllowed
+            }
+        }
+        
+        // set enabled state
+        item.isEnabled = isEnabled
+    
+        return wasFound ? item.isEnabled : nil
+    }
+    
+    func updateMenuItems(_ items:[NSMenuItem]? = nil, context:String) {
+        
+        self.state = calcMenuState()
+        
+        var itemz : [NSMenuItem] = []
+        if items?.count ?? 0 > 0 {
+            itemz = items ?? []
+            dlog?.info("updateMenuItems \(itemz.count) items. context: \(context)")
+        } else {
+            dlog?.info("updateMenuItems all items. context: \(context)")
+            self.recalcLeafItems()
+            itemz = self.allLeafItems
+            
+            // Submenu item holders that need to be updated as well
+            itemz.append(contentsOf: [fileOpenRecentMnuItem, fileClearRecentsMenuItem,
+                                      editFindMnuItem, viewZoomMnuItem, fileRevertToToMnuItem ?? fileRevertToSavedMnuItem])
+        }
+        
+        // Get cur doc:
+        // let curVC = BrickDocController.shared.curDocVC
+        let curWC = BrickDocController.shared.curDocWC
+        let curDoc = BrickDocController.shared.curDoc
+        for item in itemz {
+            self.updateMenuItem(item, doc: curDoc, docWC: curWC, context:context)
+        }
+    }
+
 }

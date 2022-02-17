@@ -62,14 +62,16 @@ class AppDocumentHistory : WhenLoadedable {
     // MARK: Private functions
     var historyFilePath : URL? {
         get {
-            let directory = FileManager.default.urls(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first
+            var directory = FileManager.default.urls(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first
+            // directory = directory?.appendingPathComponent(Bundle.main.bundleName?.capitalized ?? "Bricks")
+            
             let filename = Self.FILENAME
             if let dir = directory?.appendingPathComponent(filename) {
-                if FileManager.default.fileExists(atPath: dir.absoluteString) {
+                if FileManager.default.fileExists(atPath: directory!.absoluteString) {
                     return dir.appendingPathComponent(filename).appendingPathExtension("json")
                 } else {
                     do {
-                        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true, attributes: nil)
+                        try FileManager.default.createDirectory(at: directory!, withIntermediateDirectories: true, attributes: nil)
                         return dir.appendingPathComponent(filename).appendingPathExtension("json")
                     } catch let error {
                         let appErr = AppError(error: error)
@@ -129,77 +131,81 @@ class AppDocumentHistory : WhenLoadedable {
             return
         }
         
-        self._historyLock.lock {
-            var wasLoaded = false
-            do {
-                let recents = NSDocumentController.shared.recentDocumentURLs
-                let data = try Data(contentsOf: filepath)
-                self._history = try JSONDecoder().decode(AppDocHistory.self, from: data)
-                var wasChanged = false
-                if self._history.count > 0 {
-                    wasLoaded = true
-                    for (uuid, _) in self._history {
-                        if let item = self._history[uuid] {
-                            if let path = item.filePath {
-                                if !recents.contains(path) || !FileManager.default.fileExists(atPath: path.path) {
+        if !FileManager.default.fileExists(atPath: filepath.path) {
+            completion?(.failure(AppError(AppErrorCode.misc_failed_loading, detail: "Bricks settings file was not found!")))
+        } else {
+            self._historyLock.lock {
+                var wasLoaded = false
+                do {
+                    let recents = NSDocumentController.shared.recentDocumentURLs
+                    let data = try Data(contentsOf: filepath)
+                    self._history = try JSONDecoder().decode(AppDocHistory.self, from: data)
+                    var wasChanged = false
+                    if self._history.count > 0 {
+                        wasLoaded = true
+                        for (uuid, _) in self._history {
+                            if let item = self._history[uuid] {
+                                if let path = item.filePath {
+                                    if !recents.contains(path) || !FileManager.default.fileExists(atPath: path.path) {
+                                        self._history[uuid] = nil
+                                        wasChanged = true
+                                    }
+                                } else {
                                     self._history[uuid] = nil
                                     wasChanged = true
                                 }
-                            } else {
-                                self._history[uuid] = nil
-                                wasChanged = true
                             }
                         }
-                    }
-                    
-                    // Find duplicate uids with same path:
-                    var foundDuplicates : [URL:[BrickBasicInfo]] = [:]
-                    for (_ , info) in self._history {
-                        if let path = info.filePath {
-                            var paths = foundDuplicates[path] ?? []
-                            paths.append(info)
-                            foundDuplicates[path] = paths
+                        
+                        // Find duplicate uids with same path:
+                        var foundDuplicates : [URL:[BrickBasicInfo]] = [:]
+                        for (_ , info) in self._history {
+                            if let path = info.filePath {
+                                var paths = foundDuplicates[path] ?? []
+                                paths.append(info)
+                                foundDuplicates[path] = paths
+                            }
                         }
-                    }
-                    
-                    for (url, duplicates) in foundDuplicates {
-                        if duplicates.count > 1 {
-                            // We have more than one file per path
-                            let sorted = duplicates.sorted(by: { (infoA, infoB) -> Bool in
-                                if let a = infoA.lastModifiedDate, let b = infoB.lastModifiedDate {
-                                    return a > b
-                                }
-                                
-                                return infoA.creationDate > infoB.creationDate
-                            })
-                            DLog.docHistory.info("\(sorted.count) duplicates for \(url) will keep:\(sorted.first?.id.description ?? "<no items>" )")
-                            for item in sorted {
-                                if item != sorted.first {
-                                    // Remove this uuid from _history, since the actual (assuming latest) file refers to another uuid
-                                    _history[item.id] = nil
-                                    wasChanged = true
+                        
+                        for (url, duplicates) in foundDuplicates {
+                            if duplicates.count > 1 {
+                                // We have more than one file per path
+                                let sorted = duplicates.sorted(by: { (infoA, infoB) -> Bool in
+                                    if let a = infoA.lastModifiedDate, let b = infoB.lastModifiedDate {
+                                        return a > b
+                                    }
+                                    
+                                    return infoA.creationDate > infoB.creationDate
+                                })
+                                DLog.docHistory.info("\(sorted.count) duplicates for \(url) will keep:\(sorted.first?.id.description ?? "<no items>" )")
+                                for item in sorted {
+                                    if item != sorted.first {
+                                        // Remove this uuid from _history, since the actual (assuming latest) file refers to another uuid
+                                        _history[item.id] = nil
+                                        wasChanged = true
+                                    }
                                 }
                             }
                         }
+                        
+                        if wasChanged {
+                            self.save()
+                        }
+                        
+                        DLog.docHistory.success("load. was loaded from json history")
+                        self.orbservers.enumerateOnMainThread(block: { (observer) in
+                            observer.appDeocumentHistoryDidChange()
+                        })
                     }
-                    
-                    if wasChanged {
-                        self.save()
-                    }
-                    
-                    DLog.docHistory.success("load. was loaded from json history")
-                    self.orbservers.enumerateOnMainThread(block: { (observer) in
-                        observer.appDeocumentHistoryDidChange()
-                    })
+                } catch let error {
+                    let appErr = AppError(error: error)
+                    DLog.docHistory.warning("load failed. error: \(appErr)")
                 }
-            } catch let error {
-                let appErr = AppError(error: error)
-                DLog.docHistory.warning("load failed. error: \(appErr)")
-            }
-            
-            if !wasLoaded {
-                DispatchQueue.notMainIfNeeded {
-                    self.loadFromFiles()
+                
+                if !wasLoaded {
+                    DispatchQueue.notMainIfNeeded {
+                        self.loadFromFiles()
+                    }
                 }
             }
         }

@@ -18,21 +18,21 @@ extension BrickDoc : CommandReciever {
         self.commandInvoker.addCommands(commands)
     }
     
-    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> Bool {
-        var result = false
+    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> Bool? {
+        var result : Bool? = nil
         
-        DispatchQueue.main.safeSync {
-            switch commandType.typeName {
-            case CmdLayerAdd.typeName:        result = true
-            case CmdLayerEdit.typeName:       result = self.brick.layers.selectedLayer != nil
-            case CmdLayerRemove.typeName:     result = self.brick.layers.selectedLayer != nil
-            default:
-                break
-            }
-        }
+//        DispatchQueue.main.safeSync {
+//            switch commandType.typeName {
+//            case CmdLayerAdd.typeName:        result = true
+//            case CmdLayerEdit.typeName:       result = self.brick.layers.selectedLayers.count > 0
+//            case CmdLayerRemove.typeName:     result = self.brick.layers.selectedLayers.count > 0
+//            default:
+//                break
+//            }
+//        }
         
         // dlog?.info("isAllowed=\(result) command: \(commandType.typeName) for: \(method) context: \(context)")
-        return false
+        return result
     }
     
     func isAllowedNativeAction(_ sel: Selector?, context: CommandContext) -> Bool? {
@@ -73,6 +73,10 @@ extension BrickDoc /* command factory */ {
         case is CmdLayerAdd.Type:       result = CmdLayerAdd(context: context, receiver: self)
         case is CmdLayerEdit.Type:      result = CmdLayerEdit(context: context, receiver: self, layerID: selectedLyerUID!)
         case is CmdLayerRemove.Type:    result = CmdLayerRemove(context: context, receiver: self, layerID: selectedLyerUID!)
+            
+        // Misc
+        case is CmdUITogglePopupForToolbarNameView.Type:    result = CmdUITogglePopupForToolbarNameView(context: context, receiver: self)
+        case is CmdUITogglePopupForToolbarLogFileView.Type:    result = CmdUITogglePopupForToolbarLogFileView(context: context, receiver: self)
             
         default:
             dlog?.note("createCommand for [\(cmdType)] was not implemented!")

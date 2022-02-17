@@ -52,6 +52,7 @@
 "UNNAMED" = "Unnamed"; // "Unnamed" // an unnamed element will have this title / name
 "UNSAVED" = "Unsaved"; // "Unsaved" // an un-saved file - was never saved into a file.
 "SAVE" = "Save";
+"SAVED" = "Saved";
 "SAVE_DOT_DOT" = "Save..";
 "SAVE_AS" = "Save as";
 "SAVE_AS_DOT_DOT" = "Save as..";
@@ -61,6 +62,7 @@
 "REVERT_TO_DOT_DOT"  = "Revert to..";
 "OPEN" = "Open";
 "UNTITLED" = "Untitled"; // "Untitled" // an untitled (no filename yet) document / element - will display this title
+"READY" = "Ready";
 
 // Progress / loading
 "PLEASE_WAIT" = "Please wait";    // "Please Wait" // Message displayed to the user while some operation is in progress
@@ -73,6 +75,7 @@
 "SUCCESS" = "Success"; // "Success"
 "FAILED" = "Failed"; // "Failed"
 "USER_CANCELED" = "User canceled"; // "User canceled"
+"SHARE_DOT_DOT" = "Share.."; // "Share.."
 
 // Errors
 "OOPS_EXCL_POINT" = "Oops!"; // "Oops!"
@@ -87,10 +90,6 @@
 "DAYS_FORMAT" = "%zd Days";    // "%zd Days" // Word for a few days. Example: "7 Days"
 "LAST_UPDATED_AT_FORMAT" = "Last updated at %@";    // "Last updated at %@" // Present a last updated date / time for a data field
 "GOT_IT" = "Got It!";    // "Got it!" // Usually a button title to dismiss a dialog // android
-
-"LOCK" = "Lock";
-"UNLOCK" = "Unlock";
-"ADD_NEW" = "Add new";
 
 // Menu
 // App menu
@@ -163,6 +162,27 @@
 "SHOW_FORMAT" = "Show %@";
 "HIDE_FORMAT" = "Hide %@";
 
+// Additional layers actions
+"LOCK" = "Lock";
+"UNLOCK" = "Unlock";
+"ADD_NEW" = "Add new";
+
+"ADD_NEW_PLAN_LAYER_TOOLTIP" = "Add new plan layer";
+"DELETE_SELECTED_LAYER_FROM_PLAN_TOOLTIP" = "Delete selected layer from plan";
+"EDIT_SELECTED_LAYER_TOOLTIP" = "Edit selected layer";
+"LOCK_SELECTED_LAYER_TOOLTIP" = "Lock selected layer. Prevent changes";
+"UNLOCK_SELECTED_LAYER_TOOLTIP" = " Unlock selected layer. Allow changes";
+"HIDE_SELECTED_LAYER_TOOLTIP" = "Hide slected layer";
+"SHOW_SELECTED_LAYER_TOOLTIP" = "Show selected layer";
+"HIDE_OTHER_LAYERS_TOOLTIP" = "Hide all other layers";
+"SHOW_ALL_LAYERS_TOOLTIP" = "Show all layers";
+
+// Misc actions
+"SHOW_DOCNAME_POPUP" = "Show doc info";
+"SHOW_DOCNAME_POPUP_TOOLTIP" = "Show document information.";
+"SHOW_LOG_FILE_POPUP" = "Show log file";
+"SHOW_LOG_FILE_POPUP_TOOLTIP" = "Show log file view.";
+
 // Splash screen
 "PRODUCT_NAME" = "Bricks"; // product name
 "START_A_NEW_PROJECT_DOT_DOT" = "Start a new project..";
@@ -181,11 +201,6 @@
 "STOP_GENERATION" = "Stop generating";
 "STOP_GENERATION_TOOLTIP" = "Stop all code generation, revert to previous code structure";
 
-// Tooltips
-"ADD_NEW_PLAN_LAYER_TOOLTIP" = "Add new plan layer";
-"DELETE_SELECTED_LAYER_FROM_PLAN_TOOLTIP" = "Delete selected layer from plan";
-"EDIT_SELECTED_LAYER_TOOLTIP" = "Edit selected layer";
-
 // Preferences
 "GENERAL" = "General";
 "ACCOUNTS" = "Accounts";
@@ -193,3 +208,11 @@
 "GENERAL_PREFERENCES_TOOLTIP" = "General settings";
 "ACCOUNTS_PREFERENCES_TOOLTIP" = "Accounts and git remote settings";
 "KEY_BINDINGS_PREFERENCES_TOOLTIP" = "Keyboard shortcuts assignment";
+
+// Stats / Logging
+"LOG_START" = "Log start";
+"SESSION_NUMBER_SHORT" = "Session Nr.";
+"SESSION_STARTED" = "Session started";
+"SESSION_ENDED" = "Session ended";
+"INSTALL_ID" = "Install ID";
+"USER_ID" = "User ID";

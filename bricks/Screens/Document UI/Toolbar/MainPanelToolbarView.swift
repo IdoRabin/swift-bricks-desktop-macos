@@ -36,11 +36,14 @@ class MainPanelToolbarView : NSView {
     @IBOutlet weak var trailingextButton2: NSButton!
     
     private weak var _lastDoc : BrickDoc? = nil
+    private var _lastDocUID : BrickDocUID? = nil
     weak var centerProgressBoxView : MNProgressBoxView? = nil
     
     var isWindowCurrent : Bool {
         var isCurWindow = false
         if let window = self.window, window.isKeyWindow && window.isMainWindow {
+            isCurWindow = true
+        } else if BrickDocController.shared.curDocWC?.window == self.window {
             isCurWindow = true
         }
         return isCurWindow
@@ -64,6 +67,17 @@ class MainPanelToolbarView : NSView {
                 newPBoXView.autoresizingMask = [.width, .height]
                 centerProgressBoxViewContainer.addSubview(newPBoXView)
                 centerProgressBoxView = newPBoXView
+                newPBoXView.observers.add(observer: self)
+                
+                if let copyItem = newPBoXView.copyMenuItem {
+                    copyItem.target = self
+                    copyItem.action = #selector(mptbvCopyMenuItemAction(_:))
+                }
+                
+                if let viewLogItem = newPBoXView.viewLogMenuItem {
+                    viewLogItem.target = self
+                    viewLogItem.action = #selector(mptbvViewLogMenuItemAction(_:))
+                }
             }
             
 //            if let progress = progress {
@@ -108,21 +122,31 @@ class MainPanelToolbarView : NSView {
     }
     
     deinit {
+        centerProgressBoxView?.observers.remove(observer: self)
         dlog?.info("deinit")
     }
     
     // MARK: Public
     func updateWithDoc(_ doc:BrickDoc?) {
         if _lastDoc != doc {
+            dlog?.info("updateWithDoc")
             _lastDoc?.observers.remove(observer: self)
             _lastDoc = doc
+            _lastDocUID = doc?.id
             _lastDoc?.observers.add(observer: self)
             
             centerProgressBoxView?.updateWithDoc(doc)
         }
     }
     
+    func basicUpdate(state newState:MNProgressState, title newTitle:String?, subtitle newSubtitle:String?, progress newProgress:CGFloat? = nil) {
+        dlog?.info("basicUpdate \(newTitle.descOrNil) | \(newSubtitle.descOrNil) progress:\(newProgress.descOrNil)")
+        centerProgressBoxView?.basicUpdate(state:newState, title: newTitle, subtitle: newSubtitle, progress: newProgress)
+    }
+    
+    
     func updateWindowState() {
+        dlog?.info("updateWindowState isWindowCurrent: \(self.isWindowCurrent)")
         self.alphaValue = self.isWindowCurrent ? 1.0 : 0.6
     }
     
@@ -142,8 +166,8 @@ extension MainPanelToolbarView : BrickDocObserver {
         }
     }
     
-    func brickDocumentDidClose(_ brick: BrickDoc) {
-        guard self._lastDoc == brick else {
+    func brickDocumentDidClose(_ brickUID: BrickDocUID) {
+        guard self._lastDocUID == brickUID else {
             return
         }
     }
@@ -169,6 +193,50 @@ extension MainPanelToolbarView : BrickDocObserver {
     func brickDocumentDidChange(_ brick: BrickDoc, saveState: BrickDoc.DocSaveState) {
         guard self._lastDoc == brick else {
             return
+        }
+    }
+}
+
+extension MainPanelToolbarView : MNProgressBoxViewObserver {
+    func mnProgressBoxView(_ view: MNProgressBoxView, didLeftMouseDown event: NSEvent) {
+        //dlog?.info("mnProgressBoxView:didLeftMouseDown:")
+        if view.isAllTextSeleted == false && view.isPopupMenuPresented == false {
+            view.selectsAllText = true
+            view.presentPopUpContextMenu(event: event)
+        }
+    }
+    
+    func mnProgressBoxView(_ view: MNProgressBoxView, didRightMouseDown event: NSEvent) {
+        // dlog?.info("mnProgressBoxView:didRightMouseDown:")
+        if view.isAllTextSeleted == false && view.isPopupMenuPresented == false {
+            view.selectsAllText = true
+            view.presentPopUpContextMenu(event: event)
+        }
+    }
+    
+}
+
+@objc extension MainPanelToolbarView /* MNProgressBoxView menu events */ {
+    
+    @objc fileprivate func mptbvCopyMenuItemAction(_ sender:Any) {
+        guard let boxView = centerProgressBoxView else {
+            return
+        }
+        
+        // Copy last log entitiy to pasteboard:
+        let log = boxView.lastLogEntry
+        dlog?.info("popup menu action: Copy... [\(log)]")
+        
+        let pasteboard = NSPasteboard.general
+        pasteboard.declareTypes([.string], owner: nil)
+        pasteboard.setString(log, forType: .string)
+    }
+    
+    @objc fileprivate func mptbvViewLogMenuItemAction(_ sender:Any) {
+        dlog?.info("popup menu action: View Log...")
+        // Enqueue command:
+        if let docWC = self.window?.windowController as? DocWC, docWC.isCurentDocWC, let doc = docWC.brickDoc {
+            doc.createCommand(CmdUITogglePopupForToolbarLogFileView.self, context: "toolbar.toggleLogViewPopup", isEnqueue: true)
         }
     }
 }

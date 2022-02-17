@@ -24,6 +24,7 @@ struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, BUIDabl
     var lastOpenedDate:Date? = nil
     var lastClosedDate:Date? = nil
     var lastModifiedDate:Date? = nil
+    var lastSavedDate:Date? = nil
     var shouldRestoreOnInit:Bool = false
     
     // MARK: Identifiable / BUIDable

@@ -19,16 +19,19 @@ class DocNameToolbarView : MNBaseView {
     @IBOutlet weak var subtitleProgressIndicator: NSProgressIndicator!
     @IBOutlet weak var subtitleChevronImageView: NSImageView!
     private weak var _lastDoc : BrickDoc? = nil
+    private var _lastDocUID : BrickDocUID? = nil
+    
     public var isChevronPointsDown : Bool = true {
         didSet {
             updateChevronImage(isPointsDown: isChevronPointsDown)
         }
     }
 
-    
     var isWindowCurrent : Bool {
         var isCurWindow = false
         if let window = self.window, window.isKeyWindow && window.isMainWindow {
+            isCurWindow = true
+        } else if BrickDocController.shared.curDocWC?.window == self.window {
             isCurWindow = true
         }
         return isCurWindow
@@ -55,11 +58,12 @@ class DocNameToolbarView : MNBaseView {
     
     // MARK: Private
     private func updateChevronImage(isPointsDown isDown:Bool = false) {
-        var val = isDown
-        if !val && !self.isWindowCurrent {
-            val = true
+        var valIsDn = isDown
+        if !valIsDn && !self.isWindowCurrent {
+            valIsDn = true
         }
-        let img = NSImage.systemSymbol(named: "chevron.\(val ? "down" : "up")",
+        let symbolName = "chevron.\(valIsDn ? "down" : "up")"
+        let img = NSImage.systemSymbol(named: symbolName,
                                        pointSize: 14, weight: .medium,
                                        accessibilityDescription: nil)
         subtitleChevronImageView.image = img
@@ -68,13 +72,14 @@ class DocNameToolbarView : MNBaseView {
     // MARK: Public
     func updateWindowState() {
         self.alphaValue = self.isWindowCurrent ? 1.0 : 0.6
-        isChevronPointsDown = false
+        isChevronPointsDown = true
     }
     
     func updateWithDoc(_ doc:BrickDoc?) {
         if _lastDoc != doc {
             _lastDoc?.observers.remove(observer: self)
             _lastDoc = doc
+            _lastDocUID = doc?.id
             _lastDoc?.observers.add(observer: self)
         }
         
@@ -99,6 +104,7 @@ class DocNameToolbarView : MNBaseView {
             mainImageView.image = AppImages.docNewEmptyDocumentIcon.image
             subtitleProgressIndicator.startAnimation(self)
         }
+        
     }
     
     func setHighlighted(_ isOn:Bool) {
@@ -128,11 +134,17 @@ class DocNameToolbarView : MNBaseView {
         DispatchQueue.main.async {
             self.setHighlighted(true)
         }
+        
+        // Enqueue command:
+        if let docWC = self.window?.windowController as? DocWC, docWC.isCurentDocWC, let doc = docWC.brickDoc {
+            doc.createCommand(CmdUITogglePopupForToolbarNameView.self, context: "toolbar.toggleNamwPopup", isEnqueue: true)
+        }
     }
 
 }
 
 extension DocNameToolbarView : BrickDocObserver {
+
     func brickDocumentError(_ brick: BrickDoc, error: AppError?) {
         guard self._lastDoc == brick else {
             return
@@ -145,8 +157,8 @@ extension DocNameToolbarView : BrickDocObserver {
         }
     }
     
-    func brickDocumentDidClose(_ brick: BrickDoc) {
-        guard self._lastDoc == brick else {
+    func brickDocumentDidClose(_ brickUID: BrickDocUID) {
+        guard self._lastDocUID == brickUID else {
             return
         }
     }
@@ -175,6 +187,6 @@ extension DocNameToolbarView : BrickDocObserver {
         }
         
         mainImageView.image = brick.docSaveState.iconImage
-        (brick.windowControllers.first as? DocWC)?.mainMenu?.updateWindowsMenuItems()
+        (brick.windowControllers.first as? DocWC)?.mainMenu?.updateWindowsDynamicMenuItems()
     }
 }

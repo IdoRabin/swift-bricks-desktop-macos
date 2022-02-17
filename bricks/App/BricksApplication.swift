@@ -47,7 +47,7 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BricksApplication")
             }
         }
         
-        BrickDocController.shared.menu?.updateWindowsMenuItems()
+        BrickDocController.shared.menu?.updateWindowsDynamicMenuItems()
     }
     
     func didLoadViewControllersAfterInit() {

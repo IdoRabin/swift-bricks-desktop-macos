@@ -11,6 +11,10 @@ import Foundation
 // Swift 3
 extension Bundle {
 
+    var bundleName : String? {
+        return infoDictionary?["CFBundleName"] as? String
+    }
+    
     var versionNumber: String? {
         return infoDictionary?["CFBundleShortVersionString"] as? String
     }

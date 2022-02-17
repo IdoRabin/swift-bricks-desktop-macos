@@ -152,6 +152,7 @@ class SplashVC : NSViewController {
             dlog?.warning("Two splash screens opened at once!")
         }
         Self.sharedWindowController = self.view.window?.windowController
+        self.view.window?.isMovableByWindowBackground = true
     }
     
     override func viewDidAppear() {

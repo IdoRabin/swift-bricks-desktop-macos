@@ -36,7 +36,7 @@ extension URL {
     /// Return the last X path components for a given url
     ///
     /// - Parameter count: amount of suffixing components to return, delimited by "/"
-    /// - Returns: array of last components, by order of appearance in the URL
+    /// - Returns: String of last components, by order of appearance in the URL, joined by "/"
     func lastPathComponents(count:Int)->String {
         if count == 0 {return ""}
         let components = self.absoluteString.components(separatedBy: "/")

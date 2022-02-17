@@ -467,4 +467,8 @@ extension NSEdgeInsets {
     var isZero : Bool {
         return top == 0 && left == 0 && bottom == 0 && right == 0
     }
+    
+    init(allSides:CGFloat) {
+        self.init(top: allSides, left: allSides, bottom: allSides, right: allSides)
+    }
 }

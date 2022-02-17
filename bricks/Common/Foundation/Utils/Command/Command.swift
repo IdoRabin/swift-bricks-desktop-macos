@@ -25,8 +25,8 @@ protocol CommandReciever :AnyObject {
     ///   - commandType: command to be performed
     ///   - method: command method about to be performed
     ///   - context: context for this test
-    /// - Returns: true if command is allowed to execute, or false if currently prohibited.
-    func isAllowed(commandType: Command.Type, method:CommandExecutionMethod /* = .execute*/, context:CommandContext)->Bool
+    /// - Returns: true or false if the test for this action is handled here, otherwise, nil
+    func isAllowed(commandType: Command.Type, method:CommandExecutionMethod /* = .execute*/, context:CommandContext)->Bool?
     
     /// Returns whether an action is allowed to be performed / the user iterface item should be enabled
     /// - Parameters:

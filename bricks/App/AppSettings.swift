@@ -92,14 +92,17 @@ final class AppSettings : JSONFileSerializable {
     }
     
     static private func pathToSettingsFile()->URL? {
-        guard let path = FileManager.default.urls(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first else {
+        guard var path = FileManager.default.urls(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first else {
             return nil
         }
-        return path.appendingPathComponent(self.FILENAME).appendingPathExtension("json")
+        // path = path.appendingPathComponent(Bundle.main.bundleName?.capitalized ?? "Bricks")
+        path = path.appendingPathComponent(self.FILENAME).appendingPathExtension("json")
+        return path
     }
     
     static private func registerIffyCodables() {
         StringAnyDictionary.registerClass(PreferencesVC.PreferencesPage.self)
+        StringAnyDictionary.registerClass([String:String].self) // see UnkeyedEncodingContainerEx
     }
     
     // MARK: Public
@@ -193,6 +196,9 @@ final class AppSettings : JSONFileSerializable {
         if values.allKeys.contains(.other) {
             var sub = try values.nestedUnkeyedContainer(forKey: .other)
             let strAny = try sub.decodeStringAnyDict(decoder: decoder)
+            if IS_DEBUG && sub.count != strAny.count {
+                dlog?.info("Failed decoding some StringLosslessConvertible. SUCCESSFUL keys: \(strAny.keysArray.descriptionsJoined). Find which key is missing.")
+            }
             for (key, val) in strAny {
                 if let val = val as? AnyCodable {
                     other[key] = val

@@ -15,6 +15,7 @@ class BrickStats: Codable {
     var modificationsCount : UInt = 0
     var savesCount : UInt = 0
     var loadsCount : UInt = 0
+    var loadsTimings = AverageAccumulator(named: "loadsTimings", persistentInFile: false, maxSize: 50)
     
     var statsDisplayDictionary : [String:String] {
         get {

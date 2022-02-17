@@ -28,18 +28,7 @@ class CmdNewProject : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        
-        // Test self allows command:
-        guard Self.isAllowed(method, context: context, reciever: receiver) else {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
-            return
-        }
-        
-        // Test receiver allows command:
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
-            return
-        }
+        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
         
         DispatchQueue.mainIfNeeded {[self] in
             // Execute command:
@@ -85,18 +74,7 @@ class CmdOpenProject : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        
-        // Test self allows command:
-        guard Self.isAllowed(method, context: context, reciever: receiver) else {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
-            return
-        }
-        
-        // Test receiver allows command:
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
-            return
-        }
+        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {

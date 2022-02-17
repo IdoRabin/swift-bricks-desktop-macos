@@ -527,3 +527,8 @@ extension Sequence {
     }
 }
 
+extension Sequence where Element : Sequence {
+    var flattened : [Element.Element] {
+        return self.flatMap { $0 }
+    }
+}

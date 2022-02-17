@@ -11,27 +11,12 @@ fileprivate let dlog : DSLogger? = DLog.forClass("DocVC+Actions")
 
 // MARK: DocumentVC - Actions
 extension DocVC : NSUserInterfacePluralValidations /* Actions */ {
-    
+    // MARK: Conputed vars
     var mainMenu : MainMenu? {
         return BrickDocController.shared.menu
     }
     
-    override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
-        return BrickDocController.shared.validateUserInterfaceItem(doc: self.document, item: item)
-    }
-    
-    func updateSidebarMenuItems() {
-        if let menu = self.mainMenu, self.docWC == BrickDocController.shared.curDocWC {
-            menu.updateMenuItems([menu.viewShowProjectSidebarMnuItem,
-                                  menu.viewShowUtilitySidebarMnuItem])
-        }
-    }
-    
-    func updateSidebarToolbarItems() {
-        self.docWC?.updateSidebarToolbarItems(isLeadingPanelCollapsed: self.mnSplitView.isLeadingPanelCollapsed,
-                                              isTrailingPanelCollapsed:self.mnSplitView.isTrailingPanelCollapsed)
-    }
-    
+    // MARK: IBActions:
     @IBAction @objc func toggleSidebarAction(_ sender : Any) {
         // dlog?.info("toggleSidebarAction sender:\(sender)")
         
@@ -83,6 +68,26 @@ extension DocVC : NSUserInterfacePluralValidations /* Actions */ {
         DispatchQueue.main.asyncAfter(delayFromNow: 0.35) {
             self.updateSidebarToolbarItems()
         }
+    }
+    
+    // MARK: Other Actions:
+    override func validateUserInterfaceItem(_ item: NSValidatedUserInterfaceItem) -> Bool {
+        return BrickDocController.shared.validateUserInterfaceItem(doc: self.document, item: item)
+    }
+    
+    func updateSidebarMenuItems() {
+        TimedEventFilter.shared.filterEvent(key: "updateSidebarMenuItems", threshold: 0.2) {
+            if let menu = self.mainMenu, self.docWC == BrickDocController.shared.curDocWC {
+                menu.updateMenuItems([menu.viewShowProjectSidebarMnuItem,
+                                      menu.viewShowUtilitySidebarMnuItem],
+                                      context: "updateSidebarMenuItems")
+            }
+        }
+    }
+    
+    func updateSidebarToolbarItems() {
+        self.docWC?.updateSidebarToolbarItems(isLeadingPanelCollapsed: self.mnSplitView.isLeadingPanelCollapsed,
+                                              isTrailingPanelCollapsed:self.mnSplitView.isTrailingPanelCollapsed)
     }
     
     func docController(didChangeCurVCFrom fromVC: DocVC?, toVC: DocVC?) {

@@ -28,6 +28,11 @@ extension NSTextField {
         }
     }
 
+    
+    /// Animate a fade-out-fade-in between any wanted change to the text view.
+    /// - Parameters:
+    ///   - change: block containing any needed visual change to the text view
+    ///   - duration: duration of the whole animation - fade-out-change-and fade back in
     private func animateText(change: @escaping () -> Void, duration: TimeInterval) {
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = duration / 2.0

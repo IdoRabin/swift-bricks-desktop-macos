@@ -30,16 +30,7 @@ class CmdSplashWindow : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        
-        guard Self.isAllowed(method, context: context, reciever: receiver) else {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
-            return
-        }
-        
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
-            return
-        }
+        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
         
         DispatchQueue.mainIfNeeded {[self] in
             func saveFlags() {
@@ -63,7 +54,6 @@ class CmdSplashWindow : AppCommand {
                     if let vc = wc.contentViewController as? SplashVC {
                         
                         wc.window?.forceWindowCornerRadius(12, setup: { window in
-                            window?.isMovableByWindowBackground = true
                             window?.contentView?.wantsLayer = true
                             window?.contentView?.layer?.border(color: NSColor.underPageBackgroundColor, width: 1)
                         })
@@ -109,14 +99,7 @@ class CmdAboutPanel : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        guard Self.isAllowed(method, context: context, reciever: receiver) else {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
-            return
-        }
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
-            return
-        }
+        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {
@@ -160,18 +143,7 @@ class CmdPreferencesPanel : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        
-        // Test self allows command:
-        guard Self.isAllowed(method, context: context, reciever: receiver) else {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "method: \(method) context: \(context)")))
-            return
-        }
-        
-        // Test receiver allows command:
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
-            completion(.failure(AppError(AppErrorCode.cmd_not_available_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
-            return
-        }
+        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {

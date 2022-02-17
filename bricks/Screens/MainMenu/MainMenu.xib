@@ -125,39 +125,39 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Edit" autoenablesItems="NO" id="W48-6f-4Dl">
                         <items>
-                            <menuItem title="Undo" keyEquivalent="z" id="dRJ-4n-Yzg">
+                            <menuItem title="Undo" keyEquivalent="z" id="dRJ-4n-Yzg" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <connections>
                                     <action selector="undo:" target="-1" id="M6e-cu-g7V"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Redo" keyEquivalent="Z" id="6dh-zS-Vam">
+                            <menuItem title="Redo" keyEquivalent="Z" id="6dh-zS-Vam" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <connections>
                                     <action selector="redo:" target="-1" id="oIA-Rs-6OD"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="WRV-NI-Exz"/>
-                            <menuItem title="Cut" keyEquivalent="x" id="uRl-iY-unG">
+                            <menuItem title="Cut" keyEquivalent="x" id="uRl-iY-unG" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <connections>
                                     <action selector="cut:" target="-1" id="YJe-68-I9s"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Copy" keyEquivalent="c" id="x3v-GG-iWU">
+                            <menuItem title="Copy" keyEquivalent="c" id="x3v-GG-iWU" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <connections>
                                     <action selector="copy:" target="-1" id="G1f-GL-Joy"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Paste" keyEquivalent="v" id="gVA-U4-sdL">
+                            <menuItem title="Paste" keyEquivalent="v" id="gVA-U4-sdL" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <connections>
                                     <action selector="paste:" target="-1" id="UvS-8e-Qdg"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Delete" id="pa3-QI-u2k">
+                            <menuItem title="Delete" id="pa3-QI-u2k" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
                                     <action selector="delete:" target="-1" id="0Mk-Ml-PaM"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Select All" keyEquivalent="a" id="Ruw-6m-B2m">
+                            <menuItem title="Select All" keyEquivalent="a" id="Ruw-6m-B2m" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <connections>
                                     <action selector="selectAll:" target="-1" id="VNm-Mi-diN"/>
                                 </connections>
@@ -192,27 +192,27 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <menu key="submenu" title="Layer" autoenablesItems="NO" id="EuD-js-nfB">
                         <items>
-                            <menuItem title="Add.." id="lKF-z5-cZD" userLabel="Add">
+                            <menuItem title="Add.." id="lKF-z5-cZD" userLabel="Add" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Delete.." id="4r7-JD-sb7" userLabel="Delete">
+                            <menuItem title="Delete.." id="4r7-JD-sb7" userLabel="Delete" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="gfm-Y8-z0O"/>
-                            <menuItem title="Edit.." id="3Nc-rz-1o2">
+                            <menuItem title="Edit.." id="3Nc-rz-1o2" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Lock" id="mJe-YQ-Ql2">
+                            <menuItem title="Lock" id="mJe-YQ-Ql2" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Hide" id="ELB-oB-63v">
+                            <menuItem title="Hide" id="ELB-oB-63v" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="FO7-hH-THF"/>
-                            <menuItem title="Hide Others" id="zEG-vY-KgW">
+                            <menuItem title="Hide Others" id="zEG-vY-KgW" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
-                            <menuItem title="Show All" keyEquivalent="s" id="JS6-n5-NhB"/>
+                            <menuItem title="Show All" keyEquivalent="s" id="JS6-n5-NhB" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target"/>
                         </items>
                     </menu>
                 </menuItem>
@@ -245,27 +245,27 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="vFH-wu-Bv5"/>
-                            <menuItem title="Zoom" id="MFy-jP-4If">
+                            <menuItem title="Zoom" id="MFy-jP-4If" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" id="Xpf-Z2-BJt">
                                     <items>
-                                        <menuItem title="Zoom in" keyEquivalent="]" id="0xc-uw-TJy">
+                                        <menuItem title="Zoom in" keyEquivalent="]" id="0xc-uw-TJy" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                             <connections>
                                                 <action selector="zoomIn:" target="-1" id="3aW-JZ-YIv"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Zoom to 100%" id="v9S-xT-sWZ">
+                                        <menuItem title="Zoom to 100%" id="v9S-xT-sWZ" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="zoomImageToActualSize:" target="-1" id="cko-bq-n8r"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Zoom out" keyEquivalent="[" id="ts1-jK-DJA">
+                                        <menuItem title="Zoom out" keyEquivalent="[" id="ts1-jK-DJA" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                             <connections>
                                                 <action selector="zoomOut:" target="-1" id="Tyk-Xx-dmG"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Zoom to fit" id="TSa-fT-2zb">
+                                        <menuItem title="Zoom to fit" id="TSa-fT-2zb" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                             <connections>
                                                 <action selector="zoomImageToFit:" target="-1" id="jAJ-yH-6ai"/>
@@ -275,7 +275,7 @@
                                 </menu>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="TLN-0R-nSU"/>
-                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa">
+                            <menuItem title="Enter Full Screen" keyEquivalent="f" id="4J7-dP-txa" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask" control="YES" command="YES"/>
                                 <connections>
                                     <action selector="toggleFullScreen:" target="-1" id="dU3-MA-1Rq"/>
@@ -319,7 +319,7 @@
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="oZ7-fd-NW0"/>
-                            <menuItem title="Keyboard Shortcut Tooltip" state="on" id="2dR-dr-Vg3">
+                            <menuItem title="Keyboard Shortcut Tooltip" state="on" id="2dR-dr-Vg3" customClass="MNMenuItem" customModule="Bricks" customModuleProvider="target">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                             </menuItem>
                         </items>

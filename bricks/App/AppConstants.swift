@@ -12,14 +12,6 @@ import AudioToolbox
 public let IS_DEBUG = true
 let IS_RTL_LAYOUT : Bool = NSApplication.shared.userInterfaceLayoutDirection == .rightToLeft
 
-func isDarkThemeActive(view: NSView) -> Bool {
-    
-    if #available(OSX 10.14, *) {
-        return view.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-    }
-    return false
-}
-
 func AppPlayAlertSound() {
     let systemSoundId: SystemSoundID = kSystemSoundID_UserPreferredAlert
     AudioServicesPlaySystemSound(systemSoundId)
@@ -33,7 +25,7 @@ extension NSColor {
 
 struct AppConstants {
     static let SETTINGS_FILENAME = "bricks_app_settings"
-    static let DOCUMENT_HISTORY_FILENAME = "brickFileHistory"
+    static let DOCUMENT_HISTORY_FILENAME = "brick_file_history"
     static let BRICK_FILE_EXTENSION = "bricks"
     static let RULE_SET_FILE_EXTENSTION = "bricksruleset"
 }
@@ -58,4 +50,21 @@ extension Date {
     public static let SECONDS_IN_A_MINUTE : TimeInterval = 60.0
     public static let MINUTES_IN_AN_HOUR : TimeInterval = 60.0
     public static let MINUTES_IN_A_DAY : TimeInterval = 1440.0
+}
+
+extension NSView {
+    var isDarkThemeActive : Bool {
+        if #available(OSX 10.14, *) {
+            return self.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        }
+        return false
+    }
+}
+
+func isDarkThemeActive(view: NSView) -> Bool {
+    
+    if #available(OSX 10.14, *) {
+        return view.isDarkThemeActive
+    }
+    return false
 }

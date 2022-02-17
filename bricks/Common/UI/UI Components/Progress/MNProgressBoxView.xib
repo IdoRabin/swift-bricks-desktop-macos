@@ -23,7 +23,7 @@
                     <subviews>
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SKd-wR-3Se" userLabel="unitsLabel">
                             <rect key="frame" x="74" y="9" width="166" height="16"/>
-                            <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" allowsUndo="NO" focusRingType="none" title="1/100" usesSingleLineMode="YES" id="zRU-1t-3R2">
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" focusRingType="none" title="1/100" usesSingleLineMode="YES" id="zRU-1t-3R2">
                                 <font key="font" usesAppearanceFont="YES"/>
                                 <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -31,7 +31,7 @@
                         </textField>
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aa6-fZ-8l7" userLabel="titleLabel">
                             <rect key="frame" x="0.0" y="9" width="74" height="16"/>
-                            <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" allowsUndo="NO" focusRingType="none" title="Loading" usesSingleLineMode="YES" id="o5g-Xf-1VK">
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" focusRingType="none" title="Loading" usesSingleLineMode="YES" id="o5g-Xf-1VK">
                                 <font key="font" usesAppearanceFont="YES"/>
                                 <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -39,7 +39,7 @@
                         </textField>
                         <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" allowsExpansionToolTips="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Tfk-26-3hv" userLabel="subtitleLabel">
                             <rect key="frame" x="0.0" y="-2" width="74" height="14"/>
-                            <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" allowsUndo="NO" focusRingType="none" title="Please wait..." usesSingleLineMode="YES" id="9u7-y9-KUq">
+                            <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" focusRingType="none" title="Please wait..." usesSingleLineMode="YES" id="9u7-y9-KUq">
                                 <font key="font" metaFont="smallSystem"/>
                                 <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -70,6 +70,7 @@
             </constraints>
             <connections>
                 <outlet property="leadingPadConstraint" destination="KZd-de-SRt" id="5Se-Vh-TuX"/>
+                <outlet property="menu" destination="zBD-VU-o1B" id="9av-DV-m1W"/>
                 <outlet property="progressCircle" destination="EDJ-iG-COl" id="BWE-CR-cDx"/>
                 <outlet property="progressWidthConstraint" destination="jiJ-RP-j3m" id="csw-qy-hny"/>
                 <outlet property="subtitleLabel" destination="Tfk-26-3hv" id="XQ8-WV-U6x"/>
@@ -119,5 +120,16 @@
             </textFieldCell>
             <point key="canvasLocation" x="144" y="-45"/>
         </textField>
+        <menu autoenablesItems="NO" id="zBD-VU-o1B">
+            <items>
+                <menuItem title="Copy" identifier="mnProgressBoxViewCopyMenuItemID" id="j9N-TX-fMx">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Activity Log..." identifier="mnProgressBoxViewLogMenuItemID" id="xrr-oj-8Su">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <point key="canvasLocation" x="6" y="158"/>
+        </menu>
     </objects>
 </document>

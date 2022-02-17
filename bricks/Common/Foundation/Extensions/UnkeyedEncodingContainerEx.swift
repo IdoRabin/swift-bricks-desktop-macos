@@ -9,7 +9,8 @@ import Foundation
 import AppKit
 // see also NSColorEx.swift for NSColor.hexString() etc..
 
-fileprivate let dlog : DSLogger? = DLog.forClass("decodeStringAnyDict")
+fileprivate let dlog : DSLogger? = nil // DLog.forClass("decodeStringAnyDict")
+fileprivate let dlogWarnings : DSLogger? = DLog.forClass("decodeStringAnyDict_")
 
 typealias LosslessStrEnum = LosslessStringConvertible & Codable
 
@@ -17,20 +18,21 @@ extension UnkeyedEncodingContainer {
     
     mutating func encode(dic:[String:Any], encoder:Encoder) throws {
         for (key, value) in dic {
+            dlog?.info("saving \(key) : \(type(of: value)) = \(value)")
             switch value {
             case let val as Bool: try self.encode("\(key) : Bool = \(val)")
                 
-            case let val as UInt: try self.encode("\(key) : UInt = \(val)")
-            case let val as UInt8: try self.encode("\(key) : Int = \(val)")
-            case let val as UInt16: try self.encode("\(key) : Int = \(val)")
-            case let val as UInt32: try self.encode("\(key) : Int = \(val)")
-            case let val as UInt64: try self.encode("\(key) : Int = \(val)")
+            case let val as Int: try self.encode("\(key) : Int = \(val)")
+            case let val as Int8: try self.encode("\(key) : Int8 = \(val)")
+            case let val as Int16: try self.encode("\(key) : Int16 = \(val)")
+            case let val as Int32: try self.encode("\(key) : Int32 = \(val)")
+            case let val as Int64: try self.encode("\(key) : Int64 = \(val)")
                 
-            case let val as Int: try self.encode("\(key) : UInt = \(val)")
-            case let val as Int8: try self.encode("\(key) : UInt8 = \(val)")
-            case let val as Int16: try self.encode("\(key) : UInt16 = \(val)")
-            case let val as Int32: try self.encode("\(key) : UInt32 = \(val)")
-            case let val as Int64: try self.encode("\(key) : UInt64 = \(val)")
+            case let val as UInt: try self.encode("\(key) : UInt = \(val)")
+            case let val as UInt8: try self.encode("\(key) : UInt8 = \(val)")
+            case let val as UInt16: try self.encode("\(key) : UInt16 = \(val)")
+            case let val as UInt32: try self.encode("\(key) : UInt32 = \(val)")
+            case let val as UInt64: try self.encode("\(key) : UInt64 = \(val)")
                 
             case let val as Float: try self.encode("\(key) : Float = \(val)")
             case let val as Double: try self.encode("\(key) : Double = \(val)")
@@ -55,7 +57,7 @@ extension UnkeyedEncodingContainer {
             case let val as Codable:
                 
                 let typeStr = String(reflecting:type(of: value))
-                dlog?.warning("to support [String:Any] dictionary encodings, type [\(typeStr)] should support LosslessStrEnum or LosslessStringConvertible in order to support encoding value :\(val)")
+                dlogWarnings?.warning("to support [String:Any] dictionary encodings, type [\(typeStr)] should support LosslessStrEnum or LosslessStringConvertible in order to support encoding value :\(val)")
                 
             default:
                 break
@@ -108,14 +110,23 @@ extension UnkeyedDecodingContainer {
         default:
             if let aatype = codingRegisteredIffyClasses[typeName] as? LosslessStringConvertible.Type {
                 let val = aatype.init(value.trimmingPrefix("."))
-                dlog?.successOrFail(condition: val != nil, items: "decode: \(aatype) val:\(val.descOrNil)")
+                
+                // Logging
+                if IS_DEBUG {
+                    if dlog != nil {
+                        dlog?.successOrFail(condition: val != nil, items: "decode: \(aatype) val:\(val.descOrNil)")
+                    } else {
+                        dlogWarnings?.fail("decode: \(aatype) val:\(val.descOrNil)")
+                    }
+                }
+                
                 return val
             } else if let aatype = codingRegisteredIffyClasses[typeName] {
                 let val = try aatype.init(from:decoder)
                 dlog?.info("did decode: \(aatype) val:\(val)")
                 return val
             } else {
-                dlog?.note("\(key) failed parsing \(typeName) = \(value)")
+                dlogWarnings?.note("\(key) failed parsing \(typeName) = \(value)")
             }
             break
         }
@@ -139,11 +150,33 @@ extension UnkeyedDecodingContainer {
                     result[key] = anyVal
                     dlog?.success("key [\(key)] : [\(type(of: anyVal))] = [\(anyVal)]")
                 } else {
-                    dlog?.warning("could not decode(key:typeName:value:) key [\(key)] : [\(typeName))] = [\(value)]")
+                    dlogWarnings?.warning("could not decode(key:typeName:value:) key [\(key)] : [\(typeName))] = [\(value)]")
                 }
             }
         }
         
         return result
     }
+}
+
+extension Dictionary : LosslessStringConvertible where Key == String, Value == String {
+     
+    public init?(_ description: String) {
+        self.init()
+        
+        dlog?.info("INIT Dictionary <String, String> for LosslessStringConvertible")
+        let tuples = description.trimmingPrefix("[").trimmingSuffix("]").components(separatedBy: "\",")
+        let chars = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "\""))
+        for tuple in tuples {
+            let pairs = tuple.components(separatedBy: "\":")
+            if pairs.count > 1 {
+                let one = pairs.first!.trimmingCharacters(in: chars)
+                let two = pairs[1...pairs.count - 1].joined(separator: "").trimmingCharacters(in:chars)
+                dlog?.info("INIT Dictionary     ==> [\(one)] == \(two) <==")
+                self[one] = two
+            }
+        }
+    }
+    
+    
 }

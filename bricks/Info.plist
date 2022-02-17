@@ -12,7 +12,7 @@
 			<key>CFBundleTypeIconFile</key>
 			<string>BrickDocumentIcon</string>
 			<key>CFBundleTypeName</key>
-			<string>BrickDocument</string>
+			<string>Bricks Document</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>????</string>
@@ -29,6 +29,33 @@
 			<integer>0</integer>
 			<key>NSDocumentClass</key>
 			<string>$(PRODUCT_MODULE_NAME).BrickDoc</string>
+		</dict>
+	</array>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeDescription</key>
+			<string>Bricks Document</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>brick.file.icon</string>
+				<key>UTTypeIconText</key>
+				<string>Bricks File</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>com.idorabin.bricks.document</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bricks</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/json</string>
+				</array>
+			</dict>
 		</dict>
 	</array>
 	<key>UTImportedTypeDeclarations</key>

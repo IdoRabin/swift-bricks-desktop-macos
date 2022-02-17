@@ -28,6 +28,20 @@ extension NSWindow {
         self.orderedIndex = 0
     }
     
+    var hasAnySheetPresented : Bool {
+        return self.sheets.count > 0
+    }
+    var sheetTitles : [String] {
+        self.sheets.compactMap { window in
+            window.title.replacingOccurrences(ofFromTo: ["," : "_"])
+        }
+    }
+    
+    var isFullScreen : Bool {
+        let result = styleMask.contains(.fullScreen)
+        // DLog.ui["WindowScrn"]?.info("\(result ? "full" : "partial" ) screen")
+        return result
+    }
 }
 
 extension NSWindow {

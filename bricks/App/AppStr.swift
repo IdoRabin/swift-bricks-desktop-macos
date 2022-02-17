@@ -66,6 +66,7 @@ enum AppStr : Localizable {
     case UNNAMED // "Unnamed" // an unnamed element will have this title / name
     case UNSAVED // "Unsaved" // an un-saved file - was never saved into a file.
     case SAVE
+    case SAVED
     case SAVE_DOT_DOT
     case SAVE_AS
     case SAVE_AS_DOT_DOT
@@ -75,6 +76,8 @@ enum AppStr : Localizable {
     case REVERT_TO_DOT_DOT
     case OPEN
     case UNTITLED // "Untitled" // an untitled (no filename yet) document / element - will display this title
+    case READY
+    case SHARE_DOT_DOT
     
     // Progress / loading
     case PLEASE_WAIT    // "Please Wait" // Message displayed to the user while some operation is in progress
@@ -102,10 +105,6 @@ enum AppStr : Localizable {
     case AN_ERROR_HAS_OCCURES // "An Error has occured"
     case ERROR_FORMAT // "Error %@"
     
-    // Layers actions
-    case LOCK
-    case UNLOCK
-    case ADD_NEW
     
     // Menu
     // App menu
@@ -130,7 +129,7 @@ enum AppStr : Localizable {
     case   PAGE_SETUP_DOT_DOT
     case   PRINT_DOT_DOT
     
-    // Edit menu
+    // "Edit" menu
     case   UNDO_FORMAT
     case   REDO_FORMAT
     case   CUT
@@ -176,6 +175,27 @@ enum AppStr : Localizable {
     case SHOW
     case HIDE
     
+    // Additional layers actions
+    case LOCK
+    case UNLOCK
+    case ADD_NEW
+    
+    case ADD_NEW_PLAN_LAYER_TOOLTIP
+    case DELETE_SELECTED_LAYER_FROM_PLAN_TOOLTIP
+    case EDIT_SELECTED_LAYER_TOOLTIP
+    case LOCK_SELECTED_LAYER_TOOLTIP
+    case UNLOCK_SELECTED_LAYER_TOOLTIP
+    case HIDE_SELECTED_LAYER_TOOLTIP
+    case SHOW_SELECTED_LAYER_TOOLTIP
+    case HIDE_OTHER_LAYERS_TOOLTIP
+    case SHOW_ALL_LAYERS_TOOLTIP
+    
+    // Misc actions
+    case SHOW_DOCNAME_POPUP
+    case SHOW_DOCNAME_POPUP_TOOLTIP
+    case SHOW_LOG_FILE_POPUP
+    case SHOW_LOG_FILE_POPUP_TOOLTIP
+    
     // Splash screen
     case PRESENT_SPLASH_SCREEN
     case PRODUCT_NAME // product name
@@ -195,10 +215,6 @@ enum AppStr : Localizable {
     case STOP_GENERATION
     case STOP_GENERATION_TOOLTIP
     
-    // Tooltips
-    case ADD_NEW_PLAN_LAYER_TOOLTIP
-    case DELETE_SELECTED_LAYER_FROM_PLAN_TOOLTIP
-    case EDIT_SELECTED_LAYER_TOOLTIP
     
     // Preferences
     case GENERAL
@@ -207,6 +223,14 @@ enum AppStr : Localizable {
     case GENERAL_PREFERENCES_TOOLTIP
     case ACCOUNTS_PREFERENCES_TOOLTIP
     case KEY_BINDINGS_PREFERENCES_TOOLTIP
+    
+    // Stats / Logging
+    case LOG_START
+    case SESSION_NUMBER_SHORT
+    case SESSION_STARTED
+    case SESSION_ENDED
+    case INSTALL_ID
+    case USER_ID
     
     var key : String {
         return String(describing: self)

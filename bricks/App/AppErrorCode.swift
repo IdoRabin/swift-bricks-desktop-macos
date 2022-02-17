@@ -22,6 +22,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case misc_failed_removing = 9011
     case misc_failed_inserting = 9012
     case misc_failed_updating = 9013
+    case misc_failed_reading = 9014
     
     // Misc
     case web_unknown = 1000
@@ -29,7 +30,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case web_unexpected_response = 1100
     
     // Command
-    case cmd_not_available_now = 1500
+    case cmd_not_allowed_now = 1500
     case cmd_failed_execute = 1501
     case cmd_failed_undo = 1502
     
@@ -75,7 +76,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     }
     
     var desc : String {
-        return "TODO:\(self)"
+        return "TODO.AppErrorCode.desc-\(self)"
     }
     
     var code: AppErrorInt {

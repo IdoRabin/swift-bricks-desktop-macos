@@ -13,6 +13,7 @@ class DocVC : NSSplitViewController {
     let DEBUG_DRAWING = IS_DEBUG && true
     
     fileprivate var cache = Cache<NSToolbarItem.Identifier,NSToolbarItem>(name: "itemsCach", maxSize: 200, flushToSize: 100)
+    private var _latestSplitViewStateHash : Int = -1
     
     var mnSplitView: MNSplitview {
         return super.splitView as! MNSplitview
@@ -57,7 +58,7 @@ class DocVC : NSSplitViewController {
                     }
                 }
             } else {
-                self.mainMenu?.updateWindowsMenuItems()
+                self.mainMenu?.updateWindowsDynamicMenuItems()
             }
         }
     }
@@ -108,9 +109,14 @@ extension DocVC /* NSSplitViewDelegate */ {
     }
     
     private func calcSidebarbTNSstate() {
-        self.updateSidebarToolbarItems()
-        self.updateSidebarMenuItems()
-        self.validateToolbarDelegation()
+        let newHashValue = mnSplitView.stringDesc.hashValue
+        if _latestSplitViewStateHash != newHashValue {
+            _latestSplitViewStateHash = newHashValue
+            // dlog?.info("plitView.StringDesc: \( self.mnSplitView.stringDesc)")
+            self.updateSidebarToolbarItems()
+            self.updateSidebarMenuItems()
+            self.validateToolbarDelegation()
+        }
     }
     
     override func splitViewDidResizeSubviews(_ notification: Notification) {

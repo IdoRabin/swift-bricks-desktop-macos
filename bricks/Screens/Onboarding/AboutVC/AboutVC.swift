@@ -22,6 +22,7 @@ class AboutVC: NSViewController {
     override func viewWillAppear() {
         super.viewWillAppear()
         self.view.window?.delegate = AppDelegate.shared.documentController
+        self.view.window?.isMovableByWindowBackground = true
     }
     
     override func viewDidLoad() {

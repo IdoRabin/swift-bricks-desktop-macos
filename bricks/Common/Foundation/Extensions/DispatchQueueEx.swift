@@ -315,7 +315,7 @@ extension DispatchQueue {
                 else
                 {
                     waitForQueue.asyncAfter(delayFromNow: interval, block: {
-                        waitForLog?.info("\(logStr) elapsed time:\(round(elapsedTime * 1000.0)/1000.0)")
+                        waitForLog?.info("\(logStr) elapsed time: \(round(elapsedTime * 1000.0)/1000.0)")
                         waitForQueue.waitFor(context, interval: interval, timeout: timeout, blocking: false, test: test, completion: { (waitResult) in
                             result = waitResult
                             if isShouldBlock {

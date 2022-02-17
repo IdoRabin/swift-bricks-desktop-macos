@@ -66,25 +66,45 @@ fileprivate class CommandWrapper {
         return false
     }
     
-    private func perform(_ method:CommandExecutionMethod, compeltion: CommandResultBlock? = nil) {
+    private func perform(_ method:CommandExecutionMethod, completion: CommandResultBlock? = nil) {
+        
+        let commandType = type(of: command)
+        // Check is command implementation allows execution:
+        guard commandType.isAllowed(method, context: command.context, reciever: command.receiver) else {
+            
+            executionType = method
+            executionDate = nil
+            result = .failure(AppError(AppErrorCode.cmd_not_allowed_now, detail: "cmd: \(command.typeName) disallowed method: \(method) context: \(command.context)"))
+            completion?(result!)
+            return
+        }
+        
+        if let receiver = command.receiver, let allowed = receiver.isAllowed(commandType: commandType, method: method, context: command.context), allowed == false {
+            executionType = method
+            executionDate = nil
+            result = .failure(AppError(AppErrorCode.cmd_not_allowed_now, detail: "\(type(of: receiver)) disallowed cmd: \(command.typeName) method: \(method) context: \(command.context)"))
+            completion?(result!)
+            return
+        }
+        
         command.perform(method: method) {[self] aresult in
             executionType = method
             executionDate = Date()
             result = aresult
-            compeltion?(aresult)
+            completion?(aresult)
         }
     }
     
-    func redo (compeltion: CommandResultBlock? = nil) {
-        self.perform(.redo, compeltion: compeltion)
+    func redo (completion: CommandResultBlock? = nil) {
+        self.perform(.redo, completion: completion)
     }
     
-    func execute(compeltion: CommandResultBlock? = nil) {
-        self.perform(.execute, compeltion: compeltion)
+    func execute(completion: CommandResultBlock? = nil) {
+        self.perform(.execute, completion: completion)
     }
     
-    func undo(compeltion: CommandResultBlock? = nil) {
-        self.perform(.undo, compeltion: compeltion)
+    func undo(completion: CommandResultBlock? = nil) {
+        self.perform(.undo, completion: completion)
     }
 }
 
@@ -211,28 +231,28 @@ class QueuedInvoker : CommandInvoker {
         case .toExecute:
             // Execute command - items come from .toExecute array and behave like any other execute
             targetQueueType = .finished
-            newWrapper.execute(compeltion: { result in
+            newWrapper.execute(completion: { result in
                 finalize(result:result)
             })
             
         case .finished:
             // Undo command - items come from .finished array and behave like undo
             targetQueueType = .undoed
-            newWrapper.undo(compeltion: { result in
+            newWrapper.undo(completion: { result in
                 finalize(result:result)
             })
             
         case .failed:
             // Retry command - items come from .failed array and behave like any other execute
             targetQueueType = .finished
-            newWrapper.execute(compeltion: { result in
+            newWrapper.execute(completion: { result in
                 finalize(result:result)
             })
             
         case .undoed:
             // Redo command - items come from .undoed array and behave like any other execute
             targetQueueType = .finished
-            newWrapper.redo(compeltion: { result in
+            newWrapper.redo(completion: { result in
                 finalize(result:result)
             })
         }

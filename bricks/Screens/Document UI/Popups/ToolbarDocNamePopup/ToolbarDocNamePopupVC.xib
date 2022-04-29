@@ -27,7 +27,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </searchFieldCell>
                 </searchField>
-                <box title="DoName props" translatesAutoresizingMaskIntoConstraints="NO" id="opE-yD-OKO">
+                <box title="DocName props" translatesAutoresizingMaskIntoConstraints="NO" id="opE-yD-OKO">
                     <rect key="frame" x="3" y="2" width="228" height="535"/>
                     <view key="contentView" id="xqW-im-Ivy">
                         <rect key="frame" x="3" y="3" width="222" height="517"/>

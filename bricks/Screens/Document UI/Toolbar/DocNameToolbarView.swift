@@ -90,7 +90,11 @@ class DocNameToolbarView : MNBaseView {
         if let doc = doc {
             titleLabel.stringValue = doc.displayName ?? doc.fileURL?.lastPathComponents(count: 2) ?? AppStr.UNTITLED.localized()
             titleImageView.image = nil
-            subtitleLabel.stringValue = doc.fileURL?.lastPathComponents(count: 2) ?? AppStr.UNSAVED.localized()
+            var subtitle = doc.fileURL?.lastPathComponents(count: 2) ?? AppStr.UNSAVED.localized()
+            if !doc.isDraft && (doc.hasUnautosavedChanges || doc.isDocumentEdited || doc.brick.isNeedsSaving) {
+                subtitle += "*"
+            }
+            subtitleLabel.stringValue = subtitle
             mainImageView.image = doc.docSaveState.iconImage
             mainImageView.alphaValue = isWindowCurrent ? (isMouseOver ? 1.0 : 0.8 ) : 0.5
             subtitleProgressIndicator.stopAnimation(self)
@@ -144,7 +148,7 @@ class DocNameToolbarView : MNBaseView {
 }
 
 extension DocNameToolbarView : BrickDocObserver {
-
+    
     func brickDocumentError(_ brick: BrickDoc, error: AppError?) {
         guard self._lastDoc == brick else {
             return
@@ -164,20 +168,59 @@ extension DocNameToolbarView : BrickDocObserver {
     }
     
     func brickDocumentWillOpen(_ brick: BrickDoc) {
+        // brickDocumentWillLoad
         guard self._lastDoc == brick else {
             return
         }
     }
     
     func brickDocumentDidOpen(_ brick: BrickDoc) {
+        // brickDocumentDidLoad
         guard self._lastDoc == brick else {
             return
         }
+        
+        DispatchQueue.main.async {
+            self.updateWithDoc(brick)
+        }
+    }
+    
+    func brickDocumentWillSave(_ brick: BrickDoc) {
+        guard self._lastDoc == brick else {
+            return
+        }
+        self.subtitleLabel.stringValue = AppStr.SAVING.localized()
+    }
+    
+    func brickDocumentDidSave(_ brick: BrickDoc, result: AppResult) {
+        guard self._lastDoc == brick else {
+            return
+        }
+        self.updateWithDoc(brick)
+        
+        switch result {
+        case .success:
+            self.subtitleLabel.stringValue = AppStr.SAVED.localized()
+        case .failure: // (let err):
+            self.subtitleLabel.stringValue = AppStr.FAILED.localized()
+        }
+        
     }
     
     func brickDocumentDidChange(_ brick: BrickDoc, activityState: BrickDoc.DocActivityState) {
         guard self._lastDoc == brick else {
             return
+        }
+        
+        switch activityState {
+        case .saving(let progress):
+            self.subtitleLabel.stringValue = "todo percent! \(progress)"
+            // AppStr.SAVING_X_DOT_DOT_FORMAT.localized()
+        case .loading(let progress):
+            self.subtitleLabel.stringValue = "todo percent! \(progress)"
+            // AppStr.SAVING_X_DOT_DOT_FORMAT.localized()
+        default:
+            break
         }
     }
     
@@ -187,6 +230,7 @@ extension DocNameToolbarView : BrickDocObserver {
         }
         
         mainImageView.image = brick.docSaveState.iconImage
-        (brick.windowControllers.first as? DocWC)?.mainMenu?.updateWindowsDynamicMenuItems()
+        BrickDocController.shared.curDocWC?.mainMenu?.updateWindowsDynamicMenuItems()
+        // (brick.windowControllers.first as? DocWC)?.mainMenu?.updateWindowsDynamicMenuItems()
     }
 }

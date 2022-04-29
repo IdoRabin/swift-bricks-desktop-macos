@@ -78,7 +78,7 @@ class SplashVC : NSViewController {
                         window.setFrame(rect, display: true, animate: false)
                     }
                 }
-            }, counter: 1)
+            }, logType: .allAfterFirstTest)
         }
     }
     
@@ -173,32 +173,42 @@ class SplashVC : NSViewController {
 
 extension SplashVC /* Actions */ {
     
-    @IBAction func closeButtonAction(_ sender:Any) {
-        dlog?.info("closeButtonAction")
+    func hideAndCloseSelf(animated:Bool = true, completion:@escaping (_ wasClosed:Bool)->Void) {
+        guard let window = self.view.window,self.isViewLoaded && window.isVisible else {
+            completion(false)
+            return
+        }
         
-        func terminateAppIfNeeded() {
-            if AppSettings.shared.general.splashScreenCloseBtnWillCloseApp {
-                BrickDocController.shared.lastClosedWasOnSplashScreen = (BrickDocController.shared.brickDocWindows.count == 0)
-                
-                if BrickDocController.shared.hasEditedDocuments {
-                    DLog.splash.raisePreconditionFailure("TODO: Handle unsaved documents")
-                } else {
-                    DispatchQueue.main.async {
-                        AppDelegate.shared.documentController?.invalidateMenu(context: "terminateAppIfNeeded")
-                        
-                        // Terminate the app:
-                        BricksApplication.shared.terminate("SplashVC")
-                    }
+        window.fadeHide {
+            window.close()
+            completion(true)
+        }
+    }
+    
+    private func terminateAppIfNeeded() {
+        if AppSettings.shared.general.splashScreenCloseBtnWillCloseApp {
+            BrickDocController.shared.lastClosedWasOnSplashScreen = (BrickDocController.shared.brickDocWindows.count == 0)
+            
+            if BrickDocController.shared.hasEditedDocuments {
+                DLog.splash.raisePreconditionFailure("TODO: Handle unsaved documents")
+            } else {
+                DispatchQueue.main.async {
+                    AppDelegate.shared.documentController?.invalidateMenu(context: "terminateAppIfNeeded")
+                    
+                    // Terminate the app:
+                    BricksApplication.shared.terminate("SplashVC")
                 }
             }
         }
+    }
+    
+    @IBAction func closeButtonAction(_ sender:Any) {
+        dlog?.info("closeButtonAction")
         
         if let window = self.view.window {
             if window.delegate?.windowShouldClose?(window) ?? true {
-                window.fadeHide {
-                    window.close()
-                    
-                    terminateAppIfNeeded()
+                self.hideAndCloseSelf(animated: self.isViewLoaded) { wasClosed in
+                    self.terminateAppIfNeeded()
                 }
             }
         }

@@ -56,6 +56,8 @@
 "SAVE_DOT_DOT" = "Save..";
 "SAVE_AS" = "Save as";
 "SAVE_AS_DOT_DOT" = "Save as..";
+"SAVING" = "Saving"; // saving now
+"SAVING_X_DOT_DOT_FORMAT" = "Saving %@.."; // "Saving 22%.." or "Saving MyFile.jpg.."
 "DUPLICATE"  = "Duplicate";
 "RENAME_DOT_DOT"  = "Rename..";
 "MOVE_TO_DOT_DOT"  = "Move to..";
@@ -176,6 +178,7 @@
 "SHOW_SELECTED_LAYER_TOOLTIP" = "Show selected layer";
 "HIDE_OTHER_LAYERS_TOOLTIP" = "Hide all other layers";
 "SHOW_ALL_LAYERS_TOOLTIP" = "Show all layers";
+"LAYER_NAME" = "Layer name";
 
 // Misc actions
 "SHOW_DOCNAME_POPUP" = "Show doc info";

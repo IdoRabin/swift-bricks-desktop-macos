@@ -9,7 +9,7 @@ import AppKit
 
 
 class CmdUITogglePopupForToolbarNameView : DocCommand {
-    
+
     // MARK: AppCommand required properties
     static var category : AppCommandCategory = .misc
     static var keyboardShortcut : KeyboardShortcut = .empty
@@ -35,7 +35,7 @@ class CmdUITogglePopupForToolbarNameView : DocCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {
@@ -111,7 +111,7 @@ class CmdUITogglePopupForToolbarLogFileView : DocCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {

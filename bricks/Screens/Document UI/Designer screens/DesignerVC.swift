@@ -7,22 +7,16 @@
 
 import AppKit
 
-class DesignerVC : NSViewController {
+class DesignerVC : NSViewController, DocSubVC {
     // MARK: Constants
     // MARK: Enums
     // MARK: Properties
     // MARK: Computed vars
-    var doc : BrickDoc? {
-        return docWC?.document as? BrickDoc
-    }
-    var docWC : DocWC? {
-        return (self.view.window?.windowController as? DocWC)
-    }
     
     // MARK: private Properties
     // MARK: Private funcs
     private func setup() {
-        
+        self.registerToDocWC()
     }
     
     // MARK: Lifecycle

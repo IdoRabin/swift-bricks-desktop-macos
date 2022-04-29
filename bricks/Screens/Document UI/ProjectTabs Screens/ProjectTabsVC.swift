@@ -8,7 +8,7 @@
 import AppKit
 fileprivate let dlog : DSLogger? = DLog.forClass("ProjctTabsVC")
 
-class ProjectTabsVC : MNTabViewController {
+class ProjectTabsVC : MNTabViewController, DocSubVC {
     
     // MARK: Constants
     let DEBUG_DRAWING = IS_DEBUG && true
@@ -49,14 +49,13 @@ class ProjectTabsVC : MNTabViewController {
         return Tabs.self
     }
     
-    // MARK: Computed vars
-    var doc : BrickDoc? {
-        return docWC?.document as? BrickDoc
-    }
-    var docWC : DocWC? {
-        return (self.view.window?.windowController as? DocWC)
+    // MARK: Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.registerToDocWC()
     }
     
+    // MARK: Computed vars
     // MARK: private Properties
     // MARK: Private funcs    
     // MARK: Public funcs

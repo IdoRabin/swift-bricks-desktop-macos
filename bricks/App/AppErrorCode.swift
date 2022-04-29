@@ -23,6 +23,8 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case misc_failed_inserting = 9012
     case misc_failed_updating = 9013
     case misc_failed_reading = 9014
+    case misc_no_permission_for_operation = 9020 //
+    case misc_readonly_permission_for_operation = 9021 //
     
     // Misc
     case web_unknown = 1000
@@ -30,7 +32,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case web_unexpected_response = 1100
     
     // Command
-    case cmd_not_allowed_now = 1500
+    case cmd_not_allowed_now = 1500 // no permission?
     case cmd_failed_execute = 1501
     case cmd_failed_undo = 1502
     
@@ -40,8 +42,9 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case doc_create_from_template_failed = 2011
     case doc_open_existing_failed = 2012
     case doc_save_failed = 2013
-    case doc_close_failed = 2014
-    case doc_change_failed = 2015
+    case doc_load_failed = 2014
+    case doc_close_failed = 2015
+    case doc_change_failed = 2016
     
     case doc_layer_insert_failed = 2030
     case doc_layer_insert_undo_failed = 2031
@@ -49,6 +52,19 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case doc_layer_move_undo_failed = 2033
     case doc_layer_delete_failed = 2040
     case doc_layer_delete_undo_failed = 2041
+    case doc_layer_already_exists = 2050
+    case doc_layer_lock_unlock_failed = 2051
+    case doc_layer_select_deselect_failed = 2052
+    case doc_layer_search_failed = 2060
+    case doc_layer_change_failed = 2070
+    
+    // user
+    case user_login_failed = 2501
+    case user_login_failed_no_permission = 2502
+    case user_login_failed_bad_credentials = 2503
+    case user_login_failed_permissions_revoked = 2504
+    
+    case user_logout_failed = 2530
     
     // db
     case db_unknown = 3000
@@ -76,7 +92,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     }
     
     var desc : String {
-        return "TODO.AppErrorCode.desc-\(self)"
+        return "TODO.AppErrorCode.desc|\(self)"
     }
     
     var code: AppErrorInt {

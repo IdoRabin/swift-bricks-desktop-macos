@@ -31,7 +31,6 @@ public enum AppResultAcceptDecline : CustomStringConvertible {
     }
 }
 
-
 typealias AppResultAcceptedDeclined = Result<AppResultAcceptDecline, AppError>
 typealias AppResultAcceptedDeclinedBlock = (AppResultAcceptedDeclined)->Void
 
@@ -44,15 +43,28 @@ typealias AppResultBlock = (AppResult)->Void
 extension Result {
     var isFailed : Bool {
         switch self {
-        case .failure:
-            return true
-        case .success:
-            return false
+        case .failure: return true
+        case .success: return false
         }
     }
     
     var isSuccess : Bool {
         return !isFailed
+    }
+    
+    var errorOrNil : Error? {
+        switch self {
+        case .failure(let error): return error
+        case .success: return nil
+        }
+    }
+    
+    static func fromError(_ error:AppError?, orSuccess:Any)->AppResult {
+        if let error = error {
+            return .failure(error)
+        } else {
+            return .success(orSuccess)
+        }
     }
 }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EC05EBCF27C299C100B5ED71 /* BrickLayersContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC05EBCE27C299C100B5ED71 /* BrickLayersContainer.swift */; };
 		EC069207276E46F700D9DD43 /* MainPanelToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */; };
 		EC069209276E4AC900D9DD43 /* DocNameToolbarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */; };
 		EC06920B276E545700D9DD43 /* NSScreenEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC06920A276E545700D9DD43 /* NSScreenEx.swift */; };
@@ -87,6 +88,12 @@
 		EC35288027A5BD0200CC53B7 /* FileLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC35287F27A5BD0200CC53B7 /* FileLogView.swift */; };
 		EC35288327A5D58500CC53B7 /* FileLogView+NSTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC35288227A5D58500CC53B7 /* FileLogView+NSTableView.swift */; };
 		EC40D116277A03BF00741428 /* NSView+Search Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC40D115277A03BF00741428 /* NSView+Search Constraints.swift */; };
+		EC42257C27FD998800373963 /* BrickDocUIDs.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42257B27FD998800373963 /* BrickDocUIDs.swift */; };
+		EC42257E27FD9A7E00373963 /* BrickDocController+User.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42257D27FD9A7E00373963 /* BrickDocController+User.swift */; };
+		EC42258127FD9AFE00373963 /* BricksUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42258027FD9AFE00373963 /* BricksUser.swift */; };
+		EC42258327FDB15700373963 /* NSTableViewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC42258227FDB15700373963 /* NSTableViewEx.swift */; };
+		EC422585280301F500373963 /* DocSubVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC422584280301F500373963 /* DocSubVC.swift */; };
+		EC4225872804B98000373963 /* DocWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4225862804B98000373963 /* DocWindow.swift */; };
 		EC46DB142764DAFF0070A2DC /* NSWindowEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */; };
 		EC46DB162764ECD70070A2DC /* NSApplicationEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */; };
 		EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */; };
@@ -215,6 +222,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		EC05EBCE27C299C100B5ED71 /* BrickLayersContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickLayersContainer.swift; sourceTree = "<group>"; };
 		EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainPanelToolbarView.xib; sourceTree = "<group>"; };
 		EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DocNameToolbarView.xib; sourceTree = "<group>"; };
 		EC06920A276E545700D9DD43 /* NSScreenEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSScreenEx.swift; sourceTree = "<group>"; };
@@ -307,6 +315,12 @@
 		EC35287F27A5BD0200CC53B7 /* FileLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileLogView.swift; sourceTree = "<group>"; };
 		EC35288227A5D58500CC53B7 /* FileLogView+NSTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileLogView+NSTableView.swift"; sourceTree = "<group>"; };
 		EC40D115277A03BF00741428 /* NSView+Search Constraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Search Constraints.swift"; sourceTree = "<group>"; };
+		EC42257B27FD998800373963 /* BrickDocUIDs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDocUIDs.swift; sourceTree = "<group>"; };
+		EC42257D27FD9A7E00373963 /* BrickDocController+User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrickDocController+User.swift"; sourceTree = "<group>"; };
+		EC42258027FD9AFE00373963 /* BricksUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BricksUser.swift; sourceTree = "<group>"; };
+		EC42258227FDB15700373963 /* NSTableViewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSTableViewEx.swift; sourceTree = "<group>"; };
+		EC422584280301F500373963 /* DocSubVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocSubVC.swift; sourceTree = "<group>"; };
+		EC4225862804B98000373963 /* DocWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocWindow.swift; sourceTree = "<group>"; };
 		EC46DB132764DAFF0070A2DC /* NSWindowEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWindowEx.swift; sourceTree = "<group>"; };
 		EC46DB152764ECD70070A2DC /* NSApplicationEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSApplicationEx.swift; sourceTree = "<group>"; };
 		EC46DB172764EE8B0070A2DC /* OnboardingPageVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPageVC.swift; sourceTree = "<group>"; };
@@ -437,8 +451,10 @@
 				ECA67B8C2769FEAD00BC0D7D /* Toolbar */,
 				EC802161277FD0C400F6F015 /* DocVC+Actions.swift */,
 				ECCE07912764EF67007F2A65 /* DocVC.swift */,
+				EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */,
 				EC6741A7276B518100E9BB84 /* DocWC.swift */,
 				EC96C746278489F6003BD2F6 /* DocWC+TabGroups.swift */,
+				EC4225862804B98000373963 /* DocWindow.swift */,
 				EC332CCC275ECCA200546767 /* Doc.storyboard */,
 			);
 			path = "Document UI";
@@ -470,6 +486,7 @@
 				EC218B2627593B7100744400 /* Components */,
 				EC9DEFD9275CCA810046F30A /* Brick.swift */,
 				EC9DEFDB275CCACA0046F30A /* BrickDocObserver.swift */,
+				EC42257B27FD998800373963 /* BrickDocUIDs.swift */,
 				EC218B862759471100744400 /* BrickDoc.swift */,
 				EC1C3C372783279B004DC9F1 /* BrickDoc+CmdReceiver.swift */,
 			);
@@ -481,6 +498,7 @@
 			children = (
 				EC1C3C3D27833278004DC9F1 /* BrickLayer.swift */,
 				EC1C3C3A27833238004DC9F1 /* BrickLayers.swift */,
+				EC05EBCE27C299C100B5ED71 /* BrickLayersContainer.swift */,
 			);
 			path = Layers;
 			sourceTree = "<group>";
@@ -707,6 +725,7 @@
 				EC06920A276E545700D9DD43 /* NSScreenEx.swift */,
 				EC80215D277F9EC900F6F015 /* NSTabViewEx.swift */,
 				EC802163277FDB7900F6F015 /* NSViewController+Validations.swift */,
+				EC42258227FDB15700373963 /* NSTableViewEx.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -918,12 +937,12 @@
 		ECA67B8C2769FEAD00BC0D7D /* Toolbar */ = {
 			isa = PBXGroup;
 			children = (
+				EC422584280301F500373963 /* DocSubVC.swift */,
 				ECA67B8D2769FEC600BC0D7D /* DocNameToolbarView.swift */,
 				EC069208276E4AC900D9DD43 /* DocNameToolbarView.xib */,
 				ECA67B8F276A013A00BC0D7D /* MainPanelToolbarView.swift */,
 				EC069206276E46F700D9DD43 /* MainPanelToolbarView.xib */,
 				EC06920E276F65BB00D9DD43 /* DocToolbar.swift */,
-				EC1BFD10276F9E56009DC45A /* DocWC+Toolbar.swift */,
 			);
 			path = Toolbar;
 			sourceTree = "<group>";
@@ -976,7 +995,9 @@
 		ECEA1B6827610A4700DD602D /* BrickDocController */ = {
 			isa = PBXGroup;
 			children = (
+				EC42258027FD9AFE00373963 /* BricksUser.swift */,
 				EC218B802759463500744400 /* BrickDocController.swift */,
+				EC42257D27FD9A7E00373963 /* BrickDocController+User.swift */,
 				EC96C74827849555003BD2F6 /* BrickDocController+Menu.swift */,
 				ECAA83A4276358F80016578C /* BrickDocController+CmdReciever.swift */,
 			);
@@ -1080,7 +1101,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1310;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					EC218AB4275931E700744400 = {
 						CreatedOnToolsVersion = 13.1;
@@ -1182,6 +1203,7 @@
 				ECEA1B792762297000DD602D /* MNBaseView.swift in Sources */,
 				EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */,
 				EC9DF003275CD1BE0046F30A /* CALayerEx.swift in Sources */,
+				EC42257E27FD9A7E00373963 /* BrickDocController+User.swift in Sources */,
 				EC1C3C3E27833278004DC9F1 /* BrickLayer.swift in Sources */,
 				ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */,
 				EC1C783427875DFE0021A097 /* FloatEx.swift in Sources */,
@@ -1196,6 +1218,7 @@
 				EC218B5827593CBF00744400 /* Array+Identifiable.swift in Sources */,
 				EC880DB4276583E900C58645 /* PrefsGeneralVC.swift in Sources */,
 				EC9DEFE6275CD0B40046F30A /* SplashVC.swift in Sources */,
+				EC422585280301F500373963 /* DocSubVC.swift in Sources */,
 				EC6514AF2779581900F8063D /* CircleProgressView.swift in Sources */,
 				EC46DB182764EE8B0070A2DC /* OnboardingPageVC.swift in Sources */,
 				ECA1B0D12760114700B3D36A /* MainMenu.swift in Sources */,
@@ -1226,6 +1249,7 @@
 				EC9DF015275CD2AF0046F30A /* GridViewSnapMode.swift in Sources */,
 				EC218B5627593CBF00744400 /* ArrayEx.swift in Sources */,
 				EC35287927989C7200CC53B7 /* FileLog.swift in Sources */,
+				EC05EBCF27C299C100B5ED71 /* BrickLayersContainer.swift in Sources */,
 				ECEA1B772762255500DD602D /* NSButtonEx.swift in Sources */,
 				EC802158277F899700F6F015 /* MNSegmentedTabs.swift in Sources */,
 				EC218B3D27593BE000744400 /* ObserversArray.swift in Sources */,
@@ -1244,7 +1268,9 @@
 				EC218B2227593ADA00744400 /* UserDefaults+Counters.swift in Sources */,
 				EC9DF010275CD1CE0046F30A /* MNFocus.swift in Sources */,
 				EC19D2ED2790B05100A9B97E /* NSTextField+Animated Chars.swift in Sources */,
+				EC42258327FDB15700373963 /* NSTableViewEx.swift in Sources */,
 				EC1BFD18276FB4AB009DC45A /* NSBezierPathEx.swift in Sources */,
+				EC42258127FD9AFE00373963 /* BricksUser.swift in Sources */,
 				EC9DEFEB275CD0E70046F30A /* NSTitleDetailTableCellView.swift in Sources */,
 				EC71CE222764CF5700947423 /* AppCommands.swift in Sources */,
 				EC9DEFDA275CCA810046F30A /* Brick.swift in Sources */,
@@ -1269,6 +1295,7 @@
 				EC218B7227593E7900744400 /* AppErrorCode.swift in Sources */,
 				ECCE07942764F238007F2A65 /* AcknowledgementsVC.swift in Sources */,
 				EC218B3F27593BE000744400 /* Codable+Serialize.swift in Sources */,
+				EC42257C27FD998800373963 /* BrickDocUIDs.swift in Sources */,
 				EC35288027A5BD0200CC53B7 /* FileLogView.swift in Sources */,
 				ECEA1B652760F9FB00DD602D /* Command.swift in Sources */,
 				EC9DF01E275CE6DE0046F30A /* MVP.swift in Sources */,
@@ -1309,6 +1336,7 @@
 				EC9DEFDE275CCC0A0046F30A /* OptionalEx.swift in Sources */,
 				ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */,
 				EC802162277FD0C400F6F015 /* DocVC+Actions.swift in Sources */,
+				EC4225872804B98000373963 /* DocWindow.swift in Sources */,
 				EC802152277F7DDC00F6F015 /* DesignerVC.swift in Sources */,
 				ECAA83A5276358F80016578C /* BrickDocController+CmdReciever.swift in Sources */,
 				ECEA1B7527621AC900DD602D /* NSView+SearchSubviews.swift in Sources */,
@@ -1508,6 +1536,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = bricks/bricks.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
@@ -1534,6 +1563,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = bricks/bricks.entitlements;
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
@@ -1645,6 +1675,7 @@
 		EC218B0E275938B200744400 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;
@@ -1663,6 +1694,7 @@
 		EC218B0F275938B200744400 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = ZM8DB5E59A;

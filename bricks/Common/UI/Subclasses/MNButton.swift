@@ -70,7 +70,7 @@ class MNButton: NSButton {
         super.mouseDown(with: event)
         //dlog?.info("mouseDown")
         if self.action == nil, let cmd = self.associatedCommand {
-            dlog?.note("associatedCommand: [\(cmd.typeName)] needs to be instantiated and added to an invoker.")
+            dlog?.note("associatedCommand: [\(cmd.typeName)] needs to be instantiated and added to an invoker. (action == nil for button titled [\(self.title)]")
         }
     }
     

@@ -140,8 +140,6 @@ extension DocWC : NSToolbarDelegate {
         result.imagesScale = 0.43
         result.onTint = NSColor.secondaryLabelColor
         result.offTint = NSColor.secondaryLabelColor
-        result.tag = isLeading ? 0 : (self.docVC?.splitView.trailingDividerIndex ?? 1) // used to test which toggle button was clicked
-        (result.view as? NSButton)?.tag = result.tag
         return result
     }
     
@@ -253,6 +251,8 @@ extension DocWC : NSToolbarDelegate {
             result = self.createToggleSidebarToolbarItem(id: id, isLeading: false)
             result?.target = self.contentViewController
             result?.action = #selector(DocVC.toggleSidebarAction(_:))
+            result?.tag = self.docVC?.splitView.trailingDividerIndex ?? 1 // used to test which toggle button was clicked
+            (result?.view as? MNButton)?.tag = result?.tag ?? 1
         }
 
         return result

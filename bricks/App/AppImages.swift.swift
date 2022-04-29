@@ -39,8 +39,20 @@ struct ImageString {
         self.rawValue = rawValue
     }
     
+    func systemSymbolImage(accessibilityDescription:String?)->NSImage {
+        return NSImage(systemSymbolName: rawValue, accessibilityDescription: nil)!
+    }
+    
+    var systemSymbolImage : NSImage {
+        get {
+            // NOTE: This will crash if string is an asset name
+            return NSImage(systemSymbolName: rawValue, accessibilityDescription: nil)!
+        }
+    }
+    
     var image : NSImage {
         get {
+            // NOTE: This will crash if string is a system symbol name
             return NSImage(named:self.rawValue)!
         }
     }

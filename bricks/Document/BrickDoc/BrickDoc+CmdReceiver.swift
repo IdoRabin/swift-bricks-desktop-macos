@@ -10,29 +10,53 @@ fileprivate let dlog : DSLogger? = DLog.forClass("BrickDoc+Cmd")
 
 extension BrickDoc : CommandReciever {
     
+    enum isAllowedResult : Int {
+        case unknown = -1
+        case notAllowed = 0
+        case allowed = 1
+        
+        var asOptionalBool : Bool? {
+            switch self {
+            case .notAllowed:
+                return false
+            case .allowed:
+                return true
+            case .unknown:
+                fallthrough
+            default:
+                return nil
+            }
+        }
+    }
     func enqueueCommand(_ command: DocCommand) {
         self.enqueueCommands([command])
     }
     
     func enqueueCommands(_ commands: [DocCommand]) {
-        self.commandInvoker.addCommands(commands)
+        self.docCommandInvoker.addCommands(commands)
     }
     
-    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> Bool? {
-        var result : Bool? = nil
+    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> CommandAllowed {
+        var aresult : CommandAllowed = .unhandled
         
-//        DispatchQueue.main.safeSync {
-//            switch commandType.typeName {
-//            case CmdLayerAdd.typeName:        result = true
-//            case CmdLayerEdit.typeName:       result = self.brick.layers.selectedLayers.count > 0
-//            case CmdLayerRemove.typeName:     result = self.brick.layers.selectedLayers.count > 0
-//            default:
-//                break
-//            }
-//        }
+        let layersCount = self.brick.layers.count
+        let selLayersCount = self.brick.layers.selectedLayers.count
+        
+        DispatchQueue.main.safeSync {
+            switch commandType.typeName {
+            case CmdLayerAdd.typeName:          aresult = .allowed
+            case CmdLayerEdit.typeName:         aresult = CommandAllowed(bool:selLayersCount == 1)
+            case CmdLayerRemove.typeName:       aresult = CommandAllowed(bool:selLayersCount > 0)
+            case CmdLayerEdit.typeName:         aresult = CommandAllowed(bool:selLayersCount == 1)
+            case CmdLayerSetAccess.typeName:    aresult = CommandAllowed(bool:layersCount > 0)
+            case CmdLayerSetVisiblity.typeName: aresult = CommandAllowed(bool:layersCount > 0)
+            default:
+                break
+            }
+        }
         
         // dlog?.info("isAllowed=\(result) command: \(commandType.typeName) for: \(method) context: \(context)")
-        return result
+        return aresult
     }
     
     func isAllowedNativeAction(_ sel: Selector?, context: CommandContext) -> Bool? {
@@ -62,15 +86,18 @@ extension BrickDoc : CommandReciever {
 
 extension BrickDoc /* command factory */ {
     
+    // MakeCommand // MakeCmd
     @discardableResult
     func createCommand( _ cmdType : DocCommand.Type, context:CommandContext, isEnqueue:Bool = true, setup:((_ cmd: DocCommand)->Void)? = nil)->DocCommand? {
         var result : DocCommand? = nil
-        let selectedLyerUID : LayerUID? = nil
+        let selectedLyerUID : LayerUID? = self.brick.layers.selectedLayers.first?.id
         
         switch cmdType {
         // App menu
         // Layers menu
         case is CmdLayerAdd.Type:       result = CmdLayerAdd(context: context, receiver: self)
+            
+            // These will crash if there is no selected layer: should not have allowed the UI that triggers this if no layer is selected.
         case is CmdLayerEdit.Type:      result = CmdLayerEdit(context: context, receiver: self, layerID: selectedLyerUID!)
         case is CmdLayerRemove.Type:    result = CmdLayerRemove(context: context, receiver: self, layerID: selectedLyerUID!)
             
@@ -86,7 +113,7 @@ extension BrickDoc /* command factory */ {
             
             setup?(result)
             
-            if IS_DEBUG && self.commandInvoker.state.isPaused {
+            if IS_DEBUG && self.docCommandInvoker.state.isPaused {
                 dlog?.info("createCommand: Note that the invoker is paused!")
             }
         } else {

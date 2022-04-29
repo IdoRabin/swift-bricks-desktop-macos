@@ -31,7 +31,55 @@ enum WaitResult
         return self == .success
     }
 }
-
+enum WaitForLogType : Int {
+    case never              // never log any part of the waitForLoop
+    case onlyAnyResult      // log only when the waitFor is done (success or timeout)
+    case onlyFirstTestResult // log all messages for the first test only
+    case onlyOnTimeout      // log only when the waitFor failes on timeout
+    case onlyOnSuccess      // log only when the waitFor is successful
+    case allAfterFirstTest  // log any part of the waitForLoop excpet the first immediate test
+    case always             // always log all parts of the waitFor
+    
+    private func isAllowed(for counter:Int)->Bool {
+        guard self != .never else {
+            return false
+        }
+        if (self == .onlyFirstTestResult && counter > 0) ||
+           (self == .allAfterFirstTest && counter <= 0) {
+             return false
+        }
+        guard counter == 0 || [.always].contains(self) else {
+            return true
+        }
+        return true
+    }
+    
+    fileprivate func allowsImmediate(for counter:Int)-> Bool {
+        guard isAllowed(for: counter) else {
+            return false
+        }
+        return [.always, .onlyFirstTestResult].contains(self)
+    }
+    
+    fileprivate func allowsTimeout(for counter:Int)-> Bool {
+        guard isAllowed(for: counter) else {
+            return false
+        }
+        return [.always, .onlyOnTimeout, .onlyAnyResult, .onlyFirstTestResult].contains(self)
+    }
+    
+    fileprivate func allowsSuccess(for counter:Int)-> Bool {
+        guard isAllowed(for: counter) else {
+            return false
+        }
+        return [.always, .onlyOnSuccess, .onlyAnyResult, .onlyFirstTestResult].contains(self)
+    }
+    
+    fileprivate func allowsProgress(for counter:Int)-> Bool {
+        return [.always, .allAfterFirstTest].contains(self)
+    }
+    
+}
 
 extension DispatchQueue {
     
@@ -263,8 +311,9 @@ extension DispatchQueue {
         }
     }
     
-    internal func waitFor(_ context:String?/*description*/, interval:TimeInterval = 0.1, timeout:TimeInterval = 3.0, blocking : Bool, test: @escaping ()->Bool, completion: @escaping (_ waitResult : WaitResult)->Void, counter:Int = 0) {
-        // optimization
+    internal func waitFor(_ context:String?/*description*/, interval:TimeInterval = 0.1, timeout:TimeInterval = 3.0, blocking : Bool, test: @escaping ()->Bool, completion: @escaping (_ waitResult : WaitResult)->Void, counter:Int = 0, logType:WaitForLogType = .always) {
+        
+        // Optimization
         var isShouldBlock = blocking
         if isShouldBlock && (self.isMainQueue || (self == waitForQueue)) {
             dlog?.warning("waitFor with blocking queue: \(self.label) is not supported!! WILL NOT BLOCK!")
@@ -272,16 +321,16 @@ extension DispatchQueue {
         }
         
         let logStr = IS_DEBUG ? "{\(context ?? "*" )} #\(counter)" : ""
-        // - waitForLog?.info("waitFor \(logStr)")
         
+        // Immediate test:
         if (test()) {
-            if (counter == 0)
-            {
-                waitForLog?.info("\(logStr) completed immediately")
+            if logType.allowsImmediate(for: counter) {
+                waitForLog?.success("\(logStr) completed immediately (.success)")
             }
             completion(.success)
             return
         }
+        
         // Will wait until we have an instance of the document to observe
         var result : WaitResult = .timeout
         var threadWaitLock : ThreadWaitLock? = nil
@@ -303,8 +352,11 @@ extension DispatchQueue {
         waitForQueue.async {
             if test() == false {
                 let elapsedTime : TimeInterval = TimeInterval(counter) * interval
+                let elapsedTimeRounded = elapsedTime.rounded(dec: 3)
                 if elapsedTime > timeout {
-                    waitForLog?.info("\(logStr) stopping wait (timeout)")
+                    if logType.allowsTimeout(for: counter) {
+                        waitForLog?.fail("\(logStr) stopping wait: .timeout")
+                    }
                     if isShouldBlock {
                         result = .timeout
                         threadWaitLock?.signal()
@@ -315,7 +367,8 @@ extension DispatchQueue {
                 else
                 {
                     waitForQueue.asyncAfter(delayFromNow: interval, block: {
-                        waitForLog?.info("\(logStr) elapsed time: \(round(elapsedTime * 1000.0)/1000.0)")
+                        if logType.allowsProgress(for: counter) {
+                            waitForLog?.info("\(logStr) elapsed time: \(elapsedTimeRounded)") }
                         waitForQueue.waitFor(context, interval: interval, timeout: timeout, blocking: false, test: test, completion: { (waitResult) in
                             result = waitResult
                             if isShouldBlock {
@@ -325,10 +378,14 @@ extension DispatchQueue {
                                     completion(result)
                                 }
                             }
-                        }, counter: counter + 1)
+                        },counter: counter + 1, logType: logType)
                     })
                 }
             } else {
+                if logType.allowsSuccess(for: counter) {
+                    dlog?.success("\(logStr) stopping wait: .success")
+                }
+                
                 if isShouldBlock {
                     result = .success
                     threadWaitLock?.signal()
@@ -347,16 +404,18 @@ extension DispatchQueue {
 
 fileprivate let waitForQueue = DispatchQueue(label: "waitFor")
 fileprivate var waitLocks : [String:ThreadWaitLock] = [:]
-func waitFor(_ context:String?/*description*/, interval:TimeInterval = 0.1, timeout:TimeInterval = 3.0, test: @escaping ()->Bool, completion: @escaping (_ waitResult : WaitResult)->Void, counter:Int = 0) {
-    waitForQueue.waitFor(context, interval: interval, timeout: timeout, blocking: false, test: test, completion: completion, counter: counter)
+
+func waitFor(_ context:String?/*description*/, interval:TimeInterval = 0.1, timeout:TimeInterval = 3.0, test: @escaping ()->Bool, completion: @escaping (_ waitResult : WaitResult)->Void, counter:Int = 0, logType: WaitForLogType = .always) {
+    
+    waitForQueue.waitFor(context, interval: interval, timeout: timeout, blocking: false, test: test, completion: completion, counter: counter, logType: logType)
 }
 
-func waitFor(_ context:String?/*description*/, interval:TimeInterval = 0.1, timeout:TimeInterval = 3.0, testOnMainThread: @escaping ()->Bool, completion: @escaping (_ waitResult : WaitResult)->Void, counter:Int = 0) {
+func waitFor(_ context:String?/*description*/, interval:TimeInterval = 0.1, timeout:TimeInterval = 3.0, testOnMainThread: @escaping ()->Bool, completion: @escaping (_ waitResult : WaitResult)->Void, counter:Int = 0, logType: WaitForLogType = .always) {
     waitForQueue.waitFor(context, interval: interval, timeout: timeout, blocking: false, test: { () -> Bool in
         var result = false
         DispatchQueue.mainIfNeededSync {
             result = testOnMainThread()
         }
         return result
-    }, completion: completion, counter: counter)
+    }, completion: completion, counter: counter, logType: logType)
 }

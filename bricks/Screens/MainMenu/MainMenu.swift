@@ -300,8 +300,7 @@ class MainMenu : NSMenu {
                 // DO NOT! case   viewEnterFullScreenMnuItem:  title = AppStr.ENTER_FULL_SCREEN.localized() //+ AppStr.EXIT_FULL_SCREEN.localized()
                     
                 case layerTopMnuItem: title = AppStr.LAYER.localized()
-                case layerAddMenuItem:
-                    cmd = CmdLayerAdd.self // AppStr.ADD.localized()
+                case layerAddMenuItem: cmd = CmdLayerAdd.self // AppStr.ADD.localized()
                 case layerDeleteMenuItem: cmd = CmdLayerRemove.self // title = AppStr.DELETE_FORMAT_DOT_DOT.formatLocalized(curLayerName)
                 case layerEditMenuItem: cmd = CmdLayerEdit.self // AppStr.EDIT_FORMAT_DOT_DOT.formatLocalized(curLayerName)
                 case layerLockMenuItem: title = AppStr.LOCK.localized() //+ AppStr.UNLOCK.localized()
@@ -367,7 +366,7 @@ class MainMenu : NSMenu {
 
         for item in items {
             var isEnable = (except.contains(item)) ? !enabled : enabled
-            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand, let result = BrickDocController.shared.isAllowed(commandType: cmd, context: "MainMenu.setEnabledforMenuItems") {
+            if isEnable, let item = item as? MNMenuItem, let cmd = item.associatedCommand, let result = BrickDocController.shared.isAllowed(commandType: cmd, context: "MainMenu.setEnabledforMenuItems").asOptionalBool {
                 isEnable = result
             }
             item.isEnabled = isEnable
@@ -627,7 +626,7 @@ extension MainMenu /* updtes most important funcs */ {
         
         // Change enabled using the associatedCommand or native action for the menu item:
         if isEnabled && wasFound {
-            if let item = item as? MNMenuItem, let command = item.associatedCommand, let result = BrickDocController.shared.isAllowed(commandType: command, method: .execute, context: "updateMenuItem") {
+            if let item = item as? MNMenuItem, let command = item.associatedCommand, let result = BrickDocController.shared.isAllowed(commandType: command, method: .execute, context: "updateMenuItem").asOptionalBool {
                 isEnabled = isEnabled && result
             } else if item.action != nil, let isAllowed = BrickDocController.shared.isAllowedNativeAction(item.action, context: "updateMenuItem") {
                 isEnabled = isEnabled && isAllowed

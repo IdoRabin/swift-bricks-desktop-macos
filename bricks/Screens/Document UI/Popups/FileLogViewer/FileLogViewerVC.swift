@@ -32,7 +32,7 @@ class FileLogViewerVC: NSViewController {
                 DispatchQueue.mainIfNeeded {
                     self.fileLogView.fileLog = self.fileLog
                 }
-            })
+            }, logType: .always)
         }
     }
     

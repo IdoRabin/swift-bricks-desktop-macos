@@ -10,7 +10,15 @@ import AppKit
 fileprivate let dlog : DSLogger? = DLog.forClass("DocWC")
 typealias BrickDocIDsTriplet = (BrickDocUID, /* display name */ String, NSWindow.TabbingIdentifier?)
 
-@objc extension NSObject {
+extension NSViewController : HashableObject {
+    
+}
+
+protocol BasicDescable {
+    var basicDesc : String { get }
+}
+
+@objc extension NSObject : BasicDescable {
     @objc var basicDesc : String {
         return "<\(type(of: self)) \(String(memoryAddressOf: self))>"
     }
@@ -47,6 +55,21 @@ class DocWC : NSWindowController, WhenLoadedable {
     // MARK: TabGroups (see extension)
     static var appTabGroups : [NSWindow.TabbingIdentifier:[BrickDocUID : String]] = [:]
     static var appTabGroupSelections : [NSWindow.TabbingIdentifier:(BrickDocUID , String)] = [:]
+    private var subVCs:[String:WeakWrapperHashable<NSViewController>] = [:]
+    
+    func registerSubVC(_ vc:NSViewController?) {
+        guard let vc = vc, self.contentViewController != nil else {
+            return
+        }
+        subVCs[type(of: vc).description()] = WeakWrapperHashable(value: vc)
+    }
+    
+    func getSubVC<T:NSViewController>(ofType:T.Type)->T? {
+        guard self.contentViewController != nil else {
+            return nil
+        }
+        return subVCs[ofType.description()]?.value as? T
+    }
     
     var docVC : DocVC? {
         return self.contentViewController as? DocVC
@@ -93,7 +116,7 @@ class DocWC : NSWindowController, WhenLoadedable {
         self.updateToolbarAction(state: .success,
                                  title: AppStr.READY.localized(),
                                  subtitle: "",
-                                 progress: 1.00) {
+                                 progress: 1.0) {
             self.mainPanelBoxView?.clearUnitsTitle(animated:true)
         }
     }
@@ -120,12 +143,10 @@ class DocWC : NSWindowController, WhenLoadedable {
                 case .success:
                     let duration = abs(loadTime.timeIntervalSinceNow)
                     if let doc = self.brickDoc {
-                        if doc.isDraft || doc.brick.stats.modificationsCount == 0 || doc.brick.stats.loadsCount == 0 {
+                        if doc.isDraft && doc.brick.stats.modificationsCount == 0 && doc.brick.stats.loadsCount == 0 {
                             // Was never changed:
                             dlog?.success("windowDidLoad with empty document: [\(self.docNameOrNil)] time:\( duration.rounded(dec: 2)) sec.")
                         } else {
-                            // Was loaded from file / DB
-                            doc.brick.stats.loadsTimings.add(amount: 1, value: duration)
                             dlog?.success("windowDidLoad with document: [\(self.docNameOrNil)] time:\( duration.rounded(dec: 2)) sec. avg:\( doc.brick.stats.loadsTimings.average.rounded(dec: 2)) sec.")
                         }
                         self.finalizeToolbarAfterLoad()
@@ -181,7 +202,6 @@ class DocWC : NSWindowController, WhenLoadedable {
     func updateToolbarVisible() {
         self._lastToolbarVisible = self.windowIfLoaded?.toolbar?.isVisible ?? false
     }
-    
 }
 
 extension DocWC : BrickDocControllerObserver {

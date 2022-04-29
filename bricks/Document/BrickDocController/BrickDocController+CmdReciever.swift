@@ -19,10 +19,15 @@ extension BrickDocController : CommandReciever {
         self.commandInvoker.addCommands(commands)
     }
     
-    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> Bool? {
-        var result : Bool? = nil
+    func isAllowed(commandType: Command.Type, method: CommandExecutionMethod = .execute, context: CommandContext) -> CommandAllowed {
+        var result : CommandAllowed = .unhandled
         let doc = self.curDoc
         let hasDoc = doc != nil
+        
+        var isNeedsSaving = doc?.brick.isNeedsSaving ?? false
+        if isNeedsSaving == false, let doc = doc, doc.isDraft == false, doc.isDocumentEdited || doc.hasUnautosavedChanges {
+            isNeedsSaving = true
+        }
         
         DispatchQueue.main.safeSync {
             switch commandType.typeName {
@@ -30,24 +35,20 @@ extension BrickDocController : CommandReciever {
             // All singly instanced VCs / Util vcs are always allowed because the implementation will just bring to front the single intance, and never create a new instance.
             
             // App menu
-            case CmdSplashWindow.typeName:      result = true // !BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self)
-            case CmdAboutPanel.typeName:        result = true // !BricksApplication.shared.isViewControllerExistsOfClass(AboutVC.self)
-            case CmdPreferencesPanel.typeName:  result = true // !BricksApplication.shared.isViewControllerExistsOfClass(PreferencesVC.self)
+            case CmdSplashWindow.typeName:      result = .allowed // !BricksApplication.shared.isViewControllerExistsOfClass(SplashVC.self)
+            case CmdAboutPanel.typeName:        result = .allowed // !BricksApplication.shared.isViewControllerExistsOfClass(AboutVC.self)
+            case CmdPreferencesPanel.typeName:  result = .allowed // !BricksApplication.shared.isViewControllerExistsOfClass(PreferencesVC.self)
             
             // File menu
-            case CmdNewProject.typeName:        result = true
-            case CmdOpenProject.typeName:       result = true
-            //case CmdSaveProjet.typeName:        result = hasDoc && (!doc!.isDraft && (doc!.isDocumentEdited || doc!.hasUnautosavedChanges))
-            //case CmdSaveProjectAs.typeName:     result = hasDoc && (doc!.isDraft || doc!.isDocumentEdited || doc!.hasUnautosavedChanges)
+            case CmdNewProject.typeName:        result = .allowed
+            case CmdOpenProject.typeName:       result = .allowed
+            //case CmdSaveProject.typeName:       result = isNeedsSaving
+            //case CmdSaveProjectAs.typeName:     result = isNeedsSaving
                 
-            // Layer menu:
-            case CmdLayerAdd.typeName:          result = hasDoc
-            case CmdLayerEdit.typeName:         result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
-            case CmdLayerRemove.typeName:       result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
-            case CmdLayerSetAccess.typeName:    result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
-            case CmdLayerSetVisiblity.typeName: result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
-            case CmdLayerSetVisiblity.typeName: result = hasDoc && doc!.brick.layers.selectedLayers.count > 0
-                
+            // Layer menu: (only when we have a cur doc)
+            case CmdLayerAdd.typeName:          result = CommandAllowed(bool: hasDoc)
+            case CmdLayerEdit.typeName, CmdLayerRemove.typeName, CmdLayerSetAccess.typeName, CmdLayerSetVisiblity.typeName:
+                result = doc?.isAllowed(commandType: commandType, method: method, context: context) ?? .notAllowed
             default:
                 dlog?.note("did not handle command of type [\(commandType.typeName)]")
                 break
@@ -125,11 +126,15 @@ extension BrickDocController /* command factory */ {
     }
 }
 
+// Should typically respond and handle only App Commands:
 extension BrickDocController : CommandInvokerObserver {
     func commandInvoker(_ invoker: CommandInvoker, didPerformCommand command: Command, method: CommandExecutionMethod, result: CommandResult) {
+        
+        // Should typically respond and handle only App Commands:
         guard let appCmd = command as? AppCommand else {
             return
         }
+        
         let cmdType = Swift.type(of: appCmd)
         
         DispatchQueue.main.async {

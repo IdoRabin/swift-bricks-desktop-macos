@@ -21,12 +21,17 @@ extension NSColor {
     static var appFailureOrange =  NSColor(named: "failure_orange_color")!
     static var appFailureRed    =  NSColor(named: "failure_red_color")!
     static var appSuccessGreen  =  NSColor(named: "success_green_color")!
+    static var appLabelColor : NSColor {
+        return labelColor
+    }
 }
 
 struct AppConstants {
     static let SETTINGS_FILENAME = "bricks_app_settings"
     static let DOCUMENT_HISTORY_FILENAME = "brick_file_history"
     static let BRICK_FILE_EXTENSION = "bricks"
+    static let BRICK_FILE_UTI = "com.idorabin.bricks.document"
+    
     static let RULE_SET_FILE_EXTENSTION = "bricksruleset"
 }
 
@@ -55,7 +60,7 @@ extension Date {
 extension NSView {
     var isDarkThemeActive : Bool {
         if #available(OSX 10.14, *) {
-            return self.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            return self.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua, .vibrantDark]) == .darkAqua
         }
         return false
     }

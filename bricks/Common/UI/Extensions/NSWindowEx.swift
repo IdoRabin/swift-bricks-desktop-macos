@@ -42,6 +42,18 @@ extension NSWindow {
         // DLog.ui["WindowScrn"]?.info("\(result ? "full" : "partial" ) screen")
         return result
     }
+    
+    static var isDarkThemeActive : Bool {
+        return NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua, .vibrantDark]) == .darkAqua
+    }
+    
+    var isDarkThemeActive : Bool {
+        guard let view = self.contentViewController?.view else {
+            return Self.isDarkThemeActive
+        }
+        
+        return view.isDarkThemeActive
+    }
 }
 
 extension NSWindow {
@@ -118,7 +130,7 @@ extension NSWindowController {
             self.isWindowLoaded
         }, completion: { waitResult in
             self.window?.forceWindowCornerRadius(radius, setup: setup)
-        }, counter: 1)
+        }, logType: .allAfterFirstTest)
     }
     
     func bringWindowToFront() {
@@ -127,6 +139,7 @@ extension NSWindowController {
         }
         self.window?.bringToFront()
     }
+    
 }
 
 class NSUtilWindow : NSWindow {

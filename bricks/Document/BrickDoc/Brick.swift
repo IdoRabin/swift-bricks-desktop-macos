@@ -10,7 +10,7 @@ import Foundation
 fileprivate let dlog : DSLogger? = DLog.forClass("Brick")
 
 protocol Changable : AnyObject {
-    func didChange(sender:Any, propsAndVals:[String:String])
+    func didChange(sender:Any, context:String, propsAndVals:[String:String])
 }
 
 class Brick : Codable, CustomDebugStringConvertible, BUIDable {
@@ -19,6 +19,28 @@ class Brick : Codable, CustomDebugStringConvertible, BUIDable {
     var settings : BrickSettings
     var stats : BrickStats
     var layers : BrickLayers
+    
+    private var _isNeedsSaving : Bool = false
+    var isNeedsSaving : Bool {
+        get {
+            guard _isNeedsSaving == false else {
+                return true // needs saving
+            }
+            guard self.stats.modificationsCount > 0 else {
+                return false // not a draft
+            }
+            guard let lastSaved = self.info.lastSavedDate else { return true }
+            if let modified = info.lastModifiedDate, modified > lastSaved {
+                return true // needs saving
+            }
+            return false
+        }
+    }
+    
+    func setNeedsSaving(sender:Any, context:String, propsAndVals:[String:String]) {
+        self.didChange(sender: sender, context:context, propsAndVals: propsAndVals)
+    }
+    
     
     // MARK: Identifiable / BUIDable
     var id : BrickDocUID {
@@ -61,15 +83,39 @@ class Brick : Codable, CustomDebugStringConvertible, BUIDable {
     // MARK: CustomDebugStringConvertible
     var debugDescription: String {
         get {
-            return "Brick\n\(info.debugDescription)"
+            return "\(info.debugDescription.replacingOccurrences(ofFromTo: ["\(BrickBasicInfo.self)":"\(Brick.self)"]))"
         }
+    }
+    
+    static func sanitize(_ str : String?)->String? {
+        guard var result = str, result.count > 0 else {
+            return nil
+        }
+        result = result.replacingOccurrences(ofFromTo: [
+            "drop table" : "fat chance",
+            "DROP TABLE" : "fat chance",
+        ])
+        result = result.trimmingCharacters(in: .whitespacesAndNewlines.union(.punctuationCharacters).union(.symbols))
+        if result.count == 0 {
+            return nil
+        }
+        return result
+    }
+    
+    func sanitize(_ str : String?)->String? {
+        return Self.sanitize(str)
     }
 }
 
 extension Brick : Changable {
-    
-    func didChange(sender: Any, propsAndVals: [String : String]) {
+    func didChange(sender: Any, context: String, propsAndVals: [String : String]) {
+        dlog?.info("didChange [\(self)] context: \(context) props:\(propsAndVals.keysArray.descriptionsJoined)")
         self.info.lastModifiedDate = Date()
         self.stats.modificationsCount += 1
+        self._isNeedsSaving = true
     }
+}
+
+extension Brick : JSONSerializable {
+    // all implemented already
 }

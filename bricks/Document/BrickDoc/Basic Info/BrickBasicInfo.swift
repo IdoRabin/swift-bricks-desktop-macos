@@ -16,11 +16,13 @@ struct BrickBasicInfo : Codable, CustomDebugStringConvertible, Hashable, BUIDabl
     
     var debugDescription: String {
         get {
-            return "BrickBasicInfo \(displayName ?? "< untitled >" ) \(creationDate.description) \(id)"
+            let formatter = DateFormatter.formatterByDateFormatString("dd/MM/yy HH:mm:ss.SSS")
+            return "BrickBasicInfo \(displayName ?? "< untitled >" ) \(formatter.string(from: self.creationDate)) \(id)"
         }
     }
     
     var creationDate:Date
+    var creatingUserId:UserUID? = nil
     var lastOpenedDate:Date? = nil
     var lastClosedDate:Date? = nil
     var lastModifiedDate:Date? = nil

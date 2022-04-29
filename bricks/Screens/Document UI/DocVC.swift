@@ -84,7 +84,6 @@ class DocVC : NSSplitViewController {
     
     override func viewWillAppear() {
         super.viewWillAppear()
-        // self.setupToolbarIfPossible()
     }
     
     // MARK: Public

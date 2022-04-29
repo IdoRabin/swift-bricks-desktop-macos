@@ -79,7 +79,7 @@ class MNSplitview : NSSplitView {
                     self.calcSnappingSizes()
                 }
             }
-        }, counter: 1)
+        }, logType: .allAfterFirstTest)
     }
     
     private func saveWidthsForPanel(at index:Int) {

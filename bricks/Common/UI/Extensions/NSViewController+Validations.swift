@@ -62,22 +62,39 @@ extension NSUserInterfacePluralValidations /* default implementation */  {
 
 extension NSViewController {
     
-    func triggerValidations() {
+    @objc func triggerValidations() {
         guard self.isViewLoaded else {
             DLog.ui["\(type(of: self))"]?.note("triggerValidations cannot work when isViewLoaded == false")
             return
         }
         
         let items = self.view.subviews(which: { view in
-            view.conforms(to: NSValidatedUserInterfaceItem.self)
+            switch view {
+            case is MNButton: // is NSButton
+                return true
+            default:
+                return false
+            }
         }, downtree: true) as? [NSValidatedUserInterfaceItem]
 
-        if let plural = self as? NSUserInterfacePluralValidations {
+        if items?.count ?? 0 == 0 {
+            dlog?.note("triggerValidations for VC: \(type(of: self)) found 0 items to validate")
+            let retry = self.view.subviews(which: { view in
+                switch view {
+                case is NSButton:
+                    dlog?.note("triggerValidations    view : \(view) is NSButton - should it be an MNButton?")
+                    return true
+                default:
+                    return false
+                }
+            }, downtree: true)
+            dlog?.note("triggerValidations retry for VC:\(type(of: self)) found \(retry.count) items: \(retry.descriptionsJoined)")
+        } else if let plural = self as? NSUserInterfacePluralValidations {
             plural.validateUserInterfaceItems(items ?? [])
-        } else if let singler = self as? NSUserInterfaceValidations {
+        } else if let single = self as? NSUserInterfaceValidations {
             for item in items ?? [] {
-                let isEnabled = singler.validateUserInterfaceItem(item)
-                singler.applyValidation(item: item, isEnabled: isEnabled)
+                let isEnabled = single.validateUserInterfaceItem(item)
+                single.applyValidation(item: item, isEnabled: isEnabled)
             }
         }
     }

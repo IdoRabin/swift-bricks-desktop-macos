@@ -133,7 +133,7 @@ class MNTabViewController : NSTabViewController {
                         mnSegmentedTabs.needsDisplay = true
                     }
                 }
-            }, counter: 0)
+            }, logType: .allAfterFirstTest)
         }
     }
     

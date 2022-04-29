@@ -115,7 +115,7 @@ extension UnkeyedDecodingContainer {
                 if IS_DEBUG {
                     if dlog != nil {
                         dlog?.successOrFail(condition: val != nil, items: "decode: \(aatype) val:\(val.descOrNil)")
-                    } else {
+                    } else if val == nil {
                         dlogWarnings?.fail("decode: \(aatype) val:\(val.descOrNil)")
                     }
                 }

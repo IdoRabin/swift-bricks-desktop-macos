@@ -244,9 +244,9 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
         guard !self.isMappingLines else {
             waitFor("mapLines.waitforPrevMapping", testOnMainThread: {
                 return self.isMappingLines == false
-            }) { waitResult in
+            }, completion: { waitResult in
                 completion()
-            }
+            }, logType: .always)
             return
         }
         
@@ -403,9 +403,6 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
     }
     
     private func internal_appendLines(_ untimedLines:[String], depth:UInt) {
-        dlog?.todo("TEMP - no append lines!!")
-        return // TEMP
-        
         
         guard depth < 10 else {
             dlog?.note("internal_appendLines depth >= 10")

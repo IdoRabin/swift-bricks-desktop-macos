@@ -10,6 +10,7 @@ import AppKit
 import CoreAudioTypes
 
 fileprivate let dlog : DSLogger? = DLog.forClass("MNProgress")
+fileprivate let dlogDetailed : DSLogger? = DLog.forClass("MNProgressDetail")
 
 struct DiscreteMNProgStruct : DiscreteMNProg, Equatable {
 
@@ -50,6 +51,7 @@ struct FractionalMNProgStruct : FractionalMNProg {
 }
 
 enum MNProgressState : Int {
+    case idle
     case pending
     case inProgress
     case success
@@ -58,7 +60,7 @@ enum MNProgressState : Int {
     
     var isComplete : Bool {
         switch self {
-        case .pending ,.inProgress:
+        case .pending, .idle, .inProgress:
             return false
         case .success, .failed, .userCanceled:
             return true
@@ -79,6 +81,7 @@ enum MNProgressState : Int {
     
     var imageSystemSymbolName : String {
         switch self {
+        case .idle:          return "" // idle state has no symbol
         case .pending:       return "" // "pause.circle.fill" ? "hand.raised.square.on.square" ? "plus.square.fill.on.square.fill"
         case .inProgress:    return "" // "gearshape.circle.fill" ? "ellipsis.circle.fill"
         case .success:       return "checkmark.circle"
@@ -94,8 +97,8 @@ enum MNProgressState : Int {
     
     var iconTintColor : NSColor {
         switch self {
-        case .pending:       return NSColor.clear
-        case .inProgress:    return NSColor.clear
+
+        case .pending, .idle, .inProgress:    return NSColor.clear
         case .success:       return NSColor.appSuccessGreen
         case .failed:        return NSColor.appFailureRed
         case .userCanceled:  return NSColor.appFailureOrange
@@ -104,8 +107,7 @@ enum MNProgressState : Int {
     
     var iconBkgColor : NSColor {
         switch self {
-        case .pending:       return NSColor.clear
-        case .inProgress:    return NSColor.clear
+        case .pending, .idle, .inProgress:       return NSColor.clear
         case .success:       return NSColor.appSuccessGreen
         case .failed:        return NSColor.appFailureRed
         case .userCanceled:  return NSColor.appFailureOrange
@@ -113,6 +115,7 @@ enum MNProgressState : Int {
     }
     var displayString : String {
         switch self {
+        case .idle:          return ""
         case .pending:       return AppStr.PENDING.localized()
         case .inProgress:    return AppStr.PROGRESS.localized()
         case .success:       return AppStr.SUCCESS.localized()
@@ -233,6 +236,8 @@ struct MNProgressEmitSignature : Equatable, Hashable {
     }
 }
 
+
+/// An MNProgress describes the state of progress for a task, command or other operation. One can use a single mutable instance of MNProgress or generate a new MNProgress struct for each push / emit / usage.
 struct MNProgress : FractionalMNProg {
     private var _progressNum : MNProgressNum = .unknown
     private var _title : String?
@@ -323,11 +328,11 @@ struct MNProgress : FractionalMNProg {
                 let startState = contexts.first?.state ?? _lastStateChange.1
                 let endState = self.state
                 if startState != endState {
-                    dlog?.info("state changed from: \(startState) to: \(endState)")
+                    dlogDetailed?.info("state changed from: \(startState) to: \(endState) context:\(context)")
                     self.onStateChanged?(self, startState, endState)
                 }
                 
-                // dlog?.info("changed(context:) \(contexts.map { $0.context }.descriptionsJoined)")
+                // dlogDetailed?.info("changed(context:) \(contexts.map { $0.context }.descriptionsJoined)")
                 self.onChanged?(self, contexts.map { $0.context })
             }
         }
@@ -354,9 +359,10 @@ struct MNProgress : FractionalMNProg {
                 self.setState(.success, error: nil, fraction: nil)
                 changed(context: "state=.success")
             }
+            
             if fractionChangeed {
                 self._progressNum = .fraction(newFraction)
-                // dlog?.info("setProgress fraction: \(self.fractionCompletedDisplayString)")
+                dlogDetailed?.info("setProgress fraction: \(self.fractionCompletedDisplayString)")
                 changed(context: "progress fraction=\(newFraction)")
             }
             
@@ -371,7 +377,7 @@ struct MNProgress : FractionalMNProg {
         let newStruct = DiscreteMNProgStruct(total: totalUnitsCnt, completed: completedUnitsCnt)
 
         self._progressNum = .discrete(newStruct)
-        // dlog?.info("setProgress discretes: \(newStruct.progressUnitsDisplayString) | \(self.fractionCompletedDisplayString)")
+        dlogDetailed?.info("setProgress discretes: \(newStruct.progressUnitsDisplayString) | \(self.fractionCompletedDisplayString)")
         
         var willChange = false
         if let prevStruct = prevStruct, prevStruct != newStruct  {
@@ -781,56 +787,49 @@ extension MNProgress /* emit to an MNProgressObserver */ {
             }
         }
         
-        let fraction = self.fractionCompleted
-        let discrete = self._progressNum.asDiscreteStructOrNil
-        let immutableCopy = self
-        switch _lastStateChange {
-        case (_, .pending):
-            let newSummary = MNProgressEmitSignature(messageName: "pending", progress: self)
+        func emitNow(messageName:String, completion:(_ success:Bool)->Void) {
+            let immutableCopy = self
+            let fraction = self.fractionCompleted
+            let discrete = self._progressNum.asDiscreteStructOrNil
+            let newSummary = MNProgressEmitSignature(messageName: messageName, progress: self)
             if newSummary != self._lastEmittedSignature {
                 self._lastEmittedSignature = newSummary
+                dlog?.info("emit from: \(_lastStateChange.0) to: \(_lastStateChange.1) ")
                 execute { observer in
                     observer.mnProgress(sender: sender, isPendingProgress: immutableCopy, fraction: fraction, discretes: discrete)
                 }
-            } else {
-                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
-            }
-        case (.pending, .inProgress):
-            let newSummary = MNProgressEmitSignature(messageName: "startProgress", progress: self)
-            if newSummary != self._lastEmittedSignature {
-                self._lastEmittedSignature = newSummary
+                completion(true)
                 
-                execute { observer in
-                    observer.mnProgress(sender: sender, didStartProgress: immutableCopy, fraction: fraction, discretes: discrete)
-                }
-                _lastStateChange = (.inProgress, .inProgress)
             } else {
-                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
+                dlogDetailed?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
+                completion(false)
+            }
+        }
+
+        switch _lastStateChange {
+        case (.failed, .idle), (.success, .idle), (.userCanceled, .idle):
+            emitNow(messageName: "idle", completion: {(_) in })
+            
+        case (.pending, .idle), (.inProgress, .idle):
+            emitNow(messageName: "idle", completion: {(_) in })
+            
+        case (_, .idle):
+            emitNow(messageName: "pending", completion: {(_) in })
+            
+        case (_, .pending):
+            emitNow(messageName: "pending", completion: {(_) in })
+            
+        case (.pending, .inProgress), (.idle, .inProgress):
+            emitNow(messageName: "startProgress") {success in
+                if success {
+                    self._lastStateChange = (.inProgress, .inProgress)
+                }
             }
         case (_, .inProgress):
-            let newSummary = MNProgressEmitSignature(messageName: "progress", progress: self)
-            if newSummary != self._lastEmittedSignature {
-                self._lastEmittedSignature = newSummary
-                
-                execute { observer in
-                    observer.mnProgress(sender: sender, didProgress: immutableCopy, fraction: fraction, discretes: discrete)
-                }
-                // self.logAll(title:"")
-                
-            } else {
-                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
-            }
+            emitNow(messageName: "progress", completion: {(_) in })
+            
         case (_, .userCanceled), (_, .failed), (_, .success):
-            let newSummary = MNProgressEmitSignature(messageName: "complete", progress: self)
-            if newSummary != self._lastEmittedSignature {
-                self._lastEmittedSignature = newSummary
-                
-                execute { observer in
-                    observer.mnProgress(sender: sender, didComplete: immutableCopy, state: immutableCopy.state)
-                }
-            } else {
-                // dlog?.note("Already emitted signature: \(newSummary.msg) prec: \(round(newSummary.fraction * 10000) / 100)")
-            }
+            emitNow(messageName: "complete", completion: {(_) in })
         }
     }
     
@@ -839,7 +838,7 @@ extension MNProgress /* emit to an MNProgressObserver */ {
 extension MNProgress : CustomStringConvertible {
     var description: String {
         let fractionStr = self.fractionCompletedDisplayString
-        return "\(type(of: self)) \(self.title ?? AppStr.UNTITLED.localized()) state: \(self.state) progress: \(fractionStr) discrete: \(self.discreteStructOrNil?.progressUnitsDisplayString ?? "<not discrete>")"
+        return "<\(type(of: self)) \(self.title ?? AppStr.UNTITLED.localized()) state: \(self.state) progress: \(fractionStr) discrete: \(self.discreteStructOrNil?.progressUnitsDisplayString ?? "<not discrete>")>"
     }
 }
 

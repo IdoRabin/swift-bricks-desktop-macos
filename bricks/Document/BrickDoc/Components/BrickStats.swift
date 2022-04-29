@@ -14,8 +14,13 @@ class BrickStats: Codable {
     var indexingCount : UInt = 0
     var modificationsCount : UInt = 0
     var savesCount : UInt = 0
+    var savesByCommandCount : UInt = 0
     var loadsCount : UInt = 0
     var loadsTimings = AverageAccumulator(named: "loadsTimings", persistentInFile: false, maxSize: 50)
+    
+    var autosavesCount : Int {
+        return Int(savesCount) - Int(savesByCommandCount)
+    }
     
     var statsDisplayDictionary : [String:String] {
         get {
@@ -23,6 +28,7 @@ class BrickStats: Codable {
             result["sessions"] = String(sessionCount)
             result["indexing"] = String(indexingCount)
             result["savesCount"] = String(savesCount)
+            result["savesByCommandCount"] = String(savesByCommandCount)
             result["modificationsCount"] = String(modificationsCount)
             result["loadsCount"] = String(loadsCount)
             return result

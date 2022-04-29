@@ -180,7 +180,7 @@ extension PreferencesVC : NSPageControllerDelegate {
                 DispatchQueue.mainIfNeeded {
                     vc.view.debugBorder(color: .cyan, width: 1)
                 }
-            }, counter: 1)
+            }, logType: .allAfterFirstTest)
         }
         return vc
     }

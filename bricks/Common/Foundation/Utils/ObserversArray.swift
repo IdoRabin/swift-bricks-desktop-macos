@@ -33,9 +33,12 @@ class ObserversArrayLock : NSLock {
             }
         #endif
         
-        self.lock()
-        block()
-        self.unlock()
+        if self.try() {
+            block()
+            self.unlock()
+        } else {
+            dlog?.warning("ObserversArrayLock already locked!!")
+        }
         
         #if DEBUG
             if ObserversArrayLock.DEBUG_LONG_LOCKS == true {

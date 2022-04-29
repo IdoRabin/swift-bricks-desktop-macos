@@ -36,6 +36,7 @@ protocol AppCommand : Command, AnyObject {
     static var tooltipTitleFull : String { get }
     var dlog : DSLogger? { get }
     
+    var category : AppCommandCategory { get }
 }
 
 extension AppCommand /* default implementation */ {
@@ -46,6 +47,10 @@ extension AppCommand /* default implementation */ {
             return title + " " + keyboardShortcut.displayString
         }
         return title
+    }
+    
+    var category : AppCommandCategory {
+        return Self.category
     }
     
     var dlog : DSLogger? {

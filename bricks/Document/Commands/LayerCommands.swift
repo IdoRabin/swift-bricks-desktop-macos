@@ -7,7 +7,33 @@
 
 import Foundation
 
-class CmdLayerAdd : DocCommand {
+protocol LayerCommand : DocCommand {
+    var layerID:LayerUID? { get }
+    func getLayerId(fromPayload:Bool, fromUndoInfo:Bool)->LayerUID?
+}
+extension LayerCommand /* default implementations */ {
+    
+    func getLayerId(fromPayload:Bool, fromUndoInfo:Bool)->LayerUID? {
+        var result : LayerUID? = self.layerID
+        if result == nil && fromPayload {
+            if let payload = payload as? [String:AnyCodable] {
+                result = payload["LayerId"] as? LayerUID
+            } else if let layerId = payload as? LayerUID {
+                result = layerId
+            }
+        }
+        if result == nil && fromUndoInfo {
+            if let undoInfo = undoInfo as? [String:AnyCodable] {
+                result = undoInfo["LayerId"] as? LayerUID
+            } else if let layerId = payload as? LayerUID {
+                result = layerId
+            }
+        }
+        return result
+    }
+}
+
+class CmdLayerAdd : LayerCommand {
     
     
     // MARK: AppCommand required properties
@@ -22,7 +48,25 @@ class CmdLayerAdd : DocCommand {
     let docID : BrickDocUID
     weak var receiver: CommandReciever?
     var context: CommandContext
-    var layerId:LayerUID? // saved after being created for undo
+    var layerID:LayerUID? // saved after being created for undo
+    var layerName:String? // saved after being created for undo
+    var payload : [String:AnyCodable]? {
+        var result : [String:AnyCodable] = [:]
+        if let id = self.layerID {
+            result["layerID"] = id
+        }
+        if let name = self.layerName {
+            result["layerName"] = name
+        }
+        if result.count == 0 {
+            return nil
+        }
+        return result
+    }
+    
+    var undoInfo : CommandUndoInfo? {
+        return self.payload
+    }
     
     var doc: BrickDoc? {
         if let receiver = receiver as? BrickDoc {
@@ -48,17 +92,51 @@ class CmdLayerAdd : DocCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        guard let doc = doc else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_insert_failed, detail: "doc not found")))
+            return
+        }
+
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed!
         
-        // Execute command:
-//        switch method {
-//        case .execute, .redo:
-//            // Peform on receiver
-//            // ... completion(...)
-//        case .undo:
-//            // Perform undo if possible?
-//            // ... completion(...)
-//        }
+        // Execute command: CmdLayerAdd
+        // Peform on receiver
+        switch method {
+        case .execute, .redo:
+            let layerResult = doc.brick.layers.addLayer(id: self.layerID, name: self.layerName) // Will add a layer with "Untitled #" as title
+            if let layer = layerResult.layers?.first {
+                if self.layerID == nil {
+                    self.layerID = layer.id
+                }
+                if self.layerName == nil {
+                    self.layerName = layer.name
+                }
+                
+                // Test / Log warning is needed.
+                if IS_DEBUG {
+                    if self.layerID == nil { dlog?.warning("addLayer perform:\(method) but did not get a layerID!") }
+                }
+            }
+            
+            let result = layerResult.asCommandResult
+            
+            if result.isSuccess == true {
+                doc.setNeedsSaving(sender: self, context: "Add layer", propsAndVals: ["LayerID":layerResult.layers?.ids.descriptionsJoined ?? ""])
+            }
+            dlog?.info("Add layer result: \(result) payload:\(self.payload.descOrNil)")
+            completion(result)
+            
+        case .undo:
+            guard let layerId = layerID else {
+                completion(.failure(AppError(AppErrorCode.doc_layer_insert_failed, detail: "layer id is nil")))
+                return
+            }
+            
+            // Perform undo if possible?
+            let result = doc.brick.layers.removeLayers(ids: [layerId]).asCommandResult
+            dlog?.info("Add layer (UNDO) result: \(result)")
+            completion(result)
+        }
     }
     
     // MARK: Lifecycle
@@ -66,12 +144,12 @@ class CmdLayerAdd : DocCommand {
         self.receiver = receiver
         self.docID = receiver.id
         self.context = context
-        self.layerId = nil
+        self.layerID = nil
     }
 }
 
 
-class CmdLayerEdit : DocCommand {
+class CmdLayerEdit : LayerCommand {
     
     // MARK: AppCommand required properties
     static var category : AppCommandCategory = .layer
@@ -85,7 +163,9 @@ class CmdLayerEdit : DocCommand {
     let docID : BrickDocUID
     weak var receiver: CommandReciever?
     var context: CommandContext
-    var layerId:LayerUID
+    var layerID:LayerUID?
+    var payload : [String:AnyCodable] = [:]
+    var undoInfo : [String:AnyCodable] = [:]
     
     // MARK: Command funcs
     static func isAllowed(_ method: CommandExecutionMethod, context: CommandContext, reciever: CommandReciever?) -> Bool {
@@ -100,17 +180,34 @@ class CmdLayerEdit : DocCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
+
+        guard let layerID = layerID else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "layer id not found")))
+            return
+        }
+        guard let layers = doc?.brick.layers else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "layers container missing")))
+            return
+        }
         
-        // Execute command:
-//        switch method {
-//        case .execute, .redo:
-//            // Peform on receiver
-//            // ... completion(...)
-//        case .undo:
-//            // Perform undo if possible?
-//            // ... completion(...)
-//        }
+        let dic : [String:AnyCodable] = method.isUndo ? self.undoInfo : self.payload
+        
+        guard dic.count > 0 else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "changes map is empty")))
+            return
+        }
+
+        // Execute command: CmdLayerEdit
+        // Execute or Undo info:
+        
+        // Chck if allowed, and apply edit
+        var result = layers.isAllowedEdit(dic, layerID: layerID)
+        if result.isSuccess {
+            result = layers.applyEdit(dic, layerID: layerID)
+        }
+        
+        completion(result)
     }
     
     // MARK: Lifecycle
@@ -118,12 +215,12 @@ class CmdLayerEdit : DocCommand {
         self.receiver = receiver
         self.docID = receiver.id
         self.context = context
-        self.layerId = layerID
+        self.layerID = layerID
     }
 }
 
 
-class CmdLayerRemove : DocCommand {
+class CmdLayerRemove : LayerCommand {
     
     // MARK: AppCommand required properties
     static var category : AppCommandCategory = .layer
@@ -137,7 +234,8 @@ class CmdLayerRemove : DocCommand {
     let docID : BrickDocUID
     weak var receiver: CommandReciever?
     var context: CommandContext
-    var layerId:LayerUID
+    var layerID:LayerUID?
+    /* from protocol */ var undoInfo : BrickLayer? = nil
     
     // MARK: Command funcs
     static func isAllowed(_ method: CommandExecutionMethod, context: CommandContext, reciever: CommandReciever?) -> Bool {
@@ -160,20 +258,42 @@ class CmdLayerRemove : DocCommand {
         }
         
         // Test receiver allows command:
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
+        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == .notAllowed {
             completion(.failure(AppError(AppErrorCode.cmd_not_allowed_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
             return
         }
+        guard let doc = doc else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_delete_failed, detail: "Failed removing layer with an unknwon doc")))
+            return
+        }
         
-        // Execute command:
-//        switch method {
-//        case .execute, .redo:
-//            // Peform on receiver
-//            // ... completion(...)
-//        case .undo:
-//            // Perform undo if possible?
-//            // ... completion(...)
-//        }
+        guard let layerID = layerID else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_delete_failed, detail: "Failed removing layer because layerID is nil")))
+            return
+        }
+
+        //  Execute command: CmdLayerRemove
+        var cmdResult : CommandResult = .failure(AppError(AppErrorCode.doc_layer_delete_failed, detail: "Failed removing layer \(layerID) for an unknown reason"))
+        switch method {
+        case .execute, .redo:
+            // Peform on receiver
+            self.undoInfo = doc.brick.layers.layer(byId: layerID)
+            cmdResult = doc.brick.layers.removeLayers(ids: [layerID]).asCommandResult
+        case .undo:
+            // Perform undo if possible?
+            if let deletedLayer = self.undoInfo {
+                cmdResult = doc.brick.layers.addLayers(layers: [deletedLayer]).asCommandResult
+            } else {
+                cmdResult = .failure(AppError(AppErrorCode.doc_layer_delete_failed, detail: "Failed restoring (undo for a remove) layer \(layerID). Undo info is missing."))
+            }
+        }
+        
+        if cmdResult.isSuccess {
+            doc.setNeedsSaving(sender: self, context: context, propsAndVals: ["bricks.layers.layer":layerID.uuidString,
+                                                                              "removed":"\(method)"], executionMehod: method)
+        }
+        
+        completion(cmdResult)
     }
     
     // MARK: Lifecycle
@@ -181,11 +301,11 @@ class CmdLayerRemove : DocCommand {
         self.receiver = receiver
         self.docID = receiver.id
         self.context = context
-        self.layerId = layerID
+        self.layerID = layerID
     }
 }
 
-class CmdLayerSetAccess : DocCommand {
+class CmdLayerSetAccess : LayerCommand {
     
     // MARK: AppCommand required properties
     static var category : AppCommandCategory = .layer
@@ -199,8 +319,9 @@ class CmdLayerSetAccess : DocCommand {
     let docID : BrickDocUID
     weak var receiver: CommandReciever?
     var context: CommandContext
-    var layerId:LayerUID
+    var layerID:LayerUID?
     var lockStateToSet : BrickLayer.Access = .unlocked
+    /* from protocol */ var undoInfo : BrickLayer.Access? = nil
     
     // MARK: Command funcs
     static func isAllowed(_ method: CommandExecutionMethod, context: CommandContext, reciever: CommandReciever?) -> Bool {
@@ -223,20 +344,51 @@ class CmdLayerSetAccess : DocCommand {
         }
         
         // Test receiver allows command:
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
+        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context).asBool == false {
             completion(.failure(AppError(AppErrorCode.cmd_not_allowed_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
             return
         }
         
-        // Execute command:
-//        switch method {
-//        case .execute, .redo:
-//            // Peform on receiver
-//            // ... completion(...)
-//        case .undo:
-//            // Perform undo if possible?
-//            // ... completion(...)
-//        }
+        guard let doc = doc else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "\(self): failed finding doc: \(self.docID)")))
+            return
+        }
+        
+        
+        guard let layerID = layerID, let layer = doc.brick.layers.orderedLayers.first(id: layerID) else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "\(self): failed finding layer id:\(layerID.descOrNil) method: \(method) context: \(context)")))
+            return
+        }
+        
+        dlog?.info("set access: \(method) to:\(lockStateToSet)")
+        var cmdResult : CommandResult = .failure(AppError(AppErrorCode.doc_layer_change_failed, detail:"\(self): failed for unknown reason"))
+        
+        // Execute command: CmdLayerSetAccess
+        switch method {
+        case .execute, .redo:
+            // Peform on receiver
+            undoInfo = layer.access
+            cmdResult = doc.brick.layers.setLayersAccess(ids: [layerID], newAccessState: lockStateToSet).asCommandResult
+        case .undo:
+            // Perform undo if possible?
+            if let prevState = (undoInfo ?? result?.value) as? BrickLayer.Access {
+                cmdResult = doc.brick.layers.setLayersAccess(ids: [layerID], newAccessState: prevState).asCommandResult
+            } else {
+                cmdResult = .failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "\(self): failed finding previous state for UNDO id:\(layerID) method: \(method) context: \(context)"))
+            }
+        }
+        
+        // Set changed:
+        if cmdResult.isSuccess {
+            doc.setNeedsSaving(sender: self, context: context, propsAndVals: ["bricks.layers.layer":layerID.uuidString,
+                                                                              "access":"\(layer.access)"], executionMehod: method)
+        }
+        completion(cmdResult)
+        
+        // Debugging: make sure change was applied to layer:
+        //DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
+        //    self.dlog?.info("newAccessState: \(layer.access) [\(layer.name ?? layer.id.uuidString)] result:\(self.result.descOrNil)")
+        //}
     }
     
     // MARK: Lifecycle
@@ -244,12 +396,13 @@ class CmdLayerSetAccess : DocCommand {
         self.receiver = receiver
         self.docID = receiver.id
         self.context = context
-        self.layerId = layerID
+        self.layerID = layerID
         self.lockStateToSet = newLockStt
+        self.undoInfo = receiver.brick.layers.orderedLayers.first(id: layerID)?.access // current state
     }
 }
 
-class CmdLayerSetVisiblity : DocCommand {
+class CmdLayerSetVisiblity : LayerCommand {
     
     // MARK: AppCommand required properties
     static var category : AppCommandCategory = .layer
@@ -263,8 +416,9 @@ class CmdLayerSetVisiblity : DocCommand {
     let docID : BrickDocUID
     weak var receiver: CommandReciever?
     var context: CommandContext
-    var layerId:LayerUID
+    var layerID:LayerUID?
     var visibilityStateToSet : BrickLayer.Visiblity = .hidden
+    /* from protocol */ var undoInfo : BrickLayer.Visiblity? = nil
     
     // MARK: Command funcs
     static func isAllowed(_ method: CommandExecutionMethod, context: CommandContext, reciever: CommandReciever?) -> Bool {
@@ -287,20 +441,51 @@ class CmdLayerSetVisiblity : DocCommand {
         }
         
         // Test receiver allows command:
-        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context) == false {
+        if let receiver = receiver, receiver.isAllowed(commandType: Self.self, method: method, context: context).asBool == false {
             completion(.failure(AppError(AppErrorCode.cmd_not_allowed_now, detail: "receiver: \(receiver) does not allow - method: \(method) context: \(context)")))
             return
         }
         
-        // Execute command:
-//        switch method {
-//        case .execute, .redo:
-//            // Peform on receiver
-//            // ... completion(...)
-//        case .undo:
-//            // Perform undo if possible?
-//            // ... completion(...)
-//        }
+        guard let doc = doc else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "\(self): failed finding doc: \(self.docID)")))
+            return
+        }
+        
+        guard let layerID = layerID, let layer = doc.brick.layers.orderedLayers.first(id: layerID) else {
+            completion(.failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "\(self): failed finding layer id:\(layerID.descOrNil) method: \(method) context: \(context)")))
+            return
+        }
+        
+        dlog?.info("set visiblity: \(method) to: \(visibilityStateToSet)")
+        var cmdResult : CommandResult = .failure(AppError(AppErrorCode.doc_layer_change_failed, detail:"\(self): failed for unknown reason"))
+        
+        // Execute command: CmdLayerSetVisibility
+        switch method {
+        case .execute, .redo:
+            // Peform on receiver
+            self.undoInfo = layer.visiblity
+            cmdResult = doc.brick.layers.setLayersVisibility(ids: [layerID], newVisibilityState: visibilityStateToSet).asCommandResult
+            
+        case .undo:
+            // Perform undo if possible?
+            if let prevState = (self.undoInfo ?? result?.value) as? BrickLayer.Visiblity {
+                cmdResult = doc.brick.layers.setLayersVisibility(ids: [layerID], newVisibilityState: prevState).asCommandResult
+            } else {
+                
+                cmdResult = .failure(AppError(AppErrorCode.doc_layer_change_failed, detail: "\(self): failed finding previous state for UNDO id:\(layerID) method: \(method) context: \(context)"))
+            }
+        }
+        
+        if cmdResult.isSuccess {
+            doc.setNeedsSaving(sender: self, context: context, propsAndVals: ["bricks.layers.layer":layerID.uuidString,
+                                                                              "visibility":"\(layer.visiblity)"], executionMehod: method)
+        }
+        completion(cmdResult)
+        
+        // Debugging: make sure change was applied to layer:
+        //DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
+        //    self.dlog?.info("newVisibilityState: \(layer.visiblity) [\(layer.name ?? layer.id.uuidString)] result:\(self.result.descOrNil)")
+        //}
     }
     
     // MARK: Lifecycle
@@ -308,7 +493,8 @@ class CmdLayerSetVisiblity : DocCommand {
         self.receiver = receiver
         self.docID = receiver.id
         self.context = context
-        self.layerId = layerID
+        self.layerID = layerID
         self.visibilityStateToSet = newVisStt
+        self.undoInfo = receiver.brick.layers.orderedLayers.first(id: layerID)?.visiblity // current state
     }
 }

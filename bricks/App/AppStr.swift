@@ -70,6 +70,8 @@ enum AppStr : Localizable {
     case SAVE_DOT_DOT
     case SAVE_AS
     case SAVE_AS_DOT_DOT
+    case SAVING // "Saving" (now...)
+    case SAVING_X_DOT_DOT_FORMAT // "Saving X.."
     case DUPLICATE
     case RENAME_DOT_DOT
     case MOVE_TO_DOT_DOT
@@ -189,6 +191,7 @@ enum AppStr : Localizable {
     case SHOW_SELECTED_LAYER_TOOLTIP
     case HIDE_OTHER_LAYERS_TOOLTIP
     case SHOW_ALL_LAYERS_TOOLTIP
+    case LAYER_NAME
     
     // Misc actions
     case SHOW_DOCNAME_POPUP

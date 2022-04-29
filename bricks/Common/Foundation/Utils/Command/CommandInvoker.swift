@@ -23,16 +23,36 @@ enum InvokerState {
 }
 
 protocol CommandInvokerObserver {
+    func commandInvoker(_ invoker:CommandInvoker, willPerformCommand:Command, method: CommandExecutionMethod, result:CommandResult)
     func commandInvoker(_ invoker:CommandInvoker, didPerformCommand:Command, method: CommandExecutionMethod, result:CommandResult)
 }
 
+extension CommandInvokerObserver {
+    func commandInvoker(_ invoker:CommandInvoker, willPerformCommand:Command, method: CommandExecutionMethod, result:CommandResult) {
+        // does nothing
+    }
+}
+
 /// Based on GoF invoker pattern
-protocol CommandInvoker {
+protocol CommandInvoker : BasicDescable {
+    var associatedOwner : AnyObject? { get }
     var state : InvokerState { get }
+    var observers : ObserversArray<CommandInvokerObserver> { get }
+    
     func addCommands(_ commands: [Command])
     func addCommand(_ command: Command)
     func pause()->Bool
     func resume()->Bool
+}
+
+extension CommandInvoker /* BasicDescable default */ {
+    var basicDesc: String {
+        var memStr = ""
+        if let anyInvoker = self as? (AnyObject & CommandInvoker) {
+            memStr = " " + String(memoryAddressOf: anyInvoker)
+        }
+        return "<\(type(of: self))\(memStr) owner:\(associatedOwner.descOrNil)>"
+    }
 }
 
 fileprivate class CommandWrapper {
@@ -41,6 +61,14 @@ fileprivate class CommandWrapper {
     var executionType : CommandExecutionMethod?
     var result : CommandResult? = nil
     var executionDate : Date? = nil
+    
+    var payload : CommandPayload? {
+        return command.payload
+    }
+    
+    var undoInfo : CommandUndoInfo? {
+        return command.undoInfo
+    }
     
     init(command newCommand:Command,
          executionType newExecutionType:CommandExecutionMethod = .execute,
@@ -79,7 +107,7 @@ fileprivate class CommandWrapper {
             return
         }
         
-        if let receiver = command.receiver, let allowed = receiver.isAllowed(commandType: commandType, method: method, context: command.context), allowed == false {
+        if let receiver = command.receiver, let allowed = receiver.isAllowed(commandType: commandType, method: method, context: command.context).asOptionalBool, allowed == false {
             executionType = method
             executionDate = nil
             result = .failure(AppError(AppErrorCode.cmd_not_allowed_now, detail: "\(type(of: receiver)) disallowed cmd: \(command.typeName) method: \(method) context: \(command.context)"))
@@ -135,6 +163,7 @@ class QueuedInvoker : CommandInvoker {
     public var observers = ObserversArray<CommandInvokerObserver>()
     private var queues : [QueueType:[CommandWrapper]] = [:]
     private var dispatchQueue : DispatchQueue
+    weak var associatedOwner : AnyObject? = nil
     
     // MARK: Properties
     private var _state : InvokerState = .paused
@@ -222,7 +251,7 @@ class QueuedInvoker : CommandInvoker {
             self.observers.enumerateOnMainThread { observer in
                 observer.commandInvoker(self, didPerformCommand: newWrapper.command, method: newWrapper.executionType ?? .execute, result: result)
             } completed: {
-                // Call completion afte all observers
+                // Call completion after all observers were notified
                 completion(result)
             }
         }
@@ -407,7 +436,7 @@ class QueuedInvoker : CommandInvoker {
                         //DocumentView.current?.updateActionDescription(item.command as? ActionDescriptionable,
     //                                                                  for: item.isSucces ? .success : .failed,
     //                                                                  animated: true)
-                        dlog?.successOrFail(condition: item.isSucces, items: "invoke DONE for [\(type(of: item.command)))")
+                        dlog?.successOrFail(condition: item.isSucces, items: "invoke DONE for [\(type(of: item.command))) \((item.result?.errorOrNil).descOrNil)")
                     }
                 default:
                     dlog?.info("invoke DONE for \(toBeExecutedCopy.count) items")

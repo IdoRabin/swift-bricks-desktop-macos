@@ -140,7 +140,7 @@ class MainPanelToolbarView : NSView {
     }
     
     func basicUpdate(state newState:MNProgressState, title newTitle:String?, subtitle newSubtitle:String?, progress newProgress:CGFloat? = nil) {
-        dlog?.info("basicUpdate \(newTitle.descOrNil) | \(newSubtitle.descOrNil) progress:\(newProgress.descOrNil)")
+        dlog?.info("basicUpdate \"\(newTitle.descOrNil)\" | \"\(newSubtitle.descOrNil)\" progress: \(newProgress.descOrNil)")
         centerProgressBoxView?.basicUpdate(state:newState, title: newTitle, subtitle: newSubtitle, progress: newProgress)
     }
     
@@ -173,21 +173,91 @@ extension MainPanelToolbarView : BrickDocObserver {
     }
     
     func brickDocumentWillOpen(_ brick: BrickDoc) {
+        // brickDocumentWillLoad
         guard self._lastDoc == brick else {
             return
         }
     }
     
     func brickDocumentDidOpen(_ brick: BrickDoc) {
+        // brickDocumentDidLoad
         guard self._lastDoc == brick else {
             return
         }
     }
     
-    func brickDocumentDidChange(_ brick: BrickDoc, activityState: BrickDoc.DocActivityState) {
+    func brickDocumentWillSave(_ brick: BrickDoc) {
         guard self._lastDoc == brick else {
             return
         }
+    }
+    
+    func brickDocumentDidSave(_ brick: BrickDoc, result: AppResult) {
+        guard self._lastDoc == brick else {
+            return
+        }
+        
+        self.updateWithDoc(brick)
+    }
+    
+    func brickDocumentDidChange(_ brick: BrickDoc, activityState: BrickDoc.DocActivityState) {
+        /*
+        guard self._lastDoc == brick, let progressBoxView = self.centerProgressBoxView else {
+            return
+        }
+        
+        dlog?.info("brickDocumentDidChange progress [\(brick.basicDesc)] activityState: \(activityState)")
+        
+        var mnProgress : MNProgress? =  nil
+        var progressP : Double = -1.0
+        
+        switch activityState {
+        case .saving(let progressPart):
+            progressP = progressPart
+            mnProgress = MNProgress(completed: progressP >= 1.0 ? .success : .inProgress,
+                                    title: AppStr.SAVING.localized(),
+                                    subtitle:  brick.fileURL?.lastPathComponent ?? AppStr.UNNAMED.localized(),
+                                    info: nil)
+        case .loading(let progressPart):
+            progressP = progressPart
+            mnProgress = MNProgress(completed: progressP >= 1.0 ? .success : .inProgress,
+                                    title: AppStr.LOADING.localized(),
+                                    subtitle:  brick.fileURL?.lastPathComponent ?? AppStr.UNNAMED.localized(),
+                                    info: nil)
+        case .idle:
+            if !progressBoxView.progressCircle.isHidden {
+                progressP = progressBoxView.progress
+            }
+            
+            let completedState : MNProgressState = (progressP >= 0.99) ? .success : .failed
+            let futureProgress = MNProgress(completed: completedState,
+                                            title: AppStr.READY.localized(),
+                                            subtitle:  nil,
+                                            info: nil)
+            
+            // Clear activity/progres state:
+            TimedEventFilter.shared.filterEvent(key: "MainPanelToolbarView.brickDocumentDidChange_\(brick.id.uuidString)", threshold: 0.5) {
+                progressBoxView.update(with: futureProgress)
+            }
+        case .userActive:
+            mnProgress = MNProgress(completed: .pending,
+                                    title: AppStr.USER_ID.localized(),
+                                    subtitle:  nil,
+                                    info: nil)
+        case .operationActive(let operationName, let progress):
+            progressP = progress
+            let succ = progressP >= 0.99
+            mnProgress = MNProgress(completed: succ ? .success : .failed,
+                                    title: operationName,
+                                    subtitle:  nil,
+                                    info: nil)
+        }
+         
+        if let mnProgress = mnProgress {
+            progressBoxView.update(with: mnProgress)
+        } else if progressP != -1.0 {
+            progressBoxView.progress = progressP
+        }*/
     }
     
     func brickDocumentDidChange(_ brick: BrickDoc, saveState: BrickDoc.DocSaveState) {

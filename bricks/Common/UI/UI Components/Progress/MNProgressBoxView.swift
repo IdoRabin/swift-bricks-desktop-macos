@@ -26,7 +26,7 @@ class MNProgressBoxView : NSView {
     private let DEBUG_INIT_WITH_CIRCLE_SHOWN = IS_DEBUG && false
     private let DEBUG_ALWAYS_HAVE_TITLE = IS_DEBUG && false
     private let DEBUG_ALWAYS_HAVE_SUBTITLE = IS_DEBUG && false
-    private let DEFAULT_LEADING_PAD : CGFloat = 18
+    private let DEFAULT_LEADING_PAD : CGFloat = 18.0
     private let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && false
     
     private let COPY_MENU_ITEM_ID = "mnProgressBoxViewCopyMenuItemID"
@@ -60,6 +60,7 @@ class MNProgressBoxView : NSView {
     
     private(set) var isPopupMenuPresented : Bool = false
     private(set) var isPopupMenuClosing : Bool = false
+    private(set) var isUpdatingMNProgress : Bool = false
     
     @IBInspectable var title : String {
         get {
@@ -151,11 +152,14 @@ class MNProgressBoxView : NSView {
         }
         
         if subtitleLabel.stringValue != subtitle {
+            
             if animated && subtitleLabel.stringValue.count > 0 && subtitle.count == 0 && _lastSubtitleWhileAnimating == nil {
-                _lastSubtitleWhileAnimating = ""
-                DispatchQueue.main.asyncAfter(delayFromNow: 0.24) {
-                    self.subtitleLabel.stringValue = self._lastSubtitleWhileAnimating ?? ""
+                // This case is ONLY for when new subtitle label is an empty string ("")
+                _lastSubtitleWhileAnimating = "" // Clear subtitle...
+                self.clearUnitsTitle(animated: true, delay: animated ? (DEBUG_SLOW_ANIMATIONS ? 0.35 : 0.24) : 0.05) {
+                    self.subtitleLabel.stringValue = subtitle
                     self._lastSubtitleWhileAnimating = nil
+                    self.updateLabelsConstraints(animated: animated)
                 }
             } else if !_animatingPresentedLabels {
                 subtitleLabel.stringValue = subtitle
@@ -194,8 +198,8 @@ class MNProgressBoxView : NSView {
     private func updateLabelsConstraints(animated:Bool) {
         
         func exec() {
-            let labs = lastLabelsPresentedCount == 2
-             dlog?.info("updateLabelsConstraints labels: \(lastLabelsPresentedCount) animated: \(animated)")
+            let labs = (lastLabelsPresentedCount == 2)
+             // dlog?.info("updateLabelsConstraints labels: \(lastLabelsPresentedCount) animated: \(animated)")
             
             // TODO: See why this is doesn't trigger implicit animations
             titleLabelCenterYConstraint.constant = labs ?    /* top half */   -6.0 : 0.0 /* center y */
@@ -203,7 +207,7 @@ class MNProgressBoxView : NSView {
             subtitleLabel.alphaValue = labs ? 1.0 : 0.0
         }
         
-        let duration : TimeInterval = DEBUG_SLOW_ANIMATIONS ? 0.34 :  0.22
+        let duration : TimeInterval = animated ? (DEBUG_SLOW_ANIMATIONS ? 0.34 :  0.22) : 0.17
         var isShowsTwoLabels = titleLabel.stringValue.count > 0 && subtitleLabel.stringValue.count > 0
         if let sut = _lastSubtitleWhileAnimating, sut.count == 0 {
             isShowsTwoLabels = false
@@ -214,7 +218,7 @@ class MNProgressBoxView : NSView {
             if animated {
                 if _animatingPresentedLabels && newLabelsPresentedCount == 1 {
                     // This can wait
-                    dlog?.info("updateLabelsConstraints will wait: already animating")
+                    // dlog?.note("updateLabelsConstraints will wait: already animating")
                     DispatchQueue.main.asyncAfter(delayFromNow: duration + 0.01) {
                         self.lastLabelsPresentedCount = 0 // "Force" change
                         self.updateLabelsConstraints(animated: true)
@@ -241,7 +245,7 @@ class MNProgressBoxView : NSView {
     override func layout() {
         super.layout()
         DispatchQueue.main.performOncePerInstance(self) {
-            dlog?.info("first layout - circle progressWidthConstraint will be \(self.bounds.height)")
+            // dlog?.info("first layout - circle progressWidthConstraint will be \(self.bounds.height)")
             let newH = self.bounds.height
             progressCircleUnshrunkWidth = newH
             updateLabelsConstraints(animated: false)
@@ -282,7 +286,7 @@ class MNProgressBoxView : NSView {
             return
         }
         DispatchQueue.main.performOncePerInstance(self) {
-            dlog?.info("setup height: \(self.bounds.height) circle progressWidthConstraint: \(progressWidthConstraint.constant) sze: \(progressCircle.frame.size)")
+            //dlog?.info("setup height: \(self.bounds.height) circle progressWidthConstraint: \(progressWidthConstraint.constant) sze: \(progressCircle.frame.size)")
             self.menu?.delegate = self
         }
     }
@@ -297,7 +301,7 @@ class MNProgressBoxView : NSView {
     }
     
     deinit {
-//        progressCircle?.clearAllClosureProperties() // will deinit nicely even if we have a cyclic reference in the blocks..
+        // progressCircle?.clearAllClosureProperties() // will deinit nicely even if we have a cyclic reference in the blocks..
         TestMNProgressEmitter.shared.observers.remove(observer: self)
         dlog?.info("deinit")
     }
@@ -412,25 +416,58 @@ class MNProgressBoxView : NSView {
     }
     
     // MARK: Public
-    func clearUnitsTitle(animated:Bool = true) {
+    func clearUnitsTitle(animated:Bool = true, delay:TimeInterval = 0.0, completion: (()->Void)? = nil) {
         func exec() {
             self._lastSubtitleWhileAnimating = nil
             self.updateLabelsConstraints(animated: animated)
             self.superview?.superview?.layoutSubtreeIfNeeded()
         }
-        self.unitsLabel.animatedClearCharsLIFO(duration: 0.17) {
-            exec()
+        DispatchQueue.main.asyncAfter(delayFromNow: delay) {
+            self.unitsLabel.animatedClearCharsLIFO(duration: self.DEBUG_SLOW_ANIMATIONS ? 0.25 :  0.17) {
+                exec()
+                completion?()
+            }
         }
     }
     
+    func hideCircleProgress(animated:Bool = true, reset:Bool = true, completion: (()->Void)? = nil) {
+        self.updateCircleProgress(withProgress: 0.0,
+                                  animated: animated,
+                                  iconPresentation: nil,
+                                  forcedProgressCircleState: .hidden,
+                                  completion: completion)
+    }
+    
     func updateWithDoc(_ doc:BrickDoc?) {
-        dlog?.info("updateWithDoc \((doc?.displayName).descOrNil) updating progress hidden: \(doc != nil)")
+        guard doc != nil else {
+            // No document
+            dlog?.warning("updateWithDoc(<nil>) hides progress circle!")
+            self.hideCircleProgress()
+            return
+        }
         
-        setLabels(title: DEBUG_DRAWING || DEBUG_ALWAYS_HAVE_TITLE ? "Lorem ipsum title" :  "",
-                  subtitle: DEBUG_DRAWING || DEBUG_ALWAYS_HAVE_SUBTITLE ? "Lorem ipsum subtitle is longer." :  "",
-                  units: DEBUG_DRAWING || DEBUG_ALWAYS_HAVE_TITLE ? "0/100" : "",
-                  animated: false)
+        let ttle = DEBUG_DRAWING || DEBUG_ALWAYS_HAVE_TITLE ? "Lorem ipsum title" :  ""
+        let subttle = DEBUG_DRAWING || DEBUG_ALWAYS_HAVE_SUBTITLE ? "Lorem ipsum subtitle is longer." :  ""
+        let unitsStr = DEBUG_DRAWING || DEBUG_ALWAYS_HAVE_TITLE ? "0/100" : ""
+        
+        if self.isUpdatingMNProgress {
+            return
+        }
+        
+        if self.title != ttle ||
+            self.subtitle != subttle ||
+            units != unitsStr {
+            dlog?.info("updateWithDoc \((doc?.displayName).descOrNil) updating progress hidden: \(doc != nil)")
+            
+            setLabels(title: ttle,
+                      subtitle: subttle,
+                      units: unitsStr,
+                      animated: false)
+        }
+        
+        
         // progressCircle?.resetToZero(animated: true, hides: true, completion: nil)
+        
         DispatchQueue.main.async {
             if self.DEBUG_TEST_PROGRESS_OBSERVATION {
                 self.debugTestProgressObservations()
@@ -473,7 +510,9 @@ class MNProgressBoxView : NSView {
     private func updateCircleProgress(withProgress newProgress:CGFloat,
                                       animated:Bool,
                                       iconPresentation:CircleProgressView.IconPresentationInfo?,
-                                      forcedProgressCircleState:ProgressCircleState? = nil) {
+                                      forcedProgressCircleState:ProgressCircleState? = nil,
+                                      completion: (()->Void)? = nil
+    ) {
         let prevCircleState : ProgressCircleState = self.currentCircleState
         var newCircleState : ProgressCircleState = .visible
         let prevProgress = progressCircle.progress
@@ -495,7 +534,7 @@ class MNProgressBoxView : NSView {
         
         if (newCircleState != prevCircleState || isShouldShowIcon) {
 
-            let duration : TimeInterval = DEBUG_SLOW_ANIMATIONS ? 1.5 : 0.25
+            let duration : TimeInterval = animated ? (DEBUG_SLOW_ANIMATIONS ? 1.5 : 0.25) : 0.17
             NSView.animate(duration: duration, delay: 0.0) {[self] context in
                 context.allowsImplicitAnimation = true
                 self.progressWidthConstraint.animator().constant = newCircleState.isVisible ? progressCircleUnshrunkWidth : progressCircleShrunkWidth
@@ -512,15 +551,44 @@ class MNProgressBoxView : NSView {
             } completionHandler: {
                 if isShouldShowIcon, let iconPresentation = iconPresentation {
                     self.progressCircle.presentIcon(info: iconPresentation, completion:{
-                        dlog?.info("iconPresentationInfo presented")
+                        // dlog?.info("iconPresentationInfo presented")
                         self.updateCircleProgress(withProgress: newProgress,
                                                   animated: animated,
                                                   iconPresentation: nil,
-                                                  forcedProgressCircleState: .hidden)
+                                                  forcedProgressCircleState: .hidden,
+                                                  completion: completion)
                     })
+                } else {
+                    completion?()
                 }
             }
-
+            
+        } else {
+            
+            completion?()
+        }
+    }
+    
+    private func updateCenterTexts(mnProgress:MNProgress,texts txts: ProgressTexts, unitsLabelColor:NSColor, forceCircleState:ProgressCircleState? = nil) {
+        var texts : ProgressTexts = txts
+        // Update center text?
+        // self.progressCircle.centerText = "\(Int(floor(mnProgress.fractionCompleted * 35)))"
+        
+        // Update label
+        if texts.title == nil && texts.subtitle == nil, let lastRecv = self.lastRecievedProgressTexts {
+            texts = lastRecv
+        } else {
+            self.lastRecievedProgressTexts = texts
+        }
+        
+        let unitsTitle : String = "|\(String.NBSP)" + (mnProgress.discreteStructOrNil?.progressUnitsDisplayString ?? mnProgress.fractionCompletedDisplayString)
+        self.unitsLabel.textColor = unitsLabelColor
+        self.setLabels(title: texts.title ?? "",
+                       subtitle: texts.subtitle ?? "",
+                       units: unitsTitle,
+                       animated: self.window != nil)
+        if forceCircleState ?? .visible == .hidden {
+            self.clearUnitsTitle(animated: self.window != nil, completion: nil)
         }
     }
     
@@ -539,13 +607,28 @@ class MNProgressBoxView : NSView {
         self.update(with: mnProgress)
     }
     
-    private func update(with mnProgress:MNProgress) {
+    private func isShouldCollapseUnitsLabel(mnProgress:MNProgress)->Bool {
+        if mnProgress.title?.lowercased() == AppStr.READY.localized().lowercased() ||
+                self.title.lowercased() == AppStr.READY.localized().lowercased() {
+            if mnProgress.fractionCompleted == 1.0 || mnProgress.state == .success {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func internal_update(with mnProgress:MNProgress) {
+        // Assuming run on mainThread:
+        self.isUpdatingMNProgress = true
+        let ttle = mnProgress.title ?? "<no title>"
+        dlog?.info("update with mnProgress \(ttle) START")
+        DLog.indentStart(logger: dlog)
         
         // Clear previous selection
         self.selectsAllText = false
         
         // Calc title and subtitle:
-        var texts = self.calcProgressTexts(with: mnProgress)
+        let texts = self.calcProgressTexts(with: mnProgress)
         
         // Update misc. using the state:
         var forceCircleState : ProgressCircleState? = nil
@@ -554,7 +637,7 @@ class MNProgressBoxView : NSView {
         // Complete icon presentation:
         var unitsLabelColor : NSColor = NSColor.secondaryLabelColor.blended(withFraction: 0.4, of: NSColor.tertiaryLabelColor) ?? NSColor.tertiaryLabelColor
         switch mnProgress.state {
-        case .pending:
+        case .idle, .pending:
             forceCircleState = .hidden
         case .inProgress:
             break
@@ -576,25 +659,37 @@ class MNProgressBoxView : NSView {
         self.updateCircleProgress(withProgress: mnProgress.fractionCompleted,
                                   animated: self.window != nil,
                                   iconPresentation: iconPresentation,
-                                  forcedProgressCircleState:forceCircleState)
-        // Update center text?
-        // self.progressCircle.centerText = "\(Int(floor(mnProgress.fractionCompleted * 35)))"
-        
-        // Update label
-        if texts.title == nil && texts.subtitle == nil, let lastRecv = self.lastRecievedProgressTexts {
-            texts = lastRecv
-        } else {
-            self.lastRecievedProgressTexts = texts
+                                  forcedProgressCircleState:forceCircleState) {
+            DispatchQueue.mainIfNeeded {
+                self.updateCenterTexts(mnProgress: mnProgress, texts: texts, unitsLabelColor: unitsLabelColor, forceCircleState: forceCircleState)
+                DLog.indentEnd(logger: dlog)
+                dlog?.info("update with mnProgress \(ttle) END")
+                if self.isShouldCollapseUnitsLabel(mnProgress:mnProgress) {
+                    let animated = (self.window != nil)
+                    let delay : TimeInterval = animated ? (self.DEBUG_SLOW_ANIMATIONS ? 0.35 : 0.24) : 0.05
+                    self.clearUnitsTitle(animated: animated, delay: delay, completion: nil)
+                }
+                self.isUpdatingMNProgress = false
+            }
         }
-        
-        let unitsTitle = "|\(String.NBSP)" + (mnProgress.discreteStructOrNil?.progressUnitsDisplayString ?? mnProgress.fractionCompletedDisplayString)
-        self.unitsLabel.textColor = unitsLabelColor
-        self.setLabels(title: texts.title ?? "",
-                       subtitle: texts.subtitle ?? "",
-                       units: unitsTitle,
-                       animated: self.window != nil)
     }
     
+    func update(with mnProgress:MNProgress) {
+        guard Thread.current.isMainThread else {
+            DispatchQueue.mainIfNeeded {
+                self.update(with: mnProgress)
+            }
+            return
+        }
+        
+        waitFor("isUpdatingMNProgress == false", testOnMainThread: {
+            self.isUpdatingMNProgress == false
+        }, completion: { waitResult in
+            DispatchQueue.mainIfNeeded {
+                self.internal_update(with: mnProgress)
+            }
+        }, logType: .never)
+    }
 }
 
 extension MNProgressBoxView : MNProgressObserver {
@@ -622,6 +717,7 @@ extension MNProgressBoxView : MNProgressObserver {
 extension MNProgressBoxView : NSMenuDelegate {
     
     func menuWillOpen(_ menu: NSMenu) {
+        // Will load doc:
         //dlog?.info("menuWillOpen..")
         self.selectsAllText = true
         DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {

@@ -19,7 +19,7 @@ extension BrickDocController /* main menu */ {
         
         if let result = menu.updateMenuItem(menuItem, doc: self.curDoc, docWC: self.curDocWC, context: "validateMenuItem") {
             return result
-        } else if let menuItem = menuItem as? MNMenuItem, let cmd = menuItem.associatedCommand, let result = self.isAllowed(commandType: cmd, context: "validateMenuItem(noDoc))") {
+        } else if let menuItem = menuItem as? MNMenuItem, let cmd = menuItem.associatedCommand, let result = self.isAllowed(commandType: cmd, context: "validateMenuItem(noDoc))").asOptionalBool {
             return result
         } else if menuItem.title.count > 0 && menuItem.action != nil, let result = self.isAllowedNativeAction(menuItem.action, context: "validateMenuItem(noDoc)") {
             return result

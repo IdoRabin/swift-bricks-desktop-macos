@@ -7,16 +7,21 @@
 
 import Foundation
 
-protocol BUID : Codable, Hashable, CustomStringConvertible {
+protocol BUID : Codable, Hashable, Comparable, CustomStringConvertible {
     var uid : UUID! { get }
     var type : String { get }
 }
 
 extension BUID {
     
-    // Rquatable
+    // Equatable
     public static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.type == rhs.type && lhs.uid == rhs.uid
+    }
+    
+    // Comperable
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        return lhs.type < rhs.type && lhs.uid.hashValue == rhs.uid.hashValue
     }
     
     // Hashable
@@ -34,6 +39,7 @@ extension BUID {
     }
 }
 
+
 public struct TUID : BUID {
     var uid : UUID!
     var type : String = "?"
@@ -41,6 +47,7 @@ public struct TUID : BUID {
     enum Types : String {
         case doc = "DOC"
         case layer = "LYR"
+        case user = "USR"
     }
     
     init(type newType:Types, uuid: UUID) {
@@ -71,4 +78,19 @@ public struct TUID : BUID {
 
 protocol BUIDable : Identifiable where ID: BUID {
     
+}
+
+// MARK: Sorting of BUID arrays
+extension Array where Element : BUID {
+    mutating func sort() {
+        self.sort { buid1, buid2 in
+            return buid1 < buid2
+        }
+    }
+    
+    func sorted()->[Element] {
+        return self.sorted { buid1, buid2 in
+            return buid1 < buid2
+        }
+    }
 }

@@ -6,7 +6,7 @@
 //
 import AppKit
 
-class PropertiesTabsVC : MNTabViewController {
+class PropertiesTabsVC : MNTabViewController, DocSubVC {
     
     // MARK: Enums
     private enum Tabs : Int, Codable, MNTabViewControllerEnumable {
@@ -40,11 +40,11 @@ class PropertiesTabsVC : MNTabViewController {
     }
     
     // MARK: Computed vars
-    var doc : BrickDoc? {
-        return docWC?.document as? BrickDoc
-    }
-    var docWC : DocWC? {
-        return (self.view.window?.windowController as? DocWC)
+    
+    // MARK: Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.registerToDocWC()
     }
 }
 

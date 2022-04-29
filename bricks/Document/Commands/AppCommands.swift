@@ -30,11 +30,21 @@ class CmdSplashWindow : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
-        
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
+        guard method == .execute else {
+            completion(.failure(AppError(AppErrorCode.cmd_failed_execute, detail:"CmdSplashWindow can only perform in .execute mode")))
+            return
+        }
         DispatchQueue.mainIfNeeded {[self] in
             func saveFlags() {
                 BrickDocController.shared.lastClosedWasOnSplashScreen = BrickDocController.shared.brickDocWindows.count == 0
+            }
+            
+            guard BrickDocController.shared.documents.filter({ doc in
+                (doc as? BrickDoc)?.isClosing == false
+            }).count == 0 else {
+                completion(.failure(AppError(AppErrorCode.cmd_failed_execute, detail:"CmdSplashWindow cannot execute to present the splash screen while some documents are visible.")))
+                return
             }
             
             if SplashVC.sharedWindowController != nil, let vc = SplashVC.sharedWindowController?.contentViewController {
@@ -99,7 +109,7 @@ class CmdAboutPanel : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {
@@ -143,7 +153,7 @@ class CmdPreferencesPanel : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {

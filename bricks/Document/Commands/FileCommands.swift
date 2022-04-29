@@ -9,6 +9,7 @@ import AppKit
 
 class CmdNewProject : AppCommand {
     
+    
     // MARK: AppCommand required properties
     static var category : AppCommandCategory = .file
     static var keyboardShortcut : KeyboardShortcut = KeyboardShortcut(modifiers: .command, chars: "n")
@@ -28,7 +29,7 @@ class CmdNewProject : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
         
         DispatchQueue.mainIfNeeded {[self] in
             // Execute command:
@@ -74,7 +75,7 @@ class CmdOpenProject : AppCommand {
     }
     
     func perform(method: CommandExecutionMethod, completion: @escaping CommandResultBlock) {
-        // NOTE: Invoker / external caller is assumed to responsible to test isAllowed !
+        // NOTE: Invoker / external caller is assumed to be responsible to test isAllowed !
         
         // Execute command:
         DispatchQueue.mainIfNeeded {

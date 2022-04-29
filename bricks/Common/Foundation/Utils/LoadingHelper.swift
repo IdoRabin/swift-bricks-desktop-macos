@@ -188,11 +188,11 @@ class LoadingHelper {
                 DispatchQueue.mainIfNeeded {
                     finalize(waitResult: waitResult)
                 }
-            }, counter: 1)
+            }, logType: .allAfterFirstTest)
         } else {
             waitFor(context, interval: interval, timeout: timeout, test: test, completion: { waitResult in
                 finalize(waitResult: waitResult)
-            }, counter: 1)
+            }, logType: .allAfterFirstTest)
         }
     }
 }

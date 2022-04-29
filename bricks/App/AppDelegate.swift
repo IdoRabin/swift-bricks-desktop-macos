@@ -54,12 +54,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return false
     }
     
-    private func loadAndPresentDocument(at url:URL) {
+    private func hideSplashWindowIfPossible(animated:Bool = true, waitTime:TimeInterval = 0.01, depth:Int = 0) {
+        guard depth < 15 else {
+            return
+        }
         
+        waitFor("SplashVC instance", interval: min(0.02, waitTime), timeout: max(waitTime, 0.02), testOnMainThread: {
+            NSApplication.shared.windows.contains { window in
+                window.contentViewController is SplashVC
+            }
+        }, completion: { waitResult in
+            DispatchQueue.mainIfNeeded {
+                switch waitResult {
+                case .success:
+                    if let window = NSApplication.shared.windows.first(where: { window in
+                        window.contentViewController is SplashVC
+                    }) {
+                        if window.isVisible, let splashVC = window.contentViewController as? SplashVC {
+                            dlog?.info("hideSplashWindowIfPossible:(animated:Bool) START")
+                            splashVC.hideAndCloseSelf(animated: animated) {(wasClosed) in
+                                dlog?.info("hideSplashWindowIfPossible wasClosed:\(wasClosed) END")
+                            }
+                        }
+                    }
+                case .timeout:
+                    break
+                }
+            }
+        }, logType: .never)
+    }
+    
+    private func loadAndPresentDocument(at url:URL) {
+        dlog?.todo("Chdck if doc is not already loaded, if not, then load..")
     }
     
     private func loadAndPresentDocument(info : BrickBasicInfo) {
-        
+        dlog?.todo("Chdck if doc is not already loaded, if not, then load..")
     }
     
     private func isShouldShowSplashWindowOnInit()->Bool {
@@ -84,6 +114,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if self.isShouldShowSplashWindowOnInit() {
                 self.presentSplashWindow(showsRecents: hasRecents, context: "presentFirstWindow_1")
                 // Splash screen was presented
+                DispatchQueue.main.async {
+                    // We hide splash screen if any document was loaded during init / autoloaded / restored
+                    if BrickDocController.shared.brickDocWindows.count > 0 {
+                        dlog?.todo("Should hide splash screen")
+                        self.hideSplashWindowIfPossible(animated: false)
+                    }
+                }
             } else {
                 if let docInfo = AppDocumentHistory.shared.history.first {
                     dlog?.info("Should load recent document: \(docInfo)")

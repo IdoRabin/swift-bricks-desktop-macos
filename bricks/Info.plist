@@ -63,17 +63,23 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.plain-text</string>
+				<string>Bricks Document</string>
+				<string>bricks</string>
+				<string>com.idorabin.bricks.document</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Example Text</string>
+			<string>Bricks Document</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.example.plain-text</string>
+			<string>com.idorabin.bricks.document</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/json</string>
+				</array>
 				<key>public.filename-extension</key>
 				<array>
-					<string>exampletext</string>
+					<string>bricks</string>
 				</array>
 			</dict>
 		</dict>

@@ -11,7 +11,28 @@ protocol MNFocusObserver {
     func mnFocusChanged(from:NSResponder?, to:NSResponder?)
 }
 
+
+
 fileprivate let v = MNFocus.shared
+
+
+/*
+    // NOTE: For this class to do anything, take any relevant NSWindow in the project (subclass it) and implement:
+ 
+ class MyWindow : NSWindow {
+   ...
+   override func makeFirstResponder(_ responder: NSResponder?) -> Bool {
+       let result = super.makeFirstResponder(responder)
+       if result {
+           MNFocus.shared.didBecomeFocusNotif(view: responder) // <-- Here
+       }
+       return result
+   }
+   ...
+ }
+ */
+
+/// Class to track and observe all NSResponder focus changes from anywhere in the app.
 class MNFocus {
     
     var observers = ObserversArray<MNFocusObserver>()
@@ -28,20 +49,20 @@ class MNFocus {
             if oldValue != current {
                 // notify listeners / observers
                 observers.enumerateOnMainThread { (observer) in
-                    oldValue?.resignFirstResponder()
+                    // do not! oldValue?.resignFirstResponder()
                     observer.mnFocusChanged(from: oldValue, to: self.current)
                 }
             }
         }
     }
     
-    func didResignFocusNotif(view:NSResponder) {
+    func didResignFocusNotif(view:NSResponder?) {
         if current == view {
             current = nil
         }
     }
     
-    func didBecomeFocusNotif(view:NSResponder) {
+    func didBecomeFocusNotif(view:NSResponder?) {
         if current != view {
             current = view
         }

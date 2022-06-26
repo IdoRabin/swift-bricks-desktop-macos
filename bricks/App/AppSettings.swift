@@ -92,7 +92,8 @@ final class AppSettings : JSONFileSerializable {
     }
     
     static private func pathToSettingsFile()->URL? {
-        guard var path = FileManager.default.urls(for: FileManager.SearchPathDirectory.applicationSupportDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).first else {
+        guard var path = FileManager.default.urls(for: FileManager.SearchPathDirectory.applicationSupportDirectory,
+                                                   in: FileManager.SearchPathDomainMask.userDomainMask).first else {
             return nil
         }
         // path = path.appendingPathComponent(Bundle.main.bundleName?.capitalized ?? "Bricks")

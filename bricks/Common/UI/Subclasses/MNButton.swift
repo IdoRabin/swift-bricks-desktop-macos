@@ -8,8 +8,11 @@
 import AppKit
 
 fileprivate let dlog : DSLogger? = DLog.forClass("MNButton")
+fileprivate let dlogDragging : DSLogger? = nil // DLog.forClass("MNButton+DragDrop")
 
 class MNButton: NSButton {
+    
+    // MARK: Properties
     var associatedCommand : AppCommand.Type? = nil {
         didSet {
             if let cmd = self.associatedCommand {
@@ -32,14 +35,51 @@ class MNButton: NSButton {
         }
     }
     
+    override var intrinsicContentSize: NSSize {
+        var result = calcedTitleRect()
+        let imgrect = self.calcedImageRect()
+        if imageHugsTitle {
+            var mx = super.intrinsicContentSize
+            mx.width = max(mx.width + 2, result.width + (imgrect?.width ?? 0.0) + 2)
+            return mx.adding(widthAdd: instrinsicContentSizePadding.left + instrinsicContentSizePadding.right, heightAdd: instrinsicContentSizePadding.top + instrinsicContentSizePadding.bottom)
+        }
+        if let imgrect = imgrect {
+            result = result.union(imgrect)
+        }
+        return result.size.adding(widthAdd: 2)
+    }
+    
     // private properties
     private var initFrame = CGRect.zero
     private var hoverTrackingArea : NSTrackingArea? = nil
     private var preHoverTintColor : NSColor? = nil
+    private var preDragDropBkgColor : NSColor? = nil
+    var dragDropBkgColor : NSColor? = nil
     
+    fileprivate var isDragHightlight = false {
+        didSet {
+            if isDragHightlight {
+                self.preDragDropBkgColor = NSColor(cgColor: self.layer?.backgroundColor ?? NSColor.clear.cgColor)
+                self.layer?.backgroundColor = (self.dragDropBkgColor ?? self.hoverTextColor?.withAlphaComponent(0.7) ?? NSColor.systemOrange.withAlphaComponent(0.7)).cgColor
+            } else {
+                self.layer?.borderClear()
+                self.layer?.backgroundColor = (self.preDragDropBkgColor ?? NSColor.clear).cgColor
+            }
+        }
+    }
+    
+    var dragDropAction : [NSPasteboard.PasteboardType:()->Void] = [:] // action by pasteboard type
     var instrinsicContentSizePadding = NSEdgeInsets.zero
     
-    // public var
+    var acceptedDragAndDropTypes = Set<NSPasteboard.PasteboardType>() {
+        didSet {
+            if IS_DEBUG && acceptedDragAndDropTypes.count > 0 && self.isDetectHover {
+                dlog?.warning("acceptedDragAndDropTypes >0 and also isDetectHover is on!")
+            }
+        }
+    }
+
+    // Public vars
     @IBInspectable var isDetectHover : Bool = false {
         didSet {
             self.updateTrackingAreas()
@@ -57,6 +97,24 @@ class MNButton: NSButton {
     var onMouseEnter : ((_ sender : MNButton)->Void)? = nil
     var onMouseExit : ((_ sender : MNButton)->Void)? = nil
     
+    // MARK: Private
+    func setup() {
+        DispatchQueue.main.performOncePerInstance(self) {
+            initFrame = self.frame
+            
+            // Register as drop target
+            if acceptedDragAndDropTypes.count > 0 {
+                self.registerForDraggedTypes(self.acceptedDragAndDropTypes.allElements())
+            }
+            
+            // dlog?.info("awakeFromNib [\(self.attributedTitle.string)] sze:\(self.frame.size)")
+            DispatchQueue.main.async {[self] in
+                self.updateTrackingAreas()
+            }
+        }
+    }
+    
+    // MARK: Public Overrides / mouse events
     override func updateTrackingAreas() {
         if isDetectHover && self.trackingAreas.count == 0 {
             hoverTrackingArea = NSTrackingArea(rect: self.bounds, options: [.mouseEnteredAndExited, .activeInActiveApp], owner: self, userInfo: nil)
@@ -98,15 +156,17 @@ class MNButton: NSButton {
         }
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        initFrame = self.frame
-        // dlog?.info("awakeFromNib [\(self.attributedTitle.string)] sze:\(self.frame.size)")
-        DispatchQueue.main.async {[self] in
-            self.updateTrackingAreas()
-        }
+    override func viewDidMoveToSuperview() {
+        super.viewDidMoveToSuperview()
+        self.setup()
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.setup()
+    }
+    
+    // MARK: Public
     func titleNBSPPrefixIfNeeded(count:Int = 1) {
         if !self.title.hasPrefix(String.NBSP) {
             // dlog?.info("BTN \(button.title)")
@@ -252,21 +312,80 @@ class MNButton: NSButton {
         return nil
     }
     
-    override var intrinsicContentSize: NSSize {
-        var result = calcedTitleRect()
-        let imgrect = self.calcedImageRect()
-        if imageHugsTitle {
-            var mx = super.intrinsicContentSize
-            mx.width = max(mx.width + 2, result.width + (imgrect?.width ?? 0.0) + 2)
-            return mx.adding(widthAdd: instrinsicContentSizePadding.left + instrinsicContentSizePadding.right, heightAdd: instrinsicContentSizePadding.top + instrinsicContentSizePadding.bottom)
+    func updateAcceptedDragAndDropTypes(strings:[String]) {
+        let itms = strings.map { str in
+            return NSPasteboard.PasteboardType(rawValue: str)
         }
-        if let imgrect = imgrect {
-            result = result.union(imgrect)
-        }
-        return result.size.adding(widthAdd: 2)
+        self.acceptedDragAndDropTypes = Set(itms)
     }
+    
 }
 
 extension MNButton : NSValidatedUserInterfaceItem {
+    
+}
+
+// MARK: Drag & drop on button
+extension MNButton  /* Drag - Drop NSDraggingDestination / NSTableViewDropOperation */ {
+    
+    private func isDragAcceptable(_ info: NSDraggingInfo)->Bool {
+        guard acceptedDragAndDropTypes.count > 0 else {
+            dlog?.note("MNButton does not accept drag-drop - 0 accepted pasteboard types")
+            return false
+        }
+        
+        let allowedTypes = info.draggingPasteboard.types?.intersection(with: self.acceptedDragAndDropTypes.allElements())
+        guard allowedTypes?.count ?? 0 > 0 else {
+            dlog?.note("MNButton does not accept drag-drop for the dragged types: \(info.draggingPasteboard.types?.descriptions().descriptionsJoined ?? "<nIL>")")
+            return false
+        }
+        
+        return true
+    }
+    
+    override func draggingEntered(_ info: NSDraggingInfo) -> NSDragOperation {
+        guard self.isDragAcceptable(info) else {
+            return []
+        }
+        
+        isDragHightlight = true
+        dlogDragging?.info("draggingEntered \(info.draggingPasteboard.types?.descriptions().descriptionsJoined ?? "<nil>")")
+        return .every
+    }
+    
+    override func draggingExited(_ info: NSDraggingInfo?) {
+        guard let info = info, self.isDragAcceptable(info) else {
+            return
+        }
+        isDragHightlight = false
+        dlogDragging?.info("draggingExited")
+    }
+    
+    override func draggingEnded(_ info: NSDraggingInfo) {
+        guard self.isDragAcceptable(info) else {
+            return
+        }
+        dlogDragging?.info("draggingEnded")
+        DispatchQueue.main.async {
+            self.isDragHightlight = false
+        }
+    }
+    
+    override func performDragOperation(_ info: NSDraggingInfo) -> Bool {
+        let result = self.isDragAcceptable(info)
+        if result {
+            dlogDragging?.info("performDragOperation \(info.draggingPasteboard.types?.descriptions().descriptionsJoined ?? "<nil>")")
+            if let ddtype = info.draggingPasteboard.types?.first {
+                // We call the action (action by pasteboard type)
+                if let action = dragDropAction[ddtype] {
+                    // Call the action
+                    action()
+                } else {
+                    dlog?.note("There is no dragDropAction lambda block assigned to pasteboard type: \(ddtype)")
+                }
+            }
+        }
+        return result
+    }
     
 }

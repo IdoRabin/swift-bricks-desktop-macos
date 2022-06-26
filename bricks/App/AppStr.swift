@@ -192,6 +192,14 @@ enum AppStr : Localizable {
     case HIDE_OTHER_LAYERS_TOOLTIP
     case SHOW_ALL_LAYERS_TOOLTIP
     case LAYER_NAME
+    case DELETE_LAYER_X_FORMAT
+    case ARE_YOU_SURE_YOU_WANT_TO_DELETE_LAYER_X_FROM_PLAN_FORMAT
+    case DELETE_N_LAYERS_FORMAT
+    case ARE_YOU_SURE_YOU_WANT_TO_DELETE_N_LAYERS_FROM_PLAN_FORMAT
+    case DUPLICATE_LAYER_NAME
+    case ANOTHER_LAYER_HAS_THE_NAME_X_ARE_YOU_SURE_FORMAT
+    case LAYER_COLOMN_X_FORMAT // "Layer: My Lvl Name"
+    case X_LAYERS_FORMAT // "7 layers" etc..
     
     // Misc actions
     case SHOW_DOCNAME_POPUP
@@ -235,12 +243,56 @@ enum AppStr : Localizable {
     case INSTALL_ID
     case USER_ID
     
+    // Dialogs
+    case DELETE_X_FORMAT
+    case REMOVE_X_FORMAT
+    case ADD_X_FORMAT
+    case CHANGE_X_FORMAT
+    case EDIT_X_FORMAT
+    case ARE_YOU_SURE_YOU_WANT_TO_REMOVE_X_FORMAT
+    case ARE_YOU_SURE_YOU_WANT_TO_DELETE_X_FORMAT
+    case ARE_YOU_SURE_YOU_WANT_TO_ADD_X_FORMAT
+    case ARE_YOU_SURE_YOU_WANT_TO_CHANGE_X_TO_Y_FORMAT // %1$@, %2$@
+    
     var key : String {
         return String(describing: self)
     }
     
     static let DEBUG_FIND_UNTRANSLATED = true
     static let DEBUG_LOG_UNTRANSLATED = false
+    
+    public static func pluralize(count:Int, singular:AppStr, plural:AppStr)->String {
+        if IS_DEBUG && count < 0 {
+            dlog?.warning("Pluralize(count:singular:plural:) failed with negative count!")
+        }
+        
+        var result : String = ""
+        var appStr : AppStr? = nil
+        var isFormatStr = false
+        
+        switch abs(count) {
+        case 0, 1:
+            appStr = singular
+            
+        default:
+            appStr = plural
+        }
+        
+        isFormatStr =  AppStr.isFormatStr(string: appStr?.localized() ?? "", key: singular.key)
+
+        if isFormatStr, let appStr = appStr {
+            dlog?.info("pluralize fmtStr: \(appStr.localized())")
+//            if fmtStr.contains(anyOf: ["%@", "%1$@", "%2$@", "%3$@"]) {
+//                result =
+//            } else {
+//
+//            }
+        } else {
+            result = AppStr.localize(appStr?.key ?? "")
+        }
+        
+        return result
+    }
     
     public static func bool( _ condition : Bool, `true` whenTrue: AppStr, `false` whenFalse :AppStr)->AppStr {
         return condition ? whenTrue : whenFalse
@@ -268,29 +320,77 @@ enum AppStr : Localizable {
     }
     
     // Detect if a strng contains formattting patterns
-    private static func isFormatStr(string:String, key:String)->Bool {
+    fileprivate enum FormatStrType : Int, Codable {
+        case fmt_none
+        case fmt_one_number
+        case fmt_one_string
+        case fmt_multiple_formatters
+    }
+    
+    private static let numFmtStrings = ["%zd",  "%ld",  "%d",  "%f",  "%0.2f"]
+    private static let formatTypeCache = Cache<String,FormatStrType>(name: "AppStr.formatTypeCache", maxSize: 500, attemptLoad: true)
+    private static func formatStrType(string:String, key:String)->FormatStrType {
+        var result : FormatStrType = formatTypeCache[key] ?? .fmt_none
         
-        // Format - convension is that key should contain the word "format" or "fmt"
-        if key.contains("FROMAT") ||
+        guard result != .fmt_none else {
+            return result // cached
+        }
+        
+        if key.contains("FORMAT") ||
+            string.contains("FMT"){
+            result = .fmt_one_string
+        }
+        
+        // Empty string or has no string formatting symbols
+        guard string.count > 0, string.contains("%") else {
+            formatTypeCache[key] = .fmt_none
+            return .fmt_none
+        }
+        
+        // Count how many string formatter items exist:
+        // "%1$@ to %2$@" -> StrCnt should be 2 (2 occurances of a formatter for strings)
+        var strCnt = 0
+        if string.contains("@") {
+            strCnt = max(string.components(separatedBy: "%@").count - 1, 0)
+            for i in 0...4 {
+                if string.contains("%\(i)$@") {
+                    strCnt += 1
+                }
+            }
+        }
+        
+        // Count how many number (uint / float) formatter items exist:
+        var numCnt = 0
+        if string.contains("%") {
+            for substr in numFmtStrings {
+                numCnt += string.findAllStringRangeMatches(substring: substr).count
+                for i in 0...4 {
+                    let fmted = substr.replacing(range: 0...1, with: "\(i)")
+                    dlog?.info("fmted for key:\(key) IS: \(fmted)")
+                    if string.contains(fmted) {
+                        strCnt += 1
+                    }
+                }
+            }
+        }
+        
+        switch (strCnt, numCnt) {
+        case (1, 0): result = .fmt_one_string
+        case (0, 1): result = .fmt_one_number
+        default:
+            result = .fmt_multiple_formatters
+        }
+        return result
+    }
+    
+    private static func isFormatStr(string:String, key:String)->Bool {
+        if key.contains("FORMAT") ||
             string.contains("FMT"){
             return true
         }
         
-        if string.contains("%@") ||
-            string.contains("%@") ||
-            string.contains("%zd") ||
-            string.contains("%ld") ||
-            string.contains("%d") ||
-            string.contains("%f") ||
-            string.contains("%0.2f") ||
-            string.contains("%1") ||
-            string.contains("%2") ||
-            string.contains("%3") ||
-            string.contains("%4") {
-            return true
-        }
-        
-        return false
+        // Format - convension is that key should contain the word "format" or "fmt"
+        return self.formatStrType(string: string, key: key) != .fmt_none
     }
     
     fileprivate func getLocalized(bundle: Bundle = .main, tableName: String = "Localizable") -> String {

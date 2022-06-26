@@ -20,3 +20,48 @@ extension Dictionary where Key == IndexPath {
         }
     }
 }
+
+struct MoveIndexPathTuple : Hashable {
+    let fromIndexpath : IndexPath
+    let toIndexpath : IndexPath
+    
+    init(from:IndexPath, to:IndexPath) {
+        fromIndexpath = from
+        toIndexpath = to
+    }
+    
+    init(from:Int, to:Int) {
+        fromIndexpath = IndexPath(index: from)
+        toIndexpath = IndexPath(index: to)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(fromIndexpath)
+        hasher.combine(toIndexpath)
+    }
+}
+extension Sequence where Element == MoveIndexPathTuple {
+    var fromIndexPaths : [IndexPath] {
+        return self.compactMap { item in
+            item.fromIndexpath
+        }
+    }
+
+    var toIndexPaths : [IndexPath] {
+        return self.compactMap { item in
+            item.toIndexpath
+        }
+    }
+    
+    var fromIndexes : [Int] {
+        return self.compactMap { item in
+            item.fromIndexpath.first
+        }
+    }
+    
+    var toIndexes : [Int] {
+        return self.compactMap { item in
+            item.toIndexpath.first
+        }
+    }
+}

@@ -21,7 +21,7 @@ extension BrickDocController /* user management */{
             // Setup debug user
             if Self.DEBUG_USER {
                 
-                let debugUser = BricksUser(id: UserUID(uidString: "00000000-0000-0000-0000-000000000001"), name: "Debug_User_01")
+                let debugUser = BricksUser(id: UserUID(uuidString: "00000000-0000-0000-0000-000000000001"), name: "Debug_User_01")
                 
                 //self.curUser = debugUser
                 self.setCurUser(debugUser) { response in

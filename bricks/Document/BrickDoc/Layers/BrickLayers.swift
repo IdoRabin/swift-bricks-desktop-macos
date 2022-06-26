@@ -124,8 +124,9 @@ class BrickLayers : CodableHashable, BasicDescable {
         return "<\(type(of: self)) \(String(memoryAddressOf: self)) \(self.count) layers>"
     }
     
-    struct LayerUIInfo {
+    struct LayerUIInfo : CodableHashable, JSONSerializable, BasicDescable {
         static let UNNAMED_LAYER_STRING = AppStr.UNNAMED.localized()
+        static let TAG_DEFAULT_VAL : Int = -1
         
         let title : String
         let subtitle : String
@@ -133,6 +134,7 @@ class BrickLayers : CodableHashable, BasicDescable {
         let visibility : BrickLayer.Visiblity
         let id : LayerUID
         let isUnnamed : Bool
+        var tag : Int = TAG_DEFAULT_VAL
         
         static func unnamedTitle(id:LayerUID, index:Int? = 0)->String {
             return Self.UNNAMED_LAYER_STRING + String.NBSP + id.uuidString.safeSuffix(size: 4)
@@ -170,6 +172,18 @@ class BrickLayers : CodableHashable, BasicDescable {
                                                                               .foregroundColor:txtColor.withAlphaComponent(0.7)])
             }
             return attr
+        }
+        
+        var basicDesc: String {
+            var accumStrs : [String] = []
+            accumStrs.append("\"\(self.title.isEmpty ? AppStr.UNNAMED.localized() : self.title)\"")
+            if self.tag != Self.TAG_DEFAULT_VAL {
+                accumStrs.append("tag: \(tag)")
+            }
+            if self.id.uid.hashValue != 0 {
+                accumStrs.append("id: \(id.uuidString)")
+            }
+            return "<LayerUIInfo " + accumStrs.joined(separator: " ") + " >"
         }
     }
     
@@ -508,7 +522,7 @@ extension BrickLayers : BrickLayersContainer {
                 if newIndex > curIndex {
                     newIndex -= 1 // was removed, we fix the index
                 }
-                if toIndex > -1 && toIndex <= self.orderedLayers.count {
+                if newIndex > -1 && newIndex <= self.orderedLayers.count {
                     orderedLayers.insert(layer, at: newIndex)
                 }
                 return .success([layer])
@@ -560,9 +574,13 @@ extension BrickLayers : BrickLayersContainer {
         }
     }
     
-    func findLayers(names: [String]) -> LayersResult {
+    func findLayers(names: [String], caseSensitive:Bool = true) -> LayersResult {
         return self.findLayers { layer in
-            names.contains(layer.name ?? "")
+            if caseSensitive {
+                return names.contains(layer.name ?? "")
+            } else {
+                return names.lowercased.contains(layer.name?.lowercased() ?? "")
+            }
         }
     }
     
@@ -731,5 +749,14 @@ extension Sequence where Element : BrickLayer {
 
     func contains(anyOfNames names:[String], caseSensitive:Bool = false)->Bool {
         return self.filter(names: names, caseSensitive: caseSensitive).count > 0 // TODO: Optimize for stopping on first found name
+    }
+}
+
+
+extension Sequence where Element == BrickLayers.LayerUIInfo {
+    var titles : [String] {
+        return self.map { layerInfo in
+            layerInfo.title
+        }
     }
 }

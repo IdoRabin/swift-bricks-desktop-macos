@@ -71,10 +71,23 @@ extension Dictionary {
         self.merge(dict: sub)
     }
     
-    mutating func remove(valuesForKeys keysToRemove: [Dictionary.Key]) {
+    @discardableResult
+    mutating func remove(valuesForKeys keysToRemove: [Dictionary.Key])->[Dictionary.Key:Dictionary.Value] {
+        var result : [Dictionary.Key:Dictionary.Value] = [:]
+        
         for key in keysToRemove {
-            self.removeValue(forKey: key)
+            if let val = self.removeValue(forKey: key) {
+                result[key] = val
+            }
         }
+        
+        return result
+    }
+    
+    func removing(valuesForKeys keysToRemove: [Dictionary.Key])->[Dictionary.Key:Dictionary.Value] {
+        var result : [Dictionary.Key:Dictionary.Value] = self // copy
+        result.remove(valuesForKeys: keysToRemove)
+        return result
     }
     
     var valuesArray : [Value] {
@@ -126,6 +139,16 @@ extension Dictionary where Value : Equatable {
 extension Dictionary where Key : Comparable {
     var sortedKeys : [Key] {
         return Array(self.keys.sorted().reversed())
+    }
+    
+    var valuesSortedByKeys : [Value] {
+        var result : [Value] = []
+        for sortedKey in self.sortedKeys {
+            if let sortedValue = self[sortedKey] {
+                result.append(sortedValue)
+            }
+        }
+        return result
     }
 }
 

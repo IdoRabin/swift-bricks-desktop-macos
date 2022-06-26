@@ -179,8 +179,16 @@
 "HIDE_OTHER_LAYERS_TOOLTIP" = "Hide all other layers";
 "SHOW_ALL_LAYERS_TOOLTIP" = "Show all layers";
 "LAYER_NAME" = "Layer name";
+"DELETE_LAYER_X_FORMAT" = "Delete layer %@";
+"ARE_YOU_SURE_YOU_WANT_TO_DELETE_LAYER_X_FROM_PLAN_FORMAT" = "Are you sure you want to delete layer \"%@\"?";
+"DELETE_N_LAYERS_FORMAT" = "Delete %zd layers";
+"ARE_YOU_SURE_YOU_WANT_TO_DELETE_N_LAYERS_FROM_PLAN_FORMAT" = "Are you sure you want to delete %zd layers?";
+"DUPLICATE_LAYER_NAME" = "Duplicate layer name";
+"ANOTHER_LAYER_HAS_THE_NAME_X_ARE_YOU_SURE_FORMAT" = "Another layer has the name \"%@\", are you sure you want to rename this layer to the same name?";
+"LAYER_COLOMN_X_FORMAT" = "Layer: %@"; // "Layer: My Lvl Name"
+"X_LAYERS_FORMAT" = "%@ layers"; // "7 layers" etc..
 
-// Misc actions
+// Misc actions7
 "SHOW_DOCNAME_POPUP" = "Show doc info";
 "SHOW_DOCNAME_POPUP_TOOLTIP" = "Show document information.";
 "SHOW_LOG_FILE_POPUP" = "Show log file";
@@ -219,3 +227,14 @@
 "SESSION_ENDED" = "Session ended";
 "INSTALL_ID" = "Install ID";
 "USER_ID" = "User ID";
+
+// Dialogs
+"DELETE_X_FORMAT" = "Delete %@";
+"REMOVE_X_FORMAT" = "Remove %@";
+"ADD_X_FORMAT" = "Add %@";
+"CHANGE_X_FORMAT" = "Change %@";
+"EDIT_X_FORMAT" = "Edit %@";
+"ARE_YOU_SURE_YOU_WANT_TO_REMOVE_X_FORMAT" = "Are you sure you want to remove %@";
+"ARE_YOU_SURE_YOU_WANT_TO_DELETE_X_FORMAT" = "Are you sure you want to delete %@";
+"ARE_YOU_SURE_YOU_WANT_TO_ADD_X_FORMAT" = "Are you sure you want to add %@";
+"ARE_YOU_SURE_YOU_WANT_TO_CHANGE_X_TO_Y_FORMAT" = "Are you sure you want to change %1$@ to %2$@";

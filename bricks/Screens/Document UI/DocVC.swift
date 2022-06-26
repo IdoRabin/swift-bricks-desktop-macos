@@ -95,6 +95,16 @@ class DocVC : NSSplitViewController {
         
         return BrickDocController.shared.document(for: window) as? BrickDoc
     }
+    
+    func setUIEnabled(_ enabled:Bool, animated:Bool = true, completion:(()->Void)? = nil) {
+        guard self.isViewLoaded else {
+            return
+        }
+        
+        self.view.showAsGreyscale(enabled == false, animated:animated, completion: completion)
+    }
+    
+    // layersVC?.view.showAsGreyscale(enabled == false, animated:animated, completion: completion)
 }
 
 // MARK: NSSplitViewDelegate

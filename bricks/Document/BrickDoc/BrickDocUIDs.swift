@@ -21,8 +21,8 @@ struct UserUID : BUID {
     var uid : UUID!
     var type : String { return TUID.Types.user.rawValue }
     
-    init(uidString: String? = nil) {
-        if let uidString = uidString?.components(separatedBy: "|").last {
+    init(uuidString: String? = nil) {
+        if let uidString = uuidString?.components(separatedBy: "|").last {
             uid = UUID(uuidString: uidString)
         } else {
             uid = UUID()

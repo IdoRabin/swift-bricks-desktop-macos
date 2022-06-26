@@ -122,7 +122,7 @@ extension CALayer /* spin animation */ {
         self.removeAnimation(forKey: "spinRotationAnimation")
     }
     
-    func animateScale(duration:CFTimeInterval, to toValue:CGFloat) {
+    func animateScale(duration:CFTimeInterval, to toValue:CGFloat, completion:(()->Void)? = nil) {
 
         let scaleAnimation = CABasicAnimation()
         scaleAnimation.keyPath = #keyPath(CALayer.transform)
@@ -133,6 +133,31 @@ extension CALayer /* spin animation */ {
         scaleAnimation.isCumulative = true
         
         self.add(scaleAnimation, forKey: "scaleAnimation")
+        
+        if let completion = completion {
+            DispatchQueue.main.asyncAfter(delayFromNow: duration + 0.01) {
+                completion()
+            }
+        }
+    }
+    
+    func animateOpacity(duration:CFTimeInterval, to toValue:CGFloat, completion:(()->Void)? = nil) {
+
+        let opacityAnimation = CABasicAnimation()
+        opacityAnimation.keyPath = #keyPath(CALayer.opacity)
+        // scaleAnimation.fromValue = CATransform3DScale(CATransform3DIdentity, 1, 1, 1)
+        opacityAnimation.toValue = toValue
+        opacityAnimation.duration =  CFTimeInterval(duration)
+        opacityAnimation.isAdditive = true
+        opacityAnimation.isCumulative = true
+        
+        self.add(opacityAnimation, forKey: "opacityAnimation")
+        
+        if let completion = completion {
+            DispatchQueue.main.asyncAfter(delayFromNow: duration + 0.02) {
+                completion()
+            }
+        }
     }
 }
 

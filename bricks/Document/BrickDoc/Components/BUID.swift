@@ -55,8 +55,8 @@ public struct TUID : BUID {
         type = newType.rawValue
     }
     
-    init(type newType:Types, uidString: String? = nil) {
-        if let uidString = uidString?.components(separatedBy: "|").last {
+    init(type newType:Types, uuidString: String? = nil) {
+        if let uidString = uuidString?.components(separatedBy: "|").last {
             uid = UUID(uuidString: uidString)
         } else {
             uid = UUID()
@@ -65,8 +65,8 @@ public struct TUID : BUID {
         type = newType.rawValue
     }
     
-    init(type newType:String, uidString: String? = nil) {
-        if let uidString = uidString?.components(separatedBy: "|").last {
+    init(type newType:String, uuidString: String? = nil) {
+        if let uidString = uuidString?.components(separatedBy: "|").last {
             uid = UUID(uuidString: uidString)
         } else {
             uid = UUID()

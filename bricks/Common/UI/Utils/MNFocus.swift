@@ -13,7 +13,7 @@ protocol MNFocusObserver {
 
 
 
-fileprivate let v = MNFocus.shared
+fileprivate let mnFocusInstance = MNFocus.shared
 
 
 /*

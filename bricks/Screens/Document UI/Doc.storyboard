@@ -270,10 +270,14 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <stackView distribution="fillEqually" orientation="horizontal" alignment="centerY" spacing="11" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="93v-kl-Sn7" userLabel="bottom buttons">
-                                <rect key="frame" x="0.0" y="0.0" width="59" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="67" height="30"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="aIA-Cz-cOL" userLabel="Add Button" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="10" y="9.5" width="14.5" height="13"/>
+                                        <rect key="frame" x="10" y="4.5" width="18.5" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="18" id="kvV-e3-ylO"/>
+                                            <constraint firstAttribute="height" constant="18" id="xP1-mR-b1B"/>
+                                        </constraints>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="plus" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="gRP-CX-q95">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -283,7 +287,11 @@
                                         </connections>
                                     </button>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="PlA-mS-58f" userLabel="Edit button" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="35" y="9.5" width="14.5" height="13"/>
+                                        <rect key="frame" x="39" y="4.5" width="18.5" height="22"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="18" id="BEE-EG-In1"/>
+                                            <constraint firstAttribute="width" constant="18" id="F4v-uy-Ars"/>
+                                        </constraints>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="pencil" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="4st-wj-tGh">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -308,10 +316,14 @@
                                 </customSpacing>
                             </stackView>
                             <stackView distribution="fill" orientation="horizontal" alignment="centerY" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vKC-90-z06">
-                                <rect key="frame" x="420" y="0.0" width="30" height="30"/>
+                                <rect key="frame" x="412" y="0.0" width="38" height="30"/>
                                 <subviews>
                                     <button translatesAutoresizingMaskIntoConstraints="NO" id="f7R-oV-ZIN" userLabel="Remvoe Button" customClass="MNButton" customModule="Bricks" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="8" width="30.5" height="17"/>
+                                        <rect key="frame" x="10" y="3" width="18.5" height="26"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="18" id="GXb-Ip-Aqn"/>
+                                            <constraint firstAttribute="width" constant="18" id="cSO-2I-lt0"/>
+                                        </constraints>
                                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="trash" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="Yxb-4w-3Lb">
                                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                             <font key="font" metaFont="system"/>
@@ -321,6 +333,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
+                                <edgeInsets key="edgeInsets" left="10" right="10" top="0.0" bottom="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="30" id="3t4-S8-24J"/>
                                     <constraint firstAttribute="height" constant="30" id="ktT-yK-TST"/>
@@ -338,7 +351,7 @@
                                     <rect key="frame" x="1" y="1" width="448" height="98"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" rowHeight="20" viewBased="YES" id="RHK-JT-mWn">
+                                        <tableView identifier="LayersTableViewId" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnReordering="NO" columnResizing="NO" multipleSelection="NO" rowHeight="20" viewBased="YES" id="RHK-JT-mWn" customClass="LayersTableView" customModule="Bricks" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="448" height="98"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>

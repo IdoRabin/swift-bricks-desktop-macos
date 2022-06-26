@@ -14,10 +14,6 @@ extension NSViewController : HashableObject {
     
 }
 
-protocol BasicDescable {
-    var basicDesc : String { get }
-}
-
 @objc extension NSObject : BasicDescable {
     @objc var basicDesc : String {
         return "<\(type(of: self)) \(String(memoryAddressOf: self))>"

@@ -47,7 +47,7 @@ protocol BrickLayersContainer {
     
     // Find
     func findLayers(ids:[LayerUID])->LayersResult
-    func findLayers(names:[String])->LayersResult
+    func findLayers(names:[String], caseSensitive:Bool /* = true? */)->LayersResult
     func findLayers(hidden:Bool?)->LayersResult
     
     // Edit

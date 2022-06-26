@@ -138,7 +138,36 @@ class NSViewBkgLayer : CALayer {
     
 }
 
+class NSViewOverlayLayer : CALayer {
+    
+}
+
 extension NSView /* Layers*/ {
+    
+    @discardableResult
+    func updateOverlayColorLayer(color:NSColor, insets:NSEdgeInsets = NSEdgeInsetsZero)->CALayer? {
+        if self.wantsLayer == false {
+            DLog.ui["NSViewEx"]?.info("updateOverlayColorLayer for NSView \(type(of: self)) that wantsLayer == false")
+        }
+        
+        let ovrLayer = self.layer?.sublayers?.filter({ layer in
+            layer is NSViewOverlayLayer
+        }).last
+                                                            
+        guard ovrLayer == nil else {
+            ovrLayer?.backgroundColor = color.cgColor
+            ovrLayer?.frame = self.bounds.insetted(by: insets)
+            return ovrLayer!
+        }
+        
+        let layer = NSViewOverlayLayer()
+        layer.backgroundColor = color.cgColor
+        layer.frame = self.bounds.insetted(by: insets)
+        layer.autoresizingMask = [.layerWidthSizable, .layerHeightSizable]
+        self.layer?.insertSublayer(layer, above: self.layer?.sublayers?.last) // above all
+        
+        return layer
+    }
     
     @discardableResult
     func updateBkgColorLayer(color:NSColor, insets:NSEdgeInsets = NSEdgeInsetsZero)->CALayer? {
@@ -265,5 +294,52 @@ extension NSView /* search subviews */ {
         }
         self.wantsLayer = true
         self.layer?.corner(radius: radius)
+    }
+}
+
+class NSOverlayView : MNColoredView {
+    
+}
+
+fileprivate var animatingGreys : [NSView:Bool] = [:]
+
+extension NSView /* Layers*/ {
+    
+    func showAsGreyscale(_ isGreyscale : Bool, animated:Bool = true, completion:(()->Void)? = nil) {
+        // Is in mid-animation: ?
+        if let anim = animatingGreys[self] {
+            DLog.ui.warning("showAsGreyscale overlay view is in mid-animation to \(anim ? "grey" : "regular")")
+        }
+        
+        // Add / fetch existing subview
+        var overlayView : NSOverlayView? = self.subviews.first { view in
+            view is NSOverlayView
+        } as? NSOverlayView
+        
+        if overlayView == nil {
+            overlayView = NSOverlayView(frame: self.bounds)
+            overlayView?.wantsLayer = true
+            overlayView?.alphaValue = 0.0
+            overlayView?.layer?.compositingFilter = CIFilter(name: "CISaturationBlendMode")
+            self.addSubview(overlayView!)
+            overlayView?.backgroundColor = NSColor.black // determines saturation
+        } else {
+            DLog.ui.info("showAsGreyscale view already exists")
+        }
+        
+        guard let overlayView = overlayView else {
+            DLog.ui.warning("showAsGreyscale overlay view missing!")
+            return
+        }
+
+        // Short time
+        let duration : TimeInterval = animated ? 0.17 : 0.01
+        animatingGreys[self] = true
+        NSView.animate(duration: duration, delay: 0.02) { context in
+            overlayView.animator().alphaValue = isGreyscale ? 1.0 : 0.0
+        } completionHandler: {
+            animatingGreys[self] = nil
+            completion?()
+        }
     }
 }

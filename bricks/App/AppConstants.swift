@@ -33,6 +33,9 @@ struct AppConstants {
     static let BRICK_FILE_UTI = "com.idorabin.bricks.document"
     
     static let RULE_SET_FILE_EXTENSTION = "bricksruleset"
+    
+    static let BUTTON_CORNER_SMALL : CGFloat = 4.0
+    static let BUTTON_CORNER_BIG : CGFloat = 6.0
 }
 
 // Constants

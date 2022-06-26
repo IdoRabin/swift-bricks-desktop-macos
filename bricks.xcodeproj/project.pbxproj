@@ -163,6 +163,7 @@
 		ECCE07962764F259007F2A65 /* LicenseAgreementVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */; };
 		ECCE07982764F5C5007F2A65 /* PreferencesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */; };
 		ECCE07A227653942007F2A65 /* UnkeyedEncodingContainerEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */; };
+		ECE8904A283D37090037BB6D /* LayersTableViewAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE89049283D37090037BB6D /* LayersTableViewAdapter.swift */; };
 		ECEA1B632760F9DE00DD602D /* CommandInvoker.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B622760F9DE00DD602D /* CommandInvoker.swift */; };
 		ECEA1B652760F9FB00DD602D /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B642760F9FB00DD602D /* Command.swift */; };
 		ECEA1B672760FAA800DD602D /* AppCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B662760FAA800DD602D /* AppCommand.swift */; };
@@ -179,6 +180,13 @@
 		ECEA1B812762299C00DD602D /* MNToolbarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECEA1B802762299C00DD602D /* MNToolbarItem.swift */; };
 		ECF685ED2774DF6A00BD68FB /* TestMNProgressEmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */; };
 		ECF685EF2774DF9F00BD68FB /* MNProgress protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */; };
+		ECF7D60528206F51008D15B0 /* BasicDescable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF7D60428206F51008D15B0 /* BasicDescable.swift */; };
+		ECF96B01281C4E360053DF40 /* AppAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B00281C4E360053DF40 /* AppAlertController.swift */; };
+		ECF96B04281C4EDD0053DF40 /* AppAlertsObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B03281C4EDD0053DF40 /* AppAlertsObserver.swift */; };
+		ECF96B06281C4EE60053DF40 /* AppAlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B05281C4EE60053DF40 /* AppAlertPresenter.swift */; };
+		ECF96B08281C4F9B0053DF40 /* AppAlertButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B07281C4F9B0053DF40 /* AppAlertButtonsStyle.swift */; };
+		ECF96B0A281C50690053DF40 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B09281C50690053DF40 /* AppAlert.swift */; };
+		ECF96B0C281C51690053DF40 /* AppAlertMacOSDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B0B281C51690053DF40 /* AppAlertMacOSDialog.swift */; };
 		ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */; };
 		ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */; };
 /* End PBXBuildFile section */
@@ -389,6 +397,7 @@
 		ECCE07952764F259007F2A65 /* LicenseAgreementVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseAgreementVC.swift; sourceTree = "<group>"; };
 		ECCE07972764F5C5007F2A65 /* PreferencesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesVC.swift; sourceTree = "<group>"; };
 		ECCE07A127653942007F2A65 /* UnkeyedEncodingContainerEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnkeyedEncodingContainerEx.swift; sourceTree = "<group>"; };
+		ECE89049283D37090037BB6D /* LayersTableViewAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayersTableViewAdapter.swift; sourceTree = "<group>"; };
 		ECEA1B622760F9DE00DD602D /* CommandInvoker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandInvoker.swift; sourceTree = "<group>"; };
 		ECEA1B642760F9FB00DD602D /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		ECEA1B662760FAA800DD602D /* AppCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCommand.swift; sourceTree = "<group>"; };
@@ -405,6 +414,13 @@
 		ECEA1B802762299C00DD602D /* MNToolbarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MNToolbarItem.swift; sourceTree = "<group>"; };
 		ECF685EC2774DF6A00BD68FB /* TestMNProgressEmitter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMNProgressEmitter.swift; sourceTree = "<group>"; };
 		ECF685EE2774DF9F00BD68FB /* MNProgress protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MNProgress protocols.swift"; sourceTree = "<group>"; };
+		ECF7D60428206F51008D15B0 /* BasicDescable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicDescable.swift; sourceTree = "<group>"; };
+		ECF96B00281C4E360053DF40 /* AppAlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertController.swift; sourceTree = "<group>"; };
+		ECF96B03281C4EDD0053DF40 /* AppAlertsObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertsObserver.swift; sourceTree = "<group>"; };
+		ECF96B05281C4EE60053DF40 /* AppAlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertPresenter.swift; sourceTree = "<group>"; };
+		ECF96B07281C4F9B0053DF40 /* AppAlertButtonsStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertButtonsStyle.swift; sourceTree = "<group>"; };
+		ECF96B09281C50690053DF40 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
+		ECF96B0B281C51690053DF40 /* AppAlertMacOSDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertMacOSDialog.swift; sourceTree = "<group>"; };
 		ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImages.swift.swift; sourceTree = "<group>"; };
 		ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSSplitviewEx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -580,6 +596,7 @@
 		EC218AE72759326400744400 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				ECF96B02281C4EC80053DF40 /* AppAlert */,
 				EC9928A02762A97D00DD4C90 /* BricksApplication.swift */,
 				EC218AB8275931E700744400 /* AppDelegate.swift */,
 				ECEA1B662760FAA800DD602D /* AppCommand.swift */,
@@ -744,6 +761,7 @@
 			isa = PBXGroup;
 			children = (
 				EC7F18BF275D100B00BC23DA /* Clearable.swift */,
+				ECF7D60428206F51008D15B0 /* BasicDescable.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -827,6 +845,7 @@
 			children = (
 				EC802155277F7DEF00F6F015 /* PropertiesVC.swift */,
 				EC802159277F9D6200F6F015 /* LayersVC.swift */,
+				ECE89049283D37090037BB6D /* LayersTableViewAdapter.swift */,
 				EC80215B277F9D6E00F6F015 /* PropertiesTabsVC.swift */,
 			);
 			path = "PropertiesVC Screens";
@@ -1016,6 +1035,19 @@
 			path = Commands;
 			sourceTree = "<group>";
 		};
+		ECF96B02281C4EC80053DF40 /* AppAlert */ = {
+			isa = PBXGroup;
+			children = (
+				ECF96B00281C4E360053DF40 /* AppAlertController.swift */,
+				ECF96B09281C50690053DF40 /* AppAlert.swift */,
+				ECF96B0B281C51690053DF40 /* AppAlertMacOSDialog.swift */,
+				ECF96B03281C4EDD0053DF40 /* AppAlertsObserver.swift */,
+				ECF96B05281C4EE60053DF40 /* AppAlertPresenter.swift */,
+				ECF96B07281C4F9B0053DF40 /* AppAlertButtonsStyle.swift */,
+			);
+			path = AppAlert;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1193,6 +1225,7 @@
 				EC96C747278489F6003BD2F6 /* DocWC+TabGroups.swift in Sources */,
 				EC218B4127593BE000744400 /* Logger.swift in Sources */,
 				EC218B4727593C3C00744400 /* NSBundle+Versions.swift in Sources */,
+				ECF7D60528206F51008D15B0 /* BasicDescable.swift in Sources */,
 				EC9DF00D275CD1BE0046F30A /* NSWindowController+XIB.swift in Sources */,
 				EC802160277F9F6200F6F015 /* MNTabViewController.swift in Sources */,
 				EC9DF004275CD1BE0046F30A /* NSView+Animation.swift in Sources */,
@@ -1200,8 +1233,10 @@
 				EC218B7127593E7900744400 /* AppError.swift in Sources */,
 				ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */,
 				EC218B5A27593CBF00744400 /* DispatchQueueEx.swift in Sources */,
+				ECF96B0C281C51690053DF40 /* AppAlertMacOSDialog.swift in Sources */,
 				ECEA1B792762297000DD602D /* MNBaseView.swift in Sources */,
 				EC9DEFE0275CCC890046F30A /* BrickStats.swift in Sources */,
+				ECF96B06281C4EE60053DF40 /* AppAlertPresenter.swift in Sources */,
 				EC9DF003275CD1BE0046F30A /* CALayerEx.swift in Sources */,
 				EC42257E27FD9A7E00373963 /* BrickDocController+User.swift in Sources */,
 				EC1C3C3E27833278004DC9F1 /* BrickLayer.swift in Sources */,
@@ -1226,6 +1261,7 @@
 				ECF685EF2774DF9F00BD68FB /* MNProgress protocols.swift in Sources */,
 				EC9DF006275CD1BE0046F30A /* CGPointEx.swift in Sources */,
 				EC7F18C0275D100B00BC23DA /* Clearable.swift in Sources */,
+				ECF96B04281C4EDD0053DF40 /* AppAlertsObserver.swift in Sources */,
 				EC9DF007275CD1BE0046F30A /* UIImage+Utils.swift in Sources */,
 				EC218B812759463500744400 /* BrickDocController.swift in Sources */,
 				ECEA1B7B2762297600DD602D /* MNColoredStackView.swift in Sources */,
@@ -1278,6 +1314,8 @@
 				EC96C74927849555003BD2F6 /* BrickDocController+Menu.swift in Sources */,
 				EC218B3927593BE000744400 /* Box.swift in Sources */,
 				EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */,
+				ECF96B0A281C50690053DF40 /* AppAlert.swift in Sources */,
+				ECE8904A283D37090037BB6D /* LayersTableViewAdapter.swift in Sources */,
 				EC9928A12762A97D00DD4C90 /* BricksApplication.swift in Sources */,
 				EC35287D27A5BC9C00CC53B7 /* FileLogViewerVC.swift in Sources */,
 				EC218B5B27593CBF00744400 /* URLEx.swift in Sources */,
@@ -1304,7 +1342,9 @@
 				EC9DEFDF275CCC870046F30A /* BrickSettings.swift in Sources */,
 				EC802154277F7DE600F6F015 /* ProjectTabsVC.swift in Sources */,
 				EC9DEFFF275CD1BE0046F30A /* NSTextFIeldEx.swift in Sources */,
+				ECF96B01281C4E360053DF40 /* AppAlertController.swift in Sources */,
 				EC880DB62765840D00C58645 /* PrefsAccountsVC.swift in Sources */,
+				ECF96B08281C4F9B0053DF40 /* AppAlertButtonsStyle.swift in Sources */,
 				EC9DF011275CD1CE0046F30A /* MouseTracking.swift in Sources */,
 				EC2F5EED27732D9A00201865 /* MNTree.swift in Sources */,
 				EC218B872759471100744400 /* BrickDoc.swift in Sources */,

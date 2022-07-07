@@ -174,7 +174,7 @@ extension JSONFileSerializable {
             
             if let data = self.serializeToJsonData(prettyPrint: prettyPrint) {
                 FileManager.default.createFile(atPath: fileurl.path, contents: data, attributes: nil)
-                if IS_DEBUG {
+                if Debug.IS_DEBUG {
                     if data.count > 1000000 { // 1MB
                         dlog?.note("Maybe saving a > 1MB JSON as string is not efficient, consider using another encoder!")
                     }
@@ -200,7 +200,7 @@ extension JSONFileSerializable {
                 // Magic prefix bytes?
             
                 let result : Self = try decoder.decode(Self.self, from: data)
-                if IS_DEBUG {
+                if Debug.IS_DEBUG {
                     if data.count > 1000000 { // 1MB
                         dlog?.note("Maybe loading a > 1MB JSON as string is not efficient, consider using another encoder!")
                     }

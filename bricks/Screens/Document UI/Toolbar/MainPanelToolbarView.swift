@@ -12,7 +12,7 @@ fileprivate let dlog : DSLogger? = DLog.forClass("MainPanelToolbarView")
 
 
 class MainPanelToolbarView : NSView {
-    let DEBUG_DRAWING = IS_DEBUG && false
+    let DEBUG_DRAWING = Debug.IS_DEBUG && false
     
     // "\u{20D3}" = Short Vertical Line, less than a pipe |
     let TITLE_UNITS_SEPARATOR = String.THIN_SPACE + "|" + String.THIN_SPACE

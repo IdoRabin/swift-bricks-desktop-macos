@@ -17,8 +17,8 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
     
     typealias LineNr = UInt
     
-    let DEBUG_CLEAR_CACHES_ON_INIT = IS_DEBUG && true
-    let DEBUG_LOG_FIRST_LINES = IS_DEBUG && false
+    let DEBUG_CLEAR_CACHES_ON_INIT = Debug.IS_DEBUG && true
+    let DEBUG_LOG_FIRST_LINES = Debug.IS_DEBUG && false
     let DEFAULT_BLOCK_LINES_AMOUNT = 32
     let DEFAULT_AVG_LINE_LENGTH = 32
     
@@ -138,7 +138,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
                 break
             }
         }
-        if IS_DEBUG && found == false {
+        if Debug.IS_DEBUG && found == false {
             dlog?.note("calcLineNr Failed to find line number at byte offset position: \(offset). File size is: \(self.fileSize()). Line posses: \(linePositions.count)")
         }
         
@@ -186,7 +186,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
                 var cnt = data.count
                 while cnt > 2 && offset == offst {
                     if let str = String(data:data.prefix(cnt), encoding: self.encoding) {
-                        if IS_DEBUG && cnt != 0 {
+                        if Debug.IS_DEBUG && cnt != 0 {
                             dlogMapping?.success("mapLine (\(nr)) success casting to string at:\(offset)/\(fileSize) size:\(cnt)")
                         }
                         
@@ -305,7 +305,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
                 safeCounter += 1
             }
 
-            if IS_DEBUG && safeCounter >= fileSze / 3 /**/ {
+            if Debug.IS_DEBUG && safeCounter >= fileSze / 3 /**/ {
                 dlog?.note("mapLines DONE safeCounter overflow - while loop issue.")
             }
             
@@ -414,7 +414,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
             return
         }
         
-        if IS_DEBUG, untimedLines.count > 1000 {
+        if Debug.IS_DEBUG, untimedLines.count > 1000 {
             dlog?.note("internal_appendLines: It is reccommended to use less lines / more frequently the append operation.")
         }
         
@@ -595,7 +595,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
         }
         
         // Debugging
-        if IS_DEBUG && self.isNeedsSave == false {
+        if Debug.IS_DEBUG && self.isNeedsSave == false {
             dlog?.note("save() called when save is not needed!")
         }
         

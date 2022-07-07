@@ -146,7 +146,7 @@ class BrickLayers : CodableHashable, BasicDescable {
         
         init (layer:BrickLayer, at index:Int, unnamedTitle:String?) {
             id = layer.id
-            subtitle = IS_DEBUG ? layer.id.uuidString : "" // TODO: change this
+            subtitle = Debug.IS_DEBUG ? layer.id.uuidString : "" // TODO: change this
             access = layer.access
             visibility = layer.visiblity
             isUnnamed = (layer.name?.count ?? 0) == 0

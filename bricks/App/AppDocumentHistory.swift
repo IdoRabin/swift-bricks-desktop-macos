@@ -274,7 +274,7 @@ class AppDocumentHistory : WhenLoadedable {
             })
             
             for itemToRemove in toRemove {
-                if IS_DEBUG, let path = itemToRemove.filePath {
+                if Debug.IS_DEBUG, let path = itemToRemove.filePath {
                     dlog?.note("revalidateAll failed to find \(itemToRemove.displayName.descOrNil) uid:\(itemToRemove.id) in: \(path.lastPathComponents(count: 3))")
                 }
                 

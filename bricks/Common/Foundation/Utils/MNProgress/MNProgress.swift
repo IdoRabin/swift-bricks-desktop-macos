@@ -480,7 +480,7 @@ struct MNProgress : FractionalMNProg {
     
     mutating func incerementCompletedUnits(isCompletesOnLast:Bool = true) {
         if let num = self.discreteStructOrNil {
-            if IS_DEBUG && num.completedUnitsCnt + 1 > num.totalUnitsCnt {
+            if Debug.IS_DEBUG && num.completedUnitsCnt + 1 > num.totalUnitsCnt {
                 dlog?.note("incerementCompletedUnits made the progress above 100%! \(num.progressUnitsDisplayString) = \(num.fractionCompletedDisplayString)")
             }
             if num.totalUnitsCnt == num.completedUnitsCnt + 1 && !self.state.isComplete {

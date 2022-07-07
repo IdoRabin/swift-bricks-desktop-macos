@@ -16,7 +16,7 @@ extension Array {
             return [:]
         }
         
-        if IS_DEBUG && (count > 200 || indexPaths.count > 200) {
+        if Debug.IS_DEBUG && (count > 200 || indexPaths.count > 200) {
             dlog?.note("Array where Element : Identifiable called elementsAt(indexPaths:) - this search may be CPU intensive (not efficient) use with small arrays only")
         }
         
@@ -54,7 +54,7 @@ extension Sequence where Element : Identifiable {
         guard let idsToSearch = idsToSearch?.uniqueElements(), idsToSearch.count > 0 else {
             return [:]
         }
-        if IS_DEBUG && (ids.count > 200 || idsToSearch.count > 200) {
+        if Debug.IS_DEBUG && (ids.count > 200 || idsToSearch.count > 200) {
             dlog?.note("Array where Element : Identifiable called indexPathsFor(ids:) - this search may be CPU intensive (not efficient) use with small arrays only")
         }
         

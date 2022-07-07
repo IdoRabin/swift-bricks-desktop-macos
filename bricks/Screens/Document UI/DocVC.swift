@@ -10,7 +10,7 @@ import AppKit
 fileprivate let dlog : DSLogger? = DLog.forClass("DocVC")
 
 class DocVC : NSSplitViewController {
-    let DEBUG_DRAWING = IS_DEBUG && true
+    let DEBUG_DRAWING = Debug.IS_DEBUG && true
     
     fileprivate var cache = Cache<NSToolbarItem.Identifier,NSToolbarItem>(name: "itemsCach", maxSize: 200, flushToSize: 100)
     private var _latestSplitViewStateHash : Int = -1

@@ -14,7 +14,7 @@ enum BrickVersionControlType : Int, Codable {
     case mercurial = 3
 }
 
-//extension BrickVersionControlType /*VCS protocol factory*/ {
+//extension BrickVersionControlType /* VCS protocol factory */ {
 //
 //    func factoryCreateVCS(path:URL?)->VCS? {
 //        if let path = path {

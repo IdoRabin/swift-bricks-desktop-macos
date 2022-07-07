@@ -37,8 +37,8 @@ extension MNTabViewControllerEnumable {
 // This is supposed to be an "abstract" parent to be subclassed. Will raise exceptions in places requiring overrides.
 class MNTabViewController : NSTabViewController {
     // MARK: Constants
-    private let DEBUG_DRAWING = IS_DEBUG && false
-    private let DEBUG_DRAW_ORIG_TABS = IS_DEBUG && false
+    private let DEBUG_DRAWING = Debug.IS_DEBUG && false
+    private let DEBUG_DRAW_ORIG_TABS = Debug.IS_DEBUG && false
     
     lazy var dlog : DSLogger? = {
         return DLog.forClass("\(type(of: self))")

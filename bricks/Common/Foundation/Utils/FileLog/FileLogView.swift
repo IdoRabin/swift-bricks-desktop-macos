@@ -75,7 +75,7 @@ class FileLogView: NSTableView {
     typealias TextChunkIndex = UInt
     
     // MARK: Const
-    private let LINES_MIN_CHUNK_SIZE = (IS_DEBUG ? 16 :  512)
+    private let LINES_MIN_CHUNK_SIZE = (Debug.IS_DEBUG ? 16 :  512)
     
     // MARK: Static
     
@@ -172,7 +172,7 @@ class FileLogView: NSTableView {
         
         let lnes = self.lines[chunkIndex]
         guard let fileLog = self.fileLog, lnes == nil else {
-            // if IS_DEBUG, let lnes = lnes {
+            // if Debug.IS_DEBUG, let lnes = lnes {
             //    dlog?.note("loadLinesShown was already loaded [chunk: \(chunkIndex) lines: [\(lnes.minRow)...\(lnes.maxRow)]")
             // }
             completion(false)

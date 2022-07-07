@@ -13,7 +13,7 @@ fileprivate let dlog : DSLogger? = DLog.forClass("PreferencesVC")
 class PreferencesVC : NSPageController {
     
     // MARK: Properties:
-    private var DEBUG_DRAWING = IS_DEBUG && true
+    private var DEBUG_DRAWING = Debug.IS_DEBUG && true
     private var isAppearing : Bool = true
     
     fileprivate func updatePageIndex() {

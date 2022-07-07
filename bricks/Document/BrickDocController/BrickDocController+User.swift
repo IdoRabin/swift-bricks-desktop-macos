@@ -10,7 +10,7 @@ import Foundation
 fileprivate let dlog : DSLogger? = DLog.forClass("BrickDocController+User")
 extension BrickDocController /* user management */{
     
-    static let DEBUG_USER : Bool = IS_DEBUG && true
+    static let DEBUG_USER : Bool = Debug.IS_DEBUG && true
     
     var isUserLogggedIn : Bool {
         return self.curUser != nil

@@ -11,8 +11,8 @@ fileprivate let dlog : DSLogger? = DLog.forClass("ProjctTabsVC")
 class ProjectTabsVC : MNTabViewController, DocSubVC {
     
     // MARK: Constants
-    let DEBUG_DRAWING = IS_DEBUG && true
-    let DEBUG_DRAW_ORIG_TABS = IS_DEBUG && false
+    let DEBUG_DRAWING = Debug.IS_DEBUG && true
+    let DEBUG_DRAW_ORIG_TABS = Debug.IS_DEBUG && false
     
     // MARK: Enums
     enum Tabs : Int, Codable, MNTabViewControllerEnumable {

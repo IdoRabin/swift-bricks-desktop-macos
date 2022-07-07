@@ -21,13 +21,13 @@ class MNProgressBoxView : NSView {
     var observers = ObserversArray<MNProgressBoxViewObserver>()
     
     // MARK: static and enum
-    private let DEBUG_DRAWING = IS_DEBUG && false
-    private let DEBUG_TEST_PROGRESS_OBSERVATION = IS_DEBUG && false
-    private let DEBUG_INIT_WITH_CIRCLE_SHOWN = IS_DEBUG && false
-    private let DEBUG_ALWAYS_HAVE_TITLE = IS_DEBUG && false
-    private let DEBUG_ALWAYS_HAVE_SUBTITLE = IS_DEBUG && false
+    private let DEBUG_DRAWING = Debug.IS_DEBUG && false
+    private let DEBUG_TEST_PROGRESS_OBSERVATION = Debug.IS_DEBUG && false
+    private let DEBUG_INIT_WITH_CIRCLE_SHOWN = Debug.IS_DEBUG && false
+    private let DEBUG_ALWAYS_HAVE_TITLE = Debug.IS_DEBUG && false
+    private let DEBUG_ALWAYS_HAVE_SUBTITLE = Debug.IS_DEBUG && false
     private let DEFAULT_LEADING_PAD : CGFloat = 18.0
-    private let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && false
+    private let DEBUG_SLOW_ANIMATIONS = Debug.IS_DEBUG && false
     
     private let COPY_MENU_ITEM_ID = "mnProgressBoxViewCopyMenuItemID"
     private let VIEW_LOG_MENU_ITEM_ID = "mnProgressBoxViewLogMenuItemID"
@@ -491,7 +491,7 @@ class MNProgressBoxView : NSView {
         }
         
         // Debugging only:
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             if DEBUG_ALWAYS_HAVE_TITLE && title?.count ?? 0 == 0 {
                 title = "DEBUG always have lg title"
             }

@@ -46,7 +46,7 @@ final class AppAlert {
             DispatchQueue.mainIfNeeded {
                 self._presentedCountLock.lock {
                     let newValue = self._presentedCount + amount
-                    if IS_DEBUG && newValue < 0 {
+                    if Debug.IS_DEBUG && newValue < 0 {
                         dlog?.warning("newValue < 0! context:\(context)")
                         // assert(false, "AppAlert.presentedCount is set to become negative! context:\(context)") // we catch the reason for this unexpected behavior
                     }

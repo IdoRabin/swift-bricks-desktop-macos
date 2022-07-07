@@ -73,7 +73,7 @@ class MNButton: NSButton {
     
     var acceptedDragAndDropTypes = Set<NSPasteboard.PasteboardType>() {
         didSet {
-            if IS_DEBUG && acceptedDragAndDropTypes.count > 0 && self.isDetectHover {
+            if Debug.IS_DEBUG && acceptedDragAndDropTypes.count > 0 && self.isDetectHover {
                 dlog?.warning("acceptedDragAndDropTypes >0 and also isDetectHover is on!")
             }
         }

@@ -112,7 +112,7 @@ extension UnkeyedDecodingContainer {
                 let val = aatype.init(value.trimmingPrefix("."))
                 
                 // Logging
-                if IS_DEBUG {
+                if Debug.IS_DEBUG {
                     if dlog != nil {
                         dlog?.successOrFail(condition: val != nil, items: "decode: \(aatype) val:\(val.descOrNil)")
                     } else if val == nil {

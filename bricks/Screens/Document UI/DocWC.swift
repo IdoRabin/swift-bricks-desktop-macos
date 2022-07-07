@@ -21,7 +21,7 @@ extension NSViewController : HashableObject {
 }
 
 class DocWC : NSWindowController, WhenLoadedable {
-    let DEBUG_DRAWING = IS_DEBUG && false
+    let DEBUG_DRAWING = Debug.IS_DEBUG && false
         
     let TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_Pixel : CGFloat = 400
     let TOOLBAR_MAIN_PANEL_VIEW_MIN_WIDTH_fraction : CGFloat = 0.2

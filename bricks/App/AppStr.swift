@@ -14,7 +14,7 @@ protocol Localizable {
 }
 
 #if !CALL_BLOCK_EXTENSION
-fileprivate var AppStringsTodo : AppStringsTodoList? = IS_DEBUG ?  AppStringsTodoList() : nil
+fileprivate var AppStringsTodo : AppStringsTodoList? = Debug.IS_DEBUG ?  AppStringsTodoList() : nil
 #endif
 
 enum AppStr : Localizable {
@@ -262,7 +262,7 @@ enum AppStr : Localizable {
     static let DEBUG_LOG_UNTRANSLATED = false
     
     public static func pluralize(count:Int, singular:AppStr, plural:AppStr)->String {
-        if IS_DEBUG && count < 0 {
+        if Debug.IS_DEBUG && count < 0 {
             dlog?.warning("Pluralize(count:singular:plural:) failed with negative count!")
         }
         
@@ -304,7 +304,7 @@ enum AppStr : Localizable {
         #else
             var result = NSLocalizedString(key, tableName: tableName, value: key, comment: "")
             if result != "" && result != key {
-                if IS_DEBUG && AppStr.DEBUG_FIND_UNTRANSLATED == true {
+                if Debug.IS_DEBUG && AppStr.DEBUG_FIND_UNTRANSLATED == true {
                     result = "▹\(result)◃"
                 }
                 
@@ -422,7 +422,7 @@ enum AppStr : Localizable {
             }
             #endif
         
-            if IS_DEBUG && AppStr.DEBUG_FIND_UNTRANSLATED == true {
+            if Debug.IS_DEBUG && AppStr.DEBUG_FIND_UNTRANSLATED == true {
                 result = "▹\(result)◃"
             }
         

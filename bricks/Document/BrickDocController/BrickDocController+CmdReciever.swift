@@ -112,7 +112,7 @@ extension BrickDocController /* command factory */ {
             
             setup?(result)
             
-            if IS_DEBUG && self.commandInvoker.state.isPaused {
+            if Debug.IS_DEBUG && self.commandInvoker.state.isPaused {
                 dlog?.info("createCommand: Note that the invoker is paused!")
             }
         } else {

@@ -37,10 +37,10 @@ class CircleProgressView : NSView {
         let duration:TimeInterval
     }
     
-    private let DEBUG_DRAWING = IS_DEBUG && false
-    private let DEBUG_DRAW_MASK_AS_LAYER = IS_DEBUG && false
-    private let DEBUG_DEV_TIMED_TEST = IS_DEBUG && false
-    private let DEBUG_SLOW_ANIMATIONS = IS_DEBUG && false
+    private let DEBUG_DRAWING = Debug.IS_DEBUG && false
+    private let DEBUG_DRAW_MASK_AS_LAYER = Debug.IS_DEBUG && false
+    private let DEBUG_DEV_TIMED_TEST = Debug.IS_DEBUG && false
+    private let DEBUG_SLOW_ANIMATIONS = Debug.IS_DEBUG && false
     
     let MAX_WIDTH : CGFloat = 1200.0
     let MAX_HEIGHT : CGFloat = 1200.0
@@ -179,7 +179,7 @@ class CircleProgressView : NSView {
             // Actuallt change the progress mask layer here
             self.setNewProgressStrokeEnd(part: newValue, animated:animated)
             
-            //if IS_DEBUG {
+            //if Debug.IS_DEBUG {
              //   let prog = self.progressType == .determinate ? "Progress" : "Spinning           progress"
              //   let hid = [self.isHidden ? "true" : "false"].joined(separator: "            ").trimmingCharacters(in: .whitespaces)
              //   dlog?.info("z setNew: \(prog)=\(newValue) animated: \(animated) hidden: \(hid)          forced: \(forced)")
@@ -395,7 +395,7 @@ class CircleProgressView : NSView {
                 mask.strokeEnd = self.progress
             }
             
-            if IS_DEBUG {
+            if Debug.IS_DEBUG {
                 dlog?.info("updateProgressRingLayerMask \(rct) \(logAddedInfo)")
             }
             

@@ -249,7 +249,7 @@ extension NSView /* search subviews */ {
     }
     
     private func internal_debugBorders(downtree:Bool = true, depth:Int = 0, alpha:CGFloat = 1.0) {
-        guard IS_DEBUG && depth < 126 else {
+        guard Debug.IS_DEBUG && depth < 126 else {
             return
         }
         
@@ -270,14 +270,14 @@ extension NSView /* search subviews */ {
     }
     
     func debugBorders(downtree:Bool = true, alpha:CGFloat = 0.7) {
-        guard IS_DEBUG else {
+        guard Debug.IS_DEBUG else {
             return
         }
         self.internal_debugBorders(downtree: downtree, depth: 0, alpha:alpha)
     }
     
     func debugBorder(color:NSColor = NSColor.cyan, width:CGFloat = 1.0) {
-        guard IS_DEBUG else {
+        guard Debug.IS_DEBUG else {
             return
         }
         self.border(color: color, width: width)
@@ -289,7 +289,7 @@ extension NSView /* search subviews */ {
     }
     
     func corner(radius:CGFloat = 1.0) {
-        guard IS_DEBUG else {
+        guard Debug.IS_DEBUG else {
             return
         }
         self.wantsLayer = true

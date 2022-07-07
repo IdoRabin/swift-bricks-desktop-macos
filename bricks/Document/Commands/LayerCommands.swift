@@ -113,7 +113,7 @@ class CmdLayerAdd : LayerCommand {
                 }
                 
                 // Test / Log warning is needed.
-                if IS_DEBUG {
+                if Debug.IS_DEBUG {
                     if self.layerID == nil { dlog?.warning("addLayer perform:\(method) but did not get a layerID!") }
                 }
             }

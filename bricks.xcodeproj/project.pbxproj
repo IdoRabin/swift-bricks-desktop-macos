@@ -77,6 +77,8 @@
 		EC218B832759466C00744400 /* BrickTemplateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B822759466C00744400 /* BrickTemplateType.swift */; };
 		EC218B852759468E00744400 /* BrickVersionControlType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B842759468E00744400 /* BrickVersionControlType.swift */; };
 		EC218B872759471100744400 /* BrickDoc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC218B862759471100744400 /* BrickDoc.swift */; };
+		EC23DD2F2875D3F300E950AC /* ImageString.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC23DD2E2875D3F300E950AC /* ImageString.swift */; };
+		EC23DD312876DE6000E950AC /* AppSettable.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC23DD302876DE6000E950AC /* AppSettable.swift */; };
 		EC2F5EEA27726DCC00201865 /* MNProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2F5EE927726DCC00201865 /* MNProgress.swift */; };
 		EC2F5EED27732D9A00201865 /* MNTree.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2F5EEC27732D9A00201865 /* MNTree.swift */; };
 		EC332CB7275EB6DC00546767 /* MNButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC332CB6275EB65B00546767 /* MNButton.swift */; };
@@ -187,7 +189,7 @@
 		ECF96B08281C4F9B0053DF40 /* AppAlertButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B07281C4F9B0053DF40 /* AppAlertButtonsStyle.swift */; };
 		ECF96B0A281C50690053DF40 /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B09281C50690053DF40 /* AppAlert.swift */; };
 		ECF96B0C281C51690053DF40 /* AppAlertMacOSDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF96B0B281C51690053DF40 /* AppAlertMacOSDialog.swift */; };
-		ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */; };
+		ECFFF1582766238500ACC3F4 /* AppImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF1572766238500ACC3F4 /* AppImages.swift */; };
 		ECFFF15A27664C8500ACC3F4 /* NSSplitviewEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */; };
 /* End PBXBuildFile section */
 
@@ -312,6 +314,8 @@
 		EC218B822759466C00744400 /* BrickTemplateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickTemplateType.swift; sourceTree = "<group>"; };
 		EC218B842759468E00744400 /* BrickVersionControlType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickVersionControlType.swift; sourceTree = "<group>"; };
 		EC218B862759471100744400 /* BrickDoc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrickDoc.swift; sourceTree = "<group>"; };
+		EC23DD2E2875D3F300E950AC /* ImageString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageString.swift; sourceTree = "<group>"; };
+		EC23DD302876DE6000E950AC /* AppSettable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettable.swift; sourceTree = "<group>"; };
 		EC2F5EE927726DCC00201865 /* MNProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNProgress.swift; sourceTree = "<group>"; };
 		EC2F5EEC27732D9A00201865 /* MNTree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNTree.swift; sourceTree = "<group>"; };
 		EC332CB6275EB65B00546767 /* MNButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNButton.swift; sourceTree = "<group>"; };
@@ -421,7 +425,7 @@
 		ECF96B07281C4F9B0053DF40 /* AppAlertButtonsStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertButtonsStyle.swift; sourceTree = "<group>"; };
 		ECF96B09281C50690053DF40 /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		ECF96B0B281C51690053DF40 /* AppAlertMacOSDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlertMacOSDialog.swift; sourceTree = "<group>"; };
-		ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImages.swift.swift; sourceTree = "<group>"; };
+		ECFFF1572766238500ACC3F4 /* AppImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppImages.swift; sourceTree = "<group>"; };
 		ECFFF15927664C8500ACC3F4 /* NSSplitviewEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSSplitviewEx.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -602,6 +606,7 @@
 				ECEA1B662760FAA800DD602D /* AppCommand.swift */,
 				EC218B6927593DB300744400 /* AppConstants.swift */,
 				EC218B16275939DA00744400 /* AppSettings.swift */,
+				EC23DD302876DE6000E950AC /* AppSettable.swift */,
 				EC218B14275939CF00744400 /* AppDocumentHistory.swift */,
 				EC218B12275939CC00744400 /* AppConstants.swift */,
 				EC218B6B27593DDC00744400 /* AppResult.swift */,
@@ -609,7 +614,7 @@
 				EC218B6F27593E7900744400 /* AppErrorCode.swift */,
 				EC218B6D27593DE100744400 /* AppStr.swift */,
 				EC218B10275939B600744400 /* AppStoryboard.swift */,
-				ECFFF1572766238500ACC3F4 /* AppImages.swift.swift */,
+				ECFFF1572766238500ACC3F4 /* AppImages.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -707,6 +712,7 @@
 				EC218B3727593BDB00744400 /* WeakWrapper.swift */,
 				EC218B7927593F5E00744400 /* IndexPathTuple.swift */,
 				EC2F5EEC27732D9A00201865 /* MNTree.swift */,
+				EC23DD2E2875D3F300E950AC /* ImageString.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1229,6 +1235,7 @@
 				EC9DF00D275CD1BE0046F30A /* NSWindowController+XIB.swift in Sources */,
 				EC802160277F9F6200F6F015 /* MNTabViewController.swift in Sources */,
 				EC9DF004275CD1BE0046F30A /* NSView+Animation.swift in Sources */,
+				EC23DD2F2875D3F300E950AC /* ImageString.swift in Sources */,
 				EC9DF00A275CD1BE0046F30A /* CGSizeEx.swift in Sources */,
 				EC218B7127593E7900744400 /* AppError.swift in Sources */,
 				ECA67B8B2769DEBC00BC0D7D /* NSMenuEx.swift in Sources */,
@@ -1292,6 +1299,7 @@
 				EC218B4327593BE000744400 /* WeakWrapper.swift in Sources */,
 				EC1C7832278700310021A097 /* KeyboardShortcut.swift in Sources */,
 				EC19D2F22790B7BD00A9B97E /* ToolbarDocNamePopupVC.swift in Sources */,
+				EC23DD312876DE6000E950AC /* AppSettable.swift in Sources */,
 				ECA67B8E2769FEC600BC0D7D /* DocNameToolbarView.swift in Sources */,
 				EC218B4027593BE000744400 /* HashableObject.swift in Sources */,
 				ECEA1B732761FB7700DD602D /* MNMenuItem.swift.swift in Sources */,
@@ -1356,7 +1364,7 @@
 				EC218B3827593BE000744400 /* Cache.swift in Sources */,
 				EC19D2F52790B90B00A9B97E /* MiscCommands.swift in Sources */,
 				ECEA1B6D2761144F00DD602D /* FileCommands.swift in Sources */,
-				ECFFF1582766238500ACC3F4 /* AppImages.swift.swift in Sources */,
+				ECFFF1582766238500ACC3F4 /* AppImages.swift in Sources */,
 				EC9DF00C275CD1BE0046F30A /* CGRect+Quadrants.swift in Sources */,
 				EC218B5727593CBF00744400 /* DateFormatterEx.swift in Sources */,
 				EC218B4227593BE000744400 /* Selectable.swift in Sources */,

@@ -26,7 +26,7 @@ enum AppErrorCode : AppErrorInt, AppErrorCodable {
     case misc_no_permission_for_operation = 9020 //
     case misc_readonly_permission_for_operation = 9021 //
     
-    // Misc
+    // Web
     case web_unknown = 1000
     case web_internet_connection_error = 1003
     case web_unexpected_response = 1100

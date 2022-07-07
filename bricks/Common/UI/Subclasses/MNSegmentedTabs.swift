@@ -36,7 +36,7 @@ class MNSegmentedTabs : NSView {
         }
     }
     
-    let DEBUG_DRAWING = IS_DEBUG && false
+    let DEBUG_DRAWING = Debug.IS_DEBUG && false
     
     weak var stackView : NSStackView? = nil
     static let minTabWidth : CGFloat = 30.0

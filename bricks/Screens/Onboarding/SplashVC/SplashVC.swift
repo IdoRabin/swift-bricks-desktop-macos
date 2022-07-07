@@ -34,7 +34,7 @@ class HistoryTableviewContainer : NSScrollView {
 }
 
 class SplashVC : NSViewController {
-    let DEBUG_DRAWING = IS_DEBUG && false
+    let DEBUG_DRAWING = Debug.IS_DEBUG && false
     let MIN_WIDTH : CGFloat = 420 // hhh
     let TABLEVIEW_WIDTH : CGFloat = 220 // hhh
     static var sharedWindowController : NSWindowController? = nil

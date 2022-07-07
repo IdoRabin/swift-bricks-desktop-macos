@@ -193,7 +193,7 @@ extension DispatchQueue {
             DispatchQueue._onceTracker.append(uniqueToken)
         }
         
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             DispatchQueue._onceTrackerLock.lock {
                 if DispatchQueue._onceTracker.count > 200 {
                     DLog.misc["DispatchQueue"]?.warning("onceTracker tokens count > 200! Should not be used with a often created instances / classes!")
@@ -253,7 +253,7 @@ extension DispatchQueue {
     ///   - token - unique string token to associate with. try to make the string unique by itself or consider it unique when in combination with the associateWith type. Recommended using #function as a token name and associate with the currect instance
     ///   - forAnyQueue: will call this only once regardless of the queue calling this. When false, we can call this block once (per queue x per install). To work correctly, this depends on the queue labels having persistent labels between sessions. Default true
     ///   - legacyKey: key used by previous versions of the app, such that set any object value to the given legacy key in user defaults
-    ///   - isDebugIgnore: allows an easy mechanism to ignore the "once" condition and always call the block, from the implementing side. Requires IS_DEBUG global var to be true as well. (&&)  Default false
+    ///   - isDebugIgnore: allows an easy mechanism to ignore the "once" condition and always call the block, from the implementing side. Requires Debug.IS_DEBUG global var to be true as well. (&&)  Default false
     ///   - block: block to perform
     /// - Returns: true if the block was performed
     @discardableResult
@@ -275,7 +275,7 @@ extension DispatchQueue {
                     UserDefaults.standard.setValue(true, forKeyPath: xtoken)
                 }
             }
-            if UserDefaults.standard.object(forKey: xtoken) == nil || (isDebugIgnore && IS_DEBUG) {
+            if UserDefaults.standard.object(forKey: xtoken) == nil || (isDebugIgnore && Debug.IS_DEBUG) {
                 UserDefaults.standard.setValue(true, forKeyPath: xtoken)
                 dlog?.success("performOncePerInstall performed: \(token)")
                 return self.performOnce(uniqueToken: xtoken, block: block)
@@ -320,7 +320,7 @@ extension DispatchQueue {
             isShouldBlock = false
         }
         
-        let logStr = IS_DEBUG ? "{\(context ?? "*" )} #\(counter)" : ""
+        let logStr = Debug.IS_DEBUG ? "{\(context ?? "*" )} #\(counter)" : ""
         
         // Immediate test:
         if (test()) {

@@ -63,7 +63,7 @@ final class AppSettings : JSONFileSerializable {
     }
     
     // MARK: Private
-    fileprivate func noteChange(_ change:String, newValue:Any) {
+    func noteChange(_ change:String, newValue:Any) {
         guard _isLoading == false else {
             return
         }
@@ -118,13 +118,13 @@ final class AppSettings : JSONFileSerializable {
     
     private func save() {
         if let path = Self.pathToSettingsFile() {
-            _ = self.saveToJSON(path, prettyPrint: IS_DEBUG)
+            _ = self.saveToJSON(path, prettyPrint: Debug.IS_DEBUG)
             UserDefaults.standard.synchronize()
         }
     }
     
     // MARK: Singleton
-    fileprivate static var sharedWasLoaded : Bool = false
+    static var sharedWasLoaded : Bool = false
     
     private static var _shared : AppSettings? = nil
     public static var shared : AppSettings {
@@ -148,7 +148,7 @@ final class AppSettings : JSONFileSerializable {
                 dlog?.fail("Failed loading file, will create new instance. error:\(appErr) path:\(path.absoluteString)")
                 // Create new instance
                 result = AppSettings()
-                _ = result?.saveToJSON(path, prettyPrint: IS_DEBUG)
+                _ = result?.saveToJSON(path, prettyPrint: Debug.IS_DEBUG)
             }
         }
         
@@ -160,7 +160,7 @@ final class AppSettings : JSONFileSerializable {
         _isLoading = false
         general = AppSettingsGeneral()
         stats = AppSettingsStats()
-        debug = IS_DEBUG ? AppSettingsDebug() : nil
+        debug = Debug.IS_DEBUG ? AppSettingsDebug() : nil
         dlog?.info("Init \(String(memoryAddressOf: self))")
     }
     
@@ -172,7 +172,7 @@ final class AppSettings : JSONFileSerializable {
         var cont = encoder.container(keyedBy: CodingKeys.self)
         try cont.encode(general, forKey: CodingKeys.general)
         try cont.encode(stats, forKey: CodingKeys.stats)
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             try cont.encode(debug, forKey: CodingKeys.debug)
         }
         
@@ -190,14 +190,14 @@ final class AppSettings : JSONFileSerializable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         general = try values.decode(AppSettingsGeneral.self, forKey: CodingKeys.general)
         stats = try values.decode(AppSettingsStats.self, forKey: CodingKeys.stats)
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             debug = try values.decodeIfPresent(AppSettingsDebug.self, forKey: CodingKeys.debug) ?? AppSettingsDebug()
         }
         
         if values.allKeys.contains(.other) {
             var sub = try values.nestedUnkeyedContainer(forKey: .other)
             let strAny = try sub.decodeStringAnyDict(decoder: decoder)
-            if IS_DEBUG && sub.count != strAny.count {
+            if Debug.IS_DEBUG && sub.count != strAny.count {
                 dlog?.info("Failed decoding some StringLosslessConvertible. SUCCESSFUL keys: \(strAny.keysArray.descriptionsJoined). Find which key is missing.")
             }
             for (key, val) in strAny {
@@ -211,65 +211,4 @@ final class AppSettings : JSONFileSerializable {
             self._isLoading = false
         }
     }
-}
-
-// MARK: AppSettable protocol - depends on AppSettings
-@propertyWrapper
-struct AppSettable<T:Equatable & Codable> : Codable {
-
-    // MARK: properties
-    private var _value : T
-    var wrappedValue : T {
-        get {
-            return _value
-        }
-        set {
-            let oldValue = _value
-            let newValue = newValue
-            if newValue != oldValue {
-                _value = newValue
-                let changedKey = name.count > 0 ? "\(self.name)" : "\(self)"
-                AppSettings.shared.noteChange(changedKey, newValue: newValue)
-            }
-        }
-    }
-
-    @SkipEncode var name : String = ""
-    
-    init(_ wrappedValue:T, name newName:String) {
-        if AppSettings.sharedWasLoaded {
-            // dlog?.info("searching for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
-            if let loadedVal = AppSettings.shared.other[newName] as? T {
-                self._value = loadedVal
-                dlog?.success("found and set for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
-            } else {
-                if IS_DEBUG && AppSettings.shared.other[newName] != nil {
-                    dlog?.warning("failed cast \(AppSettings.shared.other[newName].descOrNil) as \(T.self)")
-                }
-                
-                self._value = wrappedValue
-            }
-        } else {
-            self._value = wrappedValue
-        }
-        
-        self.name = newName
-    }
-    
-    // MARK: AppSettable: Decodable
-    init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self._value = try container.decode(T.self)
-        
-        self.name = container.codingPath.compactMap({ key in
-            return key.stringValue
-        }).joined(separator: ".")
-    }
-    
-    // MARK: AppSettable: Encodable
-    func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(_value)
-    }
-    
 }

@@ -3,7 +3,7 @@
 //  swiftsync
 //
 //  Created by Ido on 04/02/2021.
-//  Copyright © 2019 . All rights reserved.
+//  Copyright © 2021 . All rights reserved.
 //
 
 import Foundation
@@ -40,6 +40,10 @@ protocol CacheObserver {
 typealias AnyCache = Cache<AnyHashable, AnyHashable>
 class Cache<Key : Hashable, Value : Hashable> {
     
+    var defaultSearchPathDirectory : FileManager.SearchPathDirectory {
+        return .cachesDirectory
+    }
+    
     struct ValueInfo : Hashable {
         let value:Value
         let date:Date?
@@ -55,6 +59,7 @@ class Cache<Key : Hashable, Value : Hashable> {
     private var _isMemoryCacheOnly : Bool = false
     private var _oldestItemsDates : [Date] = []
     private var _isFlushItemsOlderThan : TimeInterval? = Date.SECONDS_IN_A_MONTH
+    private var _searchPathDir : FileManager.SearchPathDirectory? = nil
     public var _isSavesDates : Bool = false
     // const
     private let _maxOldestDates : UInt = 200
@@ -88,7 +93,7 @@ class Cache<Key : Hashable, Value : Hashable> {
     }
     
     func log(_ string:String) {
-        if isLog && IS_DEBUG {
+        if isLog && Debug.IS_DEBUG {
             dlog?.info("[\(name)] \(string)")
         }
     }
@@ -148,7 +153,7 @@ class Cache<Key : Hashable, Value : Hashable> {
         set {
             if _lastSaveTime != newValue {
                 _lastSaveTime = newValue
-                if let date = _lastSaveTime, IS_DEBUG {
+                if let date = _lastSaveTime, Debug.IS_DEBUG {
                     let interval = fabs(date.timeIntervalSinceNow)
                     switch interval {
                     case 0.0..<0.1:
@@ -227,7 +232,7 @@ class Cache<Key : Hashable, Value : Hashable> {
                     // NOTE: We are assuming only one item has this exact date,
                     self._oldestItemsDates.remove(objects: dates)
                     
-                    if IS_DEBUG {
+                    if Debug.IS_DEBUG {
                         self.validate()
                     }
                     self.log("Flushed to size \(_latestKeys.count) items:\(self._items.count)")
@@ -379,6 +384,11 @@ class Cache<Key : Hashable, Value : Hashable> {
             self.flushIfNeeded()
             let date = self.isSavesDates ? Date() : nil
             self._items[key] = ValueInfo(value:value, date:date)
+            
+            // mutating - remove all prev references to key (lifo)
+            self._latestKeys.remove(elementsEqualTo: key)
+            
+            // mutating - insert on top the new key
             self._latestKeys.append(key)
             self.log("Added \(key). count:\(self.count)")
             self.isNeedsSave = true
@@ -443,7 +453,7 @@ class Cache<Key : Hashable, Value : Hashable> {
             return nil
         }
         
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             if cnt != self._items.count - newItems.count {
                 dlog?.note("clear beforeDate validation of items removed did not come out right!")
             }
@@ -482,7 +492,8 @@ extension Cache where Key : CodableHashable /* saving of keys only*/ {
         // .libraryDirectory -- not accessible to user by Files app
         // .cachesDirectory -- not accessible to user by Files app, for caches and temps
         // .documentDirectory -- accessible to user by Files app
-        var url = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+        // .autosavedInformationDirectory --
+        var url = FileManager.default.urls(for: self._searchPathDir ?? self.defaultSearchPathDirectory, in: .userDomainMask).first
         let fname = self.name.replacingOccurrences(of: CharacterSet.whitespaces, with: "_").replacingOccurrences(of: CharacterSet.punctuationCharacters, with: "_")
         
         url?.appendPathComponent("mncaches")
@@ -579,8 +590,9 @@ extension Cache where Key : CodableHashable, Value : Codable {
     ///   - maxSize: maximum size for the cache (amount of items). Beyond this size, oldest entered items will be popped, and newwest pushed into the cache.
     ///   - flushToSize: nil or some value. When nil, the cache will pop as many items as required to remain at the maxSize level. When defined, once the caceh hits or surpasses maxSize capaity, te cache will flust and keep only the latest flushToSize elements, popping the remaining elements. flushToSize must be smaller than maxSize by at least one.
     ///   - attemptLoad: will attempt loading this cache immediately after init from the cache file, saved previously using saveIfNeeded(), save(), or by AutoSavedCache class.
-    convenience init(name:String, maxSize:UInt, flushToSize:UInt? = 0, attemptLoad:Bool) {
+    convenience init(name:String, maxSize:UInt, flushToSize:UInt? = 0, attemptLoad:Bool, searchDirectory:FileManager.SearchPathDirectory? = nil) {
         self.init(name: name, maxSize: maxSize, flushToSize: flushToSize)
+        self._searchPathDir = searchDirectory
         if attemptLoad {
             _ = self.load()
         }
@@ -747,6 +759,10 @@ extension Cache where Key : CodableHashable, Value : Codable {
 class AutoSavedCache <Key : CodableHashable, Value : CodableHashable> : Cache<Key, Value>  {
     private var _timeout : TimeInterval = 0.3
     
+    override var defaultSearchPathDirectory : FileManager.SearchPathDirectory {
+        return .autosavedInformationDirectory
+    }
+    
     /// Timeout of save event being called after changes are being made. default is 0.3
     public var autoSaveTimeout : TimeInterval {
         get {
@@ -772,5 +788,14 @@ class AutoSavedCache <Key : CodableHashable, Value : CodableHashable> : Cache<Ke
 }
 
 class DBCache <Key : CodableHashable, Value : CodableHashable> : AutoSavedCache <Key, Value> {
+    // TODO: Implement?
+    /*override*/ func save() -> Bool {
+        dlog?.todo("implement DBCache.save()!")
+        return false
+    }
     
+    /*override*/ func load() -> Bool {
+        dlog?.todo("implement DBCache.load()!")
+        return false
+    }
 }

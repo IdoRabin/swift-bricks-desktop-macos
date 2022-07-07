@@ -11,8 +11,8 @@ fileprivate let dlog : DSLogger? = DLog.forClass("LayersVC")
 fileprivate let dlogDDrop : DSLogger? = nil // DLog.forClass("LayersVC_dragDrop")
 fileprivate let dlogWarnings : DSLogger? = DLog.forClass("LayersVC_warn")
 
-fileprivate let IS_LOG_DRAGGING = IS_DEBUG && false
-fileprivate let DEBUG_DRAWING = IS_DEBUG && false
+fileprivate let IS_LOG_DRAGGING = Debug.IS_DEBUG && false
+fileprivate let DEBUG_DRAWING = Debug.IS_DEBUG && false
 fileprivate typealias LayerUIInfo = BrickLayers.LayerUIInfo // convenience
 
 // MARK: // Overrides NSDraggingDestination, NSDraggingSource
@@ -53,7 +53,7 @@ class LayersTableView : NSTableView  /* NSDraggingDestination, NSDraggingSource 
         }
 
         let itemsCount = infos.count
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             if itemsCount != info.numberOfValidItemsForDrop {
                 dlog?.warning("updateDraggingItemsForDrag: some items are invalid / items count validation mismatch (info.numberOfValidItemsForDrop compare). infos: \(infos.valuesArray.descriptions()) \n info.numberOfValidItemsForDrop: \(info.numberOfValidItemsForDrop)")
             }

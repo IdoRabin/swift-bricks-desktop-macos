@@ -56,7 +56,7 @@ extension AppAlertPresenter /*default implementations */ {
         // default implementation
         AppAlert.markWillPresentAndNotify(sender: sender, in: vc, presenter: presenter, instance: instance, animated: animated)
         
-//        if IS_DEBUG && (vc.presentedViewController is MNAlertViewController ||
+//        if Debug.IS_DEBUG && (vc.presentedViewController is MNAlertViewController ||
 //                        vc.presentedViewController is UIAlertController ||
 //                        vc is MNAlertViewController ||
 //                        vc is UIAlertController) {

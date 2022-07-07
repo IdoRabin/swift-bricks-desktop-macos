@@ -9,8 +9,13 @@
 import AppKit
 import AudioToolbox
 
-public let IS_DEBUG = true
+class Debug {
+    static let IS_DEBUG = true
+    static let RESET_DB_ON_INIT = Debug.IS_DEBUG && false
+}
+
 let IS_RTL_LAYOUT : Bool = NSApplication.shared.userInterfaceLayoutDirection == .rightToLeft
+
 
 func AppPlayAlertSound() {
     let systemSoundId: SystemSoundID = kSystemSoundID_UserPreferredAlert

@@ -54,7 +54,7 @@ extension AppCommand /* default implementation */ {
     }
     
     var dlog : DSLogger? {
-        if IS_DEBUG {
+        if Debug.IS_DEBUG {
             return DLog.forClass("\(Self.self)")
         }
         return nil

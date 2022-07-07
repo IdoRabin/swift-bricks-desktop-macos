@@ -349,7 +349,7 @@ class BrickDoc: NSDocument, BUIDable  {
         
         switch typeName {
         case Self.DATA_TYPE_NAME:
-            result = self.brick.serializeToJsonData(prettyPrint: IS_DEBUG)
+            result = self.brick.serializeToJsonData(prettyPrint: Debug.IS_DEBUG)
         default:
             error = AppError(AppErrorCode.doc_save_failed, detail:"Data(ofType:\(typeName))->Data. did not handle this type.")
         }

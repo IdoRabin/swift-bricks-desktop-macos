@@ -63,7 +63,7 @@ class AverageAccumulator : Codable {
     }
     
     func log(_ string:String) {
-        if payload.isLog && IS_DEBUG {
+        if payload.isLog && Debug.IS_DEBUG {
             dlog?.info("[\(payload.name)] \(string)")
         }
     }

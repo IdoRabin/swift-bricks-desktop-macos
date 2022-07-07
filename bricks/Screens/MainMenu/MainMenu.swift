@@ -115,7 +115,7 @@ class MainMenu : NSMenu {
         return menuItems[.allLeafItems] ?? []
     }
     
-    var unhookedSystemItems : [NSMenuItem]? = IS_DEBUG ? [] : nil
+    var unhookedSystemItems : [NSMenuItem]? = Debug.IS_DEBUG ? [] : nil
     
     enum State {
         enum StateSimplified : Int {

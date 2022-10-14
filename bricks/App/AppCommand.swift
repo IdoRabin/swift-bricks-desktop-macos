@@ -43,7 +43,7 @@ extension AppCommand /* default implementation */ {
     
     static var tooltipTitleFull : String {
         let title = tooltipTitle ?? buttonTitle
-        if AppSettings.shared.general.tooltipsShowKeyboardShortcut, keyboardShortcut.isEmpty == false {
+        if AppSettings.shared.client!.tooltipsShowKeyboardShortcut, keyboardShortcut.isEmpty == false {
             return title + " " + keyboardShortcut.displayString
         }
         return title

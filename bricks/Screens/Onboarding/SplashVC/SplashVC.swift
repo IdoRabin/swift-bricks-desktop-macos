@@ -70,9 +70,9 @@ class SplashVC : NSViewController {
 
                         var rect = window.frame
                         if hidden {
-                            rect = rect.changed(width: MIN_WIDTH)
+                            rect = rect.changed(width: self.MIN_WIDTH)
                         } else {
-                            rect = rect.changed(width: MIN_WIDTH + TABLEVIEW_WIDTH)
+                            rect = rect.changed(width: self.MIN_WIDTH + self.TABLEVIEW_WIDTH)
                         }
 
                         window.setFrame(rect, display: true, animate: false)
@@ -106,10 +106,10 @@ class SplashVC : NSViewController {
         
         let yearStr = DateFormatter.localeYearFormatter.string(from: Date())
         titleLabel.stringValue = AppStr.PRODUCT_NAME.localized()
-        subtitleLabel.stringValue = AppStr.COPYRIGHT_COMPANY_W_YEAR_FORMAT.formatLocalized(yearStr) + "\n" + AppStr.VERSION.localized() + Bundle.main.fullVersionAsDisplayString
+        subtitleLabel.stringValue = AppStr.COPYRIGHT_COMPANY_W_YEAR_FORMAT.formatLocalized(yearStr) + "\n" + AppStr.VERSION.localized() + Bundle.main.fullVersion
         
         showWindowCheckBox.title = AppStr.SHOW_THIS_WINDOW_ON_STARTUP.localized()
-        showWindowCheckBox.state = AppSettings.shared.general.showsSplashScreenOnInit ? .on : .off
+        showWindowCheckBox.state = AppSettings.shared.client!.showsSplashScreenOnInit ? .on : .off
         
         closeButton.onMouseEnter = {btn in
             // btn.image = NSImage(systemSymbolName: "xmark.circle.fill", accessibilityDescription: AppStr.CLOSE.localized())
@@ -186,7 +186,7 @@ extension SplashVC /* Actions */ {
     }
     
     private func terminateAppIfNeeded() {
-        if AppSettings.shared.general.splashScreenCloseBtnWillCloseApp {
+        if AppSettings.shared.client!.splashScreenCloseBtnWillCloseApp {
             BrickDocController.shared.lastClosedWasOnSplashScreen = (BrickDocController.shared.brickDocWindows.count == 0)
             
             if BrickDocController.shared.hasEditedDocuments {
@@ -219,7 +219,7 @@ extension SplashVC /* Actions */ {
             dlog?.note("showWindowCheckboxAction sender unknwon \(sender)")
             return
         }
-        AppSettings.shared.general.showsSplashScreenOnInit = (checkbox.state == .on)
+        AppSettings.shared.client!.showsSplashScreenOnInit = (checkbox.state == .on)
     }
 
     @IBAction func historyTableViewDidSelectRow(_ sender:Any) {

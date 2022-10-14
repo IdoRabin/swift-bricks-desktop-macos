@@ -76,7 +76,7 @@ class LayersTableView : NSTableView  /* NSDraggingDestination, NSDraggingSource 
 // MARK: LayersVC implementation
 class LayersVC : NSViewController, DocSubVC {
     
-    @AppSettable(false, name:"isRequiresRemoveLayersDialog") static var isRequiresRemoveLayersDialog : Bool
+    @AppSettable(name:"isRequiresRemoveLayersDialog", default: false) static var isRequiresRemoveLayersDialog : Bool
     
     // MARK: UI components
     @IBOutlet weak var addButton: MNButton!

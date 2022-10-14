@@ -25,7 +25,7 @@ class PreferencesVC : NSPageController {
     }
     
     fileprivate var lastSelectedToolbarItemID : NSToolbarItem.Identifier? = nil
-    @AppSettable(.unknown,   name:"preferences.lastSelectedPreferencesPage") var lastSelectedPreferencesPage : PreferencesPage {
+    @AppSettable(name:"preferences.lastSelectedPreferencesPage", default: .unknown) var lastSelectedPreferencesPage : PreferencesPage {
         didSet {
             self.updatePageIndex()
         }

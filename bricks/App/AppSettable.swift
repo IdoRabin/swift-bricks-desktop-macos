@@ -13,8 +13,15 @@ fileprivate let dlog : DSLogger? = DLog.forClass("AppSettable")
 @propertyWrapper
 struct AppSettable<T:Equatable & Codable> : Codable {
 
+    enum CodingKeys : String, CodingKey {
+        case name  = "name"
+        case value = "value"
+    }
+    
     // MARK: properties
     private var _value : T
+    @SkipEncode var name : String = ""
+    
     var wrappedValue : T {
         get {
             return _value
@@ -30,10 +37,13 @@ struct AppSettable<T:Equatable & Codable> : Codable {
         }
     }
 
-    @SkipEncode var name : String = ""
-    
-    init(_ wrappedValue:T, name newName:String) {
-        if AppSettings.sharedWasLoaded {
+    init(name newName:String, `default` defaultValue : T) {
+        
+        // basic setup:
+        self.name = newName
+        
+        // Adv. setup:
+        if AppSettings.isLoaded {
             // dlog?.info("searching for [\(newName)] in \(AppSettings.shared.other.keysArray.descriptionsJoined)")
             if let loadedVal = AppSettings.shared.other[newName] as? T {
                 self._value = loadedVal
@@ -43,29 +53,26 @@ struct AppSettable<T:Equatable & Codable> : Codable {
                     dlog?.warning("failed cast \(AppSettings.shared.other[newName].descOrNil) as \(T.self)")
                 }
                 
-                self._value = wrappedValue
+                self._value = defaultValue
             }
         } else {
-            self._value = wrappedValue
+            self._value = defaultValue
         }
-        
-        self.name = newName
     }
     
     // MARK: AppSettable: Decodable
     init(from decoder: Decoder) throws {
-        let container = try decoder.singleValueContainer()
-        self._value = try container.decode(T.self)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
         
-        self.name = container.codingPath.compactMap({ key in
-            return key.stringValue
-        }).joined(separator: ".")
+        // Decode only whats needed
+        self.name = try container.decode(String.self, forKey: .name)
+        self._value = try container.decode(T.self, forKey: .value)
     }
     
     // MARK: AppSettable: Encodable
     func encode(to encoder: Encoder) throws {
-        var container = encoder.singleValueContainer()
-        try container.encode(_value)
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name,   forKey: .name)
+        try container.encode(_value, forKey: .value)
     }
-    
 }

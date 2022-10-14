@@ -17,8 +17,8 @@ class BrickLayers : CodableHashable, BasicDescable {
     static let MAX_LAYER_NAME_LENGTH = 128
     
     static let SETTING_ = 128
-    @AppSettable(true, name: "BrickLayers.selectAddedLayer") static var selectAddedLayer : Bool
-    @AppSettable(true, name: "BrickLayers.selectNearRemovedLayers") static var selectNearRemovedLayers : Bool
+    @AppSettable(name: "BrickLayers.selectAddedLayer", default:true) static var selectAddedLayer : Bool
+    @AppSettable(name: "BrickLayers.selectNearRemovedLayers", default:true) static var selectNearRemovedLayers : Bool
     
     // MARK: Properties
     private(set) var orderedLayers : [BrickLayer] = []

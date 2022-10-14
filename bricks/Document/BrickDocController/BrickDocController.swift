@@ -69,7 +69,7 @@ class BrickDocController: NSDocumentController {
     // See +User extension
     private (set) var curUser : BricksUser? = nil
     
-    @AppSettable(true,   name:"BrickDocController.lastClosedWasOnSplashScreen") var lastClosedWasOnSplashScreen : Bool {
+    @AppSettable(name:"BrickDocController.lastClosedWasOnSplashScreen", default: true) var lastClosedWasOnSplashScreen : Bool {
         didSet {
             if self.lastClosedWasOnSplashScreen != oldValue {
                 dlog?.info("lastClosedWasOnSplashScreen: \(self.lastClosedWasOnSplashScreen)")
@@ -454,7 +454,7 @@ extension BrickDocController  /* Expected actions that are not commands.. */ {
             var isClose = false
             switch topVC {
             case is SplashVC:
-                isClose = AppSettings.shared.general.splashScreenCloseBtnWillCloseApp == false
+                isClose = AppSettings.shared.client!.splashScreenCloseBtnWillCloseApp == false
                 if !isClose {
                     topWindow.shake()
                 }

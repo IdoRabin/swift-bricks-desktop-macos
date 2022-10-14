@@ -35,7 +35,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
     private let fileHandle : FileHandle!
     private let avgLineLength : AverageAccumulator!
     private let linePositions : Cache<LineNr, NSRange>!
-    @AppSettable([:],   name: LOG_CACHE_KEYS_KEY) static var fileLogLastCachesKeys : [String:String]
+    @AppSettable(name: LOG_CACHE_KEYS_KEY, default: [:]) static var fileLogLastCachesKeys : [String:String]
     
     private let queue = DispatchQueue.global()
     private var isMappingLines = false
@@ -111,7 +111,7 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
             while AppSettings.shared.other.index(forKey: Self.LOG_CACHE_KEYS_KEY) == nil && counter < maxWaitcounter {
                 Thread.sleep(forTimeInterval: 0.05)
                 counter += 1
-                dlog?.info("waiting for Settings other[\(Self.LOG_CACHE_KEYS_KEY)] cnt: \(counter)")
+                dlog?.info("waiting for Settings other [\(Self.LOG_CACHE_KEYS_KEY)] cnt: \(counter)")
             }
             
             if AppSettings.shared.other.index(forKey: Self.LOG_CACHE_KEYS_KEY) == nil && counter < maxWaitcounter {

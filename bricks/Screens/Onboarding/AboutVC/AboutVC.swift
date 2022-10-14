@@ -30,7 +30,7 @@ class AboutVC: NSViewController {
         super.viewDidLoad()
 
         self.titleLabel.stringValue = AppStr.PRODUCT_NAME.localized()
-        self.versionLabel.stringValue = AppStr.VERSION.localized() + " " + Bundle.main.fullVersionAsDisplayString
+        self.versionLabel.stringValue = Bundle.main.fullVersion
 
         let yearStr = DateFormatter.localeYearFormatter.string(from: Date())
         self.copyrightLabel.stringValue = AppStr.COPYRIGHT_COMPANY_W_YEAR_FORMAT_LONG.formatLocalized(yearStr)

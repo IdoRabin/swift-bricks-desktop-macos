@@ -41,7 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         AppSettings.shared.stats.launchCount += 1
         AppSettings.shared.stats.lastLaunchDate = Date()
-        let version = Bundle.main.fullVersionAsDisplayString
+        let version = Bundle.main.fullVersion
         dlog?.info("-- App Launched version: [\(version)] launch count: \(AppSettings.shared.stats.launchCount) --")
         completion(.success(version))
     }

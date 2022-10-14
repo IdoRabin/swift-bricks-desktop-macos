@@ -32,13 +32,11 @@ extension NSColor {
 }
 
 struct AppConstants {
-    static let SETTINGS_FILENAME = "bricks_app_settings"
+    static let CLIENT_SETTINGS_FILENAME = "bricks_app_settings"
     static let DOCUMENT_HISTORY_FILENAME = "brick_file_history"
     static let BRICK_FILE_EXTENSION = "bricks"
     static let BRICK_FILE_UTI = "com.idorabin.bricks.document"
-    
     static let RULE_SET_FILE_EXTENSTION = "bricksruleset"
-    
     static let BUTTON_CORNER_SMALL : CGFloat = 4.0
     static let BUTTON_CORNER_BIG : CGFloat = 6.0
 }
@@ -75,9 +73,10 @@ extension NSView {
 }
 
 func isDarkThemeActive(view: NSView) -> Bool {
-    
+
     if #available(OSX 10.14, *) {
         return view.isDarkThemeActive
     }
+    
     return false
 }

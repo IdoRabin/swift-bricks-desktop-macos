@@ -44,9 +44,14 @@ class LoadingHelper {
     private var _isLoadingNow : Bool = false
     private var _loadResult : AppResultUpdated? = nil
     private var _loadingCompletions : [AppResultUpdatedBlock]? = []
-
+    private var _didDeinit : Bool = false
+    
     func creatingLoadingError()->AppError {
         return AppError(AppErrorCode.misc_failed_loading, detail: "Failed loading in \(self.label))")
+    }
+
+    private var logPrefix : String {
+        return "|\(self._label)|"
     }
     
     init(label newLabel:String = "Unknown") {
@@ -58,7 +63,12 @@ class LoadingHelper {
     }
 
     deinit {
-        callCompletionsAndClear()
+        dlog?.info("\(logPrefix) deinit start")
+        if !self._didDeinit {
+            callCompletionsAndClear()
+            self._didDeinit = true
+        }
+        dlog?.info("\(logPrefix) deinit end")
     }
     
     var isLoadingNow : Bool {
@@ -105,7 +115,7 @@ class LoadingHelper {
         
         // Call completions
         // Note: by the time we get to the main thread, self instance may be dealloced.
-        DispatchQueue.mainIfNeeded { [self] in
+        DispatchQueue.mainIfNeeded { [self, lock, loadResult, comps] in
             lock.lock {
                 for completion in comps {
                     completion(loadResult)
@@ -116,6 +126,7 @@ class LoadingHelper {
                 self._loadingCompletions = nil
             }
         }
+        dlog?.info("\(logPrefix) callCompletionsAndClear DONE \(lock)")
     }
     
     func startLoadingIfNeeded(loadableEx:WhenLoadedableEx, onGlobalQueue : Bool = true, userInfo:Any? = nil) {
@@ -176,7 +187,7 @@ class LoadingHelper {
             case .success:
                 result = .success(.newData)
             case .timeout:
-                result = .failure(AppError(AppErrorCode.misc_failed_loading, detail: "LoadingHelper.startedLoading:waitForCondition failed on timeout after \(timeout) sec."))
+                result = .failure(AppError(AppErrorCode.misc_failed_loading, detail: "LoadingHelper.startedLoading:waitForCondition failed on timeout after \(timeout) sec. label: .\(_label)"))
             }
             self._loadResult = result
             completed(userInfo, result)

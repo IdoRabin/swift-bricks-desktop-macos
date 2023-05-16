@@ -489,21 +489,21 @@ class QueuedInvoker : CommandInvoker {
                 return
             }
             
-            var toBeRedoed = Array<CommandWrapper>()
+            var toBeRedone = Array<CommandWrapper>()   // i.e redo a command
             if let amount = amount {
                 let amt = min(amount, undoed.count)
-                toBeRedoed.append(contentsOf: undoed.prefix(amt))
+                toBeRedone.append(contentsOf: undoed.prefix(amt))
                 undoed.removeFirst(amt)
             } else {
-                toBeRedoed.append(contentsOf: undoed)
+                toBeRedone.append(contentsOf: undoed)
                 undoed.removeAll()
             }
             
             queues[.undoed] = undoed
             
             // Execute
-            self.executeItems(queueType: .undoed, items: toBeRedoed) {
-                dlog?.info("redo DONE for \(toBeRedoed.count) items")
+            self.executeItems(queueType: .undoed, items: toBeRedone) {
+                dlog?.info("redo DONE for \(toBeRedone.count) items")
             }
         }
     }

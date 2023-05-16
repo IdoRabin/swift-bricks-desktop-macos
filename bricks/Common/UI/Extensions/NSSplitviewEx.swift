@@ -14,32 +14,34 @@ extension NSSplitView {
     var leadingDividerIndex : Int {
         return 0 // self.arrangedSubviews.count
     }
+    
     var trailingDividerIndex : Int {
         return max(self.arrangedSubviews.count - 2, 0)
     }
     
     func isPanelCollapsed(at index:Int)->Bool {
-
-        // leading
-        if index == self.leadingDividerIndex, let subview = self.arrangedSubviews.first {
-            let minPos = self.minPossiblePositionOfDivider(at: index)
-            // dlog?.info("L minPos \(minPos) w:\(subview.frame.width)")
-            return self.isSubviewCollapsed(subview) || abs(minPos - subview.frame.maxX) < 10.0 || subview.frame.width < 10.0
+        var isLeading = false
+        guard [self.leadingDividerIndex, self.trailingDividerIndex].contains(index) else {
+            return false
         }
         
-        // trailing
-        if index == self.trailingDividerIndex + 1, let subview = self.arrangedSubviews.last {
-            let minPos = self.minPossiblePositionOfDivider(at: index)
-            // dlog?.info("T minPos \(minPos) w:\(subview.frame.width)")
-            return self.isSubviewCollapsed(subview) || abs(minPos - subview.frame.width) < 10.0 || subview.frame.width < 10.0
-        }
-
-        // Not leding or trailing - middle panel collapsed?
-        if self.arrangedSubviews.count > 2 && index > 0 && index < self.arrangedSubviews.count - 1 {
-            return self.isSubviewCollapsed(self.arrangedSubviews[index])
+        isLeading = (index == self.leadingDividerIndex)
+        
+        if let vc = self.window?.contentViewController as? NSSplitViewController {
+            if let splitItem = isLeading ? vc.splitViewItems.first : vc.splitViewItems.last {
+                // ?
+            }
         }
         
-        return false
+        let minPos = self.minPossiblePositionOfDivider(at: index)
+        guard let subview : NSView = isLeading ? self.arrangedSubviews.first : self.arrangedSubviews.last else {
+            return false
+        }
+        let subtract : CGFloat = isLeading ? subview.frame.maxX : subview.frame.width
+        
+        // dlog?.info("L minPos \(minPos) w:\(subview.frame.widt h)")
+        let extraLimit : CGFloat = 10.0
+        return self.isSubviewCollapsed(subview) || abs(minPos - subtract) < extraLimit || subview.frame.width < extraLimit
     }
     
     var isLeadingPanelCollapsed : Bool {

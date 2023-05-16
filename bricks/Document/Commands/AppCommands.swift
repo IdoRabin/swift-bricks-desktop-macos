@@ -37,9 +37,10 @@ class CmdSplashWindow : AppCommand {
         }
         DispatchQueue.mainIfNeeded {[self] in
             func saveFlags() {
-                BrickDocController.shared.lastClosedWasOnSplashScreen = BrickDocController.shared.brickDocWindows.count == 0
+                BrickDocController.shared.lastClosedWasOnSplashScreen = (BrickDocController.shared.brickDocWindows.count == 0)
             }
             
+            // exit since already closing:
             guard BrickDocController.shared.documents.filter({ doc in
                 (doc as? BrickDoc)?.isClosing == false
             }).count == 0 else {

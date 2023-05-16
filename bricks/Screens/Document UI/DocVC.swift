@@ -118,7 +118,10 @@ extension DocVC /* NSSplitViewDelegate */ {
     }
     
     private func calcSidebarbTNSstate() {
-        let newHashValue = mnSplitView.stringDesc.hashValue
+        // If changing: validate this function does not cause recursion,
+        // it can take some time after launch, and has caused recoursion in the past - on launch and also after user interactions.
+        // should not trigger some
+        let newHashValue = mnSplitView.hashValue
         if _latestSplitViewStateHash != newHashValue {
             _latestSplitViewStateHash = newHashValue
             // dlog?.info("plitView.StringDesc: \( self.mnSplitView.stringDesc)")

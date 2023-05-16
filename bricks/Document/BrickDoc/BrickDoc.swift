@@ -257,7 +257,7 @@ class BrickDoc: NSDocument, BUIDable  {
     }
     
     deinit {
-        dlog?.info("deinit")
+        dlog?.info("deinit START")
         
         // Save
         if abs(self.brick.info.lastClosedDate?.timeIntervalSinceNow ?? 999.0) > 0.2 {
@@ -276,6 +276,8 @@ class BrickDoc: NSDocument, BUIDable  {
                 ])
                 cmdLog.saveIfNeeded()
                 cmdLog.loadingHelper.callCompletionsAndClear()
+                // cmdLog.loadingHelper.
+                dlog?.info("deinit finished with cmdLog's loading helper")
             }
             
             
@@ -285,6 +287,7 @@ class BrickDoc: NSDocument, BUIDable  {
         
         // Clear weak (JIC) / strong referencesr
         docCommandInvoker.associatedOwner = nil // not needed, but good practice if changes to strong ref
+        dlog?.info("deinit DONE")
     }
     
     // MARK: NSDocument overrides
@@ -481,6 +484,7 @@ class BrickDoc: NSDocument, BUIDable  {
 extension BrickDoc /* notifyObservers */ {
     
     func notifyWillClose() {
+        dlog?.info("notifyWillClose")
         observers.enumerateOnMainThread { observer in
             observer.brickDocumentWillClose(self)
         }

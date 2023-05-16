@@ -684,25 +684,34 @@ class FileLog : NSObject/* for allowing NSTableView delegation*/, WhenLoadedable
     }
     
     deinit {
-        queue.safeSync {[self] in
+        
+        queue.safeSync { // [self] in
             
             // Save misc items
             self.avgLineLength.saveIfNeeded()
             self.linePositions.saveIfNeeded()
             do {
-                try fileHandle.synchronize()
-                try fileHandle.close()
+                try self.fileHandle.synchronize()
+                try self.fileHandle.close()
             } catch {
                 
             }
             
-            dlog?.info("deinit \(self) in quque")
             let apath = self.path!
             DispatchQueue.mainIfNeeded {
+                // Static and global vars - DO NOT handle self properties here because
+                // this block may run AFTER self is deininted
                 Self._allActiveLogPaths.remove(elementsEqualTo: apath)
             }
         }
         dlog?.info("deinit \(self)")
+        
+        // NOTE: is/ when ERROR: "reference may have escaped from deinit"
+        // Object 0x7fafd0a429d0 deallocated with retain count 2, reference may have escaped from deinit.
+        // put the address 0x7fafd0a429d0 in the memory graph to make sure object is of this class
+        // see: https://forums.swift.org/t/what-is-reference-may-have-escaped-from-deinit/64866 // swift forum
+        // see also: https://github.com/apple/swift/pull/62191    // Pull request on swift's source code
+        // This error was added in this PR 14, which provides a bit more explanation. The issue is that in deinit we want to be able to call methods on self, but it's also possible for methods on self to form new strong references to self which outlive the duration of the deinit. This is what's being referred to as a reference having 'escaped.'
     }
     
     func debugLogsAfterLoad() {

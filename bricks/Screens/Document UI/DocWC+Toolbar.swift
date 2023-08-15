@@ -6,7 +6,7 @@
 //
 
 import AppKit
-fileprivate let dlog : DSLogger? = nil // DLog.forClass("DocWC+Toolbar")
+fileprivate let dlog : DSLogger? = DLog.forClass("DocWC+Toolbar")
 
 // MARK: NSToolbarDelegate
 extension DocWC : NSToolbarDelegate {
@@ -129,17 +129,33 @@ extension DocWC : NSToolbarDelegate {
     }
     
     private func createToggleSidebarToolbarItem(id:NSToolbarItem.Identifier, isLeading:Bool)->MNToggleToolbarItem {
+        
+        // Create a button and tag it according to its role:
         let result = MNToggleToolbarItem(itemIdentifier: id)
+        var tagValue = 0 // NOTE: used to test which toggle button was clicked
         if (IS_RTL_LAYOUT ? !isLeading : isLeading) {
             result.onImage = AppImages.sideMenuLeftCollapsed.image
             result.offImage = AppImages.sideMenuLeftUncollapsed.image
+            
         } else {
             result.onImage = AppImages.sideMenuRightCollapsed.image
             result.offImage = AppImages.sideMenuRightUncollapsed.image
         }
+        
         result.imagesScale = 0.43
         result.onTint = NSColor.secondaryLabelColor
         result.offTint = NSColor.secondaryLabelColor
+        
+        // tag the button
+        result.target = self.contentViewController
+        result.action = #selector(DocVC.toggleSidebarAction(_:))
+        
+        // NOTE: tagValue is used to test which toggle button was clicked
+        // result.view will load the view if not already (silently and blocking)
+        if let btn = result.view as? NSButton {
+            btn.identifier = NSUserInterfaceItemIdentifier(id.rawValue + ".button")
+        }
+        
         return result
     }
     
@@ -176,6 +192,8 @@ extension DocWC : NSToolbarDelegate {
             result?.target = self.contentViewController
             result?.action = #selector(DocVC.toggleSidebarAction(_:))
             result?.visibilityPriority = .high
+            result?.tag = self.docVC?.splitView.leadingDividerIndex ?? -1 // used to test which toggle button was clicked
+            (result?.view as? MNButton)?.tag = result?.tag ?? -1
             
             // ====== LEADING ===========
         case .leadingSidebarSettings:
@@ -249,10 +267,6 @@ extension DocWC : NSToolbarDelegate {
 
         case .trailingSidebarToggle:
             result = self.createToggleSidebarToolbarItem(id: id, isLeading: false)
-            result?.target = self.contentViewController
-            result?.action = #selector(DocVC.toggleSidebarAction(_:))
-            result?.tag = self.docVC?.splitView.trailingDividerIndex ?? 1 // used to test which toggle button was clicked
-            (result?.view as? MNButton)?.tag = result?.tag ?? 1
         }
 
         return result
@@ -283,6 +297,8 @@ extension DocWC : NSToolbarDelegate {
     
     // MARK: Public update toolbar calls
     func updateSidebarToolbarItems(isLeadingPanelCollapsed: Bool, isTrailingPanelCollapsed:Bool) {
+        // We are in DocWC + toolbar
+        dlog?.info("updateSidebarToolbarItems panels: leading: \(isLeadingPanelCollapsed) trailing: \(isTrailingPanelCollapsed)")
         self.leadingToggleSidebarItem?.isToggledOn = isLeadingPanelCollapsed
         self.trailingToggleSidebarItem?.isToggledOn = isTrailingPanelCollapsed
     }

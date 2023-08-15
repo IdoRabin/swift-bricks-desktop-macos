@@ -99,7 +99,7 @@ class MNButton: NSButton {
     
     // MARK: Private
     func setup() {
-        DispatchQueue.main.performOncePerInstance(self) {
+        DispatchQueue.main.performOncePerInstance(self) {[self] in
             initFrame = self.frame
             
             // Register as drop target

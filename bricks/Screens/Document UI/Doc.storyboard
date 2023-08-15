@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19529" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19529"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21701"/>
         <capability name="NSView safe area layout guides" minToolsVersion="12.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -20,7 +21,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="651" height="398"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
-                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ" customClass="DocToolbar" customModule="Bricks" customModuleProvider="target">
+                        <toolbar key="toolbar" implicitIdentifier="09D11707-F4A3-4FD5-970E-AC5832E91C2B" autosavesConfiguration="NO" allowsUserCustomization="NO" displayMode="iconAndLabel" sizeMode="regular" id="lHP-qd-aRJ" userLabel="DocToolbar" customClass="DocToolbar" customModule="Bricks" customModuleProvider="target">
                             <allowedToolbarItems/>
                             <defaultToolbarItems/>
                             <connections>
@@ -400,7 +401,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jQA-gA-a4N">
-                                                                    <rect key="frame" x="0.0" y="3" width="20" height="25"/>
+                                                                    <rect key="frame" x="0.0" y="3.5" width="19.5" height="25"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="lock.open.fill" catalog="system" imagePosition="overlaps" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="gIk-c5-thv">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -534,7 +535,7 @@
         <image name="checkmark.square" catalog="system" width="15" height="14"/>
         <image name="eye" catalog="system" width="21" height="13"/>
         <image name="folder" catalog="system" width="18" height="14"/>
-        <image name="lock.open.fill" catalog="system" width="16" height="15"/>
+        <image name="lock.open.fill" catalog="system" width="17" height="15"/>
         <image name="pencil" catalog="system" width="14" height="13"/>
         <image name="percent" catalog="system" width="15" height="15"/>
         <image name="plus" catalog="system" width="14" height="13"/>

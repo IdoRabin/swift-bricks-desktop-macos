@@ -42,6 +42,7 @@ class LoadingHelper {
     private var _label : String = "Unknown"
     private var _loadingLock = NSRecursiveLock()
     private var _isLoadingNow : Bool = false
+    private var _isCallingCompletionsAndClearNow : Bool = false
     private var _loadResult : AppResultUpdated? = nil
     private var _loadingCompletions : [AppResultUpdatedBlock]? = []
     private var _didDeinit : Bool = false
@@ -63,12 +64,11 @@ class LoadingHelper {
     }
 
     deinit {
-        dlog?.info("\(logPrefix) deinit start")
         if !self._didDeinit {
             callCompletionsAndClear()
             self._didDeinit = true
         }
-        dlog?.info("\(logPrefix) deinit end")
+         dlog?.info("\(logPrefix) deinit")
     }
     
     var isLoadingNow : Bool {
@@ -108,14 +108,18 @@ class LoadingHelper {
     
     func callCompletionsAndClear() {
         
+        guard _isCallingCompletionsAndClearNow == false else {
+            return
+        }
+        _isCallingCompletionsAndClearNow = true
+        
         // Save info
         let lock = self._loadingLock // will be retined for the main queue if needed:
         let loadResult = _loadResult ?? .success(.noChanges)
         let comps = self._loadingCompletions ?? []
         
         // Call completions
-        // Note: by the time we get to the main thread, self instance may be dealloced.
-        DispatchQueue.mainIfNeeded { [self, lock, loadResult, comps] in
+        DispatchQueue.mainIfNeededSync { [self, lock, loadResult, comps] in
             lock.lock {
                 for completion in comps {
                     completion(loadResult)
@@ -125,8 +129,10 @@ class LoadingHelper {
                 self._loadingCompletions?.removeAll()
                 self._loadingCompletions = nil
             }
+            
+            _isCallingCompletionsAndClearNow = false
         }
-        dlog?.info("\(logPrefix) callCompletionsAndClear DONE \(lock)")
+        // dlog?.info("\(logPrefix) callCompletionsAndClear DONE \(lock)")
     }
     
     func startLoadingIfNeeded(loadableEx:WhenLoadedableEx, onGlobalQueue : Bool = true, userInfo:Any? = nil) {

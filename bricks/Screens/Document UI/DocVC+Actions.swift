@@ -11,56 +11,65 @@ fileprivate let dlog : DSLogger? = DLog.forClass("DocVC+Actions")
 
 // MARK: DocumentVC - Actions
 extension DocVC : NSUserInterfacePluralValidations /* Actions */ {
-    // MARK: Conputed vars
+    // MARK: static
+    private static let UNKNOWN = "<Unknown>"
+    
+    // MARK: Computed vars
     var mainMenu : MainMenu? {
         return BrickDocController.shared.menu
     }
     
+    func setToggleButtonEnabled(view:NSView?, enabled:Bool = true, completion: (()->Void)? = nil) {
+        guard let btn = view as? NSButton else {
+            completion?()
+            return
+        }
+        
+        btn.isEnabled = enabled
+        NSView.animate(duration: 01, changes: { ctx in
+            btn.alphaValue = enabled ? 1.0 : 0.4
+        }, completionHandler: completion)
+    }
+    
     // MARK: IBActions:
     @IBAction @objc func toggleSidebarAction(_ sender : Any) {
-        // dlog?.info("toggleSidebarAction sender:\(sender)")
         
-        var isLeadingSidebar = true
+        var found_id = Self.UNKNOWN
+        var found_view : NSView? = nil
         
-        var sendr = sender
-        if let btn = sender as? NSButton {
-            if let lft = self.docWC?.leadingToggleSidebarItem,
-               lft.view == btn || btn.tag <= self.mnSplitView.leadingDividerIndex {
-                // Found leading
-                sendr = lft
-                isLeadingSidebar = true
-            } else if let rgt = self.docWC?.trailingToggleSidebarItem,
-                      rgt.view == btn || btn.tag >= self.mnSplitView.trailingDividerIndex {
-                // Found trailing
-                sendr = rgt
-                isLeadingSidebar = false
+        if let item = sender as? NSToolbarItem, let anId = (sender as? NSToolbarItem)?.itemIdentifier.rawValue, anId.count > 0 {
+            found_id = anId
+            found_view = item.view
+            dlog?.info("toggleSidebarAction NSToolbarItem: \(found_id)")
+        } else if let aview = sender as? NSView, let anId = aview.identifier?.rawValue, anId.count > 0 {
+            found_id = anId
+            found_view = aview
+            dlog?.info("toggleSidebarAction NSView: \(found_id)")
+        }
+        
+        let isLeadingSidebar = found_id.lowercased().contains("leading")
+        let isTrailingSidebar = found_id.lowercased().contains("trailing")
+        
+        if isLeadingSidebar || isTrailingSidebar {
+            
+            let animation_completion :(() -> Void) = { [self, found_view] in
+                self.setToggleButtonEnabled(view: found_view, enabled: true) {
+                    self.updateSidebarToolbarItems()
+                }
             }
-        }
-        
-        switch sendr {
-        case let mnToggle as MNToggleToolbarItem:
-            isLeadingSidebar = mnToggle.tag < 2
             
-        case let item as NSToolbarItem:
-            isLeadingSidebar = item.tag < 2
-            
-        case let item as NSMenuItem:
-            // dlog?.info("toggleSidebarAction sender menu item id:\(item.identifier?.rawValue ?? "<nil>" )")
-            isLeadingSidebar = (item.identifier?.rawValue ?? "").lowercased().contains("leading")
-            
-        default:
-            dlog?.note("toggleSidebarAction sender: \(sender)")
-        }
-        
-        // Toggle
-        // DO NOT use! super.toggleSidebar(sender) -- super  toggleSidebar ...
-        if isLeadingSidebar {
-            self.mnSplitView.toggleLeadingPanel()
+            // Start toggle button animation:
+            setToggleButtonEnabled(view: found_view, enabled: false) {
+                if isLeadingSidebar {
+                    self.mnSplitView.toggleLeadingPanel(animated: true, completion: animation_completion)
+                } else if isTrailingSidebar {
+                    self.mnSplitView.toggleTrailingPanel(animated: true, completion: animation_completion)
+                }
+            }
         } else {
-            self.mnSplitView.toggleTrailingPanel()
+            dlog?.warning("toggleSidebarAction failed finding toggle button's side: \(sender)")
         }
-        
-        
+
         DispatchQueue.main.asyncAfter(delayFromNow: 0.1) {
             self.updateSidebarMenuItems()
         }
@@ -75,19 +84,85 @@ extension DocVC : NSUserInterfacePluralValidations /* Actions */ {
         return BrickDocController.shared.validateUserInterfaceItem(doc: self.document, item: item)
     }
     
-    func updateSidebarMenuItems() {
-        TimedEventFilter.shared.filterEvent(key: "updateSidebarMenuItems", threshold: 0.2) {
+    func updateSidebarMenuItems(depth:Int = 0) {
+        // Prevent timed recursion
+        guard depth <= 10 else {
+            dlog?.warning("updateSidebarMenuItems: timed recursion too big")
+            return
+        }
+        let block = {
             if let menu = self.mainMenu, self.docWC == BrickDocController.shared.curDocWC {
-                menu.updateMenuItems([menu.viewShowProjectSidebarMnuItem,
-                                      menu.viewShowUtilitySidebarMnuItem],
-                                      context: "updateSidebarMenuItems")
+                if self.isAllowedSidebarUpdate(context:"updateSidebarMenuItems") {
+                    dlog?.success("updateSidebarMenuItems (by panels depth: \(depth)")
+                    menu.updateMenuItems([menu.viewShowProjectSidebarMnuItem,
+                                          menu.viewShowUtilitySidebarMnuItem],
+                                         context: "updateSidebarMenuItems")
+                } else {
+                    dlog?.warning("updateSidebarMenuItems: not allowed to update sidebar menu items (by panels, depth: \(depth))!")
+                    DispatchQueue.main.asyncAfter(delayFromNow: 0.05) {
+                        self.updateSidebarMenuItems(depth: depth + 1)
+                    }
+                }
             }
         }
+        
+        if depth > 0 {
+            // depth > 0 is timed recursion from within the block
+            block()
+        } else {
+            // Calls from external sources have a timed event filter
+            TimedEventFilter.shared.filterEvent(key: "updateSidebarMenuItems", threshold: 0.15) {
+                block()
+            }
+        }
+        
     }
     
-    func updateSidebarToolbarItems() {
-        self.docWC?.updateSidebarToolbarItems(isLeadingPanelCollapsed: self.mnSplitView.isLeadingPanelCollapsed,
-                                              isTrailingPanelCollapsed:self.mnSplitView.isTrailingPanelCollapsed)
+    func isAllowedSidebarUpdate(context ctx:String = "unknown" /* Self.UNKNOWN */)->Bool {
+        /*
+         
+         Apparently - checking window state is not needed here:
+         // Window checks:
+         guard self.docWC?.isLoaded == true else {
+             dlog?.note("isAllowedSidebarUpdate ctx: \(ctx) panels - window was not loaded yet!")
+             return false
+         }
+         
+         */
+        
+        // VC checks:
+        guard self.isViewLoaded else {
+            dlog?.note("isAllowedSidebarUpdate ctx: \(ctx) panels - VC was not loaded yet!")
+            return false
+        }
+        
+        return true
+    }
+    
+    func updateSidebarToolbarItems(depth:Int = 0) {
+        guard depth < 10 else {
+            dlog?.warning("updateSidebarToolbarItems timed recursion too deep!")
+            return
+        }
+        
+        if self.isAllowedSidebarUpdate(context:"updateSidebarToolbarItems") {
+            // We are in DocVC + Actions
+            TimedEventFilter.shared.filterEvent(key: "updateSidebarToolbarItems", threshold: 0.05) {[weak self] in
+                if let self = self {
+                    self.docWC?.updateSidebarToolbarItems(
+                        isLeadingPanelCollapsed: self.mnSplitView.isLeadingPanelCollapsed,
+                        isTrailingPanelCollapsed:self.mnSplitView.isTrailingPanelCollapsed)
+                }
+            }
+        } else if depth == 0 {
+            waitFor("updateSidebarToolbarItems", interval: 0.07, timeout: 0.5, testOnMainThread: {
+                self.isAllowedSidebarUpdate(context:"updateSidebarToolbarItems")
+            }, completion: {[weak self] waitResult in
+                if waitResult.isSuccess {
+                    self?.updateSidebarToolbarItems(depth: depth + 1)
+                }
+            })
+        }
     }
     
     func docController(didChangeCurVCFrom fromVC: DocVC?, toVC: DocVC?) {

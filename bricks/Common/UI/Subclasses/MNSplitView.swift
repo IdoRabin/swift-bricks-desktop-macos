@@ -13,10 +13,12 @@ protocol MNSplitviewDelegate : NSSplitViewDelegate {
 }
 
 class MNSplitview : NSSplitView {
+    static let MIN_DELTA : CGFloat = 10.0
     
     // MARK: Properties
     private var _isAnimating : [Int:Bool] = [:]
     private var _isAnyAnimating = false
+    private var _isSetupComplete = false
     private var _isMousePressed : Bool = false
     private var _fwdDelegate : NSSplitViewDelegate? = nil
     private var _leadingMinWidthToSnap : CGFloat? = nil
@@ -44,7 +46,43 @@ class MNSplitview : NSSplitView {
     }
     
     // MARK: Private util func
+    func isCanHandlePanels(context ctx:String = "unknown")->Bool {
+        guard let vc = self.window?.contentViewController else {
+            dlog?.warning("isCanHandlePanels: ctx: \(ctx) hostingSplitVC not assigned window or CVC!")
+            return false
+        }
+        
+        var isVCAllows = false
+        if let docVC = (self.hostingSplitVC ?? vc) as? DocVC {
+            // vc is a docVC subclassing NSSplictViewController:
+            isVCAllows = docVC.isAllowedSidebarUpdate(context:"isCanHandlePanels >> \(ctx)")
+        } else {
+            // vc is another class of vc
+            isVCAllows = vc.isViewLoaded && vc.view.bounds.width > Self.MIN_DELTA
+        }
+        
+        guard isVCAllows else {
+            dlog?.warning("isCanHandlePanels: ctx: \(ctx) window / VC not loaded yet!")
+            return false
+        }
+        
+        guard self._isAnyAnimating == false &&
+                (self._isSetupComplete == true || ctx == "setup") &&
+                self.bounds.width > Self.MIN_DELTA else {
+            // failed
+            dlog?.warning("isCanHandlePanels: ctx: \(ctx) MNSplitView is not loaded yet!")
+            return false
+        }
+        
+        // Allowed
+        return true
+    }
+    
     private func updateLastCollapsed() {
+        guard self.isCanHandlePanels(context: "updateLastCollapsed") else {
+            return
+        }
+        
         var wasChanged = false
         let isLeadingC = self.isLeadingPanelCollapsed
         if self.lastIsLeadingPanelCollapsed != isLeadingC {
@@ -67,25 +105,34 @@ class MNSplitview : NSSplitView {
     
     // MARK: Private func
     private func setup() {
-        waitFor("arrangedSubviews to be added", interval: 0.04, timeout: 0.1, testOnMainThread: {
-            self.arrangedSubviews.count > 0
+        self._isSetupComplete = false
+        waitFor("arrangedSubviews to be added", interval: 0.04, timeout: 0.2, testOnMainThread: {
+            self.isCanHandlePanels(context:"setup") && self._isAnyAnimating == false && self.arrangedSubviews.count > 0 && self.bounds.width > Self.MIN_DELTA
         }, completion: { waitResult in
-            DispatchQueue.main.performOncePerInstance(self) { [self] in
-                dlog?.info("setup: leading dic idx: \(self.leadingDividerIndex) trailing div idx \(self.trailingDividerIndex)")
-                self._leadingMinWidthToSnap = self.minPossiblePositionOfDivider(at: leadingDividerIndex)
-                self._trailingMinWidthToSnap = self.minPossiblePositionOfDivider(at: self.trailingDividerIndex)
-                self.saveWidths()
-                DispatchQueue.main.asyncAfter(delayFromNow: 0.02) {
-                    self.calcSnappingSizes()
+            if waitResult.isSuccess {
+                DispatchQueue.main.performOncePerInstance(self) { [self] in
+                    dlog?.info("setup: leading dic idx: \(self.leadingDividerIndex) trailing div idx \(self.trailingDividerIndex)")
+                    self._leadingMinWidthToSnap = self.minPossiblePositionOfDivider(at: self.leadingDividerIndex)
+                    self._trailingMinWidthToSnap = self.minPossiblePositionOfDivider(at: self.trailingDividerIndex)
+                    self._isSetupComplete = true
+                    
+                    // After setup complete:
+                    self.saveWidths()
+                    DispatchQueue.main.asyncAfter(delayFromNow: 0.02) {
+                        self.calcSnappingSizes()
+                    }
                 }
+            } else {
+                dlog?.warning("setup: waitResult timeout! (panels)")
             }
         }, logType: .allAfterFirstTest)
     }
     
     private func saveWidthsForPanel(at index:Int) {
-        guard self._isAnyAnimating == false else {
+        guard self.isCanHandlePanels(context:"saveWidthsForPanel") else {
             return
         }
+        
         var view : NSView? = nil
         if index >= 0 && index <= self.arrangedSubviews.count  {
             view = self.arrangedSubviews[index]
@@ -112,7 +159,7 @@ class MNSplitview : NSSplitView {
     
     private func calcSnappingSizes() {
         // First ever save with snapping sizes
-        if let w = self._leadingMinWidthToSnap, w <= 10, self.arrangedSubviews.count > 1 {
+        if let w = self._leadingMinWidthToSnap, w <= Self.MIN_DELTA, self.arrangedSubviews.count > 1 {
             self._leadingMinWidthToSnap = self.minPossiblePositionOfDivider(at: self.leadingDividerIndex + 1)
             self._trailingMinWidthToSnap = abs(self.minPossiblePositionOfDivider(at:self.trailingDividerIndex))
             dlog?.info("calcSnappingSizes widths leading:\(self._leadingMinWidthToSnap.descOrNil) trailing:\(self._trailingMinWidthToSnap.descOrNil)")
@@ -120,6 +167,9 @@ class MNSplitview : NSSplitView {
     }
     
     private func saveWidths() {
+        guard self.isCanHandlePanels(context: "saveWidths") else {
+            return
+        }
         
         dlog?.info("saveWidths [\(leadingDividerIndex)..\(trailingDividerIndex)]")
         for index in 0..<arrangedSubviews.count {
@@ -350,11 +400,14 @@ extension MNSplitview : NSSplitViewDelegate {
     }
     
     func splitViewDidResizeSubviews(_ notification: Notification) {
-        self._fwdDelegate?.splitViewDidResizeSubviews?(notification)
-        TimedEventFilter.shared.filterEvent(key: "splitViewDidResizeSubviews", threshold: 0.1) {
-            self.updateLastCollapsed()
+        guard self.isCanHandlePanels(context: "splitViewDidResizeSubviews") else {
+            return
         }
-        saveWidths()
+            
+        TimedEventFilter.shared.filterEvent(key: "splitViewDidResizeSubviews", threshold: 0.05) {[self] in
+            self.updateLastCollapsed()
+            self.saveWidths()
+        }
     }
     
 }

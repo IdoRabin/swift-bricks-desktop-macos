@@ -188,7 +188,7 @@ class MNSegmentedTabs : NSView {
         self.needsLayout = true
         self.updateTabs(selectedIndex: self.selectedIndex)
         
-        DispatchQueue.main.performOncePerSession {
+        DispatchQueue.main.performOncePerSession {[self] in
             if let side = self.seperatorSide {
                 self.addSeparatorView(side: side)
             }

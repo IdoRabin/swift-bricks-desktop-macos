@@ -51,41 +51,41 @@ class MainPanelToolbarView : NSView {
     
     // MARK: Lifecycle
     private func setupIfPossible() {
-        DispatchQueue.main.performOncePerInstance(self) {
+        DispatchQueue.main.performOncePerInstance(self) {[weak self] in
             dlog?.info("setup")
-            updateWithDoc(self.window?.windowController?.document as? BrickDoc)
-            // setupProgressIndicator()
-            centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)
-            centerBoxContainer.borderColor = .quaternaryLabelColor.withAlphaComponent(0.1)
-            centerBoxContainer.borderWidth = 0.5
-            
-            // Setup progress:
-            
-            // Replace
-            if let newPBoXView = MNProgressBoxView.fromNib() {
-                newPBoXView.frame = centerProgressBoxViewContainer.frame.boundsRect()
-                newPBoXView.autoresizingMask = [.width, .height]
-                centerProgressBoxViewContainer.addSubview(newPBoXView)
-                centerProgressBoxView = newPBoXView
-                newPBoXView.observers.add(observer: self)
+            if let self = self {
+                updateWithDoc(self.window?.windowController?.document as? BrickDoc)
+                // setupProgressIndicator()
+                centerBoxContainer.fillColor = .quaternaryLabelColor.withAlphaComponent(0.05)
+                centerBoxContainer.borderColor = .quaternaryLabelColor.withAlphaComponent(0.1)
+                centerBoxContainer.borderWidth = 0.5
                 
-                if let copyItem = newPBoXView.copyMenuItem {
-                    copyItem.target = self
-                    copyItem.action = #selector(mptbvCopyMenuItemAction(_:))
+                // Setup progress:
+                
+                // Replace
+                if let newPBoXView = MNProgressBoxView.fromNib() {
+                    newPBoXView.frame = centerProgressBoxViewContainer.frame.boundsRect()
+                    newPBoXView.autoresizingMask = [.width, .height]
+                    centerProgressBoxViewContainer.addSubview(newPBoXView)
+                    centerProgressBoxView = newPBoXView
+                    newPBoXView.observers.add(observer: self)
+                    
+                    if let copyItem = newPBoXView.copyMenuItem {
+                        copyItem.target = self
+                        copyItem.action = #selector(mptbvCopyMenuItemAction(_:))
+                    }
+                    
+                    if let viewLogItem = newPBoXView.viewLogMenuItem {
+                        viewLogItem.target = self
+                        viewLogItem.action = #selector(mptbvViewLogMenuItemAction(_:))
+                    }
                 }
                 
-                if let viewLogItem = newPBoXView.viewLogMenuItem {
-                    viewLogItem.target = self
-                    viewLogItem.action = #selector(mptbvViewLogMenuItemAction(_:))
+                // TODO: Understend what was meant here... if let progress = progress {
+                     
+                if DEBUG_DRAWING {
+                    self.debugBorders(downtree: true)
                 }
-            }
-            
-//            if let progress = progress {
-
-//            }
-            
-            if DEBUG_DRAWING {
-                self.debugBorders(downtree: true)
             }
         }
         

@@ -244,7 +244,7 @@ class MNProgressBoxView : NSView {
     
     override func layout() {
         super.layout()
-        DispatchQueue.main.performOncePerInstance(self) {
+        DispatchQueue.main.performOncePerInstance(self) {[self] in
             // dlog?.info("first layout - circle progressWidthConstraint will be \(self.bounds.height)")
             let newH = self.bounds.height
             progressCircleUnshrunkWidth = newH

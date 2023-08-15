@@ -51,7 +51,7 @@ class FileLogViewerVC: NSViewController {
             return
         }
         
-        DispatchQueue.main.performOncePerInstance(self) {
+        DispatchQueue.main.performOncePerInstance(self) {[self] in
             let buttons : [MNButton]? = self.view.subviews(which: { view in
                 view is MNButton
             }, downtree: true) as? [MNButton]

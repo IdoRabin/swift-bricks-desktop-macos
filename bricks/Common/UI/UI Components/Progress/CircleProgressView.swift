@@ -503,7 +503,7 @@ class CircleProgressView : NSView {
             return
         }
         
-        DispatchQueue.main.performOncePerInstance(self) {
+        DispatchQueue.main.performOncePerInstance(self) {[self] in
             let rect = self.calcRectForLayers()
             _lastUsedLayersRect = rect
             // dlog?.info("setupLayersIfNeeded")
@@ -561,8 +561,7 @@ class CircleProgressView : NSView {
     }
     
     private func setup() {
-        
-        DispatchQueue.main.performOncePerInstance(self) {
+        DispatchQueue.main.performOncePerInstance(self) {[self] in
             setupLayersIfNeeded()
         }
     }

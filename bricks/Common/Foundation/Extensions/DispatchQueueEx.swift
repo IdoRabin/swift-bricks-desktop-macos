@@ -178,7 +178,7 @@ extension DispatchQueue {
     private static var _uniqueCounter : Int64 = 0
     
     @discardableResult
-    public func performOnce(uniqueToken: String, block:()->Void)->Bool {
+    public func performOnce(uniqueToken: String, block: @escaping()->Void)->Bool {
         var contained = false
 
         DispatchQueue._onceTrackerLock.lock {
@@ -201,7 +201,9 @@ extension DispatchQueue {
             }
         }
         
-        block()
+        self.safeSync {[block] in
+            block()
+        }
         return true
     }
     
@@ -210,7 +212,7 @@ extension DispatchQueue {
     /// - Parameter block: block to perform if not performed already on this instance
     /// - Returns: true if the block was performed
     @discardableResult
-    public func performOncePerInstance(_ instance:AnyObject, block:()->Void)->Bool {
+    public func performOncePerInstance(_ instance:AnyObject, block:@escaping ()->Void)->Bool {
         var token : String = String(memoryAddressOf: instance)
         let symbs = Thread.callStackSymbols
         if symbs.count > 1 {
@@ -226,7 +228,7 @@ extension DispatchQueue {
     /// - Parameter block: block to perform if not performed already this session
     /// - Returns: true if the block was performed
     @discardableResult
-    public func performOncePerSession(block:()->Void)->Bool {
+    public func performOncePerSession(block: @escaping ()->Void)->Bool {
         
         var token : String = ""
         let symbs = Thread.callStackSymbols
@@ -257,7 +259,7 @@ extension DispatchQueue {
     ///   - block: block to perform
     /// - Returns: true if the block was performed
     @discardableResult
-    public func performOncePerInstall(associateWith:AnyObject? = nil, token atk:String, forAnyQueue:Bool = true, legacyKey:String? = nil, isDebugIgnore:Bool = false, block:()->Void)->Bool {
+    public func performOncePerInstall(associateWith:AnyObject? = nil, token atk:String, forAnyQueue:Bool = true, legacyKey:String? = nil, isDebugIgnore:Bool = false, block: @escaping ()->Void)->Bool {
         
         var token : String = atk
         if !forAnyQueue {
